@@ -75,7 +75,7 @@ export function CocktailExplorer() {
     <div className="space-y-8">
       <h1 className="text-4xl">Choose your preference</h1>
       <div>
-        <h3 className="mb-2">Sweetness</h3>
+        <h2 className="mb-2">Sweetness</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -83,13 +83,17 @@ export function CocktailExplorer() {
           className="w-full"
           onValueChange={(value) => setSweetness(value[0])}
         />
-        <div className="text-sm text-muted-foreground mt-1">
-          0: None | 2.5: Light | 5: Medium | 7.5: Sweet | 10: Very Sweet
+        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+          <span className="text-left">None</span>
+          <span className="text-center">Light</span>
+          <span className="text-center">Medium</span>
+          <span className="text-center">Sweet</span>
+          <span className="text-right">Very Sweet</span>
         </div>
       </div>
 
       <div>
-        <h3 className="mb-2">Sourness</h3>
+        <h2 className="mb-2">Sourness</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -97,13 +101,17 @@ export function CocktailExplorer() {
           className="w-full"
           onValueChange={(value) => setSourness(value[0])}
         />
-        <div className="text-sm text-muted-foreground mt-1">
-          0: None | 2.5: Light | 5: Medium | 7.5: Sour | 10: Very Sour
+        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+          <span className="text-left">None</span>
+          <span className="text-center">Light</span>
+          <span className="text-center">Medium</span>
+          <span className="text-center">Sour</span>
+          <span className="text-right">Very Sour</span>
         </div>
       </div>
 
       <div>
-        <h3 className="mb-2">Body</h3>
+        <h2 className="mb-2">Body</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -111,13 +119,17 @@ export function CocktailExplorer() {
           className="w-full"
           onValueChange={(value) => setBody(value[0])}
         />
-        <div className="text-sm text-muted-foreground mt-1">
-          0: Thin | 2.5: Light | 5: Medium | 7.5: Full | 10: Heavy
+        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+          <span className="text-left">Thin</span>
+          <span className="text-center">Light</span>
+          <span className="text-center">Medium</span>
+          <span className="text-center">Full</span>
+          <span className="text-right">Heavy</span>
         </div>
       </div>
 
       <div>
-        <h3 className="mb-2">Complexity</h3>
+        <h2 className="mb-2">Complexity</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -125,13 +137,17 @@ export function CocktailExplorer() {
           className="w-full"
           onValueChange={(value) => setComplexity(value[0])}
         />
-        <div className="text-sm text-muted-foreground mt-1">
-          0: Simple | 2.5: Some | 5: Medium | 7.5: Complex | 10: Very Complex
+        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+          <span className="text-left">Simple</span>
+          <span className="text-center">Some</span>
+          <span className="text-center">Medium</span>
+          <span className="text-center">Complex</span>
+          <span className="text-right">Very Complex</span>
         </div>
       </div>
 
       <div>
-        <h3 className="mb-2">Booziness</h3>
+        <h2 className="mb-2">Booziness</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -139,8 +155,12 @@ export function CocktailExplorer() {
           className="w-full"
           onValueChange={(value) => setBooziness(value[0])}
         />
-        <div className="text-sm text-muted-foreground mt-1">
-          0: None | 2.5: Light | 5: Medium | 7.5: Strong | 10: Very Strong
+        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+          <span className="text-left">No Alcohol</span>
+          <span className="text-center">Light</span>
+          <span className="text-center">Medium</span>
+          <span className="text-center">Strong</span>
+          <span className="text-right">Very Strong</span>
         </div>
       </div>
 
@@ -150,7 +170,7 @@ export function CocktailExplorer() {
       </div>
 
       <div className="space-y-2">
-        <h3 className="mb-2">Primary Flavor (max 3)</h3>
+        <h2 className="mb-2">Primary Flavor (max 3)</h2>
         <div className="flex flex-wrap gap-2">
           {[
             "Bitter",

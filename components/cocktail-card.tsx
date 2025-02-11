@@ -15,12 +15,24 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
     router.push(`/cocktails/${slugify(cocktail.name)}`);
   };
 
+  const handleShare = async () => {
+    const url = `${window.location.origin}/cocktails/${slugify(cocktail.name)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('Link copied to clipboard!');
+    } catch (err) {
+      alert('Failed to copy link');
+    }
+  };
+
   return (
     <div 
       className="border rounded-3xl bg-neutral-900 p-6 cursor-pointer hover:bg-neutral-800 transition-colors"
       onClick={handleClick}
     >
-      <h3 className="mb-4 text-2xl">{cocktail.name}</h3>
+      <div className="flex justify-between items-center">
+        <h3 className="mb-4 text-2xl">{cocktail.name}</h3>
+      </div>
       <ul className="mt-1">
         {[...cocktail.baseSpirits, ...cocktail.ingredients].map(
           (item, index) => (
@@ -55,6 +67,15 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
         <p>Complexity: {cocktail.flavor_profile.complexity}</p>
         <p>Booziness: {cocktail.flavor_profile.booziness}</p>
       </div>
+      <button 
+        onClick={(e) => {
+          e.stopPropagation();
+          handleShare();
+        }}
+        className="mt-4 w-full px-3 py-2 text-sm bg-neutral-700 hover:bg-neutral-600 rounded-full"
+      >
+        Share
+      </button>
     </div>
   );
 } 
