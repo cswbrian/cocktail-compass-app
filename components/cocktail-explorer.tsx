@@ -21,11 +21,13 @@ export function CocktailExplorer() {
   const { language } = useLanguage();
   const t = translations[language];
 
-  const [sweetness, setSweetness] = useState(5);
-  const [sourness, setSourness] = useState(5);
-  const [body, setBody] = useState(5);
-  const [complexity, setComplexity] = useState(5);
-  const [booziness, setBooziness] = useState(5);
+  const getRandomValue = () => Math.floor(Math.random() * 11); // Generates integer from 0 to 10
+
+  const [sweetness, setSweetness] = useState(getRandomValue());
+  const [sourness, setSourness] = useState(getRandomValue());
+  const [body, setBody] = useState(getRandomValue());
+  const [complexity, setComplexity] = useState(getRandomValue());
+  const [booziness, setBooziness] = useState(getRandomValue());
   const [bubbles, setBubbles] = useState(false);
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
   const [results, setResults] = useState<RankedCocktail[]>([]);
@@ -102,6 +104,7 @@ export function CocktailExplorer() {
           max={10}
           step={1}
           className="w-full"
+          rangeClassName="bg-rose-500"
           onValueChange={(value) => setSweetness(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
@@ -120,6 +123,7 @@ export function CocktailExplorer() {
           max={10}
           step={1}
           className="w-full"
+          rangeClassName="bg-yellow-500"
           onValueChange={(value) => setSourness(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
@@ -138,6 +142,7 @@ export function CocktailExplorer() {
           max={10}
           step={1}
           className="w-full"
+          rangeClassName="bg-emerald-500"
           onValueChange={(value) => setBody(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
@@ -156,6 +161,7 @@ export function CocktailExplorer() {
           max={10}
           step={1}
           className="w-full"
+          rangeClassName="bg-sky-500"
           onValueChange={(value) => setComplexity(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
@@ -174,6 +180,7 @@ export function CocktailExplorer() {
           max={10}
           step={1}
           className="w-full"
+          rangeClassName="bg-orange-500"
           onValueChange={(value) => setBooziness(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
