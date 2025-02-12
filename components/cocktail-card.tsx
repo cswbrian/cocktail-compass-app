@@ -33,7 +33,7 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
         <h3 className="mb-4 text-2xl">{cocktail.name}</h3>
       </div>
       <ul className="mt-1">
-        {[...cocktail.baseSpirits, ...cocktail.ingredients].map(
+        {[...cocktail.baseSpirits, ...cocktail.liqueurs, ...cocktail.ingredients].map(
           (item, index) => (
             <li key={index} className="flex justify-between">
               {item.name}

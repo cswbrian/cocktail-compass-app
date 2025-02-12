@@ -71,7 +71,7 @@ export default async function CocktailPage({ params }: { params: Promise<{ slug:
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8 text-sm">
           <h2 className="font-bold mb-4">Flavour Profile</h2>
           <div className="space-y-1">
             <p>Sweetness: {cocktail.flavor_profile.sweetness}</p>
