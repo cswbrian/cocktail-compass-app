@@ -23,9 +23,13 @@ export default async function CocktailPage({ params }: { params: Promise<{ slug:
             <h2 className="font-bold mb-2">Flavor Notes</h2>
             <div className="flex flex-wrap gap-2">
               {cocktail.flavor_descriptors.map((descriptor, i) => (
-                <span key={i} className="bg-gray-700 px-3 py-1 rounded-full text-sm">
+                <Link
+                  href={`/flavours/${slugify(descriptor)}`}
+                  key={i}
+                  className="bg-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-600 transition-colors"
+                >
                   {descriptor}
-                </span>
+                </Link>
               ))}
             </div>
           </div>
