@@ -19,9 +19,8 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
     const url = `${window.location.origin}/cocktails/${slugify(cocktail.name)}`;
     try {
       await navigator.clipboard.writeText(url);
-      alert('Link copied to clipboard!');
     } catch (err) {
-      alert('Failed to copy link');
+      console.error(err);
     }
   };
 
