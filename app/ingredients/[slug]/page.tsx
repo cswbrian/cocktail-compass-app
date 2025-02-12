@@ -2,8 +2,9 @@ import cocktails from "@/data/cocktails.json";
 import { slugify } from "@/lib/utils";
 import { CocktailCard } from "@/components/cocktail-card";
 import { Cocktail } from "@/types/cocktail";
-export default async function IngredientPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+
+export default async function IngredientPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   // Find all cocktails that contain this ingredient
   const matchingCocktails = cocktails.filter(cocktail => {
