@@ -13,6 +13,7 @@ import { translations } from "@/translations";
 
 interface RankedCocktail extends Cocktail {
   distance: number;
+  flavorMatches: number;
 }
 
 const cocktails = cocktailsData as Cocktail[];
@@ -21,13 +22,11 @@ export function CocktailExplorer() {
   const { language } = useLanguage();
   const t = translations[language];
 
-  const getRandomValue = () => Math.floor(Math.random() * 11); // Generates integer from 0 to 10
-
-  const [sweetness, setSweetness] = useState(getRandomValue());
-  const [sourness, setSourness] = useState(getRandomValue());
-  const [body, setBody] = useState(getRandomValue());
-  const [complexity, setComplexity] = useState(getRandomValue());
-  const [booziness, setBooziness] = useState(getRandomValue());
+  const [sweetness, setSweetness] = useState(5);
+  const [sourness, setSourness] = useState(5);
+  const [body, setBody] = useState(5);
+  const [complexity, setComplexity] = useState(5);
+  const [booziness, setBooziness] = useState(5);
   const [bubbles, setBubbles] = useState(false);
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
   const [results, setResults] = useState<RankedCocktail[]>([]);
@@ -36,41 +35,46 @@ export function CocktailExplorer() {
     const profile = cocktail.flavor_profile;
     const bubbleDifference = profile.bubbles === bubbles ? 0 : 5;
 
-    // Calculate flavor match score
-    const flavorMatch =
-      selectedFlavors.length > 0
-        ? selectedFlavors.filter((flavor) =>
-            cocktail.flavor_descriptors.includes(flavor.toLowerCase())
-          ).length / selectedFlavors.length
-        : 0;
-
     return Math.sqrt(
       Math.pow(profile.sweetness - sweetness, 2) +
         Math.pow(profile.sourness - sourness, 2) +
         Math.pow(profile.body - body, 2) +
         Math.pow(profile.complexity - complexity, 2) +
         Math.pow(profile.booziness - booziness, 2) +
-        Math.pow(bubbleDifference, 2) +
-        Math.pow((1 - flavorMatch) * 5, 2) // Scale flavor match to similar range as other factors
+        Math.pow(bubbleDifference, 2)
     );
   };
 
   const handleSubmit = () => {
     const rankedCocktails: RankedCocktail[] = cocktails
-      .map((cocktail) => ({
-        ...cocktail,
-        distance: calculateDistance(cocktail),
-      }))
-      .sort((a, b) => a.distance - b.distance)
+      .map((cocktail) => {
+        const flavorMatches = selectedFlavors.filter((flavor) => {
+          const selectedFlavorLower = flavor.toLowerCase();
+          const cocktailFlavorsLower = cocktail.flavor_descriptors.map(f => f.toLowerCase());
+          return cocktailFlavorsLower.includes(selectedFlavorLower);
+        }).length;
+
+        return {
+          ...cocktail,
+          distance: calculateDistance(cocktail),
+          flavorMatches,
+        };
+      })
+      .sort((a, b) => {
+        if (b.flavorMatches !== a.flavorMatches) {
+          return b.flavorMatches - a.flavorMatches;
+        }
+        return a.distance - b.distance;
+      })
       .slice(0, 5);
+
 
     setResults(rankedCocktails);
     
-    // Scroll to results after a short delay to allow state to update
     setTimeout(() => {
       const resultsElement = document.getElementById('results-section');
       if (resultsElement) {
-        const offset = 100; // 100px margin top
+        const offset = 100;
         const elementPosition = resultsElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - offset;
         
@@ -100,7 +104,7 @@ export function CocktailExplorer() {
       <div>
         <h2 className="mb-2">{t.sweetness}</h2>
         <Slider
-          defaultValue={[5]}
+          value={[sweetness]}
           max={10}
           step={1}
           className="w-full"
@@ -119,7 +123,7 @@ export function CocktailExplorer() {
       <div>
         <h2 className="mb-2">{t.sourness}</h2>
         <Slider
-          defaultValue={[5]}
+          value={[sourness]}
           max={10}
           step={1}
           className="w-full"
@@ -138,7 +142,7 @@ export function CocktailExplorer() {
       <div>
         <h2 className="mb-2">{t.body}</h2>
         <Slider
-          defaultValue={[5]}
+          value={[body]}
           max={10}
           step={1}
           className="w-full"
@@ -157,7 +161,7 @@ export function CocktailExplorer() {
       <div>
         <h2 className="mb-2">{t.complexity}</h2>
         <Slider
-          defaultValue={[5]}
+          value={[complexity]}
           max={10}
           step={1}
           className="w-full"
@@ -176,7 +180,7 @@ export function CocktailExplorer() {
       <div>
         <h2 className="mb-2">{t.booziness}</h2>
         <Slider
-          defaultValue={[5]}
+          value={[booziness]}
           max={10}
           step={1}
           className="w-full"
