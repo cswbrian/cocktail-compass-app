@@ -3,6 +3,7 @@
 import { slugify } from "@/lib/utils";
 import { Cocktail } from "@/types/cocktail";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface CocktailCardProps {
   cocktail: Cocktail;
@@ -32,11 +33,28 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
       <div className="flex justify-between items-center">
         <h3 className="mb-4 text-2xl">{cocktail.name}</h3>
       </div>
+      {cocktail.flavor_descriptors && (
+        <div className="mb-4">
+          <div className="flex flex-wrap gap-2">
+            {cocktail.flavor_descriptors.map((descriptor, i) => (
+              <span key={i} className="bg-gray-700 px-3 py-1 rounded-full text-sm">
+                {descriptor}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       <ul className="mt-1">
         {[...cocktail.baseSpirits, ...cocktail.liqueurs, ...cocktail.ingredients].map(
           (item, index) => (
             <li key={index} className="flex justify-between">
-              {item.name}
+              <Link 
+                href={`/ingredients/${slugify(item.name)}`}
+                className="hover:text-blue-400 transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {item.name}
+              </Link>
               <span className="text-gray-400">
                 {item.amount} {item.unit}
               </span>

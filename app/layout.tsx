@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cocktail Compass",
+  title: "調理農務指南 | Cocktail Compass",
   description: "Find the perfect cocktail for you",
 };
 

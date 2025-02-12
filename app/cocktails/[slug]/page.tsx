@@ -1,5 +1,6 @@
 import cocktails from "@/data/cocktails.json";
 import { slugify } from "@/lib/utils";
+import Link from 'next/link';
 
 export default async function CocktailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -36,7 +37,12 @@ export default async function CocktailPage({ params }: { params: Promise<{ slug:
             <ul className="space-y-2">
               {cocktail.baseSpirits.map((spirit, i) => (
                 <li key={i} className="flex justify-between">
-                  {spirit.name}
+                  <Link 
+                    href={`/ingredients/${slugify(spirit.name)}`}
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    {spirit.name}
+                  </Link>
                   <span className="text-gray-400">
                     {spirit.amount} {spirit.unit}
                   </span>

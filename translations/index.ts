@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     appName: "Cocktail Compass",
-    chooseYourPreference: "Choose your preference",
+    chooseYourPreference: "What's your mood?",
     sweetness: "Sweetness",
     sourness: "Sourness",
     body: "Body",
@@ -63,7 +63,7 @@ export const translations = {
   },
   "zh": {
     appName: "調理農務指南",
-    chooseYourPreference: "我想飲",
+    chooseYourPreference: "今晚心情如何？",
     sweetness: "甜度",
     sourness: "酸度",
     body: "口感",
