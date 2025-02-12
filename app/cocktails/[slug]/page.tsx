@@ -13,13 +13,26 @@ export default async function CocktailPage({ params }: { params: Promise<{ slug:
   }
 
   return (
-    <div className="p-8">
+    <div className="p-6">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl mb-6">{cocktail.name}</h1>
 
+        {cocktail.flavor_descriptors && (
+          <div className="mb-6">
+            <h2 className="font-bold mb-2">Flavor Notes</h2>
+            <div className="flex flex-wrap gap-2">
+              {cocktail.flavor_descriptors.map((descriptor, i) => (
+                <span key={i} className="bg-gray-700 px-3 py-1 rounded-full text-sm">
+                  {descriptor}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="font-bold mb-4">Ingredients</h2>
+            <h2 className="font-bold mb-2">Ingredients</h2>
             <ul className="space-y-2">
               {cocktail.baseSpirits.map((spirit, i) => (
                 <li key={i} className="flex justify-between">
@@ -49,9 +62,7 @@ export default async function CocktailPage({ params }: { params: Promise<{ slug:
           </div>
 
           {cocktail.garnish && (
-            <div className="mt-6">
-              <h4 className="text-gray-400">Garnish: {cocktail.garnish}</h4>
-            </div>
+            <h4 className="text-gray-400">Garnish: {cocktail.garnish}</h4>
           )}
 
           <div>
@@ -60,7 +71,7 @@ export default async function CocktailPage({ params }: { params: Promise<{ slug:
           </div>
         </div>
 
-        <div className="mt-8 text-sm">
+        <div className="mt-8">
           <h2 className="font-bold mb-4">Flavour Profile</h2>
           <div className="space-y-1">
             <p>Sweetness: {cocktail.flavor_profile.sweetness}</p>
