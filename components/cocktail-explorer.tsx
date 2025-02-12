@@ -8,6 +8,8 @@ import { Cocktail } from "@/types/cocktail";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { CocktailCard } from "@/components/cocktail-card";
+import { useLanguage } from "@/context/LanguageContext";
+import { translations } from "@/translations";
 
 interface RankedCocktail extends Cocktail {
   distance: number;
@@ -16,6 +18,9 @@ interface RankedCocktail extends Cocktail {
 const cocktails = cocktailsData as Cocktail[];
 
 export function CocktailExplorer() {
+  const { language } = useLanguage();
+  const t = translations[language];
+
   const [sweetness, setSweetness] = useState(5);
   const [sourness, setSourness] = useState(5);
   const [body, setBody] = useState(5);
@@ -58,6 +63,21 @@ export function CocktailExplorer() {
       .slice(0, 5);
 
     setResults(rankedCocktails);
+    
+    // Scroll to results after a short delay to allow state to update
+    setTimeout(() => {
+      const resultsElement = document.getElementById('results-section');
+      if (resultsElement) {
+        const offset = 100; // 100px margin top
+        const elementPosition = resultsElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 50);
   };
 
   const handleFlavorSelect = (flavor: string) => {
@@ -72,10 +92,11 @@ export function CocktailExplorer() {
   };
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-4xl">Choose your preference</h1>
+    <div className="mt-12 space-y-8">
+      <h1 className="text-4xl">{t.chooseYourPreference}</h1>
+      
       <div>
-        <h2 className="mb-2">Sweetness</h2>
+        <h2 className="mb-2">{t.sweetness}</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -84,16 +105,16 @@ export function CocktailExplorer() {
           onValueChange={(value) => setSweetness(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
-          <span className="text-left">None</span>
-          <span className="text-center">Light</span>
-          <span className="text-center">Medium</span>
-          <span className="text-center">Sweet</span>
-          <span className="text-right">Very Sweet</span>
+          <span className="text-left">{t.noSweet}</span>
+          <span className="text-center">{t.lightSweet}</span>
+          <span className="text-center">{t.mediumSweet}</span>
+          <span className="text-center">{t.sweet}</span>
+          <span className="text-right">{t.verySweet}</span>
         </div>
       </div>
 
       <div>
-        <h2 className="mb-2">Sourness</h2>
+        <h2 className="mb-2">{t.sourness}</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -102,16 +123,16 @@ export function CocktailExplorer() {
           onValueChange={(value) => setSourness(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
-          <span className="text-left">None</span>
-          <span className="text-center">Light</span>
-          <span className="text-center">Medium</span>
-          <span className="text-center">Sour</span>
-          <span className="text-right">Very Sour</span>
+          <span className="text-left">{t.noSour}</span>
+          <span className="text-center">{t.lightSour}</span>
+          <span className="text-center">{t.mediumSour}</span>
+          <span className="text-center">{t.sour}</span>
+          <span className="text-right">{t.verySour}</span>
         </div>
       </div>
 
       <div>
-        <h2 className="mb-2">Body</h2>
+        <h2 className="mb-2">{t.body}</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -120,16 +141,16 @@ export function CocktailExplorer() {
           onValueChange={(value) => setBody(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
-          <span className="text-left">Thin</span>
-          <span className="text-center">Light</span>
-          <span className="text-center">Medium</span>
-          <span className="text-center">Full</span>
-          <span className="text-right">Heavy</span>
+          <span className="text-left">{t.thinBody}</span>
+          <span className="text-center">{t.lightBody}</span>
+          <span className="text-center">{t.mediumBody}</span>
+          <span className="text-center">{t.heavyBody}</span>
+          <span className="text-right">{t.fullBody}</span>
         </div>
       </div>
 
       <div>
-        <h2 className="mb-2">Complexity</h2>
+        <h2 className="mb-2">{t.complexity}</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -138,16 +159,16 @@ export function CocktailExplorer() {
           onValueChange={(value) => setComplexity(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
-          <span className="text-left">Simple</span>
-          <span className="text-center">Some</span>
-          <span className="text-center">Medium</span>
-          <span className="text-center">Complex</span>
-          <span className="text-right">Very Complex</span>
+          <span className="text-left">{t.simpleComplex}</span>
+          <span className="text-center">{t.someComplex}</span>
+          <span className="text-center">{t.mediumComplex}</span>
+          <span className="text-center">{t.complex}</span>
+          <span className="text-right">{t.veryComplex}</span>
         </div>
       </div>
 
       <div>
-        <h2 className="mb-2">Booziness</h2>
+        <h2 className="mb-2">{t.booziness}</h2>
         <Slider
           defaultValue={[5]}
           max={10}
@@ -156,21 +177,21 @@ export function CocktailExplorer() {
           onValueChange={(value) => setBooziness(value[0])}
         />
         <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
-          <span className="text-left">No Alcohol</span>
-          <span className="text-center">Light</span>
-          <span className="text-center">Medium</span>
-          <span className="text-center">Strong</span>
-          <span className="text-right">Very Strong</span>
+          <span className="text-left">{t.noAlcohol}</span>
+          <span className="text-center">{t.lightAlcohol}</span>
+          <span className="text-center">{t.mediumAlcohol}</span>
+          <span className="text-center">{t.strongAlcohol}</span>
+          <span className="text-right">{t.veryStrong}</span>
         </div>
       </div>
 
       <div className="flex items-center space-x-2">
         <Switch id="bubbles" checked={bubbles} onCheckedChange={setBubbles} />
-        <Label htmlFor="bubbles">With bubbles</Label>
+        <Label htmlFor="bubbles">{t.withBubbles}</Label>
       </div>
 
       <div className="space-y-2">
-        <h2 className="mb-2">Primary Flavor (max 3)</h2>
+        <h2 className="mb-2">{t.primaryFlavor}</h2>
         <div className="flex flex-wrap gap-2">
           {[
             "Bitter",
@@ -202,18 +223,18 @@ export function CocktailExplorer() {
                 !selectedFlavors.includes(flavor) && selectedFlavors.length >= 3
               }
             >
-              {flavor}
+              {t[flavor.toLowerCase() as keyof typeof t]}
             </Button>
           ))}
         </div>
       </div>
 
       <Button className="w-full" onClick={handleSubmit}>
-        Find My Cocktail
+        {t.findCocktail}
       </Button>
         
       {results.length > 0 && (
-        <div className="mt-8 flex flex-col gap-y-6">
+        <div id="results-section" className="mt-8 flex flex-col gap-y-6">
           {results.map((cocktail) => (
             <CocktailCard key={cocktail.name} cocktail={cocktail} />
           ))}
