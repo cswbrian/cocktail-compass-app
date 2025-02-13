@@ -82,13 +82,6 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
         </div>
       )}
 
-      <div className="mt-4 text-sm">
-        <p>Sweetness: {cocktail.flavor_profile.sweetness}</p>
-        <p>Sourness: {cocktail.flavor_profile.sourness}</p>
-        <p>Body: {cocktail.flavor_profile.body}</p>
-        <p>Complexity: {cocktail.flavor_profile.complexity}</p>
-        <p>Booziness: {cocktail.flavor_profile.booziness}</p>
-      </div>
       <button 
         onClick={(e) => {
           e.stopPropagation();
