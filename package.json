@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "pnpm build && touch ./out/.nojekyll && gh-pages -d out -b gh-pages --dotfiles"
+    "deploy": "pnpm build && touch ./out/.nojekyll && cp CNAME ./out/CNAME && gh-pages -d out -b gh-pages --dotfiles"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.2",
