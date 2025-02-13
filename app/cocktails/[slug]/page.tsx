@@ -1,12 +1,16 @@
 import cocktails from "@/data/cocktails.json";
 import { slugify } from "@/lib/utils";
-import Link from 'next/link';
+import Link from "next/link";
+import FlavorRadar from "@/components/flavor-radar";
 
-export default async function CocktailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function CocktailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const cocktail = cocktails.find(
-    (cocktail) =>
-      slugify(cocktail.name) === slug
+    (cocktail) => slugify(cocktail.name) === slug
   );
 
   if (!cocktail) {
@@ -35,13 +39,17 @@ export default async function CocktailPage({ params }: { params: Promise<{ slug:
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="mt-8">
+          <FlavorRadar flavorProfile={cocktail.flavor_profile} />
+        </div>
+
+        <div className="grid grid-cols-1 gap-8">
           <div>
             <h2 className="font-bold mb-2">Ingredients</h2>
             <ul className="space-y-2">
               {cocktail.baseSpirits.map((spirit, i) => (
                 <li key={i} className="flex justify-between">
-                  <Link 
+                  <Link
                     href={`/ingredients/${slugify(spirit.name)}`}
                     className="hover:text-blue-400 transition-colors"
                   >
@@ -78,17 +86,6 @@ export default async function CocktailPage({ params }: { params: Promise<{ slug:
           <div>
             <h2 className="font-bold mb-4">Instructions</h2>
             <p className="text-gray-300">{cocktail.technique}</p>
-          </div>
-        </div>
-
-        <div className="mt-8 text-sm">
-          <h2 className="font-bold mb-4">Flavour Profile</h2>
-          <div className="space-y-1">
-            <p>Sweetness: {cocktail.flavor_profile.sweetness}</p>
-            <p>Sourness: {cocktail.flavor_profile.sourness}</p>
-            <p>Body: {cocktail.flavor_profile.body}</p>
-            <p>Complexity: {cocktail.flavor_profile.complexity}</p>
-            <p>Booziness: {cocktail.flavor_profile.booziness}</p>
           </div>
         </div>
 
