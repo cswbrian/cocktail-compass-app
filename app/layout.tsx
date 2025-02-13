@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/ui/header";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { GoogleTagManager } from "@next/third-parties/google";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,6 +28,7 @@ export default function RootLayout({
   return (
     <LanguageProvider>
       <html lang="en" className="dark">
+        <GoogleTagManager gtmId="GTM-K5555555555555555555555555555555" />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
