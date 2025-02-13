@@ -60,6 +60,7 @@ export const translations = {
     woody: "Woody",
     grassy: "Grassy",
     yeasty: "Yeasty",
+    noPreference: "No preference",
   },
   "zh": {
     appName: "調理農務指南",
@@ -119,5 +120,6 @@ export const translations = {
     woody: "木",
     grassy: "草",
     yeasty: "酵",
+    noPreference: "無所謂",
   },
 }; 

@@ -30,17 +30,22 @@ export function CocktailExplorer() {
   const [bubbles, setBubbles] = useState(false);
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
   const [results, setResults] = useState<RankedCocktail[]>([]);
+  const [noSweetness, setNoSweetness] = useState(false);
+  const [noSourness, setNoSourness] = useState(false);
+  const [noBody, setNoBody] = useState(false);
+  const [noComplexity, setNoComplexity] = useState(false);
+  const [noBooziness, setNoBooziness] = useState(false);
 
   const calculateDistance = (cocktail: Cocktail) => {
     const profile = cocktail.flavor_profile;
     const bubbleDifference = profile.bubbles === bubbles ? 0 : 5;
 
     return Math.sqrt(
-      Math.pow(profile.sweetness - sweetness, 2) +
-        Math.pow(profile.sourness - sourness, 2) +
-        Math.pow(profile.body - body, 2) +
-        Math.pow(profile.complexity - complexity, 2) +
-        Math.pow(profile.booziness - booziness, 2) +
+      (noSweetness ? 0 : Math.pow(profile.sweetness - sweetness, 2)) +
+        (noSourness ? 0 : Math.pow(profile.sourness - sourness, 2)) +
+        (noBody ? 0 : Math.pow(profile.body - body, 2)) +
+        (noComplexity ? 0 : Math.pow(profile.complexity - complexity, 2)) +
+        (noBooziness ? 0 : Math.pow(profile.booziness - booziness, 2)) +
         Math.pow(bubbleDifference, 2)
     );
   };
@@ -102,16 +107,32 @@ export function CocktailExplorer() {
       <h1 className="text-4xl">{t.chooseYourPreference}</h1>
       
       <div>
-        <h2 className="mb-2">{t.sweetness}</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className={noSweetness ? "text-gray-700" : ""}>{t.sweetness}</h2>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="no-sweetness"
+              checked={noSweetness}
+              onCheckedChange={(checked) => {
+                setNoSweetness(checked);
+                if (checked) setSweetness(5);
+              }}
+            />
+            <Label htmlFor="no-sweetness">
+              {t.noPreference}
+            </Label>
+          </div>
+        </div>
         <Slider
           value={[sweetness]}
           max={10}
           step={1}
           className="w-full"
-          rangeClassName="bg-rose-500"
+          rangeClassName={noSweetness ? "bg-gray-700" : "bg-rose-500"}
           onValueChange={(value) => setSweetness(value[0])}
+          disabled={noSweetness}
         />
-        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+        <div className={`grid grid-cols-5 text-xs mt-1 ${noSweetness ? "text-gray-700" : "text-muted-foreground"}`}>
           <span className="text-left">{t.noSweet}</span>
           <span className="text-center">{t.lightSweet}</span>
           <span className="text-center">{t.mediumSweet}</span>
@@ -121,16 +142,32 @@ export function CocktailExplorer() {
       </div>
 
       <div>
-        <h2 className="mb-2">{t.sourness}</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className={noSourness ? "text-gray-700" : ""}>{t.sourness}</h2>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="no-sourness"
+              checked={noSourness}
+              onCheckedChange={(checked) => {
+                setNoSourness(checked);
+                if (checked) setSourness(5);
+              }}
+            />
+            <Label htmlFor="no-sourness">
+              {t.noPreference}
+            </Label>
+          </div>
+        </div>
         <Slider
           value={[sourness]}
           max={10}
           step={1}
           className="w-full"
-          rangeClassName="bg-yellow-500"
+          rangeClassName={noSourness ? "bg-gray-700" : "bg-yellow-500"}
           onValueChange={(value) => setSourness(value[0])}
+          disabled={noSourness}
         />
-        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+        <div className={`grid grid-cols-5 text-xs mt-1 ${noSourness ? "text-gray-700" : "text-muted-foreground"}`}>
           <span className="text-left">{t.noSour}</span>
           <span className="text-center">{t.lightSour}</span>
           <span className="text-center">{t.mediumSour}</span>
@@ -140,16 +177,32 @@ export function CocktailExplorer() {
       </div>
 
       <div>
-        <h2 className="mb-2">{t.body}</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className={noBody ? "text-gray-700" : ""}>{t.body}</h2>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="no-body"
+              checked={noBody}
+              onCheckedChange={(checked) => {
+                setNoBody(checked);
+                if (checked) setBody(5);
+              }}
+            />
+            <Label htmlFor="no-body">
+              {t.noPreference}
+            </Label>
+          </div>
+        </div>
         <Slider
           value={[body]}
           max={10}
           step={1}
           className="w-full"
-          rangeClassName="bg-emerald-500"
+          rangeClassName={noBody ? "bg-gray-700" : "bg-emerald-500"}
           onValueChange={(value) => setBody(value[0])}
+          disabled={noBody}
         />
-        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+        <div className={`grid grid-cols-5 text-xs mt-1 ${noBody ? "text-gray-700" : "text-muted-foreground"}`}>
           <span className="text-left">{t.thinBody}</span>
           <span className="text-center">{t.lightBody}</span>
           <span className="text-center">{t.mediumBody}</span>
@@ -159,16 +212,32 @@ export function CocktailExplorer() {
       </div>
 
       <div>
-        <h2 className="mb-2">{t.complexity}</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className={noComplexity ? "text-gray-700" : ""}>{t.complexity}</h2>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="no-complexity"
+              checked={noComplexity}
+              onCheckedChange={(checked) => {
+                setNoComplexity(checked);
+                if (checked) setComplexity(5);
+              }}
+            />
+            <Label htmlFor="no-complexity">
+              {t.noPreference}
+            </Label>
+          </div>
+        </div>
         <Slider
           value={[complexity]}
           max={10}
           step={1}
           className="w-full"
-          rangeClassName="bg-sky-500"
+          rangeClassName={noComplexity ? "bg-gray-700" : "bg-sky-500"}
           onValueChange={(value) => setComplexity(value[0])}
+          disabled={noComplexity}
         />
-        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+        <div className={`grid grid-cols-5 text-xs mt-1 ${noComplexity ? "text-gray-700" : "text-muted-foreground"}`}>
           <span className="text-left">{t.simpleComplex}</span>
           <span className="text-center">{t.someComplex}</span>
           <span className="text-center">{t.mediumComplex}</span>
@@ -178,16 +247,32 @@ export function CocktailExplorer() {
       </div>
 
       <div>
-        <h2 className="mb-2">{t.booziness}</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className={noBooziness ? "text-gray-700" : ""}>{t.booziness}</h2>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="no-booziness"
+              checked={noBooziness}
+              onCheckedChange={(checked) => {
+                setNoBooziness(checked);
+                if (checked) setBooziness(5);
+              }}
+            />
+            <Label htmlFor="no-booziness">
+              {t.noPreference}
+            </Label>
+          </div>
+        </div>
         <Slider
           value={[booziness]}
           max={10}
           step={1}
           className="w-full"
-          rangeClassName="bg-orange-500"
+          rangeClassName={noBooziness ? "bg-gray-700" : "bg-orange-500"}
           onValueChange={(value) => setBooziness(value[0])}
+          disabled={noBooziness}
         />
-        <div className="grid grid-cols-5 text-xs text-muted-foreground mt-1">
+        <div className={`grid grid-cols-5 text-xs mt-1 ${noBooziness ? "text-gray-700" : "text-muted-foreground"}`}>
           <span className="text-left">{t.noAlcohol}</span>
           <span className="text-center">{t.lightAlcohol}</span>
           <span className="text-center">{t.mediumAlcohol}</span>
