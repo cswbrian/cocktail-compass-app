@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <LanguageProvider>
       <html lang="en" className="dark">
-        <GoogleTagManager gtmId="GTM-K5555555555555555555555555555555" />
+        <GoogleTagManager gtmId="G-P79BEGY4R7" />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
