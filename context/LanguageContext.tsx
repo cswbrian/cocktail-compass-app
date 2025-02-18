@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Language = "en" | "zh";
 
@@ -12,10 +13,17 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>("en");
+  const router = useRouter();
+  const [language, setLanguage] = useState<Language>("zh");
 
   const toggleLanguage = () => {
-    setLanguage((prev) => (prev === "en" ? "zh" : "en"));
+    const newLanguage = language === "en" ? "zh" : "en";
+    setLanguage(newLanguage);
+    const currentPath = window.location.pathname;
+    const newPath = currentPath.match(/\/(en|zh)/) 
+      ? currentPath.replace(/\/(en|zh)/, `/${newLanguage}`)
+      : `/${newLanguage}${currentPath}`;
+    router.push(newPath);
   };
 
   return (

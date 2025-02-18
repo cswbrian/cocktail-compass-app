@@ -1,3 +1,8 @@
+export type LocalizedString = {
+  en: string;
+  zh: string;
+};
+
 export type FlavorProfile = {
   body: number;
   booziness: number;
@@ -9,21 +14,22 @@ export type FlavorProfile = {
 
 export type Ingredient = {
   amount: number;
-  name: string;
-  unit: string;
-  rationale: string;
+  name: LocalizedString;
+  unit: LocalizedString;
+  rationale: LocalizedString;
 };
 
 export type Cocktail = {
-  name: string;
-  description: string;
-  historical_reference?: string;
-  technique: string;
-  garnish: string;
-  allergens: string[];
-  baseSpirits: Ingredient[];
+  name: LocalizedString;
+  description: LocalizedString;
+  historical_reference?: LocalizedString;
+  technique: LocalizedString;
+  garnish: LocalizedString;
+  allergens: LocalizedString[];
+  base_spirits: Ingredient[];
   liqueurs: Ingredient[];
   ingredients: Ingredient[];
-  flavor_descriptors: string[];
+  flavor_descriptors: LocalizedString[];
   flavor_profile: FlavorProfile;
+  serve_in_glass: LocalizedString;
 };

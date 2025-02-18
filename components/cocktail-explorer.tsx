@@ -55,7 +55,9 @@ export function CocktailExplorer() {
       .map((cocktail) => {
         const flavorMatches = selectedFlavors.filter((flavor) => {
           const selectedFlavorLower = flavor.toLowerCase();
-          const cocktailFlavorsLower = cocktail.flavor_descriptors.map(f => f.toLowerCase());
+          const cocktailFlavorsLower = cocktail.flavor_descriptors.map(f => 
+            f[language].toLowerCase()
+          );
           return cocktailFlavorsLower.includes(selectedFlavorLower);
         }).length;
 
@@ -72,7 +74,6 @@ export function CocktailExplorer() {
         return a.distance - b.distance;
       })
       .slice(0, 5);
-
 
     setResults(rankedCocktails);
     
@@ -332,7 +333,10 @@ export function CocktailExplorer() {
       {results.length > 0 && (
         <div id="results-section" className="mt-8 flex flex-col gap-y-6">
           {results.map((cocktail) => (
-            <CocktailCard key={cocktail.name} cocktail={cocktail} />
+            <CocktailCard 
+              key={cocktail.name[language]} 
+              cocktail={cocktail} 
+            />
           ))}
         </div>
       )}

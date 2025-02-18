@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "調理農務指南 | Cocktail Compass",
+  title: "調酒指南 | Cocktail Compass",
   description: "Find the perfect cocktail for you",
 };
 
@@ -25,9 +25,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <LanguageProvider>
-      <html lang="en" className="dark">
+      <html lang="zh" className="dark">
         <GoogleTagManager gtmId="G-P79BEGY4R7" />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}

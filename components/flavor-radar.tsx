@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { translations } from '@/translations';
 
 interface FlavorProfile {
   sweetness: number;
@@ -11,7 +12,13 @@ interface FlavorProfile {
   booziness: number;
 }
 
-export default function FlavorRadar({ flavorProfile }: { flavorProfile: FlavorProfile }) {
+export default function FlavorRadar({ 
+  flavorProfile,
+  t
+}: { 
+  flavorProfile: FlavorProfile,
+  t: typeof translations.en | typeof translations.zh 
+}) {
   const svgRef = useRef<SVGSVGElement>(null);
   const width = 300;
   const height = 300;
@@ -88,7 +95,13 @@ export default function FlavorRadar({ flavorProfile }: { flavorProfile: FlavorPr
       .attr('stroke-width', 2);
 
     // Add labels
-    const labels = ['Booziness', 'Sweetness', 'Sourness', 'Body', 'Complexity'];
+    const labels = [
+      t.booziness,   // 'Booziness' -> '酒感' (zh) / 'Booziness' (en)
+      t.sweetness,   // 'Sweetness' -> '甜度' (zh) / 'Sweetness' (en)
+      t.sourness,    // 'Sourness' -> '酸度' (zh) / 'Sourness' (en)
+      t.body,        // 'Body' -> '口感' (zh) / 'Body' (en)
+      t.complexity   // 'Complexity' -> '複雜度' (zh) / 'Complexity' (en)
+    ];
     for (let i = 0; i < 5; i++) {
       const angle = angleSlice * i - Math.PI/2;
       const x = (radius + 20) * Math.cos(angle);
@@ -104,7 +117,7 @@ export default function FlavorRadar({ flavorProfile }: { flavorProfile: FlavorPr
         .text(labels[i]);
     }
 
-  }, [flavorProfile]);
+  }, [flavorProfile, t]);
 
   return (
     <svg 
