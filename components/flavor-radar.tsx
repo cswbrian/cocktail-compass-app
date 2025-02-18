@@ -14,10 +14,12 @@ interface FlavorProfile {
 
 export default function FlavorRadar({ 
   flavorProfile,
-  t
+  t,
+  color
 }: { 
   flavorProfile: FlavorProfile,
-  t: typeof translations.en | typeof translations.zh 
+  t: typeof translations.en | typeof translations.zh,
+  color: string
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const width = 300;
@@ -90,8 +92,8 @@ export default function FlavorRadar({
     g.append('path')
       .datum(points as [number, number][])
       .attr('d', lineGenerator.curve(d3.curveLinearClosed))
-      .attr('fill', 'rgba(255, 185, 0, 0.5)')
-      .attr('stroke', 'rgba(255, 185, 0, 0.5)')
+      .attr('fill', color)
+      .attr('stroke', color)
       .attr('stroke-width', 2);
 
     // Add labels
@@ -117,7 +119,7 @@ export default function FlavorRadar({
         .text(labels[i]);
     }
 
-  }, [flavorProfile, t]);
+  }, [flavorProfile, t, color]);
 
   return (
     <svg 

@@ -31,7 +31,7 @@ export default function RootLayout({
       <html lang="zh" className="dark">
         <GoogleAnalytics gaId="G-P79BEGY4R7" />
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-4xl mx-auto`}
         >
           <Header />
           {children}

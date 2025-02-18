@@ -3,9 +3,9 @@
 import { slugify } from "@/lib/utils";
 import { Cocktail } from "@/types/cocktail";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
+import { FlavorDescriptor } from "@/components/flavor-descriptor";
 
 interface CocktailCardProps {
   cocktail: Cocktail;
@@ -44,14 +44,12 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
         <div className="mb-4">
           <div className="flex flex-wrap gap-2">
             {cocktail.flavor_descriptors.map((descriptor, i) => (
-              <Link 
-                href={`/${language}/flavours/${slugify(descriptor.en)}`}
+              <FlavorDescriptor
                 key={i}
-                className="bg-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-600 transition-colors"
+                descriptor={descriptor}
+                language={language}
                 onClick={(e) => e.stopPropagation()}
-              >
-                {descriptor[language]}
-              </Link>
+              />
             ))}
           </div>
         </div>

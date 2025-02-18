@@ -5,20 +5,22 @@ import { Cocktail } from "@/types/cocktail";
 import Link from "next/link";
 import { translations } from "@/translations/index";
 
-export default async function FlavorsPage({ 
-  params 
-}: { 
-  params: Promise<{ language: string; slug: string }> 
+export default async function FlavorsPage({
+  params,
+}: {
+  params: Promise<{ language: string; slug: string }>;
 }) {
   const { language, slug } = await params;
   const t = translations[language as keyof typeof translations];
-  
+
   if (!validLanguages.includes(language)) {
     return <div>Invalid language</div>;
   }
 
-  const matchingCocktails = cocktails.filter(cocktail => 
-    cocktail.flavor_descriptors.some(descriptor => slugify(descriptor.en) === slug)
+  const matchingCocktails = cocktails.filter((cocktail) =>
+    cocktail.flavor_descriptors.some(
+      (descriptor) => slugify(descriptor.en) === slug
+    )
   );
 
   if (matchingCocktails.length === 0) {
@@ -26,7 +28,7 @@ export default async function FlavorsPage({
   }
 
   const flavorName = matchingCocktails[0].flavor_descriptors.find(
-    descriptor => slugify(descriptor.en) === slug
+    (descriptor) => slugify(descriptor.en) === slug
   );
 
   if (!flavorName) {
@@ -35,24 +37,21 @@ export default async function FlavorsPage({
 
   return (
     <div className="p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl mb-6">
-          {t.cocktailsWithFlavor.replace(
-            '{flavor}', 
-            getLocalizedText(flavorName, language)
-          )}
-        </h1>
-        
-        <div className="grid grid-cols-1 gap-4">
-          {matchingCocktails.map((cocktail) => (
-            <Link 
-              key={cocktail.name.en} 
-              href={`/${language}/cocktails/${slugify(cocktail.name.en)}`}
-            >
-              <CocktailCard cocktail={cocktail as Cocktail} />
-            </Link>
-          ))}
-        </div>
+      <h1 className="text-4xl mb-6">
+        {t.cocktailsWithFlavor.replace(
+          "{flavor}",
+          getLocalizedText(flavorName, language)
+        )}
+      </h1>
+      <div className="grid grid-cols-1 gap-4">
+        {matchingCocktails.map((cocktail) => (
+          <Link
+            key={cocktail.name.en}
+            href={`/${language}/cocktails/${slugify(cocktail.name.en)}`}
+          >
+            <CocktailCard cocktail={cocktail as Cocktail} />
+          </Link>
+        ))}
       </div>
     </div>
   );
@@ -60,15 +59,15 @@ export default async function FlavorsPage({
 
 export async function generateStaticParams() {
   const allFlavors = new Set<string>();
-  
-  cocktails.forEach(cocktail => {
-    cocktail.flavor_descriptors.forEach(flavor => {
+
+  cocktails.forEach((cocktail) => {
+    cocktail.flavor_descriptors.forEach((flavor) => {
       allFlavors.add(slugify(flavor.en));
     });
   });
 
-  return Array.from(allFlavors).flatMap(flavor => [
-    { language: 'en', slug: flavor },
-    { language: 'zh', slug: flavor }
+  return Array.from(allFlavors).flatMap((flavor) => [
+    { language: "en", slug: flavor },
+    { language: "zh", slug: flavor },
   ]);
-} 
+}
