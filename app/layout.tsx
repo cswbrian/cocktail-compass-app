@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/ui/header";
 import { LanguageProvider } from "@/context/LanguageContext";
-import { GoogleTagManager } from "@next/third-parties/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <LanguageProvider>
       <html lang="zh" className="dark">
-        <GoogleTagManager gtmId="G-P79BEGY4R7" />
+        <GoogleAnalytics gaId="G-P79BEGY4R7" />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
