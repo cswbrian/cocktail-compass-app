@@ -115,12 +115,6 @@ interface MultiSelectProps
    * Optional, can be used to add custom styles.
    */
   className?: string;
-
-  /**
-   * If true, disables the "Select All" option in the dropdown
-   * Optional, defaults to false
-   */
-  disableSelectAll?: boolean;
 }
 
 export const MultiSelect = React.forwardRef<
@@ -139,7 +133,6 @@ export const MultiSelect = React.forwardRef<
       modalPopover = false,
       asChild = false,
       className,
-      disableSelectAll = false,
       ...props
     },
     ref
@@ -207,7 +200,7 @@ export const MultiSelect = React.forwardRef<
             {...props}
             onClick={handleTogglePopover}
             className={cn(
-              "flex w-full p-1 rounded-md border min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto",
+              "flex w-full p-1 rounded-full border min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto",
               className
             )}
           >
@@ -298,11 +291,10 @@ export const MultiSelect = React.forwardRef<
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
-                {!disableSelectAll && (
-                  <CommandItem
-                    key="all"
-                    onSelect={toggleAll}
-                    className="cursor-pointer"
+                <CommandItem
+                  key="all"
+                  onSelect={toggleAll}
+                  className="cursor-pointer"
                 >
                   <div
                     className={cn(
@@ -314,9 +306,8 @@ export const MultiSelect = React.forwardRef<
                   >
                     <CheckIcon className="h-4 w-4" />
                   </div>
-                    <span>(Select All)</span>
-                  </CommandItem>
-                )}
+                  <span>(Select All)</span>
+                </CommandItem>
                 {options.map((option) => {
                   const isSelected = selectedValues.includes(option.value);
                   return (
