@@ -4,12 +4,14 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import cocktailsData from "@/data/cocktails.json";
+import summary from "@/data/summary.json";
 import { Cocktail } from "@/types/cocktail";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { CocktailCard } from "@/components/cocktail-card";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
+import { MultiSelect } from "@/components/ui/multi-select";
 
 interface RankedCocktail extends Cocktail {
   distance: number;
@@ -35,10 +37,29 @@ export function CocktailExplorer() {
   const [noBody, setNoBody] = useState(false);
   const [noComplexity, setNoComplexity] = useState(false);
   const [noBooziness, setNoBooziness] = useState(false);
+  const [selectedBaseSpirits, setSelectedBaseSpirits] = useState<string[]>([]);
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [selectedLiqueurs, setSelectedLiqueurs] = useState<string[]>([]);
 
   const calculateDistance = (cocktail: Cocktail) => {
     const profile = cocktail.flavor_profile;
-    const bubbleDifference = profile.bubbles === bubbles ? 0 : 5;
+    const bubbleDifference = profile.bubbles === bubbles ? 0 : 1;
+
+    // Calculate penalty for mismatched base spirits (higher weight)
+    const baseSpiritPenalty = selectedBaseSpirits.length > 0 && 
+      !selectedBaseSpirits.some(spirit => cocktail.base_spirits.some(cocktailBaseSpirit => cocktailBaseSpirit.name[language] === spirit)) ? 10 : 0;
+
+    // Calculate penalty for mismatched ingredients (higher weight)
+    const ingredientPenalty = selectedIngredients.length > 0 && 
+      !selectedIngredients.some(ingredient => 
+        cocktail.ingredients.some(cocktailIngredient => 
+          cocktailIngredient.name[language] === ingredient
+        )
+      ) ? 10 : 0;
+
+    // Calculate penalty for mismatched liqueurs (higher weight)
+    const liqueurPenalty = selectedLiqueurs.length > 0 && 
+      !selectedLiqueurs.some(liqueur => cocktail.liqueurs.some(cocktailLiqueur => cocktailLiqueur.name[language] === liqueur)) ? 10 : 0;
 
     return Math.sqrt(
       (noSweetness ? 0 : Math.pow(profile.sweetness - sweetness, 2)) +
@@ -46,25 +67,36 @@ export function CocktailExplorer() {
         (noBody ? 0 : Math.pow(profile.body - body, 2)) +
         (noComplexity ? 0 : Math.pow(profile.complexity - complexity, 2)) +
         (noBooziness ? 0 : Math.pow(profile.booziness - booziness, 2)) +
-        Math.pow(bubbleDifference, 2)
+        Math.pow(bubbleDifference, 2) +
+        Math.pow(baseSpiritPenalty, 2) +
+        Math.pow(ingredientPenalty, 2) +
+        Math.pow(liqueurPenalty, 2)
     );
   };
 
   const handleSubmit = () => {
     const rankedCocktails: RankedCocktail[] = cocktails
       .map((cocktail) => {
-        const flavorMatches = selectedFlavors.filter((flavor) => {
-          const selectedFlavorLower = flavor.toLowerCase();
-          const cocktailFlavorsLower = cocktail.flavor_descriptors.map(f => 
-            f[language].toLowerCase()
-          );
-          return cocktailFlavorsLower.includes(selectedFlavorLower);
-        }).length;
+        // Calculate flavor penalty (higher weight)
+        const flavorPenalty = selectedFlavors.length > 0 && 
+          !selectedFlavors.some(flavor => {
+            const selectedFlavorLower = flavor.toLowerCase();
+            const cocktailFlavorsLower = cocktail.flavor_descriptors.map(f => 
+              f[language].toLowerCase()
+            );
+            return cocktailFlavorsLower.includes(selectedFlavorLower);
+          }) ? 10 : 0;
 
         return {
           ...cocktail,
-          distance: calculateDistance(cocktail),
-          flavorMatches,
+          distance: calculateDistance(cocktail) + Math.pow(flavorPenalty, 2),
+          flavorMatches: selectedFlavors.filter(flavor => {
+            const selectedFlavorLower = flavor.toLowerCase();
+            const cocktailFlavorsLower = cocktail.flavor_descriptors.map(f => 
+              f[language].toLowerCase()
+            );
+            return cocktailFlavorsLower.includes(selectedFlavorLower);
+          }).length,
         };
       })
       .sort((a, b) => {
@@ -101,6 +133,18 @@ export function CocktailExplorer() {
       }
       return prev;
     });
+  };
+
+  const getUniqueOptions = (items: { name: { [key: string]: string } }[], language: string) => {
+    const uniqueMap = new Map<string, { label: string, value: string }>();
+    items.forEach(item => {
+      const label = item.name[language];
+      const value = item.name.en;
+      if (!uniqueMap.has(label)) {
+        uniqueMap.set(label, { label, value });
+      }
+    });
+    return Array.from(uniqueMap.values());
   };
 
   return (
@@ -324,6 +368,29 @@ export function CocktailExplorer() {
             </Button>
           ))}
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <MultiSelect
+          options={getUniqueOptions(summary.base_spirits, language)}
+          onValueChange={(values) => setSelectedBaseSpirits(values)}
+          placeholder={t.pleaseSelectBaseSpirits}
+          disableSelectAll={true}
+        />
+
+        <MultiSelect
+          options={getUniqueOptions(summary.liqueurs, language)}
+          onValueChange={(values) => setSelectedLiqueurs(values)}
+          placeholder={t.pleaseSelectLiqueurs}
+          disableSelectAll={true}
+        />
+
+        <MultiSelect
+          options={getUniqueOptions(summary.ingredients, language)}
+          onValueChange={(values) => setSelectedIngredients(values)}
+          placeholder={t.pleaseSelectIngredients}
+          disableSelectAll={true}
+        />
       </div>
 
       <Button className="w-full" onClick={handleSubmit}>

@@ -69,6 +69,11 @@ export const translations = {
     preparation: "Preparation",
     share: "Share",
     cocktailsWithIngredient: "Cocktails with {ingredient}",
+    baseSpirits: "Base Spirits",
+    liqueurs: "Liqueurs",
+    pleaseSelectBaseSpirits: "Please select base spirits",
+    pleaseSelectLiqueurs: "Please select liqueurs",
+    pleaseSelectIngredients: "Please select ingredients",
   },
   "zh": {
     appName: "雞飛美酒 🍸🧭",
@@ -137,5 +142,8 @@ export const translations = {
     preparation: "做法",
     share: "分享",
     cocktailsWithIngredient: "有{ingredient}的調酒",
+    pleaseSelectBaseSpirits: "請選擇基酒",
+    pleaseSelectLiqueurs: "請選擇利口酒",
+    pleaseSelectIngredients: "請選擇材料",
   },
 };
