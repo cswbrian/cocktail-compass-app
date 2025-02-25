@@ -74,6 +74,14 @@ export const translations = {
     pleaseSelectBaseSpirits: "Please select base spirits",
     pleaseSelectLiqueurs: "Please select liqueurs",
     pleaseSelectIngredients: "Please select ingredients",
+    step1Title: "Flavor Profiles",
+    step2Title: "Select up to 3 flavor notes",
+    step3Title: "Ingredients (if needed)",
+    resultsTitle: "Your Cocktail Matches",
+    previous: "Previous",
+    next: "Next",
+    startOver: "Start Over",
+    noResultsFound: "No matching cocktails found. Try adjusting your preferences."
   },
   "zh": {
     appName: "雞飛美酒 🍸🧭",
@@ -145,5 +153,13 @@ export const translations = {
     pleaseSelectBaseSpirits: "請選擇基酒",
     pleaseSelectLiqueurs: "請選擇利口酒",
     pleaseSelectIngredients: "請選擇材料",
+    step1Title: "選擇風味特性",
+    step2Title: "主要風味（最多選擇3種）",
+    step3Title: "選擇材料（如果需要）",
+    resultsTitle: "試試佢！",
+    previous: "上一步",
+    next: "下一步",
+    startOver: "重新開始",
+    noResultsFound: "找不到符合的調酒。請調整你的喜好。"
   },
 };

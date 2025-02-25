@@ -12,6 +12,7 @@ import { CocktailCard } from "@/components/cocktail-card";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface RankedCocktail extends Cocktail {
   distance: number;
@@ -40,6 +41,10 @@ export function CocktailExplorer() {
   const [selectedBaseSpirits, setSelectedBaseSpirits] = useState<string[]>([]);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [selectedLiqueurs, setSelectedLiqueurs] = useState<string[]>([]);
+
+  // Add step navigation state
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 3;
 
   const calculateDistance = (cocktail: Cocktail) => {
     const profile = cocktail.flavor_profile;
@@ -147,9 +152,28 @@ export function CocktailExplorer() {
     return Array.from(uniqueMap.values());
   };
 
-  return (
-    <div className="mt-12 space-y-8">
-      <h1 className="text-4xl">{t.chooseYourPreference}</h1>
+  const nextStep = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      handleSubmit();
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const goToResults = () => {
+    handleSubmit();
+    setCurrentStep(totalSteps + 1);
+  };
+
+  const renderStep1 = () => (
+    <div className="space-y-8">
+      <h2>{t.step1Title || "Select Flavor Profiles"}</h2>
       
       <div>
         <div className="flex justify-between items-center mb-2">
@@ -325,14 +349,14 @@ export function CocktailExplorer() {
           <span className="text-right">{t.veryStrong}</span>
         </div>
       </div>
+    </div>
+  );
 
-      <div className="flex items-center space-x-2">
-        <Switch id="bubbles" checked={bubbles} onCheckedChange={setBubbles} />
-        <Label htmlFor="bubbles">{t.withBubbles}</Label>
-      </div>
-
+  const renderStep2 = () => (
+    <div className="space-y-8">
+      <h2>{t.step2Title}</h2>
+      
       <div className="space-y-2">
-        <h2 className="mb-2">{t.primaryFlavor}</h2>
         <div className="flex flex-wrap gap-2">
           {[
             "Bitter",
@@ -369,7 +393,13 @@ export function CocktailExplorer() {
           ))}
         </div>
       </div>
+    </div>
+  );
 
+  const renderStep3 = () => (
+    <div className="space-y-8">
+      <h2>{t.step3Title || "Select Ingredients"}</h2>
+      
       <div className="space-y-4">
         <MultiSelect
           options={getUniqueOptions(summary.base_spirits, language)}
@@ -390,12 +420,19 @@ export function CocktailExplorer() {
         />
       </div>
 
-      <Button className="w-full" onClick={handleSubmit}>
-        {t.findCocktail}
-      </Button>
-        
-      {results.length > 0 && (
-        <div id="results-section" className="mt-8 flex flex-col gap-y-6">
+      <div className="flex items-center space-x-2">
+        <Switch id="bubbles" checked={bubbles} onCheckedChange={setBubbles} />
+        <Label htmlFor="bubbles">{t.withBubbles}</Label>
+      </div>
+    </div>
+  );
+
+  const renderResults = () => (
+    <div className="space-y-8 mb-20">
+      <h2>{t.resultsTitle || "Your Cocktail Matches"}</h2>
+      
+      {results.length > 0 ? (
+        <div id="results-section" className="flex flex-col gap-y-6">
           {results.map((cocktail) => (
             <CocktailCard 
               key={cocktail.name[language]} 
@@ -403,7 +440,81 @@ export function CocktailExplorer() {
             />
           ))}
         </div>
+      ) : (
+        <div className="text-center py-8">
+          <p>{t.noResultsFound || "No matching cocktails found. Try adjusting your preferences."}</p>
+        </div>
       )}
+    </div>
+  );
+
+  const renderCurrentStep = () => {
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentStep}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {(() => {
+            switch (currentStep) {
+              case 1:
+                return renderStep1();
+              case 2:
+                return renderStep2();
+              case 3:
+                return renderStep3();
+              case 4:
+                return renderResults();
+              default:
+                return renderStep1();
+            }
+          })()}
+        </motion.div>
+      </AnimatePresence>
+    );
+  };
+
+  const Navigation = () => {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 bg-background px-6 py-4 flex justify-between">
+        {currentStep > 1 && (
+          <Button variant="outline" onClick={prevStep}>
+            {t.previous || "Previous"}
+          </Button>
+        )}
+        
+        {currentStep < totalSteps && (
+          <Button onClick={nextStep} className="ml-auto">
+            {t.next || "Next"}
+          </Button>
+        )}
+        
+        {currentStep === totalSteps && (
+          <Button onClick={goToResults} className="ml-auto">
+            {t.findCocktail}
+          </Button>
+        )}
+        
+        {currentStep === totalSteps + 1 && (
+          <Button variant="outline" onClick={() => setCurrentStep(1)} className="ml-auto">
+            {t.startOver || "Start Over"}
+          </Button>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="mt-12 space-y-8">
+      <h1 className="text-4xl">{t.chooseYourPreference}</h1>
+      
+      <div className="min-h-[600px]">
+        {renderCurrentStep()}
+      </div>
+      <Navigation />
     </div>
   );
 }
