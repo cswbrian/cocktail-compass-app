@@ -4,12 +4,15 @@ import { CocktailCard } from "@/components/cocktail-card";
 import { Cocktail } from "@/types/cocktail";
 import Link from "next/link";
 import { translations } from "@/translations/index";
+import { Metadata } from 'next';
+
+type Props = {
+  params: Promise<{ language: string; slug: string }>
+}
 
 export default async function FlavorsPage({
   params,
-}: {
-  params: Promise<{ language: string; slug: string }>;
-}) {
+}: Props) {
   const { language, slug } = await params;
   const t = translations[language as keyof typeof translations];
 
@@ -70,4 +73,47 @@ export async function generateStaticParams() {
     { language: "en", slug: flavor },
     { language: "zh", slug: flavor },
   ]);
+}
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { language, slug } = await params;
+  const t = translations[language as keyof typeof translations];
+  
+  const matchingCocktails = cocktails.filter((cocktail) =>
+    cocktail.flavor_descriptors.some(
+      (descriptor) => slugify(descriptor.en) === slug
+    )
+  );
+
+  const flavorName = matchingCocktails.length > 0
+    ? matchingCocktails[0].flavor_descriptors.find(
+        (descriptor) => slugify(descriptor.en) === slug
+      )
+    : null;
+
+  if (!flavorName) {
+    return {
+      title: t.appName,
+    };
+  }
+
+  // const defaultImage = 'https://yourdomain.com/default-cocktail-image.jpg';
+
+  return {
+    title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+    description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+    openGraph: {
+      title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+      description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+      // images: [{ url: defaultImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+      description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+      // images: defaultImage,
+    },
+  };
 }

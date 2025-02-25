@@ -5,6 +5,11 @@ import FlavorRadar from "@/components/flavor-radar";
 import { translations } from "@/translations";
 import ReactMarkdown from "react-markdown";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
+import { Metadata } from 'next';
+
+type Props = {
+  params: Promise<{ language: string; slug: string }>
+}
 
 // Update color mapping with all flavors
 const flavorColorMap: { [key: string]: string } = {
@@ -32,9 +37,7 @@ const flavorColorMap: { [key: string]: string } = {
 
 export default async function CocktailPage({
   params,
-}: {
-  params: Promise<{ language: string; slug: string }>;
-}) {
+}: Props) {
   const { language, slug } = await params;
 
   if (!validLanguages.includes(language)) {
@@ -170,4 +173,36 @@ export async function generateStaticParams() {
   }
 
   return params;
+}
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { language, slug } =  await params;
+  const cocktail = cocktails.find(
+    (cocktail) => slugify(cocktail.name.en) === slug
+  );
+
+  if (!cocktail) {
+    return {
+      title: translations[language as keyof typeof translations].appName,
+    };
+  }
+
+
+  return {
+    title: `${cocktail.name.en} | ${translations[language as keyof typeof translations].appName}`,
+    description: `${translations[language as keyof typeof translations].cocktailsWithFlavor.replace('{flavor}', cocktail.flavor_descriptors?.[0]?.[language as keyof typeof cocktail.flavor_descriptors[0]] || '')} | ${getLocalizedText(cocktail.description, language)}`,
+    openGraph: {
+      title: `${cocktail.name.en} | ${translations[language as keyof typeof translations].appName}`,
+      description: `${translations[language as keyof typeof translations].cocktailsWithFlavor.replace('{flavor}', cocktail.flavor_descriptors?.[0]?.[language as keyof typeof cocktail.flavor_descriptors[0]] || '')} | ${getLocalizedText(cocktail.description, language)}`,
+      // images: cocktail.image ? [{ url: cocktail.image }] : [{ url: defaultImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${cocktail.name[language as keyof typeof cocktail.name]} - ${translations[language as keyof typeof translations].appName}`,
+      description: `${translations[language as keyof typeof translations].cocktailsWithFlavor.replace('{flavor}', cocktail.flavor_descriptors?.[0]?.[language as keyof typeof cocktail.flavor_descriptors[0]] || '')} | ${getLocalizedText(cocktail.description, language)}`,
+      // images: cocktail.image ? cocktail.image : defaultImage,
+    },
+  };
 }

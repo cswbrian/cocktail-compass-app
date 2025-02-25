@@ -4,11 +4,15 @@ import { CocktailCard } from "@/components/cocktail-card";
 import { Cocktail } from "@/types/cocktail";
 import Link from "next/link";
 import { translations } from "@/translations/index";
+import { Metadata } from 'next';
+
+type Props = {
+  params: Promise<{ language: string; slug: string }>
+}
+
 export default async function IngredientPage({
   params,
-}: {
-  params: Promise<{ language: string; slug: string }>;
-}) {
+}: Props) {
   const { language, slug } = await params;
   const t = translations[language as keyof typeof translations];
 
@@ -82,4 +86,54 @@ export async function generateStaticParams() {
     { language: "en", slug },
     { language: "zh", slug },
   ]);
+}
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { language, slug } = await params;
+  const t = translations[language as keyof typeof translations];
+  
+  const matchingCocktails = cocktails.filter((cocktail) => {
+    const allIngredients = [
+      ...cocktail.base_spirits,
+      ...cocktail.liqueurs,
+      ...cocktail.ingredients,
+    ];
+    return allIngredients.some(
+      (ingredient) => slugify(ingredient.name.en) === slug
+    );
+  });
+
+  const ingredient = matchingCocktails.length > 0
+    ? [
+        ...matchingCocktails[0].base_spirits,
+        ...matchingCocktails[0].liqueurs,
+        ...matchingCocktails[0].ingredients,
+      ].find((ingredient) => slugify(ingredient.name.en) === slug)
+    : null;
+
+  if (!ingredient) {
+    return {
+      title: t.appName,
+    };
+  }
+
+  // const defaultImage = 'https://yourdomain.com/default-cocktail-image.jpg';
+
+  return {
+    title: `${t.cocktailsWithIngredient.replace("{ingredient}", getLocalizedText(ingredient.name, language))} | ${t.appName}`,
+    description: `${t.cocktailsWithIngredient.replace("{ingredient}", getLocalizedText(ingredient.name, language))} | ${t.appName}`,
+    openGraph: {
+      title: `${t.cocktailsWithIngredient.replace("{ingredient}", getLocalizedText(ingredient.name, language))} | ${t.appName}`,
+      description: `${t.cocktailsWithIngredient.replace("{ingredient}", getLocalizedText(ingredient.name, language))} | ${t.appName}`,
+      // images: [{ url: defaultImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${t.cocktailsWithIngredient.replace("{ingredient}", getLocalizedText(ingredient.name, language))} | ${t.appName}`,
+      description: `${t.cocktailsWithIngredient.replace("{ingredient}", getLocalizedText(ingredient.name, language))} | ${t.appName}`,
+      // images: defaultImage,
+    },
+  };
 }
