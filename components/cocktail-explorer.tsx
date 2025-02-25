@@ -172,8 +172,8 @@ export function CocktailExplorer() {
   };
 
   const renderStep1 = () => (
+    <>
     <div className="space-y-8">
-      <h2>{t.step1Title || "Select Flavor Profiles"}</h2>
       
       <div>
         <div className="flex justify-between items-center mb-2">
@@ -350,6 +350,7 @@ export function CocktailExplorer() {
         </div>
       </div>
     </div>
+    </>
   );
 
   const renderStep2 = () => (
@@ -508,10 +509,10 @@ export function CocktailExplorer() {
   };
 
   return (
-    <div className="mt-12 space-y-8">
+    <div className="mt-8">
       <h1 className="text-4xl">{t.chooseYourPreference}</h1>
       
-      <div className="min-h-[600px]">
+      <div className="mt-8 min-h-[600px]">
         {renderCurrentStep()}
       </div>
       <Navigation />
