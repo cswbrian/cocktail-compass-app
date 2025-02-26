@@ -5,6 +5,7 @@ import { Header } from "@/components/ui/header";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { translations } from "@/translations";
+import { Menu } from "@/components/ui/menu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +27,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   return (
     <LanguageProvider>
       <html lang="zh" className="dark">
@@ -35,6 +35,7 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-4xl mx-auto`}
         >
           <Header />
+          <Menu />
           {children}
         </body>
       </html>

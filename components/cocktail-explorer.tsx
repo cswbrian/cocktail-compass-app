@@ -520,7 +520,7 @@ export function CocktailExplorer() {
 
   const Navigation = () => {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-background px-6 py-4 flex justify-between">
+      <div className="max-w-4xl mx-auto fixed bottom-0 left-0 right-0 bg-background px-6 py-4 flex justify-between">
         {currentStep > 1 && (
           <Button variant="outline" onClick={prevStep}>
             {t.previous || "Previous"}
