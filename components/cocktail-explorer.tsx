@@ -205,204 +205,238 @@ export function CocktailExplorer() {
   const renderStep1 = () => (
     <>
       <div className="space-y-8">
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <h2 className={noSweetness ? "text-gray-700" : ""}>
-              {t.sweetness}
-            </h2>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="no-sweetness"
-                checked={noSweetness}
-                onCheckedChange={(checked) => {
-                  setNoSweetness(checked);
-                  if (checked) setSweetness(5);
-                }}
-              />
-              <Label htmlFor="no-sweetness">{t.noPreference}</Label>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className={noSweetness ? "text-gray-700" : ""}>
+                {t.sweetness}
+              </h2>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="no-sweetness"
+                  checked={noSweetness}
+                  onCheckedChange={(checked) => {
+                    setNoSweetness(checked);
+                    if (checked) setSweetness(5);
+                  }}
+                />
+                <Label htmlFor="no-sweetness">{t.noPreference}</Label>
+              </div>
+            </div>
+            <Slider
+              value={[sweetness]}
+              max={10}
+              step={1}
+              className="w-full"
+              rangeClassName={noSweetness ? "bg-gray-700" : "bg-rose-500"}
+              onValueChange={(value) => setSweetness(value[0])}
+              disabled={noSweetness}
+            />
+            <div
+              className={`grid grid-cols-5 text-xs mt-1 ${
+                noSweetness ? "text-gray-700" : "text-muted-foreground"
+              }`}
+            >
+              <span className="text-left">{t.noSweet}</span>
+              <span className="text-center">{t.lightSweet}</span>
+              <span className="text-center">{t.mediumSweet}</span>
+              <span className="text-center">{t.sweet}</span>
+              <span className="text-right">{t.verySweet}</span>
             </div>
           </div>
-          <Slider
-            value={[sweetness]}
-            max={10}
-            step={1}
-            className="w-full"
-            rangeClassName={noSweetness ? "bg-gray-700" : "bg-rose-500"}
-            onValueChange={(value) => setSweetness(value[0])}
-            disabled={noSweetness}
-          />
-          <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
-              noSweetness ? "text-gray-700" : "text-muted-foreground"
-            }`}
-          >
-            <span className="text-left">{t.noSweet}</span>
-            <span className="text-center">{t.lightSweet}</span>
-            <span className="text-center">{t.mediumSweet}</span>
-            <span className="text-center">{t.sweet}</span>
-            <span className="text-right">{t.verySweet}</span>
-          </div>
-        </div>
+        </motion.div>
 
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <h2 className={noSourness ? "text-gray-700" : ""}>{t.sourness}</h2>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="no-sourness"
-                checked={noSourness}
-                onCheckedChange={(checked) => {
-                  setNoSourness(checked);
-                  if (checked) setSourness(5);
-                }}
-              />
-              <Label htmlFor="no-sourness">{t.noPreference}</Label>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className={noSourness ? "text-gray-700" : ""}>{t.sourness}</h2>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="no-sourness"
+                  checked={noSourness}
+                  onCheckedChange={(checked) => {
+                    setNoSourness(checked);
+                    if (checked) setSourness(5);
+                  }}
+                />
+                <Label htmlFor="no-sourness">{t.noPreference}</Label>
+              </div>
+            </div>
+            <Slider
+              value={[sourness]}
+              max={10}
+              step={1}
+              className="w-full"
+              rangeClassName={noSourness ? "bg-gray-700" : "bg-yellow-500"}
+              onValueChange={(value) => setSourness(value[0])}
+              disabled={noSourness}
+            />
+            <div
+              className={`grid grid-cols-5 text-xs mt-1 ${
+                noSourness ? "text-gray-700" : "text-muted-foreground"
+              }`}
+            >
+              <span className="text-left">{t.noSour}</span>
+              <span className="text-center">{t.lightSour}</span>
+              <span className="text-center">{t.mediumSour}</span>
+              <span className="text-center">{t.sour}</span>
+              <span className="text-right">{t.verySour}</span>
             </div>
           </div>
-          <Slider
-            value={[sourness]}
-            max={10}
-            step={1}
-            className="w-full"
-            rangeClassName={noSourness ? "bg-gray-700" : "bg-yellow-500"}
-            onValueChange={(value) => setSourness(value[0])}
-            disabled={noSourness}
-          />
-          <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
-              noSourness ? "text-gray-700" : "text-muted-foreground"
-            }`}
-          >
-            <span className="text-left">{t.noSour}</span>
-            <span className="text-center">{t.lightSour}</span>
-            <span className="text-center">{t.mediumSour}</span>
-            <span className="text-center">{t.sour}</span>
-            <span className="text-right">{t.verySour}</span>
-          </div>
-        </div>
+        </motion.div>
 
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <h2 className={noBody ? "text-gray-700" : ""}>{t.body}</h2>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="no-body"
-                checked={noBody}
-                onCheckedChange={(checked) => {
-                  setNoBody(checked);
-                  if (checked) setBody(5);
-                }}
-              />
-              <Label htmlFor="no-body">{t.noPreference}</Label>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className={noBody ? "text-gray-700" : ""}>{t.body}</h2>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="no-body"
+                  checked={noBody}
+                  onCheckedChange={(checked) => {
+                    setNoBody(checked);
+                    if (checked) setBody(5);
+                  }}
+                />
+                <Label htmlFor="no-body">{t.noPreference}</Label>
+              </div>
+            </div>
+            <Slider
+              value={[body]}
+              max={10}
+              step={1}
+              className="w-full"
+              rangeClassName={noBody ? "bg-gray-700" : "bg-emerald-500"}
+              onValueChange={(value) => setBody(value[0])}
+              disabled={noBody}
+            />
+            <div
+              className={`grid grid-cols-5 text-xs mt-1 ${
+                noBody ? "text-gray-700" : "text-muted-foreground"
+              }`}
+            >
+              <span className="text-left">{t.thinBody}</span>
+              <span className="text-center">{t.lightBody}</span>
+              <span className="text-center">{t.mediumBody}</span>
+              <span className="text-center">{t.heavyBody}</span>
+              <span className="text-right">{t.fullBody}</span>
             </div>
           </div>
-          <Slider
-            value={[body]}
-            max={10}
-            step={1}
-            className="w-full"
-            rangeClassName={noBody ? "bg-gray-700" : "bg-emerald-500"}
-            onValueChange={(value) => setBody(value[0])}
-            disabled={noBody}
-          />
-          <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
-              noBody ? "text-gray-700" : "text-muted-foreground"
-            }`}
-          >
-            <span className="text-left">{t.thinBody}</span>
-            <span className="text-center">{t.lightBody}</span>
-            <span className="text-center">{t.mediumBody}</span>
-            <span className="text-center">{t.heavyBody}</span>
-            <span className="text-right">{t.fullBody}</span>
-          </div>
-        </div>
+        </motion.div>
 
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <h2 className={noComplexity ? "text-gray-700" : ""}>
-              {t.complexity}
-            </h2>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="no-complexity"
-                checked={noComplexity}
-                onCheckedChange={(checked) => {
-                  setNoComplexity(checked);
-                  if (checked) setComplexity(5);
-                }}
-              />
-              <Label htmlFor="no-complexity">{t.noPreference}</Label>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className={noComplexity ? "text-gray-700" : ""}>
+                {t.complexity}
+              </h2>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="no-complexity"
+                  checked={noComplexity}
+                  onCheckedChange={(checked) => {
+                    setNoComplexity(checked);
+                    if (checked) setComplexity(5);
+                  }}
+                />
+                <Label htmlFor="no-complexity">{t.noPreference}</Label>
+              </div>
+            </div>
+            <Slider
+              value={[complexity]}
+              max={10}
+              step={1}
+              className="w-full"
+              rangeClassName={noComplexity ? "bg-gray-700" : "bg-sky-500"}
+              onValueChange={(value) => setComplexity(value[0])}
+              disabled={noComplexity}
+            />
+            <div
+              className={`grid grid-cols-5 text-xs mt-1 ${
+                noComplexity ? "text-gray-700" : "text-muted-foreground"
+              }`}
+            >
+              <span className="text-left">{t.simpleComplex}</span>
+              <span className="text-center">{t.someComplex}</span>
+              <span className="text-center">{t.mediumComplex}</span>
+              <span className="text-center">{t.complex}</span>
+              <span className="text-right">{t.veryComplex}</span>
             </div>
           </div>
-          <Slider
-            value={[complexity]}
-            max={10}
-            step={1}
-            className="w-full"
-            rangeClassName={noComplexity ? "bg-gray-700" : "bg-sky-500"}
-            onValueChange={(value) => setComplexity(value[0])}
-            disabled={noComplexity}
-          />
-          <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
-              noComplexity ? "text-gray-700" : "text-muted-foreground"
-            }`}
-          >
-            <span className="text-left">{t.simpleComplex}</span>
-            <span className="text-center">{t.someComplex}</span>
-            <span className="text-center">{t.mediumComplex}</span>
-            <span className="text-center">{t.complex}</span>
-            <span className="text-right">{t.veryComplex}</span>
-          </div>
-        </div>
+        </motion.div>
 
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <h2 className={noBooziness ? "text-gray-700" : ""}>
-              {t.booziness}
-            </h2>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="no-booziness"
-                checked={noBooziness}
-                onCheckedChange={(checked) => {
-                  setNoBooziness(checked);
-                  if (checked) setBooziness(5);
-                }}
-              />
-              <Label htmlFor="no-booziness">{t.noPreference}</Label>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className={noBooziness ? "text-gray-700" : ""}>
+                {t.booziness}
+              </h2>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="no-booziness"
+                  checked={noBooziness}
+                  onCheckedChange={(checked) => {
+                    setNoBooziness(checked);
+                    if (checked) setBooziness(5);
+                  }}
+                />
+                <Label htmlFor="no-booziness">{t.noPreference}</Label>
+              </div>
+            </div>
+            <Slider
+              value={[booziness]}
+              max={10}
+              step={1}
+              className="w-full"
+              rangeClassName={noBooziness ? "bg-gray-700" : "bg-orange-500"}
+              onValueChange={(value) => setBooziness(value[0])}
+              disabled={noBooziness}
+            />
+            <div
+              className={`grid grid-cols-5 text-xs mt-1 ${
+                noBooziness ? "text-gray-700" : "text-muted-foreground"
+              }`}
+            >
+              <span className="text-left">{t.noAlcohol}</span>
+              <span className="text-center">{t.lightAlcohol}</span>
+              <span className="text-center">{t.mediumAlcohol}</span>
+              <span className="text-center">{t.strongAlcohol}</span>
+              <span className="text-right">{t.veryStrong}</span>
             </div>
           </div>
-          <Slider
-            value={[booziness]}
-            max={10}
-            step={1}
-            className="w-full"
-            rangeClassName={noBooziness ? "bg-gray-700" : "bg-orange-500"}
-            onValueChange={(value) => setBooziness(value[0])}
-            disabled={noBooziness}
-          />
-          <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
-              noBooziness ? "text-gray-700" : "text-muted-foreground"
-            }`}
-          >
-            <span className="text-left">{t.noAlcohol}</span>
-            <span className="text-center">{t.lightAlcohol}</span>
-            <span className="text-center">{t.mediumAlcohol}</span>
-            <span className="text-center">{t.strongAlcohol}</span>
-            <span className="text-right">{t.veryStrong}</span>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </>
   );
 
   const renderStep2 = () => (
-    <div className="space-y-8">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="space-y-8"
+    >
       <h2>{t.step2Title}</h2>
-
       <div className="space-y-2">
         <div className="flex flex-wrap gap-2">
           {[
@@ -440,13 +474,17 @@ export function CocktailExplorer() {
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   const renderStep3 = () => (
-    <div className="space-y-8">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="space-y-8"
+    >
       <h2>{t.step3Title || "Select Ingredients"}</h2>
-
       <div className="space-y-4">
         <MultiSelect
           options={getUniqueOptions(summary.base_spirits, language)}
@@ -454,14 +492,12 @@ export function CocktailExplorer() {
           placeholder={t.pleaseSelectBaseSpirits}
           enableSelectAll={false}
         />
-
         <MultiSelect
           options={getUniqueOptions(summary.liqueurs, language)}
           onValueChange={(values) => setSelectedLiqueurs(values)}
           placeholder={t.pleaseSelectLiqueurs}
           enableSelectAll={false}
         />
-
         <MultiSelect
           options={getUniqueOptions(summary.ingredients, language)}
           onValueChange={(values) => setSelectedIngredients(values)}
@@ -469,24 +505,34 @@ export function CocktailExplorer() {
           enableSelectAll={false}
         />
       </div>
-
       <div className="flex items-center space-x-2">
         <Switch id="bubbles" checked={bubbles} onCheckedChange={setBubbles} />
         <Label htmlFor="bubbles">{t.withBubbles}</Label>
       </div>
-    </div>
+    </motion.div>
   );
 
   const renderResults = () => (
-    <div className="space-y-8 mb-20">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="space-y-8"
+    >
       <h2>{t.resultsTitle || "Your Cocktail Matches"}</h2>
-
       <div id="results-section" className="flex flex-col gap-y-6">
-        {results.map((cocktail) => (
-          <CocktailCard key={cocktail.name[language]} cocktail={cocktail} />
+        {results.map((cocktail, index) => (
+          <motion.div
+            key={cocktail.name[language]}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+          >
+            <CocktailCard cocktail={cocktail} />
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 
   const renderCurrentStep = () => {
@@ -497,7 +543,7 @@ export function CocktailExplorer() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5 }}
         >
           {(() => {
             switch (currentStep) {
@@ -520,7 +566,12 @@ export function CocktailExplorer() {
 
   const Navigation = () => {
     return (
-      <div className="max-w-4xl mx-auto fixed bottom-0 left-0 right-0 bg-background px-6 py-4 flex justify-between">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="bg-background py-4 flex justify-between"
+      >
         {currentStep > 1 && (
           <Button variant="outline" onClick={prevStep}>
             {t.previous || "Previous"}
@@ -548,15 +599,21 @@ export function CocktailExplorer() {
             {t.startOver || "Start Over"}
           </Button>
         )}
-      </div>
+      </motion.div>
     );
   };
 
   return (
-    <div className="mt-8">
-      <h1 className="text-4xl">{t.chooseYourPreference}</h1>
-
-      <div className="mt-8 min-h-[600px]">{renderCurrentStep()}</div>
+    <div className="grid grid-rows-[auto_1fr_auto] px-6 h-[calc(100vh-56px)]">
+      <motion.h1 
+        className="mt-8 text-4xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {t.chooseYourPreference}
+      </motion.h1>
+      <div className="mt-8 flex-1 overflow-y-auto">{renderCurrentStep()}</div>
       <Navigation />
     </div>
   );

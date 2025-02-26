@@ -9,10 +9,8 @@ export async function generateStaticParams() {
 
 export default function Home() {
   return (
-    <div className="grid items-center min-h-screen px-6">
       <main>
         <CocktailExplorer />
       </main>
-    </div>
   );
 } 

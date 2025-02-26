@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    appName: "Cocktail Cult",
+    appName: "Cocktail Cult 🍸🔮",
     chooseYourPreference: "Mix and Mingle!",
     sweetness: "Sweetness",
     sourness: "Sourness",
@@ -85,7 +85,7 @@ export const translations = {
     language: "Language"
   },
   "zh": {
-    appName: "溝酒神燈",
+    appName: "溝酒神燈 🍸🔮",
     chooseYourPreference: "今晚想溝咩？",
     sweetness: "甜度",
     sourness: "酸度",
@@ -157,7 +157,7 @@ export const translations = {
     step1Title: "選擇風味特性",
     step2Title: "主要風味（最多選擇3種）",
     step3Title: "選擇基酒、利口酒或材料（隨心）",
-    resultsTitle: "AI 可以玩嘢，建議純屬參考！",
+    resultsTitle: "AI可以9up，以下建議純屬參考！",
     previous: "上一步",
     next: "下一步",
     startOver: "重新開始",
