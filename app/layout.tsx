@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/ui/header";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { translations } from "@/translations";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "調酒指南 | Cocktail Compass",
+  title: `${translations.zh.appName} | ${translations.en.appName}`,
   description: "Find the perfect cocktail for you",
 };
 

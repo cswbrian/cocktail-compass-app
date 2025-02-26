@@ -51,20 +51,38 @@ export function CocktailExplorer() {
     const bubbleDifference = profile.bubbles === bubbles ? 0 : 1;
 
     // Calculate penalty for mismatched base spirits (higher weight)
-    const baseSpiritPenalty = selectedBaseSpirits.length > 0 && 
-      !selectedBaseSpirits.some(spirit => cocktail.base_spirits.some(cocktailBaseSpirit => cocktailBaseSpirit.name[language] === spirit)) ? 10 : 0;
+    const baseSpiritPenalty =
+      selectedBaseSpirits.length > 0 &&
+      !selectedBaseSpirits.some((spirit) =>
+        cocktail.base_spirits.some(
+          (cocktailBaseSpirit) => cocktailBaseSpirit.name[language] === spirit
+        )
+      )
+        ? 10
+        : 0;
 
     // Calculate penalty for mismatched ingredients (higher weight)
-    const ingredientPenalty = selectedIngredients.length > 0 && 
-      !selectedIngredients.some(ingredient => 
-        cocktail.ingredients.some(cocktailIngredient => 
-          cocktailIngredient.name[language] === ingredient
+    const ingredientPenalty =
+      selectedIngredients.length > 0 &&
+      !selectedIngredients.some((ingredient) =>
+        cocktail.ingredients.some(
+          (cocktailIngredient) =>
+            cocktailIngredient.name[language] === ingredient
         )
-      ) ? 10 : 0;
+      )
+        ? 10
+        : 0;
 
     // Calculate penalty for mismatched liqueurs (higher weight)
-    const liqueurPenalty = selectedLiqueurs.length > 0 && 
-      !selectedLiqueurs.some(liqueur => cocktail.liqueurs.some(cocktailLiqueur => cocktailLiqueur.name[language] === liqueur)) ? 10 : 0;
+    const liqueurPenalty =
+      selectedLiqueurs.length > 0 &&
+      !selectedLiqueurs.some((liqueur) =>
+        cocktail.liqueurs.some(
+          (cocktailLiqueur) => cocktailLiqueur.name[language] === liqueur
+        )
+      )
+        ? 10
+        : 0;
 
     return Math.sqrt(
       (noSweetness ? 0 : Math.pow(profile.sweetness - sweetness, 2)) +
@@ -83,21 +101,24 @@ export function CocktailExplorer() {
     const rankedCocktails: RankedCocktail[] = cocktails
       .map((cocktail) => {
         // Calculate flavor penalty (higher weight)
-        const flavorPenalty = selectedFlavors.length > 0 && 
-          !selectedFlavors.some(flavor => {
+        const flavorPenalty =
+          selectedFlavors.length > 0 &&
+          !selectedFlavors.some((flavor) => {
             const selectedFlavorLower = flavor.toLowerCase();
-            const cocktailFlavorsLower = cocktail.flavor_descriptors.map(f => 
+            const cocktailFlavorsLower = cocktail.flavor_descriptors.map((f) =>
               f[language].toLowerCase()
             );
             return cocktailFlavorsLower.includes(selectedFlavorLower);
-          }) ? 10 : 0;
+          })
+            ? 10
+            : 0;
 
         return {
           ...cocktail,
           distance: calculateDistance(cocktail) + Math.pow(flavorPenalty, 2),
-          flavorMatches: selectedFlavors.filter(flavor => {
+          flavorMatches: selectedFlavors.filter((flavor) => {
             const selectedFlavorLower = flavor.toLowerCase();
-            const cocktailFlavorsLower = cocktail.flavor_descriptors.map(f => 
+            const cocktailFlavorsLower = cocktail.flavor_descriptors.map((f) =>
               f[language].toLowerCase()
             );
             return cocktailFlavorsLower.includes(selectedFlavorLower);
@@ -109,21 +130,28 @@ export function CocktailExplorer() {
           return b.flavorMatches - a.flavorMatches;
         }
         return a.distance - b.distance;
-      })
+      });
+
+    // Select top 20 and then randomize to pick 5
+    const top20 = rankedCocktails.slice(0, 20);
+    const random5 = top20
+      .map(value => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value)
       .slice(0, 5);
 
-    setResults(rankedCocktails);
-    
+    setResults(random5);
+
     setTimeout(() => {
-      const resultsElement = document.getElementById('results-section');
+      const resultsElement = document.getElementById("results-section");
       if (resultsElement) {
         const offset = 100;
         const elementPosition = resultsElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - offset;
-        
+
         window.scrollTo({
           top: offsetPosition,
-          behavior: 'smooth'
+          behavior: "smooth",
         });
       }
     }, 50);
@@ -140,9 +168,12 @@ export function CocktailExplorer() {
     });
   };
 
-  const getUniqueOptions = (items: { name: { [key: string]: string } }[], language: string) => {
-    const uniqueMap = new Map<string, { label: string, value: string }>();
-    items.forEach(item => {
+  const getUniqueOptions = (
+    items: { name: { [key: string]: string } }[],
+    language: string
+  ) => {
+    const uniqueMap = new Map<string, { label: string; value: string }>();
+    items.forEach((item) => {
       const label = item.name[language];
       const value = item.name.en;
       if (!uniqueMap.has(label)) {
@@ -173,190 +204,205 @@ export function CocktailExplorer() {
 
   const renderStep1 = () => (
     <>
-    <div className="space-y-8">
-      
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <h2 className={noSweetness ? "text-gray-700" : ""}>{t.sweetness}</h2>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="no-sweetness"
-              checked={noSweetness}
-              onCheckedChange={(checked) => {
-                setNoSweetness(checked);
-                if (checked) setSweetness(5);
-              }}
-            />
-            <Label htmlFor="no-sweetness">
-              {t.noPreference}
-            </Label>
+      <div className="space-y-8">
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className={noSweetness ? "text-gray-700" : ""}>
+              {t.sweetness}
+            </h2>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="no-sweetness"
+                checked={noSweetness}
+                onCheckedChange={(checked) => {
+                  setNoSweetness(checked);
+                  if (checked) setSweetness(5);
+                }}
+              />
+              <Label htmlFor="no-sweetness">{t.noPreference}</Label>
+            </div>
+          </div>
+          <Slider
+            value={[sweetness]}
+            max={10}
+            step={1}
+            className="w-full"
+            rangeClassName={noSweetness ? "bg-gray-700" : "bg-rose-500"}
+            onValueChange={(value) => setSweetness(value[0])}
+            disabled={noSweetness}
+          />
+          <div
+            className={`grid grid-cols-5 text-xs mt-1 ${
+              noSweetness ? "text-gray-700" : "text-muted-foreground"
+            }`}
+          >
+            <span className="text-left">{t.noSweet}</span>
+            <span className="text-center">{t.lightSweet}</span>
+            <span className="text-center">{t.mediumSweet}</span>
+            <span className="text-center">{t.sweet}</span>
+            <span className="text-right">{t.verySweet}</span>
           </div>
         </div>
-        <Slider
-          value={[sweetness]}
-          max={10}
-          step={1}
-          className="w-full"
-          rangeClassName={noSweetness ? "bg-gray-700" : "bg-rose-500"}
-          onValueChange={(value) => setSweetness(value[0])}
-          disabled={noSweetness}
-        />
-        <div className={`grid grid-cols-5 text-xs mt-1 ${noSweetness ? "text-gray-700" : "text-muted-foreground"}`}>
-          <span className="text-left">{t.noSweet}</span>
-          <span className="text-center">{t.lightSweet}</span>
-          <span className="text-center">{t.mediumSweet}</span>
-          <span className="text-center">{t.sweet}</span>
-          <span className="text-right">{t.verySweet}</span>
-        </div>
-      </div>
 
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <h2 className={noSourness ? "text-gray-700" : ""}>{t.sourness}</h2>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="no-sourness"
-              checked={noSourness}
-              onCheckedChange={(checked) => {
-                setNoSourness(checked);
-                if (checked) setSourness(5);
-              }}
-            />
-            <Label htmlFor="no-sourness">
-              {t.noPreference}
-            </Label>
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className={noSourness ? "text-gray-700" : ""}>{t.sourness}</h2>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="no-sourness"
+                checked={noSourness}
+                onCheckedChange={(checked) => {
+                  setNoSourness(checked);
+                  if (checked) setSourness(5);
+                }}
+              />
+              <Label htmlFor="no-sourness">{t.noPreference}</Label>
+            </div>
+          </div>
+          <Slider
+            value={[sourness]}
+            max={10}
+            step={1}
+            className="w-full"
+            rangeClassName={noSourness ? "bg-gray-700" : "bg-yellow-500"}
+            onValueChange={(value) => setSourness(value[0])}
+            disabled={noSourness}
+          />
+          <div
+            className={`grid grid-cols-5 text-xs mt-1 ${
+              noSourness ? "text-gray-700" : "text-muted-foreground"
+            }`}
+          >
+            <span className="text-left">{t.noSour}</span>
+            <span className="text-center">{t.lightSour}</span>
+            <span className="text-center">{t.mediumSour}</span>
+            <span className="text-center">{t.sour}</span>
+            <span className="text-right">{t.verySour}</span>
           </div>
         </div>
-        <Slider
-          value={[sourness]}
-          max={10}
-          step={1}
-          className="w-full"
-          rangeClassName={noSourness ? "bg-gray-700" : "bg-yellow-500"}
-          onValueChange={(value) => setSourness(value[0])}
-          disabled={noSourness}
-        />
-        <div className={`grid grid-cols-5 text-xs mt-1 ${noSourness ? "text-gray-700" : "text-muted-foreground"}`}>
-          <span className="text-left">{t.noSour}</span>
-          <span className="text-center">{t.lightSour}</span>
-          <span className="text-center">{t.mediumSour}</span>
-          <span className="text-center">{t.sour}</span>
-          <span className="text-right">{t.verySour}</span>
-        </div>
-      </div>
 
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <h2 className={noBody ? "text-gray-700" : ""}>{t.body}</h2>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="no-body"
-              checked={noBody}
-              onCheckedChange={(checked) => {
-                setNoBody(checked);
-                if (checked) setBody(5);
-              }}
-            />
-            <Label htmlFor="no-body">
-              {t.noPreference}
-            </Label>
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className={noBody ? "text-gray-700" : ""}>{t.body}</h2>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="no-body"
+                checked={noBody}
+                onCheckedChange={(checked) => {
+                  setNoBody(checked);
+                  if (checked) setBody(5);
+                }}
+              />
+              <Label htmlFor="no-body">{t.noPreference}</Label>
+            </div>
+          </div>
+          <Slider
+            value={[body]}
+            max={10}
+            step={1}
+            className="w-full"
+            rangeClassName={noBody ? "bg-gray-700" : "bg-emerald-500"}
+            onValueChange={(value) => setBody(value[0])}
+            disabled={noBody}
+          />
+          <div
+            className={`grid grid-cols-5 text-xs mt-1 ${
+              noBody ? "text-gray-700" : "text-muted-foreground"
+            }`}
+          >
+            <span className="text-left">{t.thinBody}</span>
+            <span className="text-center">{t.lightBody}</span>
+            <span className="text-center">{t.mediumBody}</span>
+            <span className="text-center">{t.heavyBody}</span>
+            <span className="text-right">{t.fullBody}</span>
           </div>
         </div>
-        <Slider
-          value={[body]}
-          max={10}
-          step={1}
-          className="w-full"
-          rangeClassName={noBody ? "bg-gray-700" : "bg-emerald-500"}
-          onValueChange={(value) => setBody(value[0])}
-          disabled={noBody}
-        />
-        <div className={`grid grid-cols-5 text-xs mt-1 ${noBody ? "text-gray-700" : "text-muted-foreground"}`}>
-          <span className="text-left">{t.thinBody}</span>
-          <span className="text-center">{t.lightBody}</span>
-          <span className="text-center">{t.mediumBody}</span>
-          <span className="text-center">{t.heavyBody}</span>
-          <span className="text-right">{t.fullBody}</span>
-        </div>
-      </div>
 
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <h2 className={noComplexity ? "text-gray-700" : ""}>{t.complexity}</h2>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="no-complexity"
-              checked={noComplexity}
-              onCheckedChange={(checked) => {
-                setNoComplexity(checked);
-                if (checked) setComplexity(5);
-              }}
-            />
-            <Label htmlFor="no-complexity">
-              {t.noPreference}
-            </Label>
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className={noComplexity ? "text-gray-700" : ""}>
+              {t.complexity}
+            </h2>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="no-complexity"
+                checked={noComplexity}
+                onCheckedChange={(checked) => {
+                  setNoComplexity(checked);
+                  if (checked) setComplexity(5);
+                }}
+              />
+              <Label htmlFor="no-complexity">{t.noPreference}</Label>
+            </div>
+          </div>
+          <Slider
+            value={[complexity]}
+            max={10}
+            step={1}
+            className="w-full"
+            rangeClassName={noComplexity ? "bg-gray-700" : "bg-sky-500"}
+            onValueChange={(value) => setComplexity(value[0])}
+            disabled={noComplexity}
+          />
+          <div
+            className={`grid grid-cols-5 text-xs mt-1 ${
+              noComplexity ? "text-gray-700" : "text-muted-foreground"
+            }`}
+          >
+            <span className="text-left">{t.simpleComplex}</span>
+            <span className="text-center">{t.someComplex}</span>
+            <span className="text-center">{t.mediumComplex}</span>
+            <span className="text-center">{t.complex}</span>
+            <span className="text-right">{t.veryComplex}</span>
           </div>
         </div>
-        <Slider
-          value={[complexity]}
-          max={10}
-          step={1}
-          className="w-full"
-          rangeClassName={noComplexity ? "bg-gray-700" : "bg-sky-500"}
-          onValueChange={(value) => setComplexity(value[0])}
-          disabled={noComplexity}
-        />
-        <div className={`grid grid-cols-5 text-xs mt-1 ${noComplexity ? "text-gray-700" : "text-muted-foreground"}`}>
-          <span className="text-left">{t.simpleComplex}</span>
-          <span className="text-center">{t.someComplex}</span>
-          <span className="text-center">{t.mediumComplex}</span>
-          <span className="text-center">{t.complex}</span>
-          <span className="text-right">{t.veryComplex}</span>
-        </div>
-      </div>
 
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <h2 className={noBooziness ? "text-gray-700" : ""}>{t.booziness}</h2>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="no-booziness"
-              checked={noBooziness}
-              onCheckedChange={(checked) => {
-                setNoBooziness(checked);
-                if (checked) setBooziness(5);
-              }}
-            />
-            <Label htmlFor="no-booziness">
-              {t.noPreference}
-            </Label>
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className={noBooziness ? "text-gray-700" : ""}>
+              {t.booziness}
+            </h2>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="no-booziness"
+                checked={noBooziness}
+                onCheckedChange={(checked) => {
+                  setNoBooziness(checked);
+                  if (checked) setBooziness(5);
+                }}
+              />
+              <Label htmlFor="no-booziness">{t.noPreference}</Label>
+            </div>
+          </div>
+          <Slider
+            value={[booziness]}
+            max={10}
+            step={1}
+            className="w-full"
+            rangeClassName={noBooziness ? "bg-gray-700" : "bg-orange-500"}
+            onValueChange={(value) => setBooziness(value[0])}
+            disabled={noBooziness}
+          />
+          <div
+            className={`grid grid-cols-5 text-xs mt-1 ${
+              noBooziness ? "text-gray-700" : "text-muted-foreground"
+            }`}
+          >
+            <span className="text-left">{t.noAlcohol}</span>
+            <span className="text-center">{t.lightAlcohol}</span>
+            <span className="text-center">{t.mediumAlcohol}</span>
+            <span className="text-center">{t.strongAlcohol}</span>
+            <span className="text-right">{t.veryStrong}</span>
           </div>
         </div>
-        <Slider
-          value={[booziness]}
-          max={10}
-          step={1}
-          className="w-full"
-          rangeClassName={noBooziness ? "bg-gray-700" : "bg-orange-500"}
-          onValueChange={(value) => setBooziness(value[0])}
-          disabled={noBooziness}
-        />
-        <div className={`grid grid-cols-5 text-xs mt-1 ${noBooziness ? "text-gray-700" : "text-muted-foreground"}`}>
-          <span className="text-left">{t.noAlcohol}</span>
-          <span className="text-center">{t.lightAlcohol}</span>
-          <span className="text-center">{t.mediumAlcohol}</span>
-          <span className="text-center">{t.strongAlcohol}</span>
-          <span className="text-right">{t.veryStrong}</span>
-        </div>
       </div>
-    </div>
     </>
   );
 
   const renderStep2 = () => (
     <div className="space-y-8">
       <h2>{t.step2Title}</h2>
-      
+
       <div className="space-y-2">
         <div className="flex flex-wrap gap-2">
           {[
@@ -400,7 +446,7 @@ export function CocktailExplorer() {
   const renderStep3 = () => (
     <div className="space-y-8">
       <h2>{t.step3Title || "Select Ingredients"}</h2>
-      
+
       <div className="space-y-4">
         <MultiSelect
           options={getUniqueOptions(summary.base_spirits, language)}
@@ -431,21 +477,12 @@ export function CocktailExplorer() {
   const renderResults = () => (
     <div className="space-y-8 mb-20">
       <h2>{t.resultsTitle || "Your Cocktail Matches"}</h2>
-      
-      {results.length > 0 ? (
-        <div id="results-section" className="flex flex-col gap-y-6">
-          {results.map((cocktail) => (
-            <CocktailCard 
-              key={cocktail.name[language]} 
-              cocktail={cocktail} 
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-8">
-          <p>{t.noResultsFound || "No matching cocktails found. Try adjusting your preferences."}</p>
-        </div>
-      )}
+
+      <div id="results-section" className="flex flex-col gap-y-6">
+        {results.map((cocktail) => (
+          <CocktailCard key={cocktail.name[language]} cocktail={cocktail} />
+        ))}
+      </div>
     </div>
   );
 
@@ -486,21 +523,25 @@ export function CocktailExplorer() {
             {t.previous || "Previous"}
           </Button>
         )}
-        
+
         {currentStep < totalSteps && (
           <Button onClick={nextStep} className="ml-auto">
             {t.next || "Next"}
           </Button>
         )}
-        
+
         {currentStep === totalSteps && (
           <Button onClick={goToResults} className="ml-auto">
             {t.findCocktail}
           </Button>
         )}
-        
+
         {currentStep === totalSteps + 1 && (
-          <Button variant="outline" onClick={() => setCurrentStep(1)} className="ml-auto">
+          <Button
+            variant="outline"
+            onClick={() => setCurrentStep(1)}
+            className="ml-auto"
+          >
             {t.startOver || "Start Over"}
           </Button>
         )}
@@ -511,10 +552,8 @@ export function CocktailExplorer() {
   return (
     <div className="mt-8">
       <h1 className="text-4xl">{t.chooseYourPreference}</h1>
-      
-      <div className="mt-8 min-h-[600px]">
-        {renderCurrentStep()}
-      </div>
+
+      <div className="mt-8 min-h-[600px]">{renderCurrentStep()}</div>
       <Navigation />
     </div>
   );

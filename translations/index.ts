@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    appName: "Cocktail Compass 🍸🧭",
+    appName: "Cocktail Cult",
     chooseYourPreference: "Mix and Mingle!",
     sweetness: "Sweetness",
     sourness: "Sourness",
@@ -84,7 +84,7 @@ export const translations = {
     noResultsFound: "No matching cocktails found. Try adjusting your preferences."
   },
   "zh": {
-    appName: "雞飛美酒 🍸🧭",
+    appName: "溝酒神燈",
     chooseYourPreference: "今晚想溝咩？",
     sweetness: "甜度",
     sourness: "酸度",
@@ -156,7 +156,7 @@ export const translations = {
     step1Title: "選擇風味特性",
     step2Title: "主要風味（最多選擇3種）",
     step3Title: "選擇材料（如果需要）",
-    resultsTitle: "AI 可以玩嘢，建議純粹參考！",
+    resultsTitle: "AI 可以玩嘢，建議純屬參考！",
     previous: "上一步",
     next: "下一步",
     startOver: "重新開始",
