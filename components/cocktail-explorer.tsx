@@ -452,18 +452,21 @@ export function CocktailExplorer() {
           options={getUniqueOptions(summary.base_spirits, language)}
           onValueChange={(values) => setSelectedBaseSpirits(values)}
           placeholder={t.pleaseSelectBaseSpirits}
+          enableSelectAll={false}
         />
 
         <MultiSelect
           options={getUniqueOptions(summary.liqueurs, language)}
           onValueChange={(values) => setSelectedLiqueurs(values)}
           placeholder={t.pleaseSelectLiqueurs}
+          enableSelectAll={false}
         />
 
         <MultiSelect
           options={getUniqueOptions(summary.ingredients, language)}
           onValueChange={(values) => setSelectedIngredients(values)}
           placeholder={t.pleaseSelectIngredients}
+          enableSelectAll={false}
         />
       </div>
 
