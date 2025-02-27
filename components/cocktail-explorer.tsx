@@ -135,7 +135,7 @@ export function CocktailExplorer() {
     // Select top 20 and then randomize to pick 5
     const top20 = rankedCocktails.slice(0, 20);
     const random5 = top20
-      .map(value => ({ value, sort: Math.random() }))
+      .map((value) => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value)
       .slice(0, 5);
@@ -257,7 +257,9 @@ export function CocktailExplorer() {
         >
           <div>
             <div className="flex justify-between items-center mb-2">
-              <h2 className={noSourness ? "text-gray-700" : ""}>{t.sourness}</h2>
+              <h2 className={noSourness ? "text-gray-700" : ""}>
+                {t.sourness}
+              </h2>
               <div className="flex items-center space-x-2">
                 <Switch
                   id="no-sourness"
@@ -566,12 +568,7 @@ export function CocktailExplorer() {
 
   const Navigation = () => {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="bg-background py-4 flex justify-between"
-      >
+      <div className="bg-background py-4 flex justify-between">
         {currentStep > 1 && (
           <Button variant="outline" onClick={prevStep}>
             {t.previous || "Previous"}
@@ -599,22 +596,26 @@ export function CocktailExplorer() {
             {t.startOver || "Start Over"}
           </Button>
         )}
-      </motion.div>
+      </div>
     );
   };
 
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] px-6 h-[calc(100vh-56px)]">
-      <motion.h1 
-        className="mt-8 text-4xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {t.chooseYourPreference}
-      </motion.h1>
-      <div className="mt-8 flex-1 overflow-y-auto">{renderCurrentStep()}</div>
-      <Navigation />
+    <div>
+      <div className="px-6">
+        <motion.h1
+          className="mt-8 text-4xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {t.chooseYourPreference}
+        </motion.h1>
+        <div className="mt-8 flex-1 overflow-y-auto">{renderCurrentStep()}</div>
+      </div>
+      <div className="fixed bottom-0 w-full px-6">
+        <Navigation />
+      </div>
     </div>
   );
 }
