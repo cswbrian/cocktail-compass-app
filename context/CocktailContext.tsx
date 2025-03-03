@@ -38,6 +38,7 @@ type CocktailContextType = {
   selectedLiqueurs: string[];
   setSelectedLiqueurs: (value: string[]) => void;
   currentStep: number;
+  setCurrentStep: (step: number) => void;
   
   // Methods
   handleFlavorSelect: (flavor: string) => void;
@@ -61,7 +62,14 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
   const [booziness, setBooziness] = useState(5);
   const [bubbles, setBubbles] = useState(false);
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
-  const [results, setResults] = useState<RankedCocktail[]>([]);
+  const [results, setResults] = useState<RankedCocktail[]>(() => {
+    // Initialize results from sessionStorage if available
+    if (typeof window !== 'undefined') {
+      const stored = sessionStorage.getItem('cocktailExplorerResults');
+      return stored ? JSON.parse(stored) : [];
+    }
+    return [];
+  });
   const [noSweetness, setNoSweetness] = useState(false);
   const [noSourness, setNoSourness] = useState(false);
   const [noBody, setNoBody] = useState(false);
@@ -163,7 +171,6 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
         return a.distance - b.distance;
       });
 
-    // Select top 20 and then randomize to pick 5
     const top20 = rankedCocktails.slice(0, 20);
     const random5 = top20
       .map((value) => ({ value, sort: Math.random() }))
@@ -172,6 +179,8 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
       .slice(0, 5);
 
     setResults(random5);
+    // Store results in sessionStorage with new key name
+    sessionStorage.setItem('cocktailExplorerResults', JSON.stringify(random5));
     return random5;
   }, [calculateDistance, language, selectedFlavors]);
 
@@ -212,6 +221,9 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
 
   const startOver = useCallback(() => {
     setCurrentStep(1);
+    // Clear results from sessionStorage with new key name
+    sessionStorage.removeItem('cocktailExplorerResults');
+    setResults([]);
   }, []);
 
   const value = {
@@ -247,6 +259,7 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
     selectedLiqueurs,
     setSelectedLiqueurs,
     currentStep,
+    setCurrentStep,
     
     // Methods
     handleFlavorSelect,

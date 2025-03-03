@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { useCocktail } from "@/context/CocktailContext";
+import { useEffect } from "react";
 import Step1 from "@/components/cocktail-explorer/step1";
 import Step2 from "@/components/cocktail-explorer/step2";
 import Step3 from "@/components/cocktail-explorer/step3";
@@ -13,7 +14,16 @@ import Navigation from "@/components/cocktail-explorer/navigation";
 export function CocktailExplorer() {
   const { language } = useLanguage();
   const t = translations[language];
-  const { currentStep } = useCocktail();
+  const { currentStep, results, setCurrentStep } = useCocktail();
+
+  useEffect(() => {
+    if (results.length > 0 && currentStep !== 4) {
+      const stored = sessionStorage.getItem('cocktailExplorerResults');
+      if (stored) {
+        setCurrentStep(4);
+      }
+    }
+  }, []);
 
   const renderCurrentStep = () => {
     return (
