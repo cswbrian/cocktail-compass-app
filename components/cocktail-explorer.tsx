@@ -522,7 +522,7 @@ export function CocktailExplorer() {
       className="space-y-8"
     >
       <h2>{t.resultsTitle || "Your Cocktail Matches"}</h2>
-      <div id="results-section" className="flex flex-col gap-y-6">
+      <div id="results-section" className="flex flex-col gap-y-6 pb-20">
         {results.map((cocktail, index) => (
           <motion.div
             key={cocktail.name[language]}
