@@ -14,11 +14,20 @@ const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [language, setLanguage] = useState<Language>("zh");
+  const [language, setLanguage] = useState<Language>(() => {
+    // Check localStorage for saved language preference, default to "zh"
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('language') as Language) || 'zh';
+    }
+    return 'zh';
+  });
 
   const toggleLanguage = () => {
     const newLanguage = language === "en" ? "zh" : "en";
     setLanguage(newLanguage);
+    // Save the new language preference to localStorage
+    localStorage.setItem('language', newLanguage);
+    
     const currentPath = window.location.pathname;
     const newPath = currentPath.match(/\/(en|zh)/) 
       ? currentPath.replace(/\/(en|zh)/, `/${newLanguage}`)
