@@ -86,6 +86,7 @@ export const translations = {
     seeMore: "See More",
     linkCopied: "Link copied!",
     copyFailed: "Failed to copy link",
+    masterNoPreference: "Really no preference",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -169,5 +170,6 @@ export const translations = {
     seeMore: "睇多啲",
     linkCopied: "已複製連結",
     copyFailed: "複製失敗",
+    masterNoPreference: "全部無所謂",
   },
 };

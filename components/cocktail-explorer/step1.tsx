@@ -33,8 +33,41 @@ export default function Step1() {
     setNoBooziness,
   } = useCocktail();
 
+  const handleMasterNoPreference = (checked: boolean) => {
+    setNoSweetness(checked);
+    setNoSourness(checked);
+    setNoBody(checked);
+    setNoComplexity(checked);
+    setNoBooziness(checked);
+    
+    // Reset all sliders to middle value when enabling no preference
+    if (checked) {
+      setSweetness(5);
+      setSourness(5);
+      setBody(5);
+      setComplexity(5);
+      setBooziness(5);
+    }
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-20">
+      {/* Master No Preference Switch */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="flex justify-end items-center space-x-2">
+          <Switch
+            id="master-no-preference"
+            checked={noSweetness && noSourness && noBody && noComplexity && noBooziness}
+            onCheckedChange={handleMasterNoPreference}
+          />
+          <Label htmlFor="master-no-preference">{t.masterNoPreference}</Label>
+        </div>
+      </motion.div>
+
       {/* Sweetness Slider */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
