@@ -85,15 +85,23 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
         </div>
       )}
 
-      <button 
-        onClick={(e) => {
-          e.stopPropagation();
-          handleShare();
-        }}
-        className="mt-4 w-full px-3 py-2 text-sm bg-neutral-700 hover:bg-neutral-600 rounded-full"
-      >
-        {t.share}
-      </button>
+      <div className="mt-4 flex gap-2">
+        <button 
+          onClick={handleClick}
+          className="flex-1 px-3 py-2 bg-white text-black hover:bg-gray-200 rounded-full font-medium"
+        >
+          {t.seeMore}
+        </button>
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            handleShare();
+          }}
+          className="px-4 py-2 text-sm bg-neutral-700 hover:bg-neutral-600 rounded-full"
+        >
+          {t.share}
+        </button>
+      </div>
     </div>
   );
 } 
