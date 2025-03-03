@@ -1,9 +1,10 @@
 import { CocktailExplorer } from "@/components/cocktail-explorer"
+import { CocktailProvider } from "@/context/CocktailContext"
 
 export default function Home() {
   return (
-      <main>
-        <CocktailExplorer />
-      </main>
+    <CocktailProvider>
+      <CocktailExplorer />
+    </CocktailProvider>
   );
 }

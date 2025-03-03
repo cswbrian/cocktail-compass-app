@@ -22,7 +22,8 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
     router.push(`/${language}/cocktails/${slugify(cocktail.name.en)}`);
   };
 
-  const handleShare = async () => {
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     const url = `${window.location.origin}/${language}/cocktails/${slugify(
       cocktail.name.en
     )}`;
@@ -106,7 +107,7 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            handleShare();
+            handleShare(e);
           }}
           className="p-4 text-sm bg-neutral-700 hover:bg-neutral-600 rounded-full"
         >

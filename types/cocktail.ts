@@ -19,17 +19,25 @@ export type Ingredient = {
   rationale: LocalizedString;
 };
 
-export type Cocktail = {
+// Update the base type for all ingredient types
+type BaseIngredient = {
   name: LocalizedString;
-  description: LocalizedString;
-  historical_reference?: LocalizedString;
-  technique: LocalizedString;
-  garnish: LocalizedString;
-  allergens: LocalizedString[];
-  base_spirits: Ingredient[];
-  liqueurs: Ingredient[];
-  ingredients: Ingredient[];
-  flavor_descriptors: LocalizedString[];
-  flavor_profile: FlavorProfile;
-  serve_in_glass: LocalizedString;
+  amount: number;
+  unit: LocalizedString;
 };
+
+export interface Cocktail {
+  name: LocalizedString;
+  flavor_profile: FlavorProfile;
+  base_spirits: BaseIngredient[];
+  liqueurs: BaseIngredient[];
+  ingredients: BaseIngredient[];
+  flavor_descriptors: LocalizedString[];
+  technique?: LocalizedString;  // Add since it's used in the component
+  garnish?: LocalizedString;    // Add since it's used in the component
+}
+
+export interface RankedCocktail extends Cocktail {
+  distance: number;
+  flavorMatches: number;
+}
