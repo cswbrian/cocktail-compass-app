@@ -84,6 +84,8 @@ export const translations = {
     noResultsFound: "No matching cocktails found. Try adjusting your preferences.",
     language: "Language",
     seeMore: "See More",
+    linkCopied: "Link copied!",
+    copyFailed: "Failed to copy link",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -165,5 +167,7 @@ export const translations = {
     noResultsFound: "找不到符合的調酒。請調整你的喜好。",
     language: "語言",
     seeMore: "睇多啲",
+    linkCopied: "已複製連結",
+    copyFailed: "複製失敗",
   },
 };

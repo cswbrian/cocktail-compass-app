@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
+import { toast } from "sonner";
+import {
+  Link,
+} from "lucide-react";
+
 
 interface CocktailCardProps {
   cocktail: Cocktail;
@@ -24,8 +29,13 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
     const url = `${window.location.origin}/${language}/cocktails/${slugify(cocktail.name.en)}`;
     try {
       await navigator.clipboard.writeText(url);
+      toast.success(t.linkCopied || "Link copied!", {
+        duration: 2000,
+        position: 'bottom-center',
+      });
     } catch (err) {
       console.error(err);
+      toast.error(t.copyFailed || "Failed to copy link");
     }
   };
 
@@ -97,9 +107,9 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
             e.stopPropagation();
             handleShare();
           }}
-          className="px-4 py-2 text-sm bg-neutral-700 hover:bg-neutral-600 rounded-full"
+          className="p-4 text-sm bg-neutral-700 hover:bg-neutral-600 rounded-full"
         >
-          {t.share}
+          <Link className="w-4 h-4" />
         </button>
       </div>
     </div>

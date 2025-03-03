@@ -6,6 +6,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { translations } from "@/translations";
 import { Menu } from "@/components/ui/menu";
+import { Toaster } from "@/components/ui/sonner"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
           <Header />
           <Menu />
           {children}
+          <Toaster />
         </body>
       </html>
     </LanguageProvider>
