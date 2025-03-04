@@ -26,6 +26,9 @@ export default function Step3() {
   const { language } = useLanguage();
   const t = translations[language];
   const {
+    selectedBaseSpirits,
+    selectedLiqueurs,
+    selectedIngredients,
     setSelectedBaseSpirits,
     setSelectedLiqueurs,
     setSelectedIngredients,
@@ -47,18 +50,21 @@ export default function Step3() {
           onValueChange={setSelectedBaseSpirits}
           placeholder={t.pleaseSelectBaseSpirits}
           enableSelectAll={false}
+          value={selectedBaseSpirits}
         />
         <MultiSelect
           options={getUniqueOptions(summary.liqueurs, language)}
           onValueChange={setSelectedLiqueurs}
           placeholder={t.pleaseSelectLiqueurs}
           enableSelectAll={false}
+          value={selectedLiqueurs}
         />
         <MultiSelect
           options={getUniqueOptions(summary.ingredients, language)}
           onValueChange={setSelectedIngredients}
           placeholder={t.pleaseSelectIngredients}
           enableSelectAll={false}
+          value={selectedIngredients}
         />
       </div>
       <div className="flex items-center space-x-2">

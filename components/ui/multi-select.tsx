@@ -121,6 +121,12 @@ interface MultiSelectProps
    * Optional, defaults to true.
    */
   enableSelectAll?: boolean;
+
+  /**
+   * The current selected values of the multi-select component.
+   * Optional, defaults to an empty array.
+   */
+  value?: string[];
 }
 
 export const MultiSelect = React.forwardRef<
@@ -132,6 +138,7 @@ export const MultiSelect = React.forwardRef<
       options,
       onValueChange,
       variant,
+      value,
       defaultValue = [],
       placeholder = "Select options",
       animation = 0,
@@ -144,8 +151,16 @@ export const MultiSelect = React.forwardRef<
     },
     ref
   ) => {
-    const [selectedValues, setSelectedValues] =
-      React.useState<string[]>(defaultValue);
+    const [selectedValues, setSelectedValues] = React.useState<string[]>(
+      value || defaultValue
+    );
+
+    React.useEffect(() => {
+      if (value !== undefined) {
+        setSelectedValues(value);
+      }
+    }, [value]);
+
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);
 
