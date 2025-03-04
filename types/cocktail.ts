@@ -39,5 +39,4 @@ export interface Cocktail {
 
 export interface RankedCocktail extends Cocktail {
   distance: number;
-  flavorMatches: number;
 }

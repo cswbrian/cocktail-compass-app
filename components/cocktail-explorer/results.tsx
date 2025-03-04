@@ -25,7 +25,10 @@ export default function Results() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <CocktailCard cocktail={cocktail} />
+            <CocktailCard 
+              cocktail={cocktail} 
+              distance={cocktail.distance}
+            />
           </motion.div>
         ))}
       </div>

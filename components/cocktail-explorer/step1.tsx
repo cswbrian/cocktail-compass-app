@@ -21,27 +21,16 @@ export default function Step1() {
     setComplexity,
     booziness,
     setBooziness,
-    noSweetness,
-    setNoSweetness,
-    noSourness,
-    setNoSourness,
-    noBody,
-    setNoBody,
-    noComplexity,
-    setNoComplexity,
-    noBooziness,
-    setNoBooziness,
   } = useCocktail();
 
   const handleMasterNoPreference = (checked: boolean) => {
-    setNoSweetness(checked);
-    setNoSourness(checked);
-    setNoBody(checked);
-    setNoComplexity(checked);
-    setNoBooziness(checked);
-    
-    // Reset all sliders to middle value when enabling no preference
     if (checked) {
+      setSweetness(null);
+      setSourness(null);
+      setBody(null);
+      setComplexity(null);
+      setBooziness(null);
+    } else {
       setSweetness(5);
       setSourness(5);
       setBody(5);
@@ -61,7 +50,11 @@ export default function Step1() {
         <div className="flex justify-end items-center space-x-2">
           <Switch
             id="master-no-preference"
-            checked={noSweetness && noSourness && noBody && noComplexity && noBooziness}
+            checked={sweetness === null && 
+                    sourness === null && 
+                    body === null && 
+                    complexity === null && 
+                    booziness === null}
             onCheckedChange={handleMasterNoPreference}
           />
           <Label htmlFor="master-no-preference">{t.masterNoPreference}</Label>
@@ -76,31 +69,28 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={noSweetness ? "text-gray-700" : ""}>{t.sweetness}</h2>
+            <h2 className={sweetness === null ? "text-gray-700" : ""}>{t.sweetness}</h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-sweetness"
-                checked={noSweetness}
-                onCheckedChange={(checked) => {
-                  setNoSweetness(checked);
-                  if (checked) setSweetness(5);
-                }}
+                checked={sweetness === null}
+                onCheckedChange={(checked) => setSweetness(checked ? null : 5)}
               />
               <Label htmlFor="no-sweetness">{t.noPreference}</Label>
             </div>
           </div>
           <Slider
-            value={[sweetness]}
+            value={[sweetness === null ? 5 : sweetness]}
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={noSweetness ? "bg-gray-700" : "bg-rose-500"}
+            rangeClassName={sweetness === null ? "bg-gray-700" : "bg-rose-500"}
             onValueChange={(value) => setSweetness(value[0])}
-            disabled={noSweetness}
+            disabled={sweetness === null}
           />
           <div
             className={`grid grid-cols-5 text-xs mt-1 ${
-              noSweetness ? "text-gray-700" : "text-muted-foreground"
+              sweetness === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
             <span className="text-left">{t.noSweet}</span>
@@ -120,31 +110,28 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={noSourness ? "text-gray-700" : ""}>{t.sourness}</h2>
+            <h2 className={sourness === null ? "text-gray-700" : ""}>{t.sourness}</h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-sourness"
-                checked={noSourness}
-                onCheckedChange={(checked) => {
-                  setNoSourness(checked);
-                  if (checked) setSourness(5);
-                }}
+                checked={sourness === null}
+                onCheckedChange={(checked) => setSourness(checked ? null : 5)}
               />
               <Label htmlFor="no-sourness">{t.noPreference}</Label>
             </div>
           </div>
           <Slider
-            value={[sourness]}
+            value={[sourness === null ? 5 : sourness]}
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={noSourness ? "bg-gray-700" : "bg-yellow-500"}
+            rangeClassName={sourness === null ? "bg-gray-700" : "bg-yellow-500"}
             onValueChange={(value) => setSourness(value[0])}
-            disabled={noSourness}
+            disabled={sourness === null}
           />
           <div
             className={`grid grid-cols-5 text-xs mt-1 ${
-              noSourness ? "text-gray-700" : "text-muted-foreground"
+              sourness === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
             <span className="text-left">{t.noSour}</span>
@@ -164,31 +151,28 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={noBody ? "text-gray-700" : ""}>{t.body}</h2>
+            <h2 className={body === null ? "text-gray-700" : ""}>{t.body}</h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-body"
-                checked={noBody}
-                onCheckedChange={(checked) => {
-                  setNoBody(checked);
-                  if (checked) setBody(5);
-                }}
+                checked={body === null}
+                onCheckedChange={(checked) => setBody(checked ? null : 5)}
               />
               <Label htmlFor="no-body">{t.noPreference}</Label>
             </div>
           </div>
           <Slider
-            value={[body]}
+            value={[body === null ? 5 : body]}
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={noBody ? "bg-gray-700" : "bg-emerald-500"}
+            rangeClassName={body === null ? "bg-gray-700" : "bg-emerald-500"}
             onValueChange={(value) => setBody(value[0])}
-            disabled={noBody}
+            disabled={body === null}
           />
           <div
             className={`grid grid-cols-5 text-xs mt-1 ${
-              noBody ? "text-gray-700" : "text-muted-foreground"
+              body === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
             <span className="text-left">{t.thinBody}</span>
@@ -208,31 +192,28 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={noComplexity ? "text-gray-700" : ""}>{t.complexity}</h2>
+            <h2 className={complexity === null ? "text-gray-700" : ""}>{t.complexity}</h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-complexity"
-                checked={noComplexity}
-                onCheckedChange={(checked) => {
-                  setNoComplexity(checked);
-                  if (checked) setComplexity(5);
-                }}
+                checked={complexity === null}
+                onCheckedChange={(checked) => setComplexity(checked ? null : 5)}
               />
               <Label htmlFor="no-complexity">{t.noPreference}</Label>
             </div>
           </div>
           <Slider
-            value={[complexity]}
+            value={[complexity === null ? 5 : complexity]}
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={noComplexity ? "bg-gray-700" : "bg-sky-500"}
+            rangeClassName={complexity === null ? "bg-gray-700" : "bg-sky-500"}
             onValueChange={(value) => setComplexity(value[0])}
-            disabled={noComplexity}
+            disabled={complexity === null}
           />
           <div
             className={`grid grid-cols-5 text-xs mt-1 ${
-              noComplexity ? "text-gray-700" : "text-muted-foreground"
+              complexity === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
             <span className="text-left">{t.simpleComplex}</span>
@@ -252,31 +233,28 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={noBooziness ? "text-gray-700" : ""}>{t.booziness}</h2>
+            <h2 className={booziness === null ? "text-gray-700" : ""}>{t.booziness}</h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-booziness"
-                checked={noBooziness}
-                onCheckedChange={(checked) => {
-                  setNoBooziness(checked);
-                  if (checked) setBooziness(5);
-                }}
+                checked={booziness === null}
+                onCheckedChange={(checked) => setBooziness(checked ? null : 5)}
               />
               <Label htmlFor="no-booziness">{t.noPreference}</Label>
             </div>
           </div>
           <Slider
-            value={[booziness]}
+            value={[booziness === null ? 5 : booziness]}
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={noBooziness ? "bg-gray-700" : "bg-orange-500"}
+            rangeClassName={booziness === null ? "bg-gray-700" : "bg-orange-500"}
             onValueChange={(value) => setBooziness(value[0])}
-            disabled={noBooziness}
+            disabled={booziness === null}
           />
           <div
             className={`grid grid-cols-5 text-xs mt-1 ${
-              noBooziness ? "text-gray-700" : "text-muted-foreground"
+              booziness === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
             <span className="text-left">{t.noAlcohol}</span>

@@ -23,7 +23,7 @@ export function CocktailExplorer() {
         setCurrentStep(4);
       }
     }
-  }, []);
+  }, [results.length, currentStep, setCurrentStep]);
 
   const renderCurrentStep = () => {
     return (

@@ -11,9 +11,10 @@ import { Link } from "lucide-react";
 
 interface CocktailCardProps {
   cocktail: Cocktail;
+  distance?: number;
 }
 
-export function CocktailCard({ cocktail }: CocktailCardProps) {
+export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
   const router = useRouter();
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
@@ -44,10 +45,17 @@ export function CocktailCard({ cocktail }: CocktailCardProps) {
       className="border rounded-3xl bg-neutral-900 p-6 cursor-pointer hover:bg-neutral-800 transition-colors"
       onClick={handleClick}
     >
-      <div className="mb-4">
-        <h3 className="text-2xl mb-1">{cocktail.name.en}</h3>
-        {language === "zh" && (
-          <div className="text-gray-400 text-xs">{cocktail.name.zh}</div>
+      <div className="mb-4 flex justify-between items-start">
+        <div>
+          <h3 className="text-2xl mb-1">{cocktail.name.en}</h3>
+          {language === "zh" && (
+            <div className="text-gray-400 text-sm">{cocktail.name.zh}</div>
+          )}
+        </div>
+        {typeof distance === 'number' && (
+          <div className="text-sm px-2 py-1 bg-neutral-800 rounded-full">
+            {`${t.similarity}: ${(100 - Math.min(distance, 100)).toFixed(1)}`}
+          </div>
         )}
       </div>
       {cocktail.flavor_descriptors && (
