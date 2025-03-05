@@ -16,7 +16,6 @@ const FLAVORS = [
   "Floral",
   "Tropical",
   "Nutty",
-  "Chocolate",
   "Coffee",
   "Vanilla",
   "Smoky",
@@ -26,12 +25,21 @@ const FLAVORS = [
   "Woody",
   "Grassy",
   "Yeasty",
+  "Chocolate",
 ];
 
 export default function Step2() {
   const { language } = useLanguage();
   const t = translations[language];
   const { selectedFlavors, handleFlavorSelect } = useCocktail();
+
+  const handleReset = () => {
+    FLAVORS.forEach(flavor => {
+      if (selectedFlavors.includes(flavor)) {
+        handleFlavorSelect(flavor);
+      }
+    });
+  };
 
   return (
     <motion.div
@@ -41,7 +49,7 @@ export default function Step2() {
       className="space-y-8"
     >
       <h2>{t.step2Title}</h2>
-      <div className="space-y-2">
+      <div className="space-y-4">
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {FLAVORS.map((flavor) => (
             <Button
@@ -61,6 +69,21 @@ export default function Step2() {
             </Button>
           ))}
         </div>
+        {selectedFlavors.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Button
+              onClick={handleReset}
+              className="mt-4"
+            >
+              {t.reset || 'Reset'}
+            </Button>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );

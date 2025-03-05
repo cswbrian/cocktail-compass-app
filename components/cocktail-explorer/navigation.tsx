@@ -42,28 +42,41 @@ export default function Navigation() {
       transition={{ delay: 0.8 }}
       className="bg-background py-4 flex justify-between"
     >
-      {currentStep > 1 && (
-        <Button variant="outline" onClick={handlePrev}>
-          {t.previous || "Previous"}
-        </Button>
-      )}
+      {/* Reset button - always visible */}
+      <Button variant="ghost" onClick={handleStartOver}>
+        {t.reset || "Reset"}
+      </Button>
 
-      {currentStep < TOTAL_STEPS && (
-        <Button onClick={handleNext} className="ml-auto">
-          {t.next || "Next"}
-        </Button>
-      )}
+      <div className="flex gap-2 ml-auto">
+        {currentStep > 1 && (
+          <Button variant="outline" onClick={handlePrev}>
+            {t.previous || "Previous"}
+          </Button>
+        )}
 
-      {currentStep === TOTAL_STEPS && (
-        <Button onClick={handleGoToResults} className="ml-auto">
-          {t.findCocktail}
-        </Button>
-      )}
+        {currentStep < TOTAL_STEPS && (
+          <Button onClick={handleNext}>
+            {t.next || "Next"}
+          </Button>
+        )}
+
+        {currentStep === TOTAL_STEPS && (
+          <Button onClick={handleGoToResults}>
+            {t.findCocktail}
+          </Button>
+        )}
+      </div>
 
       {currentStep === TOTAL_STEPS + 1 && (
-        <Button variant="outline" onClick={handleStartOver} className="ml-auto">
-          {t.startOver || "Start Over"}
-        </Button>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          <Button onClick={handleStartOver} className="ml-auto">
+            {t.startOver}
+          </Button>
+        </motion.div>
       )}
     </motion.div>
   );

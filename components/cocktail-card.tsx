@@ -8,6 +8,7 @@ import { translations } from "@/translations";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
 import { toast } from "sonner";
 import { Link } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CocktailCardProps {
   cocktail: Cocktail;
@@ -45,7 +46,7 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
       className="border rounded-3xl bg-neutral-900 p-6 cursor-pointer hover:bg-neutral-800 transition-colors"
       onClick={handleClick}
     >
-      <div className="mb-4 flex justify-between items-start">
+      <div className="mb-4 flex justify-between items-start gap-x-2">
         <div>
           <h3 className="text-2xl mb-1">{cocktail.name.en}</h3>
           {language === "zh" && (
@@ -53,7 +54,7 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
           )}
         </div>
         {typeof distance === 'number' && (
-          <div className="text-sm px-2 py-1 bg-neutral-800 rounded-full">
+          <div className="text-sm px-2 py-1 bg-neutral-800 rounded-full whitespace-nowrap">
             {`${t.similarity}: ${(100 - Math.min(distance, 100)).toFixed(1)}`}
           </div>
         )}
@@ -106,21 +107,23 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
       )}
 
       <div className="mt-4 flex gap-2">
-        <button
+        <Button
           onClick={handleClick}
-          className="flex-1 px-3 py-2 bg-white text-black hover:bg-gray-200 rounded-full font-medium"
+          variant="default"
+          className="flex-1 bg-white text-black hover:bg-gray-200"
         >
           {t.seeMore}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={(e) => {
             e.stopPropagation();
             handleShare(e);
           }}
-          className="p-4 text-sm bg-neutral-700 hover:bg-neutral-600 rounded-full"
+          variant="secondary"
+          size="icon"
         >
           <Link className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

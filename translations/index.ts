@@ -77,7 +77,7 @@ export const translations = {
     step1Title: "Flavor Profiles",
     step2Title: "Select up to 3 flavor notes",
     step3Title: "Select base spirits, liqueurs or ingredients (optional)",
-    resultsTitle: "AI mixologist can be drunk, the results are just for reference :)",
+    resultsTitle: "AI mixologist can be drunk, the results are just for reference",
     previous: "Previous",
     next: "Next",
     startOver: "Start Over",
@@ -90,6 +90,7 @@ export const translations = {
     similarity: "Similarity",
     hasBubbles: "With bubbles",
     noBubbles: "No bubbles",
+    reset: "Reset",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -164,7 +165,7 @@ export const translations = {
     step1Title: "選擇風味特性",
     step2Title: "主要風味（最多選擇3種）",
     step3Title: "選擇基酒、利口酒或材料（隨心）",
-    resultsTitle: "AI可以9up，以下建議純屬參考！",
+    resultsTitle: "AI可以9up，建議純屬參考！",
     previous: "上一步",
     next: "下一步",
     startOver: "重新開始",
@@ -177,5 +178,6 @@ export const translations = {
     similarity: "相似度",
     hasBubbles: "有",
     noBubbles: "無",
+    reset: "重設",
   },
 };
