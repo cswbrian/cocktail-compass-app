@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { useCocktail } from "@/context/CocktailContext";
+import { flavorClasses } from "@/components/flavor-descriptor";
 
 const FLAVORS = [
   "Bitter",
@@ -41,15 +42,20 @@ export default function Step2() {
     >
       <h2>{t.step2Title}</h2>
       <div className="space-y-2">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
           {FLAVORS.map((flavor) => (
             <Button
               key={flavor}
-              variant={selectedFlavors.includes(flavor) ? "default" : "outline"}
+              variant="ghost"
               onClick={() => handleFlavorSelect(flavor)}
               disabled={
                 !selectedFlavors.includes(flavor) && selectedFlavors.length >= 3
               }
+              className={`${
+                selectedFlavors.includes(flavor)
+                  ? flavorClasses[flavor as keyof typeof flavorClasses]
+                  : "border border-gray-200"
+              }`}
             >
               {t[flavor.toLowerCase() as keyof typeof t]}
             </Button>
