@@ -6,7 +6,7 @@ export type LocalizedString = {
 export type FlavorProfile = {
   body: number;
   booziness: number;
-  bubbles: boolean;
+  bubbles: boolean | null;
   complexity: number;
   sourness: number;
   sweetness: number;

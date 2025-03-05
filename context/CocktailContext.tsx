@@ -18,7 +18,7 @@ type CocktailContextType = {
   setComplexity: (value: number | null) => void;
   booziness: number | null;
   setBooziness: (value: number | null) => void;
-  bubbles: boolean;
+  bubbles: boolean | null;
   setBubbles: (value: boolean) => void;
   selectedFlavors: string[];
   results: RankedCocktail[];
@@ -50,7 +50,7 @@ interface CocktailExplorerState {
   body: number | null;
   complexity: number | null;
   booziness: number | null;
-  bubbles: boolean;
+  bubbles: boolean | null;
   selectedFlavors: string[];
   selectedBaseSpirits: string[];
   selectedIngredients: string[];
@@ -65,7 +65,7 @@ const defaultState: CocktailExplorerState = {
   body: 5,
   complexity: 5,
   booziness: 5,
-  bubbles: false,
+  bubbles: null,
   selectedFlavors: [],
   selectedBaseSpirits: [],
   selectedIngredients: [],

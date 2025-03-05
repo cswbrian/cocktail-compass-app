@@ -7,7 +7,7 @@ interface CalculateDistanceParams {
   body: number | null;
   complexity: number | null;
   booziness: number | null;
-  bubbles: boolean;
+  bubbles: boolean | null;
   selectedBaseSpirits: string[];
   selectedIngredients: string[];
   selectedLiqueurs: string[];
@@ -27,21 +27,7 @@ export function calculateDistance({
   selectedIngredients,
   selectedLiqueurs,
   selectedFlavors,
-  language
 }: CalculateDistanceParams): number {
-  console.log('selection', {
-    sweetness,
-  sourness,
-  body,
-  complexity,
-  booziness,
-  bubbles,
-  selectedBaseSpirits,
-  selectedIngredients,
-  selectedLiqueurs,
-  selectedFlavors,
-  language,
-  })
   const profile = cocktail.flavor_profile;
   
   // 1. MUST-HAVE: If user booziness is 0, only keep non-alcoholic cocktails
@@ -49,8 +35,8 @@ export function calculateDistance({
     return Number.MAX_SAFE_INTEGER;
   }
   
-  // 2. MUST-HAVE: Bubbles must match user preference exactly
-  if (profile.bubbles !== bubbles) {
+  // 2. MUST-HAVE: Bubbles must match user preference exactly if specified
+  if (bubbles !== null && profile.bubbles !== bubbles) {
     return Number.MAX_SAFE_INTEGER;
   }
   

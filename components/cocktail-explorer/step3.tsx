@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -67,9 +67,34 @@ export default function Step3() {
           value={selectedIngredients}
         />
       </div>
-      <div className="flex items-center space-x-2">
-        <Switch id="bubbles" checked={bubbles} onCheckedChange={setBubbles} />
-        <Label htmlFor="bubbles">{t.withBubbles}</Label>
+      <div className="space-y-2">
+        <Label>{t.withBubbles}</Label>
+        <RadioGroup
+          defaultValue="no-preference"
+          value={bubbles === null ? "no-preference" : bubbles ? "with-bubbles" : "no-bubbles"}
+          onValueChange={(value: "no-preference" | "with-bubbles" | "no-bubbles") => {
+            const bubblesState = {
+              "no-preference": null,
+              "with-bubbles": true,
+              "no-bubbles": false
+            }[value];
+            
+            setBubbles(bubblesState as boolean);
+          }}
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="no-preference" id="no-preference" />
+            <Label htmlFor="no-preference">{t.noPreference}</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="with-bubbles" id="with-bubbles" />
+            <Label htmlFor="with-bubbles">{t.hasBubbles}</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="no-bubbles" id="no-bubbles" />
+            <Label htmlFor="no-bubbles">{t.noBubbles}</Label>
+          </div>
+        </RadioGroup>
       </div>
     </motion.div>
   );
