@@ -370,7 +370,7 @@
     },
     {
       "en": "Chocolate Martini",
-      "zh": "巧克力馬丁尼"
+      "zh": "朱古力馬丁尼"
     },
     {
       "en": "Chrysanthemum",
@@ -818,7 +818,7 @@
     },
     {
       "en": "Lime Rickey",
-      "zh": "萊姆利奇"
+      "zh": "青檸利奇"
     },
     {
       "en": "Link Up",
@@ -2516,7 +2516,7 @@
     {
       "name": {
         "en": "Chocolate Liqueur",
-        "zh": "巧克力利口酒"
+        "zh": "朱古力利口酒"
       },
       "count": 3
     },
@@ -2572,7 +2572,7 @@
     {
       "name": {
         "en": "Lime Juice",
-        "zh": "萊姆汁"
+        "zh": "青檸汁"
       },
       "count": 2
     },
@@ -3218,7 +3218,7 @@
     {
       "name": {
         "en": "Lime Juice",
-        "zh": "萊姆汁"
+        "zh": "青檸汁"
       },
       "count": 67
     },
@@ -3365,7 +3365,7 @@
     {
       "name": {
         "en": "Fresh Lime Juice",
-        "zh": "新鮮萊姆汁"
+        "zh": "新鮮青檸汁"
       },
       "count": 6
     },
@@ -3470,7 +3470,7 @@
     {
       "name": {
         "en": "Lime",
-        "zh": "萊姆"
+        "zh": "青檸"
       },
       "count": 3
     },
@@ -3596,7 +3596,7 @@
     {
       "name": {
         "en": "Lime juice",
-        "zh": "萊姆汁"
+        "zh": "青檸汁"
       },
       "count": 2
     },
@@ -3673,7 +3673,7 @@
     {
       "name": {
         "en": "Lime Juice (Freshly Squeezed)",
-        "zh": "鮮榨萊姆汁"
+        "zh": "鮮榨青檸汁"
       },
       "count": 2
     },
@@ -3981,7 +3981,7 @@
     {
       "name": {
         "en": "Generic lemon-lime soda",
-        "zh": "通用檸檬萊姆汽水"
+        "zh": "通用檸檬青檸汽水"
       },
       "count": 1
     },
@@ -4086,7 +4086,7 @@
     {
       "name": {
         "en": "Lime Juice, freshly squeezed",
-        "zh": "新鮮現榨萊姆汁"
+        "zh": "新鮮現榨青檸汁"
       },
       "count": 1
     },
@@ -4541,7 +4541,7 @@
     {
       "name": {
         "en": "Lemon-Lime Soda or Sparkling Lemonade",
-        "zh": "檸檬萊姆汽水或氣泡檸檬水"
+        "zh": "檸檬青檸汽水或氣泡檸檬水"
       },
       "count": 1
     },
@@ -4844,7 +4844,7 @@
     {
       "name": {
         "en": "Chocolate",
-        "zh": "巧克力"
+        "zh": "朱古力"
       },
       "count": 26
     },
