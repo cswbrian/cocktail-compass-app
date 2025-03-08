@@ -94,7 +94,7 @@
     },
     {
       "en": "Bacardi White Rum",
-      "zh": "百加得白蘭姆酒"
+      "zh": "百加得白冧酒"
     },
     {
       "en": "Bacon Bourbon Manhattan",
@@ -694,7 +694,7 @@
     },
     {
       "en": "Hot Buttered Rum",
-      "zh": "熱奶油蘭姆酒"
+      "zh": "熱奶油冧酒"
     },
     {
       "en": "Hugo",
@@ -1210,7 +1210,7 @@
     },
     {
       "en": "Rum Swizzle",
-      "zh": "蘭姆酒思醉"
+      "zh": "冧酒思醉"
     },
     {
       "en": "Rusty Nail",
@@ -1583,7 +1583,7 @@
     {
       "name": {
         "en": "Dark Rum",
-        "zh": "黑蘭姆酒"
+        "zh": "黑冧酒"
       },
       "count": 28
     },
@@ -1597,7 +1597,7 @@
     {
       "name": {
         "en": "White Rum",
-        "zh": "白蘭姆酒"
+        "zh": "白冧酒"
       },
       "count": 15
     },
@@ -1618,7 +1618,7 @@
     {
       "name": {
         "en": "Light Rum",
-        "zh": "白蘭姆酒"
+        "zh": "白冧酒"
       },
       "count": 10
     },
@@ -1695,7 +1695,7 @@
     {
       "name": {
         "en": "Gold Rum",
-        "zh": "金蘭姆酒"
+        "zh": "金冧酒"
       },
       "count": 4
     },
@@ -1716,7 +1716,7 @@
     {
       "name": {
         "en": "Rum",
-        "zh": "蘭姆酒"
+        "zh": "冧酒"
       },
       "count": 4
     },
@@ -1730,7 +1730,7 @@
     {
       "name": {
         "en": "Aged Rum",
-        "zh": "陳年蘭姆酒"
+        "zh": "陳年冧酒"
       },
       "count": 3
     },
@@ -1807,7 +1807,7 @@
     {
       "name": {
         "en": "Generic White Rum",
-        "zh": "通用白蘭姆酒"
+        "zh": "通用白冧酒"
       },
       "count": 2
     },
@@ -1821,7 +1821,7 @@
     {
       "name": {
         "en": "Overproof Rum",
-        "zh": "高濃度蘭姆酒"
+        "zh": "高濃度冧酒"
       },
       "count": 2
     },
@@ -1870,14 +1870,14 @@
     {
       "name": {
         "en": "Aged Jamaican Rum",
-        "zh": "牙買加陳年蘭姆酒"
+        "zh": "牙買加陳年冧酒"
       },
       "count": 1
     },
     {
       "name": {
         "en": "Rhum Agricole",
-        "zh": "農業蘭姆酒"
+        "zh": "農業冧酒"
       },
       "count": 1
     },
@@ -1926,14 +1926,14 @@
     {
       "name": {
         "en": "Agricultural Rum",
-        "zh": "農業蘭姆酒"
+        "zh": "農業冧酒"
       },
       "count": 1
     },
     {
       "name": {
         "en": "Aged Component",
-        "zh": "陳年蘭姆酒"
+        "zh": "陳年冧酒"
       },
       "count": 1
     },
@@ -2017,7 +2017,7 @@
     {
       "name": {
         "en": "Pineapple Rum",
-        "zh": "鳳梨蘭姆酒"
+        "zh": "鳳梨冧酒"
       },
       "count": 1
     },
@@ -2031,7 +2031,7 @@
     {
       "name": {
         "en": "Rum (White or Gold)",
-        "zh": "蘭姆酒（白色或金色）"
+        "zh": "冧酒（白色或金色）"
       },
       "count": 1
     },
@@ -2269,7 +2269,7 @@
     {
       "name": {
         "en": "Bacardi White Rum",
-        "zh": "百加得白蘭姆酒"
+        "zh": "百加得白冧酒"
       },
       "count": 1
     },
@@ -2283,7 +2283,7 @@
     {
       "name": {
         "en": "151 Proof Rum",
-        "zh": "151 proof 蘭姆酒"
+        "zh": "151 proof 冧酒"
       },
       "count": 1
     },
@@ -2887,7 +2887,7 @@
     {
       "name": {
         "en": "White Rum",
-        "zh": "白蘭姆酒"
+        "zh": "白冧酒"
       },
       "count": 1
     },
@@ -3209,7 +3209,7 @@
     {
       "name": {
         "en": "Dark Rum",
-        "zh": "黑蘭姆酒"
+        "zh": "黑冧酒"
       },
       "count": 1
     }
