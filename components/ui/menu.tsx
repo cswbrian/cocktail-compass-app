@@ -35,57 +35,65 @@ export function Menu() {
           <div className="mt-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">{t.language}</span>
-              <Tabs defaultValue={language} className="w-[200px]">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger
-                    value="en"
-                    onClick={() => language !== "en" && toggleLanguage()}
-                    aria-label="English"
-                  >
-                    English
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="zh"
-                    onClick={() => language !== "zh" && toggleLanguage()}
-                    aria-label="Chinese"
-                  >
-                    中文
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <SheetClose asChild>
+                <Tabs defaultValue={language} className="w-[200px]">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger
+                      value="en"
+                      onClick={() => language !== "en" && toggleLanguage()}
+                      aria-label="English"
+                    >
+                      English
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="zh"
+                      onClick={() => language !== "zh" && toggleLanguage()}
+                      aria-label="Chinese"
+                    >
+                      中文
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </SheetClose>
             </div>
           </div>
           <div className="absolute bottom-4 left-4 flex flex-col gap-2">
             <div className="flex gap-2">
-              <a
-                href="https://github.com/cswbrian/cocktail-compass-app"
-                className="hover:text-gray-400 flex items-center gap-1"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image src="/github.svg" alt="GitHub" width={24} height={24} />
-              </a>
-              <a
-                href="https://www.threads.net/@coolsunwind"
-                className="hover:text-gray-400 flex items-center gap-1"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src="/threads.svg"
-                  alt="Threads"
-                  width={24}
-                  height={24}
-                />
-              </a>
+              <SheetClose asChild>
+                <a
+                  href="https://github.com/cswbrian/cocktail-compass-app"
+                  className="hover:text-gray-400 flex items-center gap-1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image src="/github.svg" alt="GitHub" width={24} height={24} />
+                </a>
+              </SheetClose>
+              <SheetClose asChild>
+                <a
+                  href="https://www.threads.net/@coolsunwind"
+                  className="hover:text-gray-400 flex items-center gap-1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    src="/threads.svg"
+                    alt="Threads"
+                    width={24}
+                    height={24}
+                  />
+                </a>
+              </SheetClose>
             </div>
-            <a
-              href="https://www.flaticon.com/free-icons/magic-lamp"
-              title="magic lamp icons"
-              className="hover:text-gray-400 text-xs text-gray-500"
-            >
-              Magic lamp icons created by Freepik - Flaticon
-            </a>
+            <SheetClose asChild>
+              <a
+                href="https://www.flaticon.com/free-icons/magic-lamp"
+                title="magic lamp icons"
+                className="hover:text-gray-400 text-xs text-gray-500"
+              >
+                Magic lamp icons created by Freepik - Flaticon
+              </a>
+            </SheetClose>
           </div>
         </SheetContent>
       </Sheet>

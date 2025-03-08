@@ -26,6 +26,8 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { useLanguage } from "@/context/LanguageContext";
+import { translations } from "@/translations";
 
 /**
  * Variants for the multi-select component to handle different styles.
@@ -151,6 +153,8 @@ export const MultiSelect = React.forwardRef<
     },
     ref
   ) => {
+    const { language } = useLanguage();
+    const t = translations[language];
     const [selectedValues, setSelectedValues] = React.useState<string[]>(
       value || defaultValue
     );
@@ -301,17 +305,17 @@ export const MultiSelect = React.forwardRef<
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0"
+          className="w-auto p-0 max-h-[300px]"
           align="start"
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
         >
-          <Command>
+          <Command className="max-h-full overflow-hidden">
             <CommandInput
-              placeholder="Search..."
+              placeholder={t.search}
               onKeyDown={handleInputKeyDown}
             />
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+            <CommandList className="max-h-[250px] overflow-auto">
+              <CommandEmpty>{t.noResultsFound}</CommandEmpty>
               <CommandGroup>
                 {enableSelectAll && (
                   <CommandItem

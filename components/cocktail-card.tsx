@@ -6,9 +6,8 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
-import { toast } from "sonner";
-import { Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ShareButton } from "@/components/share-button";
 
 interface CocktailCardProps {
   cocktail: Cocktail;
@@ -24,22 +23,12 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
     router.push(`/${language}/cocktails/${slugify(cocktail.name.en)}`);
   };
 
-  const handleShare = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const url = `${window.location.origin}/${language}/cocktails/${slugify(
-      cocktail.name.en
-    )}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success(t.linkCopied || "Link copied!", {
-        duration: 2000,
-        position: "bottom-center",
-      });
-    } catch (err) {
-      console.error(err);
-      toast.error(t.copyFailed || "Failed to copy link");
-    }
-  };
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/${language}/cocktails/${slugify(
+          cocktail.name.en
+        )}`
+      : "";
 
   return (
     <div
@@ -114,16 +103,10 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
         >
           {t.seeMore}
         </Button>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleShare(e);
-          }}
-          variant="secondary"
-          size="icon"
-        >
-          <Link className="w-4 h-4" />
-        </Button>
+        <ShareButton 
+          url={shareUrl} 
+          onClick={(e) => e.stopPropagation()} 
+        />
       </div>
     </div>
   );

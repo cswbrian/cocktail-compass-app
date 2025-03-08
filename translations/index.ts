@@ -81,7 +81,6 @@ export const translations = {
     previous: "Previous",
     next: "Next",
     startOver: "Start Over",
-    noResultsFound: "No matching cocktails found. Try adjusting your preferences.",
     language: "Language",
     seeMore: "See More",
     linkCopied: "Link copied!",
@@ -91,6 +90,8 @@ export const translations = {
     hasBubbles: "With bubbles",
     noBubbles: "No bubbles",
     reset: "Reset",
+    search: "Search...",
+    noResultsFound: "No matching options found.",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -169,7 +170,6 @@ export const translations = {
     previous: "上一步",
     next: "下一步",
     startOver: "重新開始",
-    noResultsFound: "找不到符合的調酒。請調整你的喜好。",
     language: "語言",
     seeMore: "睇多啲",
     linkCopied: "已複製連結",
@@ -179,5 +179,7 @@ export const translations = {
     hasBubbles: "有",
     noBubbles: "無",
     reset: "重設",
+    search: "搜尋...",
+    noResultsFound: "找不到符合的選項",
   },
 };
