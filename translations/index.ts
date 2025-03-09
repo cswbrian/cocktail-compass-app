@@ -85,7 +85,7 @@ export const translations = {
     seeMore: "See More",
     linkCopied: "Link copied!",
     copyFailed: "Failed to copy link",
-    masterNoPreference: "Really no preference",
+    masterNoPreference: "No preference at all",
     similarity: "Similarity",
     hasBubbles: "With bubbles",
     noBubbles: "No bubbles",
