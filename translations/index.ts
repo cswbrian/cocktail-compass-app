@@ -92,7 +92,7 @@ export const translations = {
     reset: "Reset",
     search: "Search...",
     noResultsFound: "No matching options found.",
-    buyMeADrink: "Buy me a drink",
+    buyMeADrink: "Treat me a drink",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
