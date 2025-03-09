@@ -5,6 +5,7 @@ import { Cocktail } from "@/types/cocktail";
 import Link from "next/link";
 import { translations } from "@/translations/index";
 import { Metadata } from 'next';
+import { ExternalLink } from "@/components/external-link";
 
 type Props = {
   params: Promise<{ language: string; slug: string }>
@@ -46,7 +47,8 @@ export default async function FlavorsPage({
           getLocalizedText(flavorName, language)
         )}
       </h1>
-      <div className="grid grid-cols-1 gap-4">
+      <ExternalLink message={t.feedbackMessage} />
+      <div className="mt-8 grid grid-cols-1 gap-4">
         {matchingCocktails.map((cocktail) => (
           <Link
             key={cocktail.name.en}

@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
 import { Metadata } from "next";
 import { ShareButton } from "@/components/share-button";
+import { ExternalLink } from "@/components/external-link";
 
 type Props = {
   params: Promise<{ language: string; slug: string }>;
@@ -156,6 +157,8 @@ export default async function CocktailPage({ params }: Props) {
             </p>
           </div>
         )}
+
+        <ExternalLink message={t.feedbackMessage} />
 
         <div>
           <h2 className="font-bold mb-4">{t.instructions}</h2>

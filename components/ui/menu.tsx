@@ -14,6 +14,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import Image from "next/image";
 import { Menu as MenuIcon } from "lucide-react";
+import { BUY_ME_A_DRINK_URL, FEEDBACK_FORM_URL } from "@/constants";
 
 export function Menu() {
   const { language, toggleLanguage } = useLanguage();
@@ -63,7 +64,17 @@ export function Menu() {
           <div className="mt-4">
             <SheetClose asChild>
               <a
-                href="https://www.buymeacoffee.com/coolsunwind"
+                href={FEEDBACK_FORM_URL}
+                className="inline-flex h-10 items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 w-full mb-4"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t.giveMeFeedback} 📝
+              </a>
+            </SheetClose>
+            <SheetClose asChild>
+              <a
+                href={BUY_ME_A_DRINK_URL}
                 className="inline-flex h-10 items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 w-full"
                 target="_blank"
                 rel="noopener noreferrer"

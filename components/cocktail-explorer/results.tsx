@@ -3,14 +3,15 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { CocktailCard } from "@/components/cocktail-card";
 import { useCocktail } from "@/context/CocktailContext";
-import { sendGAEvent } from '@next/third-parties/google'
-import { useEffect } from 'react';
+import { sendGAEvent } from "@next/third-parties/google";
+import { useEffect } from "react";
+import { ExternalLink } from "@/components/external-link";
 
 export default function Results() {
   const { language } = useLanguage();
   const t = translations[language];
-  const { 
-    results, 
+  const {
+    results,
     sweetness,
     sourness,
     body,
@@ -20,15 +21,15 @@ export default function Results() {
     selectedFlavors,
     selectedBaseSpirits,
     selectedIngredients,
-    selectedLiqueurs
+    selectedLiqueurs,
   } = useCocktail();
 
   useEffect(() => {
     if (results.length > 0) {
-      sendGAEvent('cocktail_explorer_results', {
-        cocktails: results.map(cocktail => ({
+      sendGAEvent("cocktail_explorer_results", {
+        cocktails: results.map((cocktail) => ({
           name: cocktail.name.en,
-          similarity: (100 - cocktail.distance).toFixed(1) + '%'
+          similarity: (100 - cocktail.distance).toFixed(1) + "%",
         })),
         parameters: {
           sweetness,
@@ -40,8 +41,8 @@ export default function Results() {
           flavors: selectedFlavors,
           base_spirits: selectedBaseSpirits,
           ingredients: selectedIngredients,
-          liqueurs: selectedLiqueurs
-        }
+          liqueurs: selectedLiqueurs,
+        },
       });
     }
   }, [results, language]);
@@ -51,10 +52,10 @@ export default function Results() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="space-y-8"
     >
-      <h2>{t.resultsTitle || "Your Cocktail Matches"}</h2>
-      <div id="results-section" className="flex flex-col gap-y-6 pb-20">
+      <h2>{t.resultsTitle}</h2>
+      <ExternalLink message={t.feedbackMessage} />
+      <div id="results-section" className="mt-8 flex flex-col gap-y-6 pb-20">
         {results.map((cocktail, index) => (
           <motion.div
             key={cocktail.name[language]}
@@ -62,13 +63,10 @@ export default function Results() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <CocktailCard 
-              cocktail={cocktail} 
-              distance={cocktail.distance}
-            />
+            <CocktailCard cocktail={cocktail} distance={cocktail.distance} />
           </motion.div>
         ))}
       </div>
     </motion.div>
   );
-}; 
+}
