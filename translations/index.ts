@@ -92,6 +92,7 @@ export const translations = {
     reset: "Reset",
     search: "Search...",
     noResultsFound: "No matching options found.",
+    buyMeADrink: "Buy me a drink",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -181,5 +182,6 @@ export const translations = {
     reset: "重設",
     search: "搜尋...",
     noResultsFound: "找不到符合的選項",
+    buyMeADrink: "請我飲返杯",
   },
 };

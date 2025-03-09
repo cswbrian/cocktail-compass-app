@@ -24,41 +24,54 @@ export function Menu() {
         <SheetTrigger asChild>
           <MenuIcon className="h-6 w-6" />
         </SheetTrigger>
-        <SheetContent side="right" className="w-full sm:w-[540px]">
-          <SheetHeader className="p-0">
-            <SheetTitle className="font-normal text-left text-base">
-              <SheetClose asChild>
-                <Link href="/">{t.appName}</Link>
-              </SheetClose>
-            </SheetTitle>
-          </SheetHeader>
-          <div className="mt-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">{t.language}</span>
-              <SheetClose asChild>
-                <Tabs defaultValue={language} className="w-[200px]">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger
-                      value="en"
-                      onClick={() => language !== "en" && toggleLanguage()}
-                      aria-label="English"
-                    >
-                      English
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="zh"
-                      onClick={() => language !== "zh" && toggleLanguage()}
-                      aria-label="Chinese"
-                    >
-                      中文
-                    </TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </SheetClose>
+        <SheetContent side="right" className="h-full w-full sm:w-[540px]">
+          <div className="flex flex-col justify-between h-full">
+            <div>
+            <SheetHeader className="p-0">
+              <SheetTitle className="font-normal text-left text-base">
+                <SheetClose asChild>
+                  <Link href="/">{t.appName}</Link>
+                </SheetClose>
+              </SheetTitle>
+            </SheetHeader>
+            <div className="mt-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">{t.language}</span>
+                <SheetClose asChild>
+                  <Tabs defaultValue={language} className="w-[200px]">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger
+                        value="en"
+                        onClick={() => language !== "en" && toggleLanguage()}
+                        aria-label="English"
+                      >
+                        English
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="zh"
+                        onClick={() => language !== "zh" && toggleLanguage()}
+                        aria-label="Chinese"
+                      >
+                        中文
+                      </TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                </SheetClose>
+              </div>
             </div>
-          </div>
-          <div className="absolute bottom-4 left-4 flex flex-col gap-2">
-            <div className="flex gap-2">
+            </div>
+          <div className="mt-4">
+            <SheetClose asChild>
+              <a
+                href="https://www.buymeacoffee.com/coolsunwind"
+                className="inline-flex h-10 items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 w-full"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t.buyMeADrink} 🍸
+              </a>
+            </SheetClose>
+            <div className="mt-4 flex gap-2">
               <SheetClose asChild>
                 <a
                   href="https://github.com/cswbrian/cocktail-compass-app"
@@ -66,7 +79,12 @@ export function Menu() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Image src="/github.svg" alt="GitHub" width={24} height={24} />
+                  <Image
+                    src="/github.svg"
+                    alt="GitHub"
+                    width={24}
+                    height={24}
+                  />
                 </a>
               </SheetClose>
               <SheetClose asChild>
@@ -94,6 +112,7 @@ export function Menu() {
                 Magic lamp icons created by Freepik - Flaticon
               </a>
             </SheetClose>
+          </div>
           </div>
         </SheetContent>
       </Sheet>

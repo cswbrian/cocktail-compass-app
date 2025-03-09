@@ -26,7 +26,7 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
     : "";
 
   const handleClick = () => {
-    sendGAEvent('cocktail_interaction', {
+    sendGAEvent('cocktail_card', {
       action: 'view_details',
       cocktail_name: cocktail.name.en,
       source: 'card_click'
@@ -36,7 +36,7 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
 
   const handleSeeMoreClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    sendGAEvent('cocktail_interaction', {
+    sendGAEvent('cocktail_card', {
       action: 'view_details',
       cocktail_name: cocktail.name.en,
       source: 'see_more_button'

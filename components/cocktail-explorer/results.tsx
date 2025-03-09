@@ -25,7 +25,7 @@ export default function Results() {
 
   useEffect(() => {
     if (results.length > 0) {
-      sendGAEvent('cocktail_results', {
+      sendGAEvent('cocktail_explorer_results', {
         cocktails: results.map(cocktail => ({
           name: cocktail.name.en,
           similarity: (100 - cocktail.distance).toFixed(1) + '%'
