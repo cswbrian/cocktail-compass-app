@@ -8,6 +8,7 @@ import { FlavorDescriptor } from "@/components/flavor-descriptor";
 import { Metadata } from "next";
 import { ShareButton } from "@/components/share-button";
 import { ExternalLink } from "@/components/external-link";
+import { Search } from "lucide-react";
 
 type Props = {
   params: Promise<{ language: string; slug: string }>;
@@ -108,9 +109,10 @@ export default async function CocktailPage({ params }: Props) {
               <li key={i} className="flex justify-between">
                 <Link
                   href={`/${language}/ingredients/${slugify(spirit.name.en)}`}
-                  className="hover:text-blue-400 transition-colors"
+                  className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                 >
                   {getLocalizedText(spirit.name, language)}
+                  <Search className="w-4 h-4 text-muted-foreground" />
                 </Link>
                 <span className="text-gray-400">
                   {spirit.amount} {getLocalizedText(spirit.unit, language)}
@@ -121,9 +123,10 @@ export default async function CocktailPage({ params }: Props) {
               <li key={i} className="flex justify-between">
                 <Link
                   href={`/${language}/ingredients/${slugify(liqueur.name.en)}`}
-                  className="hover:text-blue-400 transition-colors"
+                  className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                 >
                   {getLocalizedText(liqueur.name, language)}
+                  <Search className="w-4 h-4 text-muted-foreground" />
                 </Link>
                 <span className="text-gray-400">
                   {liqueur.amount} {getLocalizedText(liqueur.unit, language)}
@@ -136,9 +139,10 @@ export default async function CocktailPage({ params }: Props) {
                   href={`/${language}/ingredients/${slugify(
                     ingredient.name.en
                   )}`}
-                  className="hover:text-blue-400 transition-colors"
+                  className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                 >
                   {getLocalizedText(ingredient.name, language)}
+                  <Search className="w-4 h-4 text-muted-foreground" />
                 </Link>
                 <span className="text-gray-400">
                   {ingredient.amount}{" "}
