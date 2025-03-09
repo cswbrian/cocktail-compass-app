@@ -8,6 +8,7 @@ import { translations } from "@/translations";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
 import { Button } from "@/components/ui/button";
 import { ShareButton } from "@/components/share-button";
+import { sendGAEvent } from '@next/third-parties/google'
 
 interface CocktailCardProps {
   cocktail: Cocktail;
@@ -19,16 +20,29 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 
+  const cocktailPath = `/${language}/cocktails/${slugify(cocktail.name.en)}`;
+  const shareUrl = typeof window !== "undefined"
+    ? `${window.location.origin}${cocktailPath}`
+    : "";
+
   const handleClick = () => {
-    router.push(`/${language}/cocktails/${slugify(cocktail.name.en)}`);
+    sendGAEvent('cocktail_interaction', {
+      action: 'view_details',
+      cocktail_name: cocktail.name.en,
+      source: 'card_click'
+    });
+    router.push(cocktailPath);
   };
 
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/${language}/cocktails/${slugify(
-          cocktail.name.en
-        )}`
-      : "";
+  const handleSeeMoreClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    sendGAEvent('cocktail_interaction', {
+      action: 'view_details',
+      cocktail_name: cocktail.name.en,
+      source: 'see_more_button'
+    });
+    router.push(cocktailPath);
+  };
 
   return (
     <div
@@ -97,7 +111,7 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
 
       <div className="mt-4 flex gap-2">
         <Button
-          onClick={handleClick}
+          onClick={handleSeeMoreClick}
           variant="default"
           className="flex-1 bg-white text-black hover:bg-gray-200"
         >

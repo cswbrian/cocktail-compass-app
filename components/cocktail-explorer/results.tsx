@@ -3,12 +3,49 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { CocktailCard } from "@/components/cocktail-card";
 import { useCocktail } from "@/context/CocktailContext";
+import { sendGAEvent } from '@next/third-parties/google'
+import { useEffect } from 'react';
 
 export default function Results() {
   const { language } = useLanguage();
   const t = translations[language];
-  const { results } = useCocktail();
-  
+  const { 
+    results, 
+    sweetness,
+    sourness,
+    body,
+    complexity,
+    booziness,
+    bubbles,
+    selectedFlavors,
+    selectedBaseSpirits,
+    selectedIngredients,
+    selectedLiqueurs
+  } = useCocktail();
+
+  useEffect(() => {
+    if (results.length > 0) {
+      sendGAEvent('cocktail_results', {
+        cocktails: results.map(cocktail => ({
+          name: cocktail.name.en,
+          similarity: (100 - cocktail.distance).toFixed(1) + '%'
+        })),
+        parameters: {
+          sweetness,
+          sourness,
+          body,
+          complexity,
+          booziness,
+          bubbles,
+          flavors: selectedFlavors,
+          base_spirits: selectedBaseSpirits,
+          ingredients: selectedIngredients,
+          liqueurs: selectedLiqueurs
+        }
+      });
+    }
+  }, [results, language]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
