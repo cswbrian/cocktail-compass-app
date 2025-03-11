@@ -95,6 +95,11 @@ export const translations = {
     noResultsFound: "No matching options found.",
     buyMeADrink: "Treat me a drink",
     giveMeFeedback: "Give me feedback",
+    bookmarks: "Bookmarks",
+    noBookmarksYet: "No bookmarks yet",
+    favorites: "Favorites",
+    wantToTry: "Want to Try",
+    dontLike: "Don't Like",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -187,5 +192,10 @@ export const translations = {
     noResultsFound: "找不到符合的選項",
     buyMeADrink: "請我飲返杯",
     giveMeFeedback: "俾啲意見",
+    bookmarks: "書籤",
+    noBookmarksYet: "暫時冇書籤",
+    favorites: "鍾意",
+    wantToTry: "想試下",
+    dontLike: "唔鍾意",
   },
 };

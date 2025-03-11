@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
 import { Metadata } from "next";
 import { ShareButton } from "@/components/share-button";
+import { BookmarkButton } from "@/components/bookmark/bookmark-button";
 import { ExternalLink } from "@/components/external-link";
 import { Search } from "lucide-react";
 
@@ -71,11 +72,14 @@ export default async function CocktailPage({ params }: Props) {
             <div className="text-gray-400 text-xs">{cocktail.name.zh}</div>
           )}
         </div>
-        <ShareButton
-          url={`${
-            process.env.NEXT_PUBLIC_BASE_URL || ""
-          }/${language}/cocktails/${slug}`}
-        />
+        <div className="flex gap-2">
+          <BookmarkButton cocktailSlug={slugify(cocktail.name.en)} cocktailName={cocktail.name.en} />
+          <ShareButton
+            url={`${
+              process.env.NEXT_PUBLIC_BASE_URL || ""
+            }/${language}/cocktails/${slug}`}
+          />
+        </div>
       </div>
 
       {cocktail.flavor_descriptors && (
