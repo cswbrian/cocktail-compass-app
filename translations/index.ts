@@ -100,6 +100,10 @@ export const translations = {
     favorites: "Favorites",
     wantToTry: "Want to Try",
     dontLike: "Don't Like",
+    selectCocktail: "Select a cocktail",
+    findTwists: "Find Twists",
+    selectedCocktail: "Your selected",
+    suggestedTwists: "Suggested Twists",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -197,5 +201,9 @@ export const translations = {
     favorites: "鍾意",
     wantToTry: "想試下",
     dontLike: "唔鍾意",
+    selectCocktail: "選擇一杯調酒",
+    findTwists: "搵Twist",
+    selectedCocktail: "你揀嘅調酒",
+    suggestedTwists: "搵到嘅Twist",
   },
 };
