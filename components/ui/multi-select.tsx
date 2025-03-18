@@ -187,6 +187,11 @@ export const MultiSelect = React.forwardRef<
         : [...selectedValues, option];
       setSelectedValues(newSelectedValues);
       onValueChange(newSelectedValues);
+      
+      // Close dropdown immediately if maxCount is 1 and an option is selected
+      if (maxCount === 1 && newSelectedValues.length === 1) {
+        setIsPopoverOpen(false);
+      }
     };
 
     const handleClear = () => {
@@ -305,7 +310,7 @@ export const MultiSelect = React.forwardRef<
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0 max-h-[300px]"
+          className="w-auto p-0"
           align="start"
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
         >

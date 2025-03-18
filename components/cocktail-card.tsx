@@ -53,7 +53,7 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
         <div>
           <h3 className="text-2xl mb-1">{cocktail.name.en}</h3>
           {language === "zh" && (
-            <div className="text-gray-400 text-sm">{cocktail.name.zh}</div>
+            <div className="text-gray-400">{cocktail.name.zh}</div>
           )}
         </div>
         {typeof distance === 'number' && (

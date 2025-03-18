@@ -3,8 +3,6 @@ import FlavorRadar from "@/components/flavor-radar";
 import { flavorColorMap } from "@/constants";
 import { useLanguage } from "@/context/LanguageContext";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
-import { Button } from "@/components/ui/button";
-import { slugify } from "@/lib/utils";
 import { translations } from "@/translations";
 
 interface BasedCocktailCardProps {
@@ -20,20 +18,13 @@ export function BasedCocktailCard({ cocktail }: BasedCocktailCardProps) {
     return flavorColorMap[firstFlavor] || "rgba(255, 185, 0, 0.5)";
   };
 
-  const cocktailPath = `/${language}/cocktails/${slugify(cocktail.name.en)}`;
-
-  const handleSeeMoreClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    window.open(cocktailPath, '_blank');
-  };
-
   return (
-    <div className="">
+    <div>
       <div className="mb-4 flex justify-between items-start gap-x-2">
         <div>
-          <h3 className="text-2xl mb-1">{cocktail.name.en}</h3>
+          <h3 className="text-4xl mb-1">{cocktail.name.en}</h3>
           {language === "zh" && (
-            <div className="text-gray-400 text-sm">{cocktail.name.zh}</div>
+            <div className="text-gray-400">{cocktail.name.zh}</div>
           )}
         </div>
       </div>
@@ -76,15 +67,6 @@ export function BasedCocktailCard({ cocktail }: BasedCocktailCardProps) {
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="mt-4">
-        <Button
-          onClick={handleSeeMoreClick}
-          variant="outline"
-        >
-          {t.seeMore}
-        </Button>
       </div>
     </div>
   );

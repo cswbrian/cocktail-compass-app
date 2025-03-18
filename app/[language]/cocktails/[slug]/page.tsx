@@ -46,7 +46,7 @@ export default async function CocktailPage({ params }: Props) {
         <div>
           <h1 className="text-4xl mb-2">{cocktail.name.en}</h1>
           {language === "zh" && (
-            <div className="text-gray-400 text-xs">{cocktail.name.zh}</div>
+            <div className="text-gray-400">{cocktail.name.zh}</div>
           )}
         </div>
         <div className="flex gap-2">

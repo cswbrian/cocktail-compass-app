@@ -104,6 +104,8 @@ export const translations = {
     findTwists: "Find Twists",
     selectedCocktail: "Your selected",
     suggestedTwists: "Suggested Twists",
+    findTwistsDescription: "Find twists for your favorite cocktail",
+    twists: "Twists",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -205,5 +207,7 @@ export const translations = {
     findTwists: "搵Twist",
     selectedCocktail: "你揀嘅調酒",
     suggestedTwists: "搵到嘅Twist",
+    findTwistsDescription: "揀你最鍾意嘅調酒，搵啲相似風味嘅Twist",
+    twists: "Twist",
   },
 };
