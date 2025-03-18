@@ -13,7 +13,9 @@ const getUniqueOptions = (
 ) => {
   const uniqueMap = new Map<string, { label: string; value: string }>();
   items.forEach((item) => {
-    const label = item.name[language];
+    const label = language === 'zh' 
+      ? `${item.name.en} / ${item.name.zh}`
+      : item.name[language];
     const value = item.name.en;
     if (!uniqueMap.has(label)) {
       uniqueMap.set(label, { label, value });
