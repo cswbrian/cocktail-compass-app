@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Cocktail } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -11,6 +11,7 @@ import { calculateDistance } from "@/lib/cocktail-twist";
 import { BasedCocktailCard } from "@/components/twist-finder/based-cocktail-card";
 import { TwistResults } from "@/components/twist-finder/twist-results";
 import { slugify } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 interface TwistFinderProps {
   cocktails: Cocktail[];
@@ -18,15 +19,29 @@ interface TwistFinderProps {
 
 export function TwistFinder({ cocktails }: TwistFinderProps) {
   const { language } = useLanguage();
+  const searchParams = useSearchParams();
   const t = translations[language as keyof typeof translations];
   const [selectedCocktail, setSelectedCocktail] = useState<string>("");
   const [twists, setTwists] = useState<Array<{ cocktail: Cocktail; distance: number }>>([]);
   const [showResults, setShowResults] = useState(false);
 
-  const cocktailOptions = cocktails.map(cocktail => ({
-    label: `${cocktail.name.en} / ${cocktail.name.zh}`,
-    value: cocktail.name.en,
-  }));
+  useEffect(() => {
+    if (!searchParams) return;
+    const cocktailParam = searchParams.get('cocktail');
+    if (cocktailParam) {
+      const cocktail = cocktails.find(c => slugify(c.name.en) === cocktailParam);
+      if (cocktail) {
+        setSelectedCocktail(cocktail.name.en);
+      }
+    }
+  }, [searchParams, cocktails]);
+
+  const cocktailOptions = cocktails
+    .map(cocktail => ({
+      label: `${cocktail.name.en} / ${cocktail.name.zh}`,
+      value: cocktail.name.en,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   const selectedCocktailData = selectedCocktail 
     ? cocktails.find(c => c.name.en === selectedCocktail)
@@ -74,7 +89,7 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
 
   return (
     <div>
-      <h1 className="text-3xl mb-8">{t.findTwists}</h1>
+      <h1 className="text-4xl mb-8">{t.findTwists}</h1>
       <p className="text-muted-foreground mb-2">{t.findTwistsDescription}</p>
       <div className="max-w-md mb-8">
         <Combobox

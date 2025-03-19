@@ -1468,147 +1468,6 @@
   },
   {
     "name": {
-      "en": "The Last Word",
-      "zh": "最後一句話"
-    },
-    "description": {
-      "en": "**A perfectly balanced equal-parts cocktail.**\n\nThe Last Word is a complex and refreshing drink with:\n*   A harmonious blend of gin, green Chartreuse, maraschino liqueur, and lime juice.\n*   An intensely flavored and sophisticated profile.\n*   Equal parts of each ingredient ensure balance and depth.",
-      "zh": "**一款完美平衡的等比例雞尾酒。**\n\n最後一句話是一款複雜而清爽的飲品，具有：\n*   琴酒、綠色 Chartreuse、黑櫻桃利口酒和萊姆汁的和諧融合。\n*   風味濃郁且精緻的特色。\n*   每種成分的等比例確保了平衡和深度。"
-    },
-    "historical_reference": {
-      "en": "**Prohibition-Era Classic**\n\n*   Credited to Frank Fogarty at the Detroit Athletic Club around 1915.\n*   Gained renewed popularity in the early 2000s, particularly in Seattle and Portland.\n*   Known for its unique combination of ingredients, resulting in a complex flavor profile.",
-      "zh": "**禁酒時代的經典**\n\n*   據說是 1915 年左右由底特律體育俱樂部的 Frank Fogarty 創作的。\n*   在 2000 年代初期重新流行起來，尤其是在西雅圖和波特蘭。\n*   以其獨特的成分組合而聞名，產生了複雜的風味。"
-    },
-    "technique": {
-      "en": "Shake all ingredients with ice and strain into a chilled glass.",
-      "zh": "將所有材料與冰塊搖勻，然後濾入冰鎮過的杯中。"
-    },
-    "garnish": {
-      "en": "Maraschino cherry (optional)",
-      "zh": "馬拉斯奇諾櫻桃（可選）"
-    },
-    "serve_in_glass": {
-      "en": "Chilled coupe or martini glass",
-      "zh": "冰鎮過的淺碟香檳杯或馬丁尼杯"
-    },
-    "appearance": {
-      "en": "Pale green and slightly cloudy",
-      "zh": "淡綠色且略帶混濁"
-    },
-    "allergens": [],
-    "base_spirits": [
-      {
-        "amount": 22,
-        "name": {
-          "en": "Gin",
-          "zh": "琴酒"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Forms the base and provides a botanical backbone.",
-          "zh": "構成基底，提供植物風味。"
-        },
-        "tags": [
-          {
-            "en": "clear spirit",
-            "zh": "清澈烈酒"
-          },
-          {
-            "en": "juniper",
-            "zh": "杜松子"
-          },
-          {
-            "en": "botanical",
-            "zh": "植物香料"
-          }
-        ]
-      }
-    ],
-    "liqueurs": [
-      {
-        "amount": 22,
-        "name": {
-          "en": "Green Chartreuse",
-          "zh": "綠色夏翠絲"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds herbal complexity and sweetness.",
-          "zh": "增加草本複雜性和甜味。"
-        }
-      },
-      {
-        "amount": 22,
-        "name": {
-          "en": "Maraschino Liqueur",
-          "zh": "黑櫻桃利口酒"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds nutty notes and sweetness.",
-          "zh": "增添堅果風味和甜味。"
-        }
-      }
-    ],
-    "ingredients": [
-      {
-        "amount": 22,
-        "name": {
-          "en": "Lime Juice",
-          "zh": "青檸汁"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds acidity and balance.",
-          "zh": "增加酸度和平衡感。"
-        }
-      }
-    ],
-    "flavor_descriptors": [
-      {
-        "en": "Herbal",
-        "zh": "草本"
-      },
-      {
-        "en": "Citrus",
-        "zh": "柑橘"
-      },
-      {
-        "en": "Fruity",
-        "zh": "果香"
-      },
-      {
-        "en": "Bitter",
-        "zh": "苦味"
-      },
-      {
-        "en": "Floral",
-        "zh": "花香"
-      }
-    ],
-    "flavor_profile": {
-      "sweetness": 5,
-      "sourness": 6,
-      "booziness": 6,
-      "body": 7,
-      "complexity": 9,
-      "bubbles": false
-    }
-  },
-  {
-    "name": {
       "en": "Apple Cider Shrub",
       "zh": "蘋果西打醋"
     },
@@ -33127,119 +32986,6 @@
   },
   {
     "name": {
-      "en": "Alexandre",
-      "zh": "亞歷山大"
-    },
-    "description": {
-      "en": "**Classic French Cocktail**\n\nA sophisticated and balanced cocktail:\n*   Combines Cognac, dry vermouth, and bitters.\n*   Often served up in a coupe glass.\n*   Known for its refined taste and subtle complexity.",
-      "zh": "**經典法式雞尾酒**\n\n一種精緻且均衡的雞尾酒：\n*   結合了干邑白蘭地、乾味美思和苦精。\n*   通常在高腳杯中供應。\n*   以其精緻的口感和微妙的複雜性而聞名。"
-    },
-    "historical_reference": {
-      "en": "**Historical Origins**\n\nThe Alexandre cocktail is believed to have originated in the early 20th century, possibly in France. While its exact history is debated, it's considered a classic cocktail with French roots, showcasing the elegance and sophistication of French mixology during that era.\n\n*   Emergence in the early 1900s.\n*   Associated with French cocktail culture.",
-      "zh": "**歷史淵源**\n\n人們認為亞歷山大雞尾酒起源於 20 世紀初，可能是在法國。雖然其確切歷史尚有爭議，但它被認為是一種具有法國血統的經典雞尾酒，展現了當時法國調酒的優雅和精緻。\n\n*   出現在 1900 年代初期。\n*   與法國雞尾酒文化相關。"
-    },
-    "technique": {
-      "en": "Stir with ice and strain into a chilled coupe glass.",
-      "zh": "與冰塊攪拌並濾入冰鎮過的香檳杯中。"
-    },
-    "garnish": {
-      "en": "Lemon twist",
-      "zh": "檸檬皮扭轉"
-    },
-    "serve_in_glass": {
-      "en": "Coupe glass",
-      "zh": "高腳杯"
-    },
-    "appearance": {
-      "en": "Clear, light amber",
-      "zh": "清澈，淺琥珀色"
-    },
-    "allergens": [
-      {
-        "en": "None",
-        "zh": "無"
-      }
-    ],
-    "base_spirits": [
-      {
-        "amount": 45,
-        "name": {
-          "en": "Cognac",
-          "zh": "干邑白蘭地"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Provides the base spirit with rich flavor and complexity.",
-          "zh": "提供基酒，具有濃郁的風味和複雜性。"
-        }
-      }
-    ],
-    "liqueurs": [
-      {
-        "amount": 20,
-        "name": {
-          "en": "Dry Vermouth",
-          "zh": "不甜苦艾酒"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds dryness and herbal notes.",
-          "zh": "增添乾爽和草本氣息。"
-        }
-      }
-    ],
-    "ingredients": [
-      {
-        "amount": 2,
-        "name": {
-          "en": "Orange Bitters",
-          "zh": "橙味苦精"
-        },
-        "unit": {
-          "en": "dashes",
-          "zh": "滴"
-        },
-        "rationale": {
-          "en": "Adds a touch of bitterness and citrus aroma.",
-          "zh": "增添一絲苦味和柑橘香氣。"
-        }
-      }
-    ],
-    "flavor_descriptors": [
-      {
-        "en": "Fruity",
-        "zh": "果香"
-      },
-      {
-        "en": "Herbal",
-        "zh": "草本"
-      },
-      {
-        "en": "Bitter",
-        "zh": "苦味"
-      },
-      {
-        "en": "Woody",
-        "zh": "木質"
-      }
-    ],
-    "flavor_profile": {
-      "sweetness": 4,
-      "sourness": 3,
-      "booziness": 7,
-      "body": 6,
-      "complexity": 8,
-      "bubbles": false
-    }
-  },
-  {
-    "name": {
       "en": "Virgin Mojito",
       "zh": "處女莫吉托"
     },
@@ -43618,148 +43364,6 @@
   },
   {
     "name": {
-      "en": "20th Century Cocktail",
-      "zh": "20世紀雞尾酒"
-    },
-    "description": {
-      "en": "**Elegant and Sophisticated**\n\nA pre-prohibition classic featuring:\n*   Gin base for a clean taste.\n*   Lillet Blanc for floral and honeyed notes.\n*   White Creme de Cacao for subtle chocolate richness.\n*   Lemon juice for bright acidity.",
-      "zh": "**優雅而精緻**\n\n禁酒令前經典之作，特色：\n*   琴酒基底帶來清爽口感。\n*   Lillet Blanc帶來花香和蜂蜜香氣。\n*   白色可可甜酒帶來微妙的巧克力醇厚感。\n*   檸檬汁帶來明亮的酸度。"
-    },
-    "historical_reference": {
-      "en": "**Created in the early 20th Century**\n\n*   First appeared around the beginning of the 20th century.\n*   Named after the luxurious 20th Century Limited train, symbolizing modernity and speed.\n*   Became popular in the Savoy Cocktail Book.",
-      "zh": "**創建於20世紀初**\n\n*   首次出現於20世紀初。\n*   以豪華的20th Century Limited列車命名，象徵現代和速度。\n*   在《薩伏伊雞尾酒書》中廣受歡迎。"
-    },
-    "technique": {
-      "en": "Shake all ingredients with ice and strain into a chilled glass.",
-      "zh": "將所有材料與冰塊搖勻，然後濾入冰鎮的玻璃杯中。"
-    },
-    "garnish": {
-      "en": "Lemon twist",
-      "zh": "檸檬皮扭轉"
-    },
-    "serve_in_glass": {
-      "en": "Coupe or Martini glass",
-      "zh": "高腳杯或馬丁尼杯"
-    },
-    "appearance": {
-      "en": "Pale yellow, frothy head",
-      "zh": "淡黃色，泡沫狀"
-    },
-    "allergens": [
-      {
-        "en": "None",
-        "zh": "無"
-      }
-    ],
-    "base_spirits": [
-      {
-        "amount": 45,
-        "name": {
-          "en": "Gin",
-          "zh": "琴酒"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Provides the base and backbone of the cocktail.",
-          "zh": "提供雞尾酒的基底和骨幹。"
-        },
-        "tags": [
-          {
-            "en": "clear spirit",
-            "zh": "清澈烈酒"
-          },
-          {
-            "en": "juniper",
-            "zh": "杜松子"
-          },
-          {
-            "en": "botanical",
-            "zh": "植物香料"
-          }
-        ]
-      }
-    ],
-    "liqueurs": [
-      {
-        "amount": 22,
-        "name": {
-          "en": "Lillet Blanc",
-          "zh": "麗葉白"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds floral, honeyed, and slightly bitter notes.",
-          "zh": "增添花香、蜂蜜和微苦的味道。"
-        }
-      },
-      {
-        "amount": 22,
-        "name": {
-          "en": "Crème de Cacao",
-          "zh": "可可酒"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds a subtle chocolate flavor and sweetness.",
-          "zh": "增添微妙的巧克力風味和甜味。"
-        }
-      }
-    ],
-    "ingredients": [
-      {
-        "amount": 0,
-        "name": {
-          "en": "None",
-          "zh": "無"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "no ingredients",
-          "zh": "沒有原料"
-        }
-      }
-    ],
-    "flavor_descriptors": [
-      {
-        "en": "Citrus",
-        "zh": "柑橘"
-      },
-      {
-        "en": "Floral",
-        "zh": "花香"
-      },
-      {
-        "en": "Chocolate",
-        "zh": "朱古力"
-      },
-      {
-        "en": "Herbal",
-        "zh": "草本"
-      }
-    ],
-    "flavor_profile": {
-      "sweetness": 4,
-      "sourness": 5,
-      "booziness": 6,
-      "body": 5,
-      "complexity": 7,
-      "bubbles": false
-    }
-  },
-  {
-    "name": {
       "en": "Test Pilot",
       "zh": "試飛員"
     },
@@ -51903,36 +51507,41 @@
   {
     "name": {
       "en": "20th Century Cocktail",
-      "zh": "二十世紀雞尾酒"
+      "zh": "20世紀雞尾酒"
     },
     "description": {
-      "en": "**A Pre-Prohibition Classic**\n\nA balanced gin cocktail featuring:\n*   Gin for a solid base.\n*   Lemon juice for sourness.\n*   Créme de cacao for chocolate and sweetness.\n*   Cream for texture and richness.",
-      "zh": "**禁酒令前經典**\n\n一款均衡的琴酒雞尾酒，特色：\n* 琴酒作為堅實的基底。\n* 檸檬汁帶來酸味。\n* 可可奶油帶來巧克力風味和甜味。\n* 鮮奶油增加質地和濃郁度。"
+      "en": "**Elegant and Sophisticated**\n\nA pre-prohibition classic featuring:\n*   Gin base for a clean taste.\n*   Lillet Blanc for floral and honeyed notes.\n*   White Creme de Cacao for subtle chocolate richness.\n*   Lemon juice for bright acidity.",
+      "zh": "**優雅而精緻**\n\n禁酒令前經典之作，特色：\n*   琴酒基底帶來清爽口感。\n*   Lillet Blanc帶來花香和蜂蜜香氣。\n*   白色可可甜酒帶來微妙的巧克力醇厚感。\n*   檸檬汁帶來明亮的酸度。"
     },
     "historical_reference": {
-      "en": "**Origin**: Created in the early 20th century.\n\n*   First appeared in print in *Recipes for Mixed Drinks* by Hugo Ensslin (1917).\n*   Served at the Wallick and Hoffman's bar, also known as the Hoffman House in New York City.",
-      "zh": "**起源**: 20世紀初創作。\n\n*   首次出現在Hugo Ensslin的《*混合飲料配方*》（1917年）中。\n*   在紐約市的Wallick and Hoffman's酒吧（也稱為霍夫曼之家）供應。"
+      "en": "**Created in the early 20th Century**\n\n*   First appeared around the beginning of the 20th century.\n*   Named after the luxurious 20th Century Limited train, symbolizing modernity and speed.\n*   Became popular in the Savoy Cocktail Book.",
+      "zh": "**創建於20世紀初**\n\n*   首次出現於20世紀初。\n*   以豪華的20th Century Limited列車命名，象徵現代和速度。\n*   在《薩伏伊雞尾酒書》中廣受歡迎。"
     },
     "technique": {
       "en": "Shake all ingredients with ice and strain into a chilled glass.",
-      "zh": "將所有材料與冰塊搖勻，然後倒入冰鎮的杯子中。"
+      "zh": "將所有材料與冰塊搖勻，然後濾入冰鎮的玻璃杯中。"
     },
     "garnish": {
-      "en": "Grated Nutmeg",
-      "zh": "磨碎的肉荳蔻"
+      "en": "Lemon twist",
+      "zh": "檸檬皮扭轉"
     },
     "serve_in_glass": {
-      "en": "Coupe",
-      "zh": "高腳杯"
+      "en": "Coupe or Martini glass",
+      "zh": "高腳杯或馬丁尼杯"
     },
     "appearance": {
-      "en": "Clear, vibrant pink",
-      "zh": "清澈、鮮豔的粉紅色"
+      "en": "Pale yellow, frothy head",
+      "zh": "淡黃色，泡沫狀"
     },
-    "allergens": [],
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
     "base_spirits": [
       {
-        "amount": 40,
+        "amount": 45,
         "name": {
           "en": "Gin",
           "zh": "琴酒"
@@ -51942,8 +51551,8 @@
           "zh": "毫升"
         },
         "rationale": {
-          "en": "Provides the primary spirit base and botanical complexity.",
-          "zh": "提供主要的烈酒基底和植物的複雜性。"
+          "en": "Provides the base and backbone of the cocktail.",
+          "zh": "提供雞尾酒的基底和骨幹。"
         },
         "tags": [
           {
@@ -51963,7 +51572,22 @@
     ],
     "liqueurs": [
       {
-        "amount": 20,
+        "amount": 22,
+        "name": {
+          "en": "Lillet Blanc",
+          "zh": "麗葉白"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds floral, honeyed, and slightly bitter notes.",
+          "zh": "增添花香、蜂蜜和微苦的味道。"
+        }
+      },
+      {
+        "amount": 22,
         "name": {
           "en": "Crème de Cacao",
           "zh": "可可酒"
@@ -51973,40 +51597,25 @@
           "zh": "毫升"
         },
         "rationale": {
-          "en": "Adds chocolate flavor and sweetness.",
-          "zh": "增加巧克力風味和甜味。"
+          "en": "Adds a subtle chocolate flavor and sweetness.",
+          "zh": "增添微妙的巧克力風味和甜味。"
         }
       }
     ],
     "ingredients": [
       {
-        "amount": 20,
+        "amount": 0,
         "name": {
-          "en": "Lemon Juice",
-          "zh": "檸檬汁"
+          "en": "None",
+          "zh": "無"
         },
         "unit": {
           "en": "ml",
           "zh": "毫升"
         },
         "rationale": {
-          "en": "Adds acidity to balance the sweetness.",
-          "zh": "增加酸度以平衡甜味。"
-        }
-      },
-      {
-        "amount": 20,
-        "name": {
-          "en": "Cream",
-          "zh": "鮮奶油"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds a rich and velvety texture.",
-          "zh": "增加豐富和柔滑的質地。"
+          "en": "no ingredients",
+          "zh": "沒有原料"
         }
       }
     ],
@@ -52016,19 +51625,23 @@
         "zh": "柑橘"
       },
       {
+        "en": "Floral",
+        "zh": "花香"
+      },
+      {
         "en": "Chocolate",
         "zh": "朱古力"
       },
       {
-        "en": "Creamy",
-        "zh": "乳脂"
+        "en": "Herbal",
+        "zh": "草本"
       }
     ],
     "flavor_profile": {
-      "sweetness": 6,
+      "sweetness": 4,
       "sourness": 5,
       "booziness": 6,
-      "body": 7,
+      "body": 5,
       "complexity": 7,
       "bubbles": false
     }
@@ -63858,127 +63471,6 @@
   },
   {
     "name": {
-      "en": "Bees Knees",
-      "zh": "蜜蜂的膝蓋"
-    },
-    "description": {
-      "en": "*Classic Prohibition-era Cocktail*\n\nA simple yet elegant cocktail featuring:\n*   Gin as the base spirit.\n*   Lemon juice for tartness.\n*   Honey syrup for sweetness and floral aroma.",
-      "zh": "*禁酒時代的經典雞尾酒*\n\n簡單而優雅的雞尾酒，特色：\n*   琴酒為基酒。\n*   檸檬汁帶來酸味。\n*   蜂蜜糖漿帶來甜味和花香。"
-    },
-    "historical_reference": {
-      "en": "**Origin**: Emerged during the Prohibition era in the United States (1920-1933).\n\n* The name \"Bees Knees\" was slang for \"the best.\"\n*   Honey was used to mask the harsh flavors of poorly made gin during Prohibition.\n*   First appeared in print in 1930, in *Recipes for Mixed Drinks* by Harry MacElhone.",
-      "zh": "**起源**: 出現於美國禁酒時期（1920-1933）。\n\n*   名稱“Bees Knees”是“最好的”的俚語。\n*   在禁酒時期，蜂蜜被用來掩蓋劣質琴酒的刺鼻味道。\n*   首次出現在印刷品中是1930年哈里·麥克埃爾霍尼的《混合飲料食譜》。"
-    },
-    "technique": {
-      "en": "Shake all ingredients with ice. Strain into a chilled glass.",
-      "zh": "將所有材料與冰塊一起搖勻。 濾入冰鎮的玻璃杯中。"
-    },
-    "garnish": {
-      "en": "Lemon twist or edible flower (optional)",
-      "zh": "檸檬皮或食用花（可選）"
-    },
-    "serve_in_glass": {
-      "en": "Coupe or cocktail glass",
-      "zh": "淺碟香檳杯或雞尾酒杯"
-    },
-    "appearance": {
-      "en": "Pale yellow, slightly cloudy",
-      "zh": "淡黃色，略帶混濁"
-    },
-    "allergens": [],
-    "base_spirits": [
-      {
-        "amount": 60,
-        "name": {
-          "en": "Gin",
-          "zh": "琴酒"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Provides the primary alcoholic backbone and botanical notes.",
-          "zh": "提供主要的酒精骨幹和植物風味。"
-        },
-        "tags": [
-          {
-            "en": "clear spirit",
-            "zh": "清澈烈酒"
-          },
-          {
-            "en": "juniper",
-            "zh": "杜松子"
-          },
-          {
-            "en": "botanical",
-            "zh": "植物香料"
-          }
-        ]
-      }
-    ],
-    "liqueurs": [],
-    "ingredients": [
-      {
-        "amount": 22,
-        "name": {
-          "en": "Honey Syrup",
-          "zh": "蜂蜜糖漿"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Sweetens the drink and provides a floral note.",
-          "zh": "為飲料增添甜味，並提供花香。"
-        }
-      },
-      {
-        "amount": 22,
-        "name": {
-          "en": "Lemon Juice",
-          "zh": "檸檬汁"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds acidity and balances the sweetness.",
-          "zh": "增加酸度，平衡甜度。"
-        }
-      }
-    ],
-    "flavor_descriptors": [
-      {
-        "en": "Citrus",
-        "zh": "柑橘"
-      },
-      {
-        "en": "Floral",
-        "zh": "花香"
-      },
-      {
-        "en": "Herbal",
-        "zh": "草本"
-      },
-      {
-        "en": "Fruity",
-        "zh": "果香"
-      }
-    ],
-    "flavor_profile": {
-      "sweetness": 5,
-      "sourness": 6,
-      "booziness": 6,
-      "body": 4,
-      "complexity": 5,
-      "bubbles": false
-    }
-  },
-  {
-    "name": {
       "en": "Mezcal Margarita",
       "zh": "梅斯卡爾瑪格麗特"
     },
@@ -69292,113 +68784,6 @@
       "booziness": 7,
       "body": 6,
       "complexity": 8,
-      "bubbles": false
-    }
-  },
-  {
-    "name": {
-      "en": "Bamboo Cocktail",
-      "zh": "竹子雞尾酒"
-    },
-    "description": {
-      "en": "*A classic aperitif cocktail*\n\nA simple yet elegant mix of sherry, vermouth, and orange bitters.\n\n*   Low ABV, making it suitable for daytime drinking\n*   Often served before a meal to stimulate the appetite",
-      "zh": "*經典的餐前雞尾酒*\n\n雪莉酒、苦艾酒和橙味苦精的簡單而優雅的混合。\n\n*   酒精度低，適合白天飲用\n*   通常在餐前飲用以刺激食慾"
-    },
-    "historical_reference": {
-      "en": "*Created in the late 19th century*\n\n*   Attributed to Louis Eppinger at the Hoffman House in New York\n*   Named after the Bamboo Room at the hotel\n*   A low-alcohol alternative to the Martini",
-      "zh": "*創建於19世紀後期*\n\n*   歸功於紐約霍夫曼之家的路易斯·埃平格\n*   以酒店的竹屋命名\n*   馬丁尼的低酒精替代品"
-    },
-    "technique": {
-      "en": "Stir with ice and strain into chilled glass",
-      "zh": "與冰攪拌並過濾到冰鎮的玻璃杯中"
-    },
-    "garnish": {
-      "en": "Lemon twist or Olive",
-      "zh": "檸檬皮或橄欖"
-    },
-    "serve_in_glass": {
-      "en": "Cocktail glass or coupe",
-      "zh": "雞尾酒杯或淺碟杯"
-    },
-    "appearance": {
-      "en": "Pale golden, clear",
-      "zh": "淡金色，清澈"
-    },
-    "allergens": [],
-    "base_spirits": [],
-    "liqueurs": [
-      {
-        "amount": 45,
-        "name": {
-          "en": "Dry Sherry",
-          "zh": "不甜雪莉酒"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Provides the base and nutty flavor.",
-          "zh": "提供基底和堅果風味。"
-        }
-      },
-      {
-        "amount": 45,
-        "name": {
-          "en": "Dry Vermouth",
-          "zh": "不甜苦艾酒"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds herbal and floral notes.",
-          "zh": "增添草本和花香。"
-        }
-      }
-    ],
-    "ingredients": [
-      {
-        "amount": 2,
-        "name": {
-          "en": "Orange Bitters",
-          "zh": "橙味苦精"
-        },
-        "unit": {
-          "en": "dashes",
-          "zh": "滴"
-        },
-        "rationale": {
-          "en": "Adds a layer of complexity and aroma.",
-          "zh": "增加複雜性和香氣。"
-        }
-      }
-    ],
-    "flavor_descriptors": [
-      {
-        "en": "Herbal",
-        "zh": "草本"
-      },
-      {
-        "en": "Nutty",
-        "zh": "堅果"
-      },
-      {
-        "en": "Bitter",
-        "zh": "苦味"
-      },
-      {
-        "en": "Woody",
-        "zh": "木質"
-      }
-    ],
-    "flavor_profile": {
-      "sweetness": 3,
-      "sourness": 2,
-      "booziness": 4,
-      "body": 5,
-      "complexity": 6,
       "bubbles": false
     }
   },

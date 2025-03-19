@@ -11,6 +11,7 @@ import { BookmarkButton } from "@/components/bookmark/bookmark-button";
 import { ExternalLink } from "@/components/external-link";
 import { Search } from "lucide-react";
 import { flavorColorMap } from "@/constants";
+import { TwistButton } from "@/components/twist-button";
 
 type Props = {
   params: Promise<{ language: string; slug: string }>;
@@ -49,13 +50,26 @@ export default async function CocktailPage({ params }: Props) {
             <div className="text-gray-400">{cocktail.name.zh}</div>
           )}
         </div>
-        <div className="flex gap-2">
-          <BookmarkButton cocktailSlug={slugify(cocktail.name.en)} cocktailName={cocktail.name.en} />
-          <ShareButton
-            url={`${
-              process.env.NEXT_PUBLIC_BASE_URL || ""
-            }/${language}/cocktails/${slug}`}
-          />
+        <div className="flex flex-col gap-2 items-end">
+          <div className="flex gap-2">
+            <BookmarkButton
+              cocktailSlug={slugify(cocktail.name.en)}
+              cocktailName={cocktail.name.en}
+            />
+            <ShareButton
+              url={
+                typeof window !== "undefined"
+                  ? `${window.location.origin}/${language}/cocktails/${slug}`
+                  : `/${language}/cocktails/${slug}`
+              }
+            />
+          </div>
+          <TwistButton 
+            href={`/${language}/twist?cocktail=${slugify(cocktail.name.en)}`}
+            cocktailName={cocktail.name.en}
+          >
+            {t.findTwists}
+          </TwistButton>
         </div>
       </div>
 

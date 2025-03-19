@@ -1,43 +1,41 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Link } from "lucide-react";
-import { toast } from "sonner";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
+import { Share } from "lucide-react";
+import { sendGAEvent } from '@next/third-parties/google';
 
 interface ShareButtonProps {
   url: string;
-  onClick?: (e: React.MouseEvent) => void;
 }
 
-export function ShareButton({ url, onClick }: ShareButtonProps) {
-  const { language } = useLanguage();
-  const t = translations[language as keyof typeof translations];
-
-  const handleShare = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onClick) onClick(e);
-    
+export function ShareButton({ url }: ShareButtonProps) {
+  const handleShare = async () => {
     try {
-      await navigator.clipboard.writeText(url);
-      toast.success(t.linkCopied || "Link copied!", {
-        duration: 2000,
-        position: "bottom-center",
+      if (navigator.share) {
+        await navigator.share({
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+      }
+      
+      sendGAEvent('share', {
+        action: 'share_cocktail',
+        url
       });
-    } catch (err) {
-      console.error(err);
-      toast.error(t.copyFailed || "Failed to copy link");
+    } catch (error) {
+      console.error('Error sharing:', error);
     }
   };
 
   return (
     <Button
-      onClick={handleShare}
-      variant="secondary"
+      variant="outline"
       size="icon"
+      onClick={handleShare}
+      title="Share"
     >
-      <Link className="w-4 h-4" />
+      <Share className="h-4 w-4" />
     </Button>
   );
 } 

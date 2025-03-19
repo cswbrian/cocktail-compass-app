@@ -7,9 +7,10 @@ import { translations } from "@/translations";
 
 interface BasedCocktailCardProps {
   cocktail: Cocktail;
+  hideTitle?: boolean;
 }
 
-export function BasedCocktailCard({ cocktail }: BasedCocktailCardProps) {
+export function BasedCocktailCard({ cocktail, hideTitle = false }: BasedCocktailCardProps) {
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
   const getColor = (cocktail: Cocktail) => {
@@ -20,14 +21,16 @@ export function BasedCocktailCard({ cocktail }: BasedCocktailCardProps) {
 
   return (
     <div>
-      <div className="mb-4 flex justify-between items-start gap-x-2">
-        <div>
-          <h3 className="text-4xl mb-1">{cocktail.name.en}</h3>
-          {language === "zh" && (
-            <div className="text-gray-400">{cocktail.name.zh}</div>
-          )}
+      {!hideTitle && (
+        <div className="mb-4 flex justify-between items-start gap-x-2">
+          <div>
+            <h3 className="text-4xl mb-1">{cocktail.name.en}</h3>
+            {language === "zh" && (
+              <div className="text-gray-400">{cocktail.name.zh}</div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {cocktail.flavor_descriptors && (
         <div className="mb-4">
           <div className="flex flex-wrap gap-2">

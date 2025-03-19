@@ -68,7 +68,8 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
         
         // Track the event
         const action = items.includes(cocktailSlug) ? 'add' : 'remove';
-        sendGAEvent(`bookmark_${action}`, {
+        sendGAEvent('bookmark', {
+          action: `bookmark_${action}`,
           list_type: listId,
           cocktail_name: cocktailName,
           cocktail_slug: cocktailSlug
