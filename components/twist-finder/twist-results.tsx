@@ -21,7 +21,7 @@ export function TwistResults({
 }: TwistResultsProps) {
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
-  const [isBaseCardExpanded, setIsBaseCardExpanded] = useState(true);
+  const [isBaseCardExpanded, setIsBaseCardExpanded] = useState(false);
 
   return (
     <motion.div
