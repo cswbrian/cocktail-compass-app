@@ -5,7 +5,7 @@ import { Cocktail } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { Button } from "@/components/ui/button";
-import { MultiSelect } from "@/components/ui/multi-select";
+import { Combobox } from "@/components/ui/combobox";
 import { sendGAEvent } from '@next/third-parties/google';
 import { calculateDistance } from "@/lib/cocktail-twist";
 import { BasedCocktailCard } from "@/components/twist-finder/based-cocktail-card";
@@ -19,7 +19,7 @@ interface TwistFinderProps {
 export function TwistFinder({ cocktails }: TwistFinderProps) {
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
-  const [selectedCocktail, setSelectedCocktail] = useState<string[]>([]);
+  const [selectedCocktail, setSelectedCocktail] = useState<string>("");
   const [twists, setTwists] = useState<Array<{ cocktail: Cocktail; distance: number }>>([]);
   const [showResults, setShowResults] = useState(false);
 
@@ -28,18 +28,18 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
     value: cocktail.name.en,
   }));
 
-  const selectedCocktailData = selectedCocktail.length 
-    ? cocktails.find(c => c.name.en === selectedCocktail[0])
+  const selectedCocktailData = selectedCocktail 
+    ? cocktails.find(c => c.name.en === selectedCocktail)
     : null;
 
   const findTwists = () => {
-    if (!selectedCocktail.length) return;
+    if (!selectedCocktail) return;
     
-    const baseCocktail = cocktails.find(c => c.name.en === selectedCocktail[0]);
+    const baseCocktail = cocktails.find(c => c.name.en === selectedCocktail);
     if (!baseCocktail) return;
 
     const cocktailScores = cocktails
-      .filter(c => c.name.en !== selectedCocktail[0])
+      .filter(c => c.name.en !== selectedCocktail)
       .map(cocktail => {
         const distance = calculateDistance(baseCocktail, cocktail);
         return { cocktail, distance };
@@ -52,13 +52,13 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
     
     sendGAEvent('twist_finder', {
       action: 'find_twists',
-      base_cocktail: selectedCocktail[0]
+      base_cocktail: selectedCocktail
     });
   };
 
   const handleFindAgain = () => {
     setShowResults(false);
-    setSelectedCocktail([]);
+    setSelectedCocktail("");
     setTwists([]);
   };
 
@@ -77,20 +77,21 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
       <h1 className="text-3xl mb-8">{t.findTwists}</h1>
       <p className="text-muted-foreground mb-2">{t.findTwistsDescription}</p>
       <div className="max-w-md mb-8">
-        <MultiSelect
+        <Combobox
           options={cocktailOptions}
           value={selectedCocktail}
           onValueChange={setSelectedCocktail}
           placeholder={t.selectCocktail}
-          maxCount={1}
-          enableSelectAll={false}
+          searchPlaceholder={t.search}
+          emptyText={t.noResultsFound}
+          className="mb-4"
         />
 
         <div className="flex gap-2 mt-4">
           <Button 
             className="flex-1" 
             onClick={findTwists}
-            disabled={!selectedCocktail.length}
+            disabled={!selectedCocktail}
           >
             {t.findTwists}
           </Button>
@@ -99,7 +100,7 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
             className="flex-1"
             variant="outline"
             onClick={() => window.open(`/${language}/cocktails/${slugify(selectedCocktailData?.name.en || '')}`, '_blank')}
-            disabled={!selectedCocktail.length}
+            disabled={!selectedCocktail}
           >
             {t.seeMore}
           </Button>
