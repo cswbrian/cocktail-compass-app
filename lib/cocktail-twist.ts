@@ -19,74 +19,100 @@ export function calculateDistance(base: Cocktail, comparison: Cocktail): number 
 
   let distance = 0;
   
-  // Compare flavor profiles (highest weight)
-  const flavorProfileDistance = compareFlavorProfiles(base.flavor_profile, comparison.flavor_profile);
-  distance += flavorProfileDistance * 3;
-
-  // Compare flavor descriptors (high weight)
-  const flavorDescriptorsDistance = compareIngredients(
-    Array.isArray(base.flavor_descriptors) ? base.flavor_descriptors.map(fd => fd.en) : [],
-    Array.isArray(comparison.flavor_descriptors) ? comparison.flavor_descriptors.map(fd => fd.en) : []
-  );
-  distance += flavorDescriptorsDistance * 2.5;
-
-  // Compare base spirits (medium-high weight)
+  // Compare base spirits (highest weight - most important for recipe similarity)
   const baseSpiritsDistance = compareIngredients(
     base.base_spirits,
-    comparison.base_spirits
+    comparison.base_spirits,
+    true // Consider position
   );
-  distance += baseSpiritsDistance * 2;
+  distance += baseSpiritsDistance * 4;
 
-  // Compare liqueurs (medium weight)
+  // Compare liqueurs (high weight)
   const liqueursDistance = compareIngredients(
     base.liqueurs,
-    comparison.liqueurs
+    comparison.liqueurs,
+    true // Consider position
   );
-  distance += liqueursDistance * 1.5;
+  distance += liqueursDistance * 3;
 
-  // Compare other ingredients (lower weight)
+  // Compare other ingredients (medium-high weight)
   const ingredientsDistance = compareIngredients(
     base.ingredients,
-    comparison.ingredients
+    comparison.ingredients,
+    true // Consider position
   );
-  distance += ingredientsDistance;
+  distance += ingredientsDistance * 2.5;
+
+  // Compare flavor profiles (medium weight)
+  const flavorProfileDistance = compareFlavorProfiles(base.flavor_profile, comparison.flavor_profile);
+  distance += flavorProfileDistance * 1.5;
+
+  // Compare flavor descriptors (lower weight)
+  const flavorDescriptorsDistance = compareIngredients(
+    Array.isArray(base.flavor_descriptors) ? base.flavor_descriptors.map(fd => fd.en) : [],
+    Array.isArray(comparison.flavor_descriptors) ? comparison.flavor_descriptors.map(fd => fd.en) : [],
+    false // Don't consider position for descriptors
+  );
+  distance += flavorDescriptorsDistance;
 
   return distance;
 }
 
-function compareIngredients(base: Ingredient[] | undefined, comparison: Ingredient[] | undefined): number {
+function compareIngredients(base: Ingredient[] | undefined, comparison: Ingredient[] | undefined, considerPosition: boolean = false): number {
   // Handle undefined/null arrays
-  if (!base || !comparison) return 5; // Return high distance if either is undefined
+  if (!base || !comparison) return 5;
   
   // Ensure we're working with arrays
   if (!Array.isArray(base) || !Array.isArray(comparison)) return 5;
   
   // Convert items to lowercase strings, handling both string and object formats
-  const baseSet = new Set(base.map(i => {
+  const baseItems = base.map(i => {
     if (!i) return '';
     return typeof i === 'string' ? i.toLowerCase() : 
            (i.name?.en ? i.name.en.toLowerCase() : '');
-  }).filter(Boolean));
+  }).filter(Boolean);
   
-  const comparisonSet = new Set(comparison.map(i => {
+  const comparisonItems = comparison.map(i => {
     if (!i) return '';
     return typeof i === 'string' ? i.toLowerCase() : 
            (i.name?.en ? i.name.en.toLowerCase() : '');
-  }).filter(Boolean));
+  }).filter(Boolean);
   
-  let different = 0;
+  let difference = 0;
   
-  // Count items in base that aren't in comparison
-  for (const item of baseSet) {
-    if (!comparisonSet.has(item)) different++;
+  if (considerPosition) {
+    // Compare items considering their position
+    const maxLength = Math.max(baseItems.length, comparisonItems.length);
+    for (let i = 0; i < maxLength; i++) {
+      const baseItem = baseItems[i];
+      const comparisonItem = comparisonItems[i];
+      
+      if (!baseItem || !comparisonItem) {
+        // Missing ingredient in one list
+        difference += 1;
+      } else if (baseItem !== comparisonItem) {
+        // Different ingredients at same position
+        // Add more weight to differences in earlier positions
+        difference += 1 + (maxLength - i) * 0.2;
+      }
+    }
+  } else {
+    // Original set-based comparison for non-positional comparisons
+    const baseSet = new Set(baseItems);
+    const comparisonSet = new Set(comparisonItems);
+    
+    // Count items in base that aren't in comparison
+    for (const item of baseSet) {
+      if (!comparisonSet.has(item)) difference++;
+    }
+    
+    // Count items in comparison that aren't in base
+    for (const item of comparisonSet) {
+      if (!baseSet.has(item)) difference++;
+    }
   }
   
-  // Count items in comparison that aren't in base
-  for (const item of comparisonSet) {
-    if (!baseSet.has(item)) different++;
-  }
-  
-  return different;
+  return difference;
 }
 
 // Add this new function to compare flavor profiles
