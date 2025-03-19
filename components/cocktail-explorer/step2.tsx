@@ -5,28 +5,17 @@ import { translations } from "@/translations";
 import { useCocktail } from "@/context/CocktailContext";
 import { flavorClasses } from "@/components/flavor-descriptor";
 
-const FLAVORS = [
-  "Bitter",
-  "Salty",
-  "Umami",
-  "Fruity",
-  "Citrus",
-  "Herbal",
-  "Spicy",
-  "Floral",
-  "Tropical",
-  "Nutty",
-  "Coffee",
-  "Vanilla",
-  "Smoky",
-  "Earth",
-  "Savory",
-  "Creamy",
-  "Woody",
-  "Grassy",
-  "Yeasty",
-  "Chocolate",
-];
+const FLAVOR_GROUPS = {
+  flavorGroupBasic: ["Bitter", "Salty", "Umami"],
+  flavorGroupFruit: ["Fruity", "Citrus", "Tropical"],
+  flavorGroupPlant: ["Herbal", "Floral", "Grassy", "Woody"],
+  flavorGroupWarm: ["Spicy", "Smoky"],
+  flavorGroupRich: ["Coffee", "Chocolate", "Vanilla", "Nutty"],
+  flavorGroupOther: ["Earth", "Savory", "Creamy", "Yeasty"],
+};
+
+// Get all flavors as a flat array when needed
+const FLAVORS = Object.values(FLAVOR_GROUPS).flat();
 
 export default function Step2() {
   const { language } = useLanguage();
@@ -34,7 +23,7 @@ export default function Step2() {
   const { selectedFlavors, handleFlavorSelect } = useCocktail();
 
   const handleReset = () => {
-    FLAVORS.forEach(flavor => {
+    FLAVORS.forEach((flavor) => {
       if (selectedFlavors.includes(flavor)) {
         handleFlavorSelect(flavor);
       }
@@ -49,26 +38,30 @@ export default function Step2() {
       className="space-y-8"
     >
       <h2>{t.step2Title}</h2>
-      <div className="space-y-4">
-        <div className="flex flex-wrap gap-x-4 gap-y-2">
-          {FLAVORS.map((flavor) => (
-            <Button
-              key={flavor}
-              variant="ghost"
-              onClick={() => handleFlavorSelect(flavor)}
-              disabled={
-                !selectedFlavors.includes(flavor) && selectedFlavors.length >= 3
-              }
-              className={`${
-                selectedFlavors.includes(flavor)
-                  ? flavorClasses[flavor as keyof typeof flavorClasses]
-                  : "border border-gray-200"
-              }`}
-            >
-              {t[flavor.toLowerCase() as keyof typeof t]}
-            </Button>
-          ))}
-        </div>
+      <div className="space-y-6">
+        {Object.entries(FLAVOR_GROUPS).map(([groupKey, flavors]) => (
+          <div key={groupKey} className="space-y-2">
+            <h4 className="font-bold">{t[groupKey as keyof typeof t]}</h4>
+            <div className="flex flex-wrap gap-x-4 gap-y-2">
+              {flavors.map((flavor) => (
+                <Button
+                  key={flavor}
+                  variant="outline"
+                  onClick={() => handleFlavorSelect(flavor)}
+                  disabled={
+                    !selectedFlavors.includes(flavor) && selectedFlavors.length >= 3
+                  }
+                  className={`${
+                    selectedFlavors.includes(flavor) &&
+                    flavorClasses[flavor as keyof typeof flavorClasses]
+                  }`}
+                >
+                  {t[flavor.toLowerCase() as keyof typeof t]}
+                </Button>
+              ))}
+            </div>
+          </div>
+        ))}
         {selectedFlavors.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -76,15 +69,12 @@ export default function Step2() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Button
-              onClick={handleReset}
-              className="mt-4"
-            >
-              {t.reset || 'Reset'}
+            <Button onClick={handleReset} className="mt-4">
+              {t.reset || "Reset"}
             </Button>
           </motion.div>
         )}
       </div>
     </motion.div>
   );
-}; 
+}

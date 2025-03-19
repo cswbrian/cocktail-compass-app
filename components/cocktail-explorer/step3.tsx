@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { useCocktail } from "@/context/CocktailContext";
 import summary from "@/data/summary.json";
+import { Button } from "../ui/button";
 
 const getUniqueOptions = (
   items: { name: { [key: string]: string } }[],
@@ -38,6 +39,29 @@ export default function Step3() {
     setBubbles,
   } = useCocktail();
 
+  const handleSpiritButtonClick = (spirit: string) => {
+    const matchingSpirits = summary.base_spirits
+      .filter(item => item.name.en.toLowerCase().includes(spirit.toLowerCase()))
+      .map(item => item.name.en);
+    
+    // Toggle selection
+    const isSelected = matchingSpirits.every(spirit => selectedBaseSpirits.includes(spirit));
+    if (isSelected) {
+      setSelectedBaseSpirits(selectedBaseSpirits.filter(s => !matchingSpirits.includes(s)));
+    } else {
+      setSelectedBaseSpirits([...new Set([...selectedBaseSpirits, ...matchingSpirits])]);
+    }
+  };
+
+  const spirits = [
+    { en: 'Brandy', key: 'spiritBrandy' },
+    { en: 'Gin', key: 'spiritGin' },
+    { en: 'Rum', key: 'spiritRum' },
+    { en: 'Tequila', key: 'spiritTequila' },
+    { en: 'Vodka', key: 'spiritVodka' },
+    { en: 'Whisky', key: 'spiritWhisky' },
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -46,6 +70,24 @@ export default function Step3() {
       className="space-y-8"
     >
       <h2>{t.step3Title || "Select Ingredients"}</h2>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {spirits.map((spirit) => {
+          const matchingSpirits = summary.base_spirits
+            .filter(item => item.name.en.toLowerCase().includes(spirit.en.toLowerCase()))
+            .map(item => item.name.en);
+          const isSelected = matchingSpirits.every(s => selectedBaseSpirits.includes(s));
+          
+          return (
+            <Button
+              key={spirit.en}
+              onClick={() => handleSpiritButtonClick(spirit.en)}
+              variant={isSelected ? "default" : "outline"}
+            >
+              {t[spirit.key as keyof typeof t]}
+            </Button>
+          );
+        })}
+      </div>
       <div className="space-y-4">
         <MultiSelect
           options={getUniqueOptions(summary.base_spirits, language)}
