@@ -6,6 +6,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Menu } from "@/components/ui/menu";
 import { Toaster } from "@/components/ui/sonner"
 import { Inter } from 'next/font/google'
+import { BottomNav } from "@/components/ui/bottom-nav";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,11 +51,12 @@ export default function RootLayout({
         </head>
         <GoogleAnalytics gaId="G-P79BEGY4R7" />
         <body
-          className={`${inter.variable} antialiased max-w-4xl mx-auto`}
+          className={`${inter.variable} antialiased max-w-4xl mx-auto pb-16`}
         >
           <Header />
           <Menu />
           {children}
+          <BottomNav />
           <Toaster />
         </body>
       </html>

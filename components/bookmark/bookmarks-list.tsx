@@ -75,7 +75,7 @@ export function BookmarksList() {
                 {t.noBookmarksYet}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {getBookmarkedCocktails(list.id).map((cocktail) => (
                   <CocktailCard
                     key={slugify(cocktail.name.en)}

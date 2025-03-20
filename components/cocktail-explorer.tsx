@@ -67,7 +67,7 @@ export function CocktailExplorer() {
         </motion.h1>
         <div className="mt-8 flex-1 overflow-y-auto">{renderCurrentStep()}</div>
       </div>
-      <div className="fixed bottom-0 left-0 right-0 px-6 max-w-4xl mx-auto">
+      <div className="fixed bottom-16 left-0 right-0 px-6 max-w-4xl mx-auto">
         <Navigation />
       </div>
     </div>

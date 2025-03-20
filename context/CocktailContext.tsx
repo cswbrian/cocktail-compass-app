@@ -76,21 +76,7 @@ const defaultState: CocktailExplorerState = {
 
 export function CocktailProvider({ children }: { children: React.ReactNode }) {
   const { language } = useLanguage();
-  // Initialize all state from a single storage item
-  const initializeState = (): CocktailExplorerState => {
-    if (typeof window !== 'undefined') {
-      const stored = sessionStorage.getItem('cocktailExplorerState');
-      return stored ? JSON.parse(stored) : defaultState;
-    }
-    return defaultState;
-  };
-
-  const [state, setState] = useState<CocktailExplorerState>(initializeState);
-
-  // Update sessionStorage whenever state changes
-  useEffect(() => {
-    sessionStorage.setItem('cocktailExplorerState', JSON.stringify(state));
-  }, [state]);
+  const [state, setState] = useState<CocktailExplorerState>(defaultState);
 
   // Individual setters that update the consolidated state
   const setSweetness = (value: number | null) => 
@@ -135,7 +121,6 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
     setState(prev => ({ ...prev, selectedLiqueurs: value }));
 
   const startOver = useCallback(() => {
-    sessionStorage.removeItem('cocktailExplorerState');
     setState(defaultState);
   }, []);
 

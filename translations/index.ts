@@ -118,6 +118,9 @@ export const translations = {
     flavorGroupWarm: "Warm",
     flavorGroupRich: "Rich",
     flavorGroupOther: "Other",
+    bottomNavExplorer: "Explorer",
+    bottomNavTwist: "Twist",
+    bottomNavBookmarks: "Bookmarks"
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -233,5 +236,8 @@ export const translations = {
     flavorGroupWarm: "暖香",
     flavorGroupRich: "濃郁",
     flavorGroupOther: "其他",
+    bottomNavExplorer: "揾Cocktail",
+    bottomNavTwist: "揾Twist",
+    bottomNavBookmarks: "書籤",
   },
 };

@@ -129,7 +129,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
                     >
                       <CheckIcon className={cn("h-4 w-4")} />
                     </div>
-                    <span>{t[list.nameKey as keyof typeof t]}</span>
+                    <span>{String(t[list.nameKey as keyof typeof t])}</span>
                   </CommandItem>
                 );
               })}

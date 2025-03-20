@@ -5,7 +5,10 @@ import { translations } from "@/translations";
 import { useCocktail } from "@/context/CocktailContext";
 import { flavorClasses } from "@/components/flavor-descriptor";
 
-const FLAVOR_GROUPS = {
+type TranslationKey = keyof typeof translations.en;
+type FlavorGroupKey = "flavorGroupBasic" | "flavorGroupFruit" | "flavorGroupPlant" | "flavorGroupWarm" | "flavorGroupRich" | "flavorGroupOther";
+
+const FLAVOR_GROUPS: Record<FlavorGroupKey, string[]> = {
   flavorGroupBasic: ["Bitter", "Salty", "Umami"],
   flavorGroupFruit: ["Fruity", "Citrus", "Tropical"],
   flavorGroupPlant: ["Herbal", "Floral", "Grassy", "Woody"],
@@ -19,7 +22,7 @@ const FLAVORS = Object.values(FLAVOR_GROUPS).flat();
 
 export default function Step2() {
   const { language } = useLanguage();
-  const t = translations[language];
+  const t = translations[language] as typeof translations.en;
   const { selectedFlavors, handleFlavorSelect } = useCocktail();
 
   const handleReset = () => {
@@ -39,9 +42,9 @@ export default function Step2() {
     >
       <h2>{t.step2Title}</h2>
       <div className="space-y-6">
-        {Object.entries(FLAVOR_GROUPS).map(([groupKey, flavors]) => (
+        {(Object.entries(FLAVOR_GROUPS) as [FlavorGroupKey, string[]][]).map(([groupKey, flavors]) => (
           <div key={groupKey} className="space-y-2">
-            <h4 className="font-bold">{t[groupKey as keyof typeof t]}</h4>
+            <h4 className="font-bold">{t[groupKey]}</h4>
             <div className="flex flex-wrap gap-x-4 gap-y-2">
               {flavors.map((flavor) => (
                 <Button
@@ -56,7 +59,7 @@ export default function Step2() {
                     flavorClasses[flavor as keyof typeof flavorClasses]
                   }`}
                 >
-                  {t[flavor.toLowerCase() as keyof typeof t]}
+                  {t[flavor.toLowerCase() as TranslationKey]}
                 </Button>
               ))}
             </div>
@@ -70,7 +73,7 @@ export default function Step2() {
             transition={{ duration: 0.2 }}
           >
             <Button onClick={handleReset} className="mt-4">
-              {t.reset || "Reset"}
+              {t.reset}
             </Button>
           </motion.div>
         )}
