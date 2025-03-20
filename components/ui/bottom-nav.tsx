@@ -48,7 +48,7 @@ export function BottomNav() {
                 }`}
               >
                 <Icon className="h-6 w-6" />
-                <span className="text-sm font-medium mt-1">{item.label}</span>
+                <span className="text-xs font-medium mt-1">{item.label}</span>
               </Link>
             );
           })}
