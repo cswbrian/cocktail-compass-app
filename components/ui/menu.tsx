@@ -9,7 +9,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -58,19 +57,6 @@ export function Menu() {
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
-                  </SheetClose>
-                </li>
-                <li className="py-2">
-                  <Separator />
-                </li>
-                <li className="py-2">
-                  <SheetClose asChild>
-                    <Link
-                      href={`/${language}/bookmarks`}
-                      className="font-medium"
-                    >
-                      {t.bookmarks} 🔖
-                    </Link>
                   </SheetClose>
                 </li>
               </ul>

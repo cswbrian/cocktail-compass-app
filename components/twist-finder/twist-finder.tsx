@@ -89,8 +89,8 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
 
   return (
     <div>
-      <h1 className="text-4xl mb-8">{t.findTwists}</h1>
-      <p className="text-muted-foreground mb-2">{t.findTwistsDescription}</p>
+      <h1 className="text-4xl mb-2">{t.findTwists}</h1>
+      <p className="text-muted-foreground mb-4">{t.findTwistsDescription}</p>
       <div className="max-w-md mb-8">
         <Combobox
           options={cocktailOptions}

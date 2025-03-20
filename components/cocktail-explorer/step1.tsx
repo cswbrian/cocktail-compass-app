@@ -89,7 +89,7 @@ export default function Step1() {
             disabled={sweetness === null}
           />
           <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
+            className={`grid grid-cols-5 text-sm mt-1 ${
               sweetness === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
@@ -130,7 +130,7 @@ export default function Step1() {
             disabled={sourness === null}
           />
           <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
+            className={`grid grid-cols-5 text-sm mt-1 ${
               sourness === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
@@ -171,7 +171,7 @@ export default function Step1() {
             disabled={body === null}
           />
           <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
+            className={`grid grid-cols-5 text-sm mt-1 ${
               body === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
@@ -212,7 +212,7 @@ export default function Step1() {
             disabled={complexity === null}
           />
           <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
+            className={`grid grid-cols-5 text-sm mt-1 ${
               complexity === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >
@@ -253,7 +253,7 @@ export default function Step1() {
             disabled={booziness === null}
           />
           <div
-            className={`grid grid-cols-5 text-xs mt-1 ${
+            className={`grid grid-cols-5 text-sm mt-1 ${
               booziness === null ? "text-gray-700" : "text-muted-foreground"
             }`}
           >

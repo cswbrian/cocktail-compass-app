@@ -29,7 +29,7 @@ export function TwistResults({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
     >
-      <button 
+      <button
         onClick={() => setIsBaseCardExpanded(!isBaseCardExpanded)}
         className="w-full text-left group"
       >
@@ -43,14 +43,18 @@ export function TwistResults({
       </button>
 
       <div className="mb-8">
-        <button 
+        <button
           onClick={() => setIsBaseCardExpanded(!isBaseCardExpanded)}
           className="flex items-center gap-2 mb-2 text-muted-foreground hover:text-foreground transition-colors"
         >
-          {isBaseCardExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          {isBaseCardExpanded ? (
+            <ChevronUp size={20} />
+          ) : (
+            <ChevronDown size={20} />
+          )}
           <span>{t.seeMore}</span>
         </button>
-        
+
         <AnimatePresence>
           {isBaseCardExpanded && (
             <motion.div
@@ -60,16 +64,13 @@ export function TwistResults({
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <BasedCocktailCard 
-                cocktail={baseCocktail} 
-                hideTitle 
-              />
+              <BasedCocktailCard cocktail={baseCocktail} hideTitle />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      <Button className="mb-8" onClick={onFindAgain}>
+      <Button className="mb-8" variant="secondary" onClick={onFindAgain}>
         {t.reset}
       </Button>
 

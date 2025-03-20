@@ -43,20 +43,20 @@ export default function Navigation() {
       className="bg-background py-4 flex justify-between"
     >
       {/* Reset button - always visible */}
-      <Button variant="ghost" onClick={handleStartOver}>
-        {t.reset || "Reset"}
+      <Button variant="outline" onClick={handleStartOver}>
+        {t.reset}
       </Button>
 
       <div className="flex gap-2 ml-auto">
         {currentStep > 1 && (
           <Button variant="outline" onClick={handlePrev}>
-            {t.previous || "Previous"}
+            {t.previous}
           </Button>
         )}
 
         {currentStep < TOTAL_STEPS && (
           <Button onClick={handleNext}>
-            {t.next || "Next"}
+            {t.next}
           </Button>
         )}
 

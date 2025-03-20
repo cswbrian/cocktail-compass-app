@@ -13,7 +13,7 @@ export function BottomNav() {
 
   const navItems = [
     {
-      href: `/${language}`,
+      href: `/${language}/explorer`,
       icon: Compass,
       label: t.bottomNavExplorer,
     },
@@ -35,7 +35,9 @@ export function BottomNav() {
         <div className="flex justify-around items-center h-16">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href;
+            const isActive = 
+              pathname === item.href || 
+              (item.href.endsWith('/explorer') && pathname === `/${language}`);
             
             return (
               <Link
@@ -46,7 +48,7 @@ export function BottomNav() {
                 }`}
               >
                 <Icon className="h-6 w-6" />
-                <span className="text-xs mt-1">{item.label}</span>
+                <span className="text-sm font-medium mt-1">{item.label}</span>
               </Link>
             );
           })}

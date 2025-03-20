@@ -113,8 +113,8 @@ export function CocktailCard({ cocktail, distance }: CocktailCardProps) {
       <div className="mt-4 flex gap-2">
         <Button
           onClick={handleSeeMoreClick}
-          variant="default"
-          className="flex-1 bg-white text-black hover:bg-gray-200"
+          variant="secondary"
+          className="flex-1"
         >
           {t.seeMore}
         </Button>
