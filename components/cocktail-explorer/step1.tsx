@@ -40,7 +40,7 @@ export default function Step1() {
   };
 
   return (
-    <div className="space-y-8 pb-20">
+    <div className="space-y-8">
       {/* Master No Preference Switch */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

@@ -7,6 +7,7 @@ import { Menu } from "@/components/ui/menu";
 import { Toaster } from "@/components/ui/sonner"
 import { Inter } from 'next/font/google'
 import { BottomNav } from "@/components/ui/bottom-nav";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -78,45 +79,47 @@ export default function RootLayout({
 }) {
   return (
     <LanguageProvider>
-      <html lang="zh-HK" className="dark">
-        <head>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-            rel="preload"
-            as="style"
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                if ('serviceWorker' in navigator) {
-                  window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/sw.js').then(
-                      function(registration) {
-                        console.log('ServiceWorker registration successful');
-                      },
-                      function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                      }
-                    );
-                  });
-                }
-              `,
-            }}
-          />
-        </head>
-        <GoogleAnalytics gaId="G-P79BEGY4R7" />
-        <body
-          className={`${inter.variable} antialiased max-w-4xl mx-auto pb-16`}
-        >
-          <Header />
-          <Menu />
-          {children}
-          <BottomNav />
-          <Toaster />
-        </body>
-      </html>
+      <AuthProvider>
+        <html lang="zh-HK" className="dark">
+          <head>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+            <link
+              href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+              rel="preload"
+              as="style"
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  if ('serviceWorker' in navigator) {
+                    window.addEventListener('load', function() {
+                      navigator.serviceWorker.register('/sw.js').then(
+                        function(registration) {
+                          console.log('ServiceWorker registration successful');
+                        },
+                        function(err) {
+                          console.log('ServiceWorker registration failed: ', err);
+                        }
+                      );
+                    });
+                  }
+                `,
+              }}
+            />
+          </head>
+          <GoogleAnalytics gaId="G-P79BEGY4R7" />
+          <body
+            className={`${inter.variable} antialiased max-w-4xl mx-auto pb-16`}
+          >
+            <Header />
+            <Menu />
+            {children}
+            <BottomNav />
+            <Toaster />
+          </body>
+        </html>
+      </AuthProvider>
     </LanguageProvider>
   );
 }

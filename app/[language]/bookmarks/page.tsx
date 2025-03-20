@@ -1,20 +1,9 @@
-import { translations } from "@/translations";
-import { BookmarksList } from "@/components/bookmark/bookmarks-list";
+import { BookmarksContent } from "@/components/bookmark/bookmarks-content";
 
-type Props = {
-  params: Promise<{ language: string; }>
-}
-
-export default async function BookmarksPage({
-  params,
-}: Props) {
-  const { language } = await params;
-  const t = translations[language as keyof typeof translations];
-
+export default async function BookmarksPage() {
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-4xl mb-6">{t.bookmarks}</h1>
-      <BookmarksList />
+      <BookmarksContent />
     </div>
   );
 }

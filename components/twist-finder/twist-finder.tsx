@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Cocktail } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -89,9 +90,28 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
 
   return (
     <div>
-      <h1 className="text-4xl mb-2">{t.findTwists}</h1>
-      <p className="text-muted-foreground mb-4">{t.findTwistsDescription}</p>
-      <div className="max-w-md mb-8">
+      <motion.h1
+        className="text-4xl mb-2"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {t.findTwists}
+      </motion.h1>
+      <motion.p
+        className="text-muted-foreground mb-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        {t.findTwistsDescription}
+      </motion.p>
+      <motion.div
+        className="max-w-md mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <Combobox
           options={cocktailOptions}
           value={selectedCocktail}
@@ -122,11 +142,16 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
         </div>
 
         {selectedCocktailData && (
-          <div className="mt-8">
+          <motion.div
+            className="mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
             <BasedCocktailCard cocktail={selectedCocktailData} />
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

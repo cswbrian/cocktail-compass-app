@@ -38,13 +38,13 @@ export default function Step2() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="space-y-8"
+      className=""
     >
-      <h2>{t.step2Title}</h2>
-      <div className="space-y-6">
+      <h2 className="mb-4">{t.step2Title}</h2>
+      <div className="space-y-4">
         {(Object.entries(FLAVOR_GROUPS) as [FlavorGroupKey, string[]][]).map(([groupKey, flavors]) => (
           <div key={groupKey} className="space-y-2">
-            <h4 className="font-bold">{t[groupKey]}</h4>
+            <h4 className="font-bold text-primary">{t[groupKey]}</h4>
             <div className="flex flex-wrap gap-x-4 gap-y-2">
               {flavors.map((flavor) => (
                 <Button
