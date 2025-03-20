@@ -20,20 +20,20 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: '溝酒神燈 | 新手調酒推介 | Cocktail Cult | Cocktail Finder for Beginners',
   description: '新手調酒推介！按照甜度、酸度、口感等條件，為你推介最適合的雞尾酒。',
-  metadataBase: new URL('https://cocktails.monsoonclub.co'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
   openGraph: {
     title: '溝酒神燈 | 新手調酒推介 | Cocktail Cult | Cocktail finder for Beginners',
     description: '新手調酒推介！按照甜度、酸度、口感等條件，為你推介最適合的雞尾酒。',
-    url: 'https://cocktails.monsoonclub.co/',
+    url: process.env.NEXT_PUBLIC_BASE_URL,
     type: 'website',
     siteName: '溝酒神燈',
     locale: 'zh_HK',
     images: [
       {
-        url: '/web-app-manifest-512x512.png',
-        width: 512,
-        height: 512,
-        alt: '溝酒神燈 Logo',
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: '溝酒神燈 - Cocktail Finder for Beginners',
       },
     ],
   },
@@ -41,15 +41,15 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: '溝酒神燈 | 新手調酒推介 | Cocktail Cult',
     description: '新手調酒推介！按照甜度、酸度、口感等條件，為你推介最適合的雞尾酒。',
-    images: ['/web-app-manifest-512x512.png'],
+    images: ['/og-image.png'],
   },
   alternates: {
     languages: {
-      'zh-HK': 'https://cocktails.monsoonclub.co/',
-      'zh-TW': 'https://cocktails.monsoonclub.co/',
-      'en': 'https://cocktails.monsoonclub.co/en/',
+      'zh-HK': process.env.NEXT_PUBLIC_BASE_URL,
+      'zh-TW': process.env.NEXT_PUBLIC_BASE_URL,
+      'en': `${process.env.NEXT_PUBLIC_BASE_URL}/en/`,
     },
-    canonical: 'https://cocktails.monsoonclub.co/',
+    canonical: process.env.NEXT_PUBLIC_BASE_URL,
   },
   viewport: {
     width: 'device-width',
