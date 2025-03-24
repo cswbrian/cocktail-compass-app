@@ -27169,8 +27169,8 @@
       {
         "amount": 30,
         "name": {
-          "en": "Bitters",
-          "zh": "苦精"
+          "en": "Angostura Bitters",
+          "zh": "安格斯特拉苦精"
         },
         "unit": {
           "en": "ml",
@@ -27184,8 +27184,8 @@
       {
         "amount": 22,
         "name": {
-          "en": "Syrup",
-          "zh": "糖漿"
+          "en": "Orgeat Syrup",
+          "zh": "杏仁糖漿"
         },
         "unit": {
           "en": "ml",
@@ -41702,7 +41702,7 @@
   {
     "name": {
       "en": "Naked and Famous",
-      "zh": "赤裸與著名"
+      "zh": "一脫成名"
     },
     "description": {
       "en": "**Modern Classic Cocktail**\n\nA vibrant and complex cocktail with a balance of:\n*   Smoky mezcal\n*   Herbal Chartreuse\n*   Bitter Aperol\n*   Sour Lime Juice",
@@ -42129,6 +42129,134 @@
       "body": 7,
       "complexity": 5,
       "bubbles": true
+    }
+  },
+  {
+    "name": {
+      "en": "American Beauty",
+      "zh": "美國美人"
+    },
+    "description": {
+      "en": "**A Classic Cocktail with a Floral Touch**\n\nThe American Beauty is a visually stunning and flavorful cocktail that combines the richness of cognac with the refreshing touch of grenadine and the subtle floral notes of crème de menthe. The egg white adds a silky texture, making it a truly delightful experience.\n\nKey features:\n\n*   Cognac base for depth\n*   Grenadine for sweetness and color\n*   Crème de menthe for a hint of mint and floral aroma\n*   Egg white for a smooth, creamy texture",
+      "zh": "**帶有花香的經典雞尾酒**\n\n美國美人是一款視覺上令人驚艷且風味十足的雞尾酒，它結合了干邑白蘭地的濃郁、紅石榴糖漿的清新和薄荷奶油的微妙花香。 蛋白的加入增添了絲滑的口感，使其成為一種真正令人愉悅的體驗。\n\n主要特點：\n\n*   干邑白蘭地基底，帶來深度\n*   紅石榴糖漿帶來甜味和色彩\n*   薄荷奶油帶來一絲薄荷味和花香\n*   蛋白帶來柔滑、奶油般的質地"
+    },
+    "historical_reference": {
+      "en": "**A Cocktail of Unknown Origins**\n\nThe American Beauty cocktail's exact origin is not definitively known, but it gained popularity in the early 20th century. Its combination of flavors and attractive presentation made it a favorite during that era.\n\n*   Appeared in cocktail books from the early 1900s.\n*   The cocktail's name evokes a sense of elegance and allure.",
+      "zh": "**起源不明的雞尾酒**\n\n美國美人雞尾酒的確切起源尚不清楚，但在 20 世紀初開始流行。 其風味的結合和吸引人的外觀使其成為那個時代的最愛。\n\n*   出現在 1900 年代初的雞尾酒書籍中。\n*   這款雞尾酒的名字喚起了一種優雅和魅力的感覺。"
+    },
+    "technique": {
+      "en": "Shake all ingredients with ice and strain into a chilled coupe glass.",
+      "zh": "將所有材料與冰塊一起搖勻，然後倒入冰鎮的淺碟香檳杯中。"
+    },
+    "garnish": {
+      "en": "Mint sprig and a cherry",
+      "zh": "薄荷枝和櫻桃"
+    },
+    "serve_in_glass": {
+      "en": "Coupe glass",
+      "zh": "淺碟香檳杯"
+    },
+    "appearance": {
+      "en": "Pinkish-red with a frothy egg white layer",
+      "zh": "粉紅色帶有泡沫狀的蛋白層"
+    },
+    "allergens": [
+      {
+        "en": "Egg white",
+        "zh": "蛋白"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Cognac",
+          "zh": "干邑白蘭地"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the base spirit and rich flavors.",
+          "zh": "提供基酒和濃郁的風味。"
+        }
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Crème de Menthe (White)",
+          "zh": "白色薄荷奶油"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a refreshing minty flavor and aroma.",
+          "zh": "增添清爽的薄荷味和香氣。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Grenadine",
+          "zh": "紅石榴糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness and a vibrant red color.",
+          "zh": "增加甜味和鮮豔的紅色。"
+        }
+      },
+      {
+        "amount": 1,
+        "name": {
+          "en": "Egg White",
+          "zh": "蛋白"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "個"
+        },
+        "rationale": {
+          "en": "Adds a smooth, silky texture.",
+          "zh": "增添柔滑的口感。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Creamy",
+        "zh": "乳脂"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 6,
+      "sourness": 3,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
     }
   },
   {
@@ -48221,6 +48349,94 @@
       "booziness": 7,
       "body": 5,
       "complexity": 4,
+      "bubbles": true
+    }
+  },
+  {
+    "name": {
+      "en": "Fernandito",
+      "zh": "費南迪多"
+    },
+    "description": {
+      "en": "*Simple and refreshing Argentinian highball*\n\nA popular and easy-to-make cocktail consisting of:\n*   Amaro (usually Fernet-Branca)\n*   Cola\n*   Ice\n\nOften enjoyed as an aperitif or a casual drink.",
+      "zh": "*簡單清爽的阿根廷 Highball*\n\n一種受歡迎且易於調製的雞尾酒，包含：\n* 阿瑪羅酒 (通常是 Fernet-Branca)\n* 可樂\n* 冰塊\n\n經常作為餐前酒或休閒飲品享用。"
+    },
+    "historical_reference": {
+      "en": "**Popular Argentinian Cocktail**\n\n*   Originates from Argentina\n*   The exact origin is debated but the cocktail gained popularity in the 1970s\n*   Fernet-Branca became the staple amaro due to Italian immigration influence.",
+      "zh": "**受歡迎的阿根廷雞尾酒**\n\n*   起源於阿根廷\n*   確切起源尚有爭議，但該雞尾酒在1970年代廣受歡迎\n*   由於義大利移民的影響，Fernet-Branca 成為主要使用的阿瑪羅酒。"
+    },
+    "technique": {
+      "en": "Fill glass with ice, add Fernet, top with Cola.",
+      "zh": "在高杯中加入冰塊，加入 Fernet，倒入可樂。"
+    },
+    "garnish": {
+      "en": "Optional: Lemon or Orange wedge",
+      "zh": "可選：檸檬或橙角"
+    },
+    "serve_in_glass": {
+      "en": "Highball glass",
+      "zh": "Highball 杯"
+    },
+    "appearance": {
+      "en": "Dark amber, effervescent",
+      "zh": "深琥珀色，有氣泡"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 50,
+        "name": {
+          "en": "Amaro",
+          "zh": "阿瑪羅"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the bitter and herbal base.",
+          "zh": "提供苦味和草本基底。"
+        }
+      }
+    ],
+    "liqueurs": [],
+    "ingredients": [
+      {
+        "amount": 0,
+        "name": {
+          "en": "Ice",
+          "zh": "冰塊"
+        },
+        "unit": {
+          "en": "cubes",
+          "zh": "塊"
+        },
+        "rationale": {
+          "en": "To chill and dilute the drink.",
+          "zh": "冷卻和稀釋飲料。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Bitter",
+        "zh": "苦味"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Spicy",
+        "zh": "辛辣"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 5,
+      "sourness": 3,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 5,
       "bubbles": true
     }
   },
@@ -57496,67 +57712,59 @@
   {
     "name": {
       "en": "Dirty Mother",
-      "zh": "骯髒的母親"
+      "zh": "黯淡的母親"
     },
     "description": {
-      "en": "**Simple and Strong**\n\nA two-ingredient cocktail that emphasizes the flavors of coffee liqueur and vodka:\n\n*   Easy to make and adjust to taste.\n*   Served in a rocks glass, no garnish is necessary.",
-      "zh": "**簡單而強烈**\n\n一種強調咖啡利口酒和伏特加風味的雙成分雞尾酒：\n\n*   易於製作且可根據口味調整。\n*   在岩石杯中供應，不需要裝飾。"
+      "en": "Dirty Mother is a simple yet flavorful coffee liqueur cocktail. It combines brandy as a base with coffee liqueur, creating a rich, after-dinner coffee-like experience. The unique notes of brandy blend seamlessly with the coffee liqueur, offering a touch of sweetness and nutty aroma, with a smooth texture that leaves a warm aftertaste.\n\n*   Rich and creamy\n*   Easy to make\n*   Good for dessert",
+      "zh": "「黯淡的母親」（Dirty Mother）是一款簡單卻深具風味的咖啡香甜酒調酒。\n\n以白蘭地為基底，與咖啡香甜酒混合，創造出如餐後咖啡般的醇厚口感。\n\n白蘭地的獨特風味與咖啡香甜酒完美融合，帶來一絲甜美與堅果香氣，口感滑順，在舌尖留下溫暖的餘韻。儘管名稱略帶戲謔，這款調酒卻能撫慰疲憊的心靈，如同在深夜中，為辛勞的母親帶來一絲慰藉。"
     },
     "historical_reference": {
-      "en": "**Origins Unclear**\n\n*   Likely emerged in the mid-20th century.\n*   The name suggests a 'dirtier' version of the 'Black Russian,' replacing cream with coffee liqueur.",
-      "zh": "**起源不明**\n\n*   可能出現在20世紀中葉。\n*   這個名字暗示了“黑色俄羅斯”的“更髒”版本，用咖啡利口酒代替奶油。"
+      "en": "",
+      "zh": ""
     },
     "technique": {
-      "en": "Pour vodka and coffee liqueur into a rocks glass with ice. Stir gently.",
-      "zh": "將伏特加和咖啡利口酒倒入裝有冰塊的岩石杯中。 輕輕攪拌。"
+      "en": "Build over ice",
+      "zh": "在冰上調製"
     },
     "garnish": {
-      "en": "None",
-      "zh": "無"
+      "en": "Grated nutmeg or chocolate shavings (optional)",
+      "zh": "磨碎的肉荳蔻或巧克力屑（可選）"
     },
     "serve_in_glass": {
-      "en": "Rocks glass",
-      "zh": "岩石杯"
+      "en": "Old-fashioned glass",
+      "zh": "古典杯"
     },
     "appearance": {
-      "en": "Opaque, dark brown to black",
-      "zh": "不透明，深棕色至黑色"
+      "en": "Light brown",
+      "zh": "淺棕色"
     },
     "allergens": [],
     "base_spirits": [
       {
-        "amount": 30,
+        "amount": 60,
         "name": {
-          "en": "Vodka",
-          "zh": "伏特加"
+          "en": "Brandy",
+          "zh": "白蘭地"
         },
         "unit": {
           "en": "ml",
           "zh": "毫升"
         },
         "rationale": {
-          "en": "Provides the alcoholic base and a neutral flavor profile.",
-          "zh": "提供酒精基底和中性的風味。"
+          "en": "Provides the alcoholic base and warm fruit notes.",
+          "zh": "提供酒精基底和溫暖的水果味。"
         },
         "tags": [
           {
-            "en": "clear spirit",
-            "zh": "清澈烈酒"
-          },
-          {
-            "en": "neutral",
-            "zh": "中性"
-          },
-          {
-            "en": "filtration",
-            "zh": "過濾"
+            "en": "Brandy",
+            "zh": "白蘭地"
           }
         ]
       }
     ],
     "liqueurs": [
       {
-        "amount": 60,
+        "amount": 30,
         "name": {
           "en": "Coffee Liqueur",
           "zh": "咖啡利口酒"
@@ -57566,32 +57774,36 @@
           "zh": "毫升"
         },
         "rationale": {
-          "en": "Adds sweetness, coffee flavor, and color.",
-          "zh": "增加甜味、咖啡味和顏色。"
+          "en": "Adds coffee flavor and sweetness.",
+          "zh": "增加咖啡味和甜味。"
         }
       }
     ],
     "ingredients": [],
     "flavor_descriptors": [
       {
+        "en": "Chocolate",
+        "zh": "朱古力"
+      },
+      {
         "en": "Coffee",
         "zh": "咖啡"
       },
       {
-        "en": "Bitter",
-        "zh": "苦味"
+        "en": "Vanilla",
+        "zh": "香草"
       },
       {
-        "en": "Chocolate",
-        "zh": "朱古力"
+        "en": "Nutty",
+        "zh": "堅果"
       }
     ],
     "flavor_profile": {
-      "sweetness": 5,
+      "sweetness": 7,
       "sourness": 1,
-      "booziness": 7,
-      "body": 6,
-      "complexity": 4,
+      "booziness": 6,
+      "body": 4,
+      "complexity": 5,
       "bubbles": false
     }
   },
