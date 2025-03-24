@@ -27,7 +27,13 @@ export function BookmarksList() {
   const router = useRouter();
   const pathname = usePathname();
   const t = translations[language];
-  const [activeTab, setActiveTab] = useState("favorites");
+  const [activeTab, setActiveTab] = useState(() => {
+    // Initialize from localStorage or default to "want-to-try"
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('bookmarks-active-tab') || 'want-to-try';
+    }
+    return 'want-to-try';
+  });
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
 
   useEffect(() => {
@@ -66,7 +72,14 @@ export function BookmarksList() {
   };
 
   return (
-    <Tabs defaultValue="favorites" value={activeTab} onValueChange={setActiveTab}>
+    <Tabs 
+      defaultValue="want-to-try" 
+      value={activeTab} 
+      onValueChange={(value) => {
+        setActiveTab(value);
+        localStorage.setItem('bookmarks-active-tab', value);
+      }}
+    >
       <TabsList className="mb-4">
         {BOOKMARK_LISTS.map((list) => {
           const bookmarkList = bookmarks.find(b => b.key === list.id);
