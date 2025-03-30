@@ -1,6 +1,154 @@
 [
   {
     "name": {
+      "en": "Peach Blossom Punch",
+      "zh": "桃花潘趣酒"
+    },
+    "description": {
+      "en": "**A Refreshing and Fruity Punch**\n\nA delightful blend perfect for warm weather, featuring:\n*   Gin for a solid base\n*   Peach liqueur and purée for intense peach flavor\n*   Lemon juice for balance\n*   Sparkling wine to add bubbles and lightness",
+      "zh": "**清爽的水果潘趣酒**\n\n非常適合溫暖天氣的美味混合物，特色：\n*   琴酒作為堅實的基礎\n*   桃子利口酒和果泥帶來濃鬱的桃子風味\n*   檸檬汁保持平衡\n*   氣泡酒增添氣泡和輕盈感"
+    },
+    "historical_reference": {
+      "en": "**Origin**: Adapted from various peach punch recipes, blending classic punch elements with modern tastes.\n\n*   Inspired by colonial-era punches\n*   Refined with contemporary ingredients and techniques",
+      "zh": "**起源**: 改編自各種桃子潘趣酒食譜，將經典潘趣酒元素與現代口味相結合。\n\n*   靈感來自殖民時代的潘趣酒\n*   採用現代食材和技術進行精製"
+    },
+    "technique": {
+      "en": "Combine gin, peach purée, peach liqueur, and lemon juice in a shaker with ice. Shake well until chilled. Strain into a glass filled with ice. Top with sparkling wine. Garnish with a peach slice and a sprig of mint.",
+      "zh": "將琴酒、桃子果泥、桃子利口酒和檸檬汁與冰塊放入搖酒器中。 充分搖晃直至冷卻。 濾入裝滿冰塊的玻璃杯中。 淋上氣泡酒。 用桃子切片和薄荷枝裝飾。"
+    },
+    "garnish": {
+      "en": "Peach slice and a sprig of mint",
+      "zh": "桃子切片和薄荷枝"
+    },
+    "serve_in_glass": {
+      "en": "Punch glass or wine glass",
+      "zh": "潘趣酒杯或葡萄酒杯"
+    },
+    "appearance": {
+      "en": "Pale pink, slightly cloudy, garnished with a peach slice and a sprig of mint",
+      "zh": "淡粉紅色，略帶混濁，以桃子切片和薄荷枝裝飾"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a botanical base and structure to the punch.",
+          "zh": "為潘趣酒提供植物基底和結構。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 20,
+        "name": {
+          "en": "Peach Liqueur",
+          "zh": "桃子利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Enhances the peach flavor and adds sweetness.",
+          "zh": "增強桃子風味並增加甜度。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Peach Purée",
+          "zh": "桃子果泥"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds natural peach flavor and texture.",
+          "zh": "增添天然桃子風味和口感。"
+        }
+      },
+      {
+        "amount": 20,
+        "name": {
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Balances the sweetness and adds acidity.",
+          "zh": "平衡甜度並增加酸度。"
+        }
+      },
+      {
+        "amount": 90,
+        "name": {
+          "en": "Sparkling Wine",
+          "zh": "氣泡酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds bubbles and lightness.",
+          "zh": "增加氣泡和輕盈感。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 7,
+      "sourness": 4,
+      "booziness": 4,
+      "body": 5,
+      "complexity": 6,
+      "bubbles": true
+    }
+  },
+  {
+    "name": {
       "en": "Royal Arrival",
       "zh": "皇家降臨"
     },
@@ -2955,6 +3103,163 @@
   },
   {
     "name": {
+      "en": "Shiso Sunrise",
+      "zh": "紫蘇日出"
+    },
+    "description": {
+      "en": "**A Refreshing and Aromatic Cocktail**\n\nA delightful blend of gin, shiso, and citrus, creating a unique and complex flavor profile:\n*   Shiso adds an herbal and slightly minty note.\n*   Citrus provides a bright and tangy counterpoint.\n*   A touch of grenadine adds sweetness and a vibrant color.",
+      "zh": "**清爽芳香的雞尾酒**\n\n琴酒、紫蘇和柑橘的完美融合，創造出獨特而複雜的風味：\n* 紫蘇增添草本和淡淡的薄荷味。\n* 柑橘提供明亮和濃郁的對比。\n* 少許石榴糖漿增添甜味和鮮豔的色彩。"
+    },
+    "historical_reference": {
+      "en": "The *Shiso Sunrise* is a modern cocktail creation, drawing inspiration from classic gin sours and incorporating the unique flavor of shiso. Its exact origin is undocumented, but it represents a contemporary approach to cocktail design, emphasizing fresh, herbal ingredients and balanced flavors.",
+      "zh": "《*紫蘇日出*》是一款現代雞尾酒，其靈感來自經典琴酒酸酒，並融入了紫蘇的獨特風味。 它的確切起源沒有記載，但它代表了一種現代的雞尾酒設計方法，強調新鮮的草本成分和均衡的風味。"
+    },
+    "technique": {
+      "en": "Muddle shiso leaves, add remaining ingredients, shake with ice, double strain into a chilled coupe glass. Garnish with a shiso leaf.",
+      "zh": "搗碎紫蘇葉，加入剩餘成分，加冰搖晃，雙重過濾到冰鎮的高腳杯中。 用紫蘇葉裝飾。"
+    },
+    "garnish": {
+      "en": "Shiso leaf",
+      "zh": "紫蘇葉"
+    },
+    "serve_in_glass": {
+      "en": "Coupe glass",
+      "zh": "高腳杯"
+    },
+    "appearance": {
+      "en": "A vibrant pink-orange gradient with a frothy top.",
+      "zh": "鮮豔的粉橙色漸變，頂部有泡沫。"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a botanical base and alcoholic backbone.",
+          "zh": "提供植物基礎和酒精骨幹。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Elderflower Liqueur",
+          "zh": "接骨木花利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds floral and subtle sweetness.",
+          "zh": "增添花香和微妙的甜味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 22,
+        "name": {
+          "en": "Shiso Leaves",
+          "zh": "紫蘇葉"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "片"
+        },
+        "rationale": {
+          "en": "Adds a unique herbal and slightly minty flavor.",
+          "zh": "增添獨特的草本和淡淡的薄荷味。"
+        }
+      },
+      {
+        "amount": 22,
+        "name": {
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sourness and balances the sweetness.",
+          "zh": "增加酸度並平衡甜度。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Grenadine",
+          "zh": "石榴糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness and color.",
+          "zh": "增加甜度和顏色。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 5,
+      "sourness": 6,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Pimm's Cup",
       "zh": "龐貝杯"
     },
@@ -3727,6 +4032,163 @@
       "booziness": 7,
       "body": 6,
       "complexity": 7,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
+      "en": "Mountain Berry Blend",
+      "zh": "山間莓果混合"
+    },
+    "description": {
+      "en": "**Vibrant and Fruity Cocktail**\n\nA refreshing blend of mixed berries and citrus, featuring:\n*   Vodka base for a clean taste\n*   Fresh berries for natural sweetness and color\n*   Lemon juice for tartness and balance",
+      "zh": "**充滿活力和果香的雞尾酒**\n\n混合莓果和柑橘的清爽融合，特色：\n*   伏特加基底，帶來清爽口感\n*   新鮮莓果，帶來天然甜味和色彩\n*   檸檬汁，帶來酸味和平衡"
+    },
+    "historical_reference": {
+      "en": "**Modern Creation**\n\n*   A contemporary cocktail designed to showcase fresh berry flavors\n*   Inspired by classic fruit-based cocktails but with a modern twist\n*   Emerged in the late 20th to early 21st century as fresh ingredients became more accessible",
+      "zh": "**現代創作**\n\n*   一款旨在展示新鮮莓果風味的現代雞尾酒\n*   靈感來自經典水果雞尾酒，但帶有現代氣息\n*   隨著新鮮食材變得更容易獲得，於 20 世紀末至 21 世紀初出現"
+    },
+    "technique": {
+      "en": "Muddle berries, add remaining ingredients, shake with ice, strain into glass filled with ice.",
+      "zh": "將莓果搗碎，加入剩餘成分，加冰搖晃，過濾到裝滿冰塊的杯子中。"
+    },
+    "garnish": {
+      "en": "Berry skewer or lemon wedge",
+      "zh": "莓果串或檸檬角"
+    },
+    "serve_in_glass": {
+      "en": "Rocks glass or wine glass",
+      "zh": "岩石杯或葡萄酒杯"
+    },
+    "appearance": {
+      "en": "Deep red with purple hues, slightly cloudy",
+      "zh": "深紅色帶紫色色調，略有混濁"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Vodka",
+          "zh": "伏特加"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a clean alcoholic base that doesn't overpower the berry flavors.",
+          "zh": "提供乾淨的酒精基底，不會蓋過莓果風味。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "neutral",
+            "zh": "中性"
+          },
+          {
+            "en": "filtration",
+            "zh": "過濾"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Berry Liqueur",
+          "zh": "莓果利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Enhances the berry flavor and adds a touch of sweetness.",
+          "zh": "增強莓果風味，增添一絲甜味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 50,
+        "name": {
+          "en": "Mixed Berries (strawberries, raspberries, blueberries)",
+          "zh": "混合莓果（草莓、覆盆子、藍莓）"
+        },
+        "unit": {
+          "en": "g",
+          "zh": "克"
+        },
+        "rationale": {
+          "en": "Provides the primary flavor and color of the cocktail.",
+          "zh": "提供雞尾酒的主要風味和顏色。"
+        }
+      },
+      {
+        "amount": 20,
+        "name": {
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds acidity to balance the sweetness of the berries.",
+          "zh": "增加酸度，以平衡莓果的甜味。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adjusts the overall sweetness of the cocktail.",
+          "zh": "調整雞尾酒的整體甜度。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Sweet",
+        "zh": "甜味"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 7,
+      "sourness": 5,
+      "booziness": 5,
+      "body": 4,
+      "complexity": 6,
       "bubbles": false
     }
   },
@@ -4881,14 +5343,12 @@
           "en": "Provides a spicy and robust base.",
           "zh": "提供辛辣和濃郁的基底。"
         }
-      }
-    ],
-    "liqueurs": [
+      },
       {
         "amount": 30,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -4897,8 +5357,20 @@
         "rationale": {
           "en": "Adds body and fruit notes.",
           "zh": "增加酒體和水果味。"
-        }
-      },
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
       {
         "amount": 30,
         "name": {
@@ -6618,7 +7090,7 @@
         "amount": 375,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -6627,7 +7099,17 @@
         "rationale": {
           "en": "Adds complexity and fruit notes.",
           "zh": "增加複雜度和水果香氣。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -7830,6 +8312,162 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
+    }
+  },
+  {
+    "name": {
+      "en": "Wasabi Whisper",
+      "zh": "芥末低語"
+    },
+    "description": {
+      "en": "**A Refreshing and Spicy Cocktail**\n\nThe Wasabi Whisper is a unique cocktail that combines the smoothness of gin with the subtle heat of wasabi. It features:\n*   A refreshing blend of cucumber and lime.\n*   A hint of wasabi for a spicy kick.\n*   A cucumber garnish for visual appeal.",
+      "zh": "**清爽辛辣的雞尾酒**\n\n芥末低語是一款獨特的雞尾酒，結合了琴酒的順滑口感和芥末的微妙辛辣味。它的特色是：\n*   黃瓜和青檸的清爽混合。\n*   少許芥末帶來辛辣的刺激。\n*   黃瓜裝飾增添視覺吸引力。"
+    },
+    "historical_reference": {
+      "en": "The Wasabi Whisper is a modern creation, inspired by the desire to blend traditional cocktail elements with unique, contemporary flavors. \n\n*   Created as a modern twist on classic gin cocktails.\n*   The cocktail's name evokes a sense of mystery and intrigue.\n*   Wasabi is traditionally used in Japanese cuisine.",
+      "zh": "芥末低語是一款現代創作，其靈感來自於將傳統雞尾酒元素與獨特現代風味相結合的願望。\n\n*   創造為經典琴酒雞尾酒的現代變奏。\n*   這款雞尾酒的名字喚起了一種神秘感和趣味。\n*   芥末傳統上用於日本料理。"
+    },
+    "technique": {
+      "en": "Muddle cucumber, add remaining ingredients, shake with ice, and double strain into a chilled glass.",
+      "zh": "搗碎黃瓜，加入剩餘的材料，與冰塊搖勻，然後雙重過濾到冰鎮的杯子中。"
+    },
+    "garnish": {
+      "en": "Cucumber ribbon or slice",
+      "zh": "黃瓜絲或片"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "高腳杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Pale green, slightly cloudy, with a vibrant green garnish.",
+      "zh": "淡綠色，略帶混濁，配以鮮豔的綠色裝飾。"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 60,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the base spirit with botanical notes.",
+          "zh": "提供基酒與植物風味。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [],
+    "ingredients": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness to balance the acidity and spice.",
+          "zh": "增加甜度以平衡酸味和辣味。"
+        }
+      },
+      {
+        "amount": 30,
+        "name": {
+          "en": "Lime Juice",
+          "zh": "青檸汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds acidity and balance.",
+          "zh": "增加酸度和平衡感。"
+        }
+      },
+      {
+        "amount": 4,
+        "name": {
+          "en": "Wasabi Paste",
+          "zh": "芥末醬"
+        },
+        "unit": {
+          "en": "grams",
+          "zh": "克"
+        },
+        "rationale": {
+          "en": "Provides the spicy element.",
+          "zh": "提供辛辣元素。"
+        }
+      },
+      {
+        "amount": 3,
+        "name": {
+          "en": "Cucumber Slice",
+          "zh": "黃瓜片"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "片"
+        },
+        "rationale": {
+          "en": "Adds the freshness and aroma.",
+          "zh": "增加清爽和香氣。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Spicy",
+        "zh": "辛辣"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Umami",
+        "zh": "鮮味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 4,
+      "sourness": 6,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
     }
   },
   {
@@ -11208,6 +11846,167 @@
   },
   {
     "name": {
+      "en": "Matcha Mist",
+      "zh": "抹茶迷霧"
+    },
+    "description": {
+      "en": "**Refreshing and Aromatic Cocktail**\n\nA modern cocktail that balances the earthy notes of matcha with the floral and citrus notes of gin.\n\n*   Matcha powder provides a unique color and flavor.\n*   Lemon juice adds brightness and acidity.\n*   Simple syrup sweetens the drink.\n*   Egg white creates a silky texture.",
+      "zh": "**清新芳香的雞尾酒**\n\n一款現代雞尾酒，將抹茶的泥土味與琴酒的花香和柑橘味相平衡。\n\n*   抹茶粉提供獨特的顏色和風味。\n*   檸檬汁增加亮度和酸度。\n*   簡糖漿使飲料變甜。\n*   蛋白營造出柔滑的質感。"
+    },
+    "historical_reference": {
+      "en": "The Matcha Mist is a modern creation, lacking a specific historical origin. It exemplifies contemporary mixology's exploration of diverse flavors, such as matcha, in cocktail crafting. It is an innovative cocktail demonstrating the integration of tea culture with cocktail culture.",
+      "zh": "抹茶迷霧是一種現代創作，缺乏特定的歷史淵源。 它體現了當代調酒師對多種風味（如抹茶）在雞尾酒調製中的探索。 這是一款創新的雞尾酒，展示了茶文化與雞尾酒文化的融合。"
+    },
+    "technique": {
+      "en": "Dry shake all ingredients, then shake with ice. Double strain into a chilled glass.",
+      "zh": "將所有材料乾搖，然後加冰搖勻。 雙重過濾到冰鎮的玻璃杯中。"
+    },
+    "garnish": {
+      "en": "Matcha powder dusting or lemon twist",
+      "zh": "抹茶粉或檸檬皮"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "高腳杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Cloudy pale green with a frothy top",
+      "zh": "混濁的淡綠色，頂部有泡沫"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a botanical base and alcoholic strength.",
+          "zh": "提供植物基礎和酒精強度。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Matcha Liqueur",
+          "zh": "抹茶利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Enhances the matcha flavor and adds sweetness.",
+          "zh": "增強抹茶風味並增加甜度。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 1,
+        "name": {
+          "en": "Egg White",
+          "zh": "蛋白"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "個"
+        },
+        "rationale": {
+          "en": "Adds a silky texture to the cocktail.",
+          "zh": "為雞尾酒增添柔滑的質感。"
+        }
+      },
+      {
+        "amount": 22,
+        "name": {
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sourness and balances the sweetness.",
+          "zh": "增加酸度，平衡甜味。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Sweetens the cocktail and balances the sourness.",
+          "zh": "使雞尾酒變甜，平衡酸味。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Umami",
+        "zh": "鮮味"
+      },
+      {
+        "en": "Grassy",
+        "zh": "草青"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 4,
+      "sourness": 6,
+      "booziness": 5,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Perroquet",
       "zh": "鸚鵡"
     },
@@ -11798,6 +12597,163 @@
   },
   {
     "name": {
+      "en": "Yuzu Blossom",
+      "zh": "柚子花"
+    },
+    "description": {
+      "en": "**A Refreshing Citrus Cocktail**\n\nThe Yuzu Blossom is a bright and aromatic cocktail featuring the unique flavor of yuzu.\n\n*   Combines gin with yuzu juice and elderflower liqueur for a floral and citrusy profile.\n*   Egg white adds a silky texture and creates a beautiful foam.\n*   A few dashes of orange bitters provide a touch of complexity and spice.",
+      "zh": "**清爽的柑橘雞尾酒**\n\nYuzu Blossom 是一款明亮芳香的雞尾酒，具有獨特的柚子風味。\n\n*   將琴酒與柚子汁和接骨木花利口酒結合，帶來花香和柑橘風味。\n*   蛋白增加了柔滑的質地，並產生了美麗的泡沫。\n*   幾滴橙味苦精帶來一絲複雜性和辛辣味。"
+    },
+    "historical_reference": {
+      "en": "**Modern Creation**\n\nThe Yuzu Blossom is a contemporary cocktail, likely created in the late 20th or early 21st century.\n\n*   Its inspiration comes from the increasing availability and appreciation of yuzu in Western mixology.\n*   The combination of gin, yuzu, and elderflower reflects a trend towards floral and citrus-forward cocktails.",
+      "zh": "**現代創作**\n\nYuzu Blossom 是一款現代雞尾酒，很可能是在 20 世紀末或 21 世紀初創作的。\n\n*   它的靈感來自於西方調酒中柚子的日益普及和讚賞。\n*   琴酒、柚子和接骨木花的組合反映了花香和柑橘風味雞尾酒的趨勢。"
+    },
+    "technique": {
+      "en": "Dry shake all ingredients, then shake again with ice. Double strain into a chilled glass.",
+      "zh": "將所有材料乾搖，然後再加冰搖晃。雙重過濾到冰鎮的杯子中。"
+    },
+    "garnish": {
+      "en": "Edible flower (e.g., pansy or orchid)",
+      "zh": "食用花卉（例如，三色堇或蘭花）"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "郁金香杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Pale yellow, slightly cloudy, with a frothy white head.",
+      "zh": "淡黃色，略帶混濁，帶有乳白色的泡沫。"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the botanical base and a strong spirituous backbone.",
+          "zh": "提供植物風味的基底和強烈的酒精骨幹。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Elderflower Liqueur",
+          "zh": "接骨木花利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds floral sweetness and complements the yuzu.",
+          "zh": "增添花香甜味，與柚子相得益彰。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 22,
+        "name": {
+          "en": "Yuzu Juice",
+          "zh": "柚子汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a unique tart and aromatic citrus flavor.",
+          "zh": "提供獨特的酸味和芳香的柑橘風味。"
+        }
+      },
+      {
+        "amount": 1,
+        "name": {
+          "en": "Egg White",
+          "zh": "蛋白"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "個"
+        },
+        "rationale": {
+          "en": "Adds a silky texture and frothy head.",
+          "zh": "增添絲滑的質地和泡沫。"
+        }
+      },
+      {
+        "amount": 2,
+        "name": {
+          "en": "Orange Bitters",
+          "zh": "橙味苦精"
+        },
+        "unit": {
+          "en": "dash",
+          "zh": "滴"
+        },
+        "rationale": {
+          "en": "Adds complexity and a subtle spice.",
+          "zh": "增加複雜性和微妙的香料味。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Bitter",
+        "zh": "苦味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 5,
+      "sourness": 7,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Martini",
       "zh": "馬丁尼"
     },
@@ -12302,14 +13258,12 @@
             "zh": "陳年"
           }
         ]
-      }
-    ],
-    "liqueurs": [
+      },
       {
         "amount": 30,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -12318,8 +13272,20 @@
         "rationale": {
           "en": "Adds fruity and complex notes.",
           "zh": "增加果味和複雜的味道。"
-        }
-      },
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
       {
         "amount": 15,
         "name": {
@@ -12411,6 +13377,128 @@
       "booziness": 9,
       "body": 7,
       "complexity": 9,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
+      "en": "Shochu Sunset",
+      "zh": "燒酎日落"
+    },
+    "description": {
+      "en": "A vibrant and refreshing cocktail inspired by the colors of a sunset. The Shochu Sunset combines the smooth taste of Shochu with the sweetness of fruit juices and a hint of grenadine, creating a balanced and visually appealing drink. \n\n*   **Fruity and Refreshing:** Combines Shochu with fruit flavors\n*   **Visually Stunning:** Creates a layered sunset effect\n*   **Easy to make:** Requires common bar ingredients and techniques",
+      "zh": "一款充滿活力且令人耳目一新的雞尾酒，靈感來自日落的色彩。燒酎日落將燒酎的柔滑口感與果汁的甜味和少許石榴糖漿結合，創造出一種平衡且視覺上吸引人的飲品。\n\n*   **果味和清爽：** 將燒酎與水果風味結合\n*   **視覺效果驚豔：** 創造分層的日落效果\n*   **易於製作：** 需要常見的酒吧原料和技巧"
+    },
+    "historical_reference": {
+      "en": "The Shochu Sunset is a modern cocktail, inspired by the popular Sunset cocktail theme. The concept of creating a layered drink to resemble a sunset has been used in various cocktails, with each variation using different spirits and ingredients to achieve the desired effect. The Shochu Sunset specifically utilizes Shochu as its base spirit, offering a unique twist on the classic concept.\n\n*   **Modern Creation:** A contemporary cocktail designed for visual appeal and balanced flavor.\n*   **Sunset Theme:** Part of a family of cocktails inspired by the colors of a sunset.\n*   **Shochu Twist:** Uses Shochu as the base spirit for a distinct character.",
+      "zh": "燒酎日落是一款現代雞尾酒，靈感來自流行的日落雞尾酒主題。創造一種分層飲料以類似日落的概念已在各種雞尾酒中使用，每種變體都使用不同的烈酒和成分來達到所需的效果。燒酎日落特別使用燒酎作為其基酒，為經典概念提供獨特的風味。\n\n*   **現代創作：** 一種專為視覺吸引力和平衡風味而設計的現代雞尾酒。\n*   **日落主題：** 一系列靈感來自日落色彩的雞尾酒的一部分。\n*   **燒酎風味：** 使用燒酎作為基酒，具有獨特的個性。"
+    },
+    "technique": {
+      "en": "Build. Pour Shochu, orange juice, and pineapple juice into a highball glass filled with ice. Gently pour grenadine down the side of the glass to create a layered effect.",
+      "zh": "直接調和。將燒酎、橙汁和鳳梨汁倒入裝滿冰的高球杯中。輕輕地將石榴糖漿倒入杯子側面，以產生分層效果。"
+    },
+    "garnish": {
+      "en": "Orange slice or cherry",
+      "zh": "橙子片或櫻桃"
+    },
+    "serve_in_glass": {
+      "en": "Highball glass",
+      "zh": "高球杯"
+    },
+    "appearance": {
+      "en": "Layered shades of red and orange, reminiscent of a sunset",
+      "zh": "分層的紅色和橙色陰影，讓人聯想到日落"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 60,
+        "name": {
+          "en": "Shochu",
+          "zh": "燒酎"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the base spirit with a clean, slightly earthy flavor.",
+          "zh": "提供基酒，帶有乾淨、略帶泥土的風味。"
+        }
+      }
+    ],
+    "liqueurs": [],
+    "ingredients": [
+      {
+        "amount": 60,
+        "name": {
+          "en": "Orange Juice",
+          "zh": "橙汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness and citrus notes.",
+          "zh": "增加甜味和柑橘味。"
+        }
+      },
+      {
+        "amount": 30,
+        "name": {
+          "en": "Pineapple Juice",
+          "zh": "菠蘿汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds tropical sweetness.",
+          "zh": "增加熱帶甜味。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Grenadine",
+          "zh": "石榴糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness and creates the sunset color effect.",
+          "zh": "增加甜味並產生日落顏色效果。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Tropical",
+        "zh": "熱帶"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 7,
+      "sourness": 4,
+      "booziness": 5,
+      "body": 4,
+      "complexity": 6,
       "bubbles": false
     }
   },
@@ -14787,7 +15875,7 @@
         "amount": 50,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -14796,7 +15884,17 @@
         "rationale": {
           "en": "Provides the base spirit and rich flavor.",
           "zh": "提供基酒和濃郁的風味。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [],
@@ -15534,6 +16632,148 @@
       "sourness": 2,
       "booziness": 8,
       "body": 7,
+      "complexity": 7,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
+      "en": "Ume Plum Sour",
+      "zh": "梅子酸酒"
+    },
+    "description": {
+      "en": "**A Refreshing Sour with Asian Flavors**\n\nA delightful twist on the classic gin sour, featuring:\n*   Umeshu for sweetness and plum flavor\n*   Yuzu juice for unique citrus notes\n*   Egg white (optional) for a silky texture",
+      "zh": "**帶有亞洲風味的清爽酸酒**\n\n經典琴酒酸酒的美味變奏，特色：\n*   梅酒帶來甜味和李子風味\n*   柚子汁帶來獨特的柑橘風味\n*   蛋白（可選）帶來絲滑的質感"
+    },
+    "historical_reference": {
+      "en": "While not a historical cocktail in the classic sense, the Ume Plum Sour is a modern creation that draws inspiration from traditional Japanese flavors. It builds upon the classic sour formula, incorporating Umeshu, a popular Japanese plum liqueur, and Yuzu, a fragrant citrus fruit widely used in Japanese cuisine.\n\n*   A modern twist on the classic gin sour\n*   Features Japanese Umeshu and Yuzu",
+      "zh": "雖然不是傳統意義上的歷史雞尾酒，但梅子酸酒是一種現代創意，靈感來自傳統日本風味。它以經典的酸酒配方為基礎，融入了梅酒（一種流行的日本梅子利口酒）和柚子（一種廣泛用於日本料理的芳香柑橘類水果）。\n\n*   經典琴酒酸酒的現代變奏\n*   以日本梅酒和柚子為特色"
+    },
+    "technique": {
+      "en": "Shake all ingredients with ice. Strain into a chilled glass. If using egg white, dry shake first.",
+      "zh": "將所有材料與冰塊一起搖勻。 倒入冰鎮的杯子中。 如果使用蛋白，先乾搖。"
+    },
+    "garnish": {
+      "en": "Plum slice or Yuzu peel",
+      "zh": "李子片或柚子皮"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Sour glass",
+      "zh": "碟型杯或酸酒杯"
+    },
+    "appearance": {
+      "en": "Pale amber, slightly cloudy",
+      "zh": "淡琥珀色，略有混濁"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a botanical and slightly dry base.",
+          "zh": "提供植物性和略乾的基底。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Umeshu (Plum Liqueur)",
+          "zh": "梅酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness and plum flavor.",
+          "zh": "增加甜味和李子風味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 20,
+        "name": {
+          "en": "Yuzu Juice",
+          "zh": "柚子汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds tartness and unique citrus flavor.",
+          "zh": "增加酸度和獨特的柑橘風味。"
+        }
+      },
+      {
+        "amount": 1,
+        "name": {
+          "en": "Egg White (Optional)",
+          "zh": "蛋白（可選）"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "個"
+        },
+        "rationale": {
+          "en": "Adds a silky texture.",
+          "zh": "增加絲滑的質感。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      },
+      {
+        "en": "Umami",
+        "zh": "鮮味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 7,
+      "sourness": 6,
+      "booziness": 6,
+      "body": 5,
       "complexity": 7,
       "bubbles": false
     }
@@ -18534,7 +19774,7 @@
         "amount": 45,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -18543,7 +19783,17 @@
         "rationale": {
           "en": "Provides the spirituous base, offering rich fruit and oak notes.",
           "zh": "提供酒體基礎，帶來濃郁的果香和橡木味。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [],
@@ -23900,7 +25150,7 @@
         "amount": 30,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -23909,7 +25159,17 @@
         "rationale": {
           "en": "Adds rich, complex base flavour.",
           "zh": "增加濃郁、複雜的基底風味。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -24184,6 +25444,137 @@
   },
   {
     "name": {
+      "en": "Rice Field Refresher",
+      "zh": "稻田清爽飲"
+    },
+    "description": {
+      "en": "**Refreshing and Earthy Cocktail**\n\nA light and revitalizing cocktail inspired by the flavors of a rice field:\n\n*   Sake base provides a smooth, clean profile.\n*   Cucumber and lime add freshness and zest.\n*   A hint of mint provides a cooling aromatic note.",
+      "zh": "**清新而樸實的雞尾酒**\n\n一款受稻田風味啟發的輕盈且充滿活力的雞尾酒：\n\n*   清酒基底提供柔滑、乾淨的口感。\n*   黃瓜和萊姆增添清新和風味。\n*   淡淡的薄荷味帶來清涼的香氣。"
+    },
+    "historical_reference": {
+      "en": "**Modern Creation**\n\nThe Rice Field Refresher is a contemporary cocktail designed to capture the essence of a serene rice field landscape. Its origins are rooted in the desire to showcase the versatility of sake in modern mixology.",
+      "zh": "**現代創作**\n\n稻田清爽飲是一款現代雞尾酒，旨在捕捉寧靜稻田景觀的精髓。 它的起源植根於在現代調酒中展示清酒多功能性的願望。"
+    },
+    "technique": {
+      "en": "Muddle cucumber and mint. Add remaining ingredients and shake with ice. Double strain into glass filled with ice.",
+      "zh": "將黃瓜和薄荷搗碎。 加入剩餘的成分，加入冰塊搖勻。 雙重過濾到裝滿冰塊的玻璃杯中。"
+    },
+    "garnish": {
+      "en": "Cucumber ribbon and mint sprig",
+      "zh": "黃瓜絲和薄荷枝"
+    },
+    "serve_in_glass": {
+      "en": "Highball glass",
+      "zh": "高球杯"
+    },
+    "appearance": {
+      "en": "Pale green, slightly cloudy",
+      "zh": "淡綠色，略帶混濁"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [],
+    "liqueurs": [
+      {
+        "amount": 20,
+        "name": {
+          "en": "Elderflower Liqueur",
+          "zh": "接骨木花利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a subtle floral sweetness.",
+          "zh": "增添微妙的花香甜味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Sake",
+          "zh": "清酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a clean, rice-based foundation.",
+          "zh": "提供乾淨、米基底的風味。"
+        }
+      },
+      {
+        "amount": 3,
+        "name": {
+          "en": "Cucumber slices",
+          "zh": "黃瓜片"
+        },
+        "unit": {
+          "en": "slices",
+          "zh": "片"
+        },
+        "rationale": {
+          "en": "Adds fresh, vegetal notes.",
+          "zh": "增加新鮮的植物風味。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Mint",
+          "zh": "薄荷"
+        },
+        "unit": {
+          "en": "leaves",
+          "zh": "片"
+        },
+        "rationale": {
+          "en": "Adds a refreshing, aromatic element.",
+          "zh": "增添清爽的芳香元素。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Grassy",
+        "zh": "草青"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Umami",
+        "zh": "鮮味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 3,
+      "sourness": 6,
+      "booziness": 5,
+      "body": 4,
+      "complexity": 6,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Mojito",
       "zh": "莫希托"
     },
@@ -24335,6 +25726,172 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
+    }
+  },
+  {
+    "name": {
+      "en": "Hokkaido Harvest",
+      "zh": "北海道豐收"
+    },
+    "description": {
+      "en": "**A Refreshing and Herbaceous Cocktail**\n\nThis cocktail combines the botanical notes of gin with the fresh flavors of cucumber and shiso, creating a vibrant and balanced drink. The egg white adds a silky texture, while the lemon juice provides a touch of acidity.",
+      "zh": "**清爽的草本雞尾酒**\n\n這款雞尾酒結合了琴酒的植物香氣與小黃瓜和紫蘇的新鮮風味，創造出一款充滿活力且平衡的飲品。蛋白增添了絲滑的口感，而檸檬汁則帶來一絲酸度。"
+    },
+    "historical_reference": {
+      "en": "This cocktail is a modern creation, inspired by the flavors of Hokkaido, Japan. It seeks to capture the essence of the region's fresh produce and unique botanicals.\n\n*   The use of shiso reflects the influence of Japanese cuisine.\n*   The cucumber provides a cooling and refreshing element.",
+      "zh": "這款雞尾酒是現代的創作，靈感來自日本北海道的風味。它旨在捕捉該地區新鮮農產品和獨特植物的精髓。\n\n*   紫蘇的使用反映了日本料理的影響。\n*   小黃瓜提供清涼和清爽的元素。"
+    },
+    "technique": {
+      "en": "Muddle shiso leaves gently. Add all ingredients to shaker with ice. Shake vigorously until well-chilled. Double strain into chilled glass. Garnish.",
+      "zh": "輕輕搗碎紫蘇葉。將所有材料加入冰塊的搖酒器中。劇烈搖晃至完全冷卻。雙重過濾到冰鎮的杯子中。裝飾。"
+    },
+    "garnish": {
+      "en": "Cucumber ribbon and shiso leaf",
+      "zh": "小黃瓜絲和紫蘇葉"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "淺碟香檳杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Cloudy, pale green with a frothy white head",
+      "zh": "混濁的淡綠色，帶有泡沫狀的白色泡沫"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the botanical base and backbone of the cocktail.",
+          "zh": "提供調酒的植物基礎和骨幹。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [],
+    "ingredients": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Cucumber Juice",
+          "zh": "小黃瓜汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a fresh, vegetal flavor.",
+          "zh": "增添新鮮的蔬菜風味。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides acidity and balance.",
+          "zh": "提供酸度和平衡感。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness to balance the acidity.",
+          "zh": "增加甜度以平衡酸度。"
+        }
+      },
+      {
+        "amount": 1,
+        "name": {
+          "en": "Egg White",
+          "zh": "蛋白"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "個"
+        },
+        "rationale": {
+          "en": "Adds a silky texture and frothy head.",
+          "zh": "增加絲滑的質感和泡沫。"
+        }
+      },
+      {
+        "amount": 3,
+        "name": {
+          "en": "Shiso Leaves",
+          "zh": "紫蘇葉"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "片"
+        },
+        "rationale": {
+          "en": "Adds a unique herbal aroma and flavor.",
+          "zh": "增添獨特的草本香氣和風味。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Grassy",
+        "zh": "草青"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 4,
+      "sourness": 6,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
     }
   },
   {
@@ -27395,7 +28952,7 @@
         "amount": 22,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -27404,7 +28961,17 @@
         "rationale": {
           "en": "Provides the rich, fruity base of the cocktail.",
           "zh": "提供雞尾酒豐富的果味基底。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       },
       {
         "amount": 22,
@@ -29458,7 +31025,7 @@
         "amount": 45,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -29467,7 +31034,17 @@
         "rationale": {
           "en": "Provides the base spirit and complex fruit notes.",
           "zh": "提供基酒和複雜的果香。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -29586,7 +31163,7 @@
         "amount": 60,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -29595,7 +31172,17 @@
         "rationale": {
           "en": "Provides the base spirit and rich flavor.",
           "zh": "提供基酒和濃郁的風味。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -31037,7 +32624,7 @@
         "amount": 60,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -31046,7 +32633,17 @@
         "rationale": {
           "en": "Provides the cocktail's rich and complex base.",
           "zh": "為雞尾酒提供豐富而複雜的基底。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -33511,6 +35108,163 @@
   },
   {
     "name": {
+      "en": "Ginger Geisha",
+      "zh": "藝伎薑汁"
+    },
+    "description": {
+      "en": "**A Refreshing Asian-Inspired Cocktail**\n\nA delicate and aromatic cocktail, blending vodka with the exotic flavors of ginger, yuzu, and elderflower. The addition of egg white creates a silky texture and a beautiful foamy head.\n\n*   Subtle sweetness balanced by citrus notes\n*   Aromatic ginger and floral hints\n*   Smooth, velvety texture",
+      "zh": "**一杯清爽的亞洲風味雞尾酒**\n\n將伏特加與生薑、柚子和接骨木花的異國風味融合在一起，創造出一款精緻而芳香的雞尾酒。 加入蛋白可產生如絲般的質地和美麗的泡沫。\n\n*   微妙的甜味與柑橘味平衡\n*   芳香的生薑和花香\n*   光滑、如天鵝絨般的質地"
+    },
+    "historical_reference": {
+      "en": "The Ginger Geisha is a modern cocktail, with no established historical background.\n\n*   Created in the early 2000s\n*   Inspired by the flavors of Asian cuisine and mixology",
+      "zh": "藝伎薑汁是一種現代雞尾酒，沒有既定的歷史背景。\n\n*   於2000年代初期創作\n*   靈感來自亞洲美食和調酒的風味"
+    },
+    "technique": {
+      "en": "Dry shake all ingredients vigorously to emulsify the egg white, then add ice and shake again until well-chilled. Strain into a chilled glass.",
+      "zh": "用力乾搖所有材料以乳化蛋白，然後加入冰塊並再次搖晃直至完全冷卻。 濾入冰鎮的杯子中。"
+    },
+    "garnish": {
+      "en": "Candied ginger slice or a thin yuzu peel",
+      "zh": "糖漬薑片或薄柚子皮"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "高腳杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Pale gold, slightly hazy, with a delicate foam head",
+      "zh": "淡金色，略帶朦朧，頂部有細膩的泡沫"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Vodka",
+          "zh": "伏特加"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a clean, neutral base for the other flavors to shine.",
+          "zh": "提供乾淨、中性的基底，讓其他風味得以展現。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "neutral",
+            "zh": "中性"
+          },
+          {
+            "en": "filtration",
+            "zh": "過濾"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Elderflower Liqueur",
+          "zh": "接骨木花利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a floral and slightly sweet note.",
+          "zh": "增添花香和微甜的味道。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 20,
+        "name": {
+          "en": "Fresh Ginger Syrup",
+          "zh": "新鮮薑汁糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a spicy and sweet ginger flavor.",
+          "zh": "增添辛辣和甜薑味。"
+        }
+      },
+      {
+        "amount": 20,
+        "name": {
+          "en": "Yuzu Juice",
+          "zh": "柚子汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a unique citrus flavor, more aromatic than lemon or lime.",
+          "zh": "提供獨特的柑橘味，比檸檬或萊姆更香。"
+        }
+      },
+      {
+        "amount": 1,
+        "name": {
+          "en": "Egg White",
+          "zh": "蛋白"
+        },
+        "unit": {
+          "en": "pc",
+          "zh": "個"
+        },
+        "rationale": {
+          "en": "Adds a silky texture and creates a foamy head.",
+          "zh": "增添如絲般的質地並產生泡沫。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      },
+      {
+        "en": "Spicy",
+        "zh": "辛辣"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 5,
+      "sourness": 6,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Toasted Almond",
       "zh": "烤杏仁"
     },
@@ -34886,7 +36640,7 @@
         "amount": 45,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -34895,7 +36649,17 @@
         "rationale": {
           "en": "Provides the base spirit and adds complexity.",
           "zh": "提供基酒並增加複雜性。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [],
@@ -34970,6 +36734,134 @@
       "booziness": 5,
       "body": 7,
       "complexity": 6,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
+      "en": "Cooper Union",
+      "zh": "庫珀聯盟"
+    },
+    "description": {
+      "en": "**A refined and complex cocktail**\n\n*   Features a smooth texture with layers of spice and herbal notes.\n*   The balance of sweetness and bitterness creates a harmonious drinking experience.\n*   A pre-prohibition era drink with a history.",
+      "zh": "**一款精緻而複雜的雞尾酒**\n\n*   口感柔順，帶有層層辛香和草本氣息。\n*   甜味和苦味的平衡創造了和諧的飲用體驗。\n*   禁酒令時期之前的飲品，具有歷史意義。"
+    },
+    "historical_reference": {
+      "en": "**The Cooper Union Cocktail - A Forgotten Classic**\n\n*   Created at The Cooper Union hotel in New York City.\n*   Dates back to the early 20th century.\n*   Features rye whiskey, vermouth, and bitters.",
+      "zh": "**庫珀聯盟雞尾酒 - 一款被遺忘的經典之作**\n\n*   在紐約市的庫珀聯盟酒店創作。\n*   可追溯到 20 世紀初。\n*   以裸麥威士忌、苦艾酒和苦精為特色。"
+    },
+    "technique": {
+      "en": "Stir all ingredients with ice and strain into a chilled glass.",
+      "zh": "將所有材料與冰塊攪拌均勻，然後濾入冰鎮的杯子中。"
+    },
+    "garnish": {
+      "en": "Lemon peel twist (expressed and discarded)",
+      "zh": "檸檬皮扭轉（擠壓後丟棄）"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "高腳杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Clear, light amber liquid",
+      "zh": "清澈淺琥珀色液體"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 60,
+        "name": {
+          "en": "Rye Whiskey",
+          "zh": "裸麥威士忌"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a spicy base with oak and vanilla notes.",
+          "zh": "提供帶有橡木和香草味的辛辣基底。"
+        }
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 22,
+        "name": {
+          "en": "Sweet Vermouth",
+          "zh": "甜苦艾酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a rich, wine-like note and herbal complexity.",
+          "zh": "增加豐富的葡萄酒風味和草本複雜性。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness to balance the bitterness and spice.",
+          "zh": "增加甜度以平衡苦味和辛辣味。"
+        }
+      },
+      {
+        "amount": 2,
+        "name": {
+          "en": "Dashes Angostura Bitters",
+          "zh": "安格式苦精"
+        },
+        "unit": {
+          "en": "dash",
+          "zh": "滴"
+        },
+        "rationale": {
+          "en": "Adds complexity and aromatic depth.",
+          "zh": "增加複雜性和芳香深度。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Spicy",
+        "zh": "辛辣"
+      },
+      {
+        "en": "Bitter",
+        "zh": "苦味"
+      },
+      {
+        "en": "Woody",
+        "zh": "木質"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 4,
+      "sourness": 2,
+      "booziness": 7,
+      "body": 6,
+      "complexity": 8,
       "bubbles": false
     }
   },
@@ -39365,7 +41257,7 @@
         "amount": 60,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -39374,7 +41266,17 @@
         "rationale": {
           "en": "Forms the base of the cocktail, providing rich, fruity and oaky notes.",
           "zh": "構成雞尾酒的基底，提供豐富、果香和橡木風味。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -40484,7 +42386,7 @@
         "amount": 30,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -40493,7 +42395,17 @@
         "rationale": {
           "en": "Adds fruity and complex notes.",
           "zh": "增添果香和複雜的風味。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -41223,6 +43135,163 @@
   },
   {
     "name": {
+      "en": "Citrus Zen",
+      "zh": "柑橘禪"
+    },
+    "description": {
+      "en": "**A Refreshing Citrus and Herbal Cocktail**\n\nThis cocktail is a harmonious blend of citrus and herbal notes, featuring:\n*   Fresh citrus juices for a vibrant and zesty flavor\n*   Herbal liqueur for added complexity\n*   Aromatic bitters for depth",
+      "zh": "**清爽的柑橘和草本雞尾酒**\n\n這款雞尾酒是柑橘和草本香氣的和諧融合，特色：\n*   新鮮的柑橘汁帶來充滿活力和清爽的風味\n*   草本利口酒增添複雜性\n*   芳香苦精帶來深度"
+    },
+    "historical_reference": {
+      "en": "**A Modern Creation**\n\n*   Inspired by classic gin sours and herbal cocktails\n*   Designed to showcase fresh citrus and herbal flavors\n*   No specific historical origin, but adheres to sour/fix cocktail structure.",
+      "zh": "**現代創作**\n\n*   靈感來自經典琴酒酸酒和草本雞尾酒\n*   旨在展示新鮮的柑橘和草本風味\n*   沒有特定的歷史起源，但符合酸酒/費克斯雞尾酒結構。"
+    },
+    "technique": {
+      "en": "Shake all ingredients with ice and strain into a chilled glass.",
+      "zh": "將所有材料與冰塊搖勻，然後濾入冰鎮的杯子中。"
+    },
+    "garnish": {
+      "en": "Lemon twist",
+      "zh": "檸檬皮扭轉"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "碟型香檳杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Pale yellow with a slight green hue, clear and bright",
+      "zh": "淡黃色帶有輕微的綠色色調，清澈明亮"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the cocktail's primary structure and botanical backbone.",
+          "zh": "提供雞尾酒的主要結構和植物風味基礎。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Herbal Liqueur",
+          "zh": "草本利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a complex herbal and botanical note.",
+          "zh": "增添複雜的草本和植物氣息。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 22,
+        "name": {
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds tartness and balances sweetness.",
+          "zh": "增加酸味並平衡甜度。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Sweetens the cocktail and enhances the other flavors.",
+          "zh": "使雞尾酒變甜並增強其他風味。"
+        }
+      },
+      {
+        "amount": 2,
+        "name": {
+          "en": "Bitters",
+          "zh": "苦精"
+        },
+        "unit": {
+          "en": "dashes",
+          "zh": "滴"
+        },
+        "rationale": {
+          "en": "Adds depth and complexity to the flavor profile.",
+          "zh": "增加風味的深度和複雜性。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Bitter",
+        "zh": "苦味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 4,
+      "sourness": 6,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Maiden's Prayer",
       "zh": "少女的祈禱"
     },
@@ -41476,6 +43545,117 @@
       "booziness": 5,
       "body": 4,
       "complexity": 3,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
+      "en": "Bamboo Breeze",
+      "zh": "竹風"
+    },
+    "description": {
+      "en": "A light and refreshing aperitif cocktail featuring dry sherry and dry vermouth.\n\n*   Simple to make and elegant.\n*   Perfect for warm weather.",
+      "zh": "一款清淡且令人耳目一新的開胃雞尾酒，以不甜雪莉酒和不甜苦艾酒為特色。\n\n*   簡單易做，優雅。\n*   適合溫暖天氣。"
+    },
+    "historical_reference": {
+      "en": "Created by Louis Eppinger in the late 19th century.\n\n*   Named after the Bamboo Bar in Yokohama, Japan.\n*   A variation of the Adonis cocktail.",
+      "zh": "由路易斯·艾平格在 19 世紀末創造。\n\n*   以日本橫濱的竹酒吧命名。\n*   阿多尼斯雞尾酒的變體。"
+    },
+    "technique": {
+      "en": "Stir all ingredients with ice and strain into chilled glass.",
+      "zh": "將所有材料與冰塊攪拌，然後濾入冰鎮的杯子。"
+    },
+    "garnish": {
+      "en": "Lemon twist",
+      "zh": "檸檬皮扭轉"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "高腳杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Pale yellow, clear, with a light viscosity.",
+      "zh": "淡黃色，清澈，略帶黏性。"
+    },
+    "allergens": [],
+    "base_spirits": [],
+    "liqueurs": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Dry Sherry",
+          "zh": "不甜雪莉酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the base and nutty notes.",
+          "zh": "提供基底和堅果風味。"
+        }
+      },
+      {
+        "amount": 45,
+        "name": {
+          "en": "Dry Vermouth",
+          "zh": "不甜苦艾酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds herbal and bitter notes.",
+          "zh": "增加草本和苦味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 2,
+        "name": {
+          "en": "Orange Bitters",
+          "zh": "橙味苦精"
+        },
+        "unit": {
+          "en": "dashes",
+          "zh": "滴"
+        },
+        "rationale": {
+          "en": "Adds complexity and aroma.",
+          "zh": "增加複雜性和香氣。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Nutty",
+        "zh": "堅果"
+      },
+      {
+        "en": "Woody",
+        "zh": "木質"
+      },
+      {
+        "en": "Bitter",
+        "zh": "苦味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 2,
+      "sourness": 3,
+      "booziness": 5,
+      "body": 4,
+      "complexity": 6,
       "bubbles": false
     }
   },
@@ -42171,7 +44351,7 @@
         "amount": 30,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -42180,7 +44360,17 @@
         "rationale": {
           "en": "Provides the base spirit and rich flavors.",
           "zh": "提供基酒和濃郁的風味。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -42329,6 +44519,163 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
+    }
+  },
+  {
+    "name": {
+      "en": "Green Tea Garden",
+      "zh": "綠茶花園"
+    },
+    "description": {
+      "en": "A refreshing cocktail that balances the botanical notes of gin with the grassy notes of green tea and a hint of citrus. The egg white adds a silky texture.",
+      "zh": "一款清爽的雞尾酒，平衡了琴酒的植物風味、綠茶的草本味和一絲柑橘味。 蛋白增添了柔滑的口感。"
+    },
+    "historical_reference": {
+      "en": "The Green Tea Garden is a modern creation, inspired by classic sours and tea-infused cocktails. It builds upon the tradition of using tea in cocktails, offering a refreshing and sophisticated twist.",
+      "zh": "綠茶花園是一款現代創意飲品，靈感來自經典的酸味雞尾酒和茶味雞尾酒。 它以在雞尾酒中使用茶的傳統為基礎，提供了一種令人耳目一新的精緻風味。"
+    },
+    "technique": {
+      "en": "Dry shake all ingredients, then shake again with ice. Strain into a chilled coupe glass.",
+      "zh": "將所有材料乾搖，然後加冰再次搖晃。 倒入冰鎮過的高腳杯中。"
+    },
+    "garnish": {
+      "en": "Lemon twist",
+      "zh": "檸檬皮"
+    },
+    "serve_in_glass": {
+      "en": "Coupe glass",
+      "zh": "高腳杯"
+    },
+    "appearance": {
+      "en": "Pale green, frothy",
+      "zh": "淡綠色，有泡沫"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the alcoholic base and botanical notes.",
+          "zh": "提供酒精基底和植物風味。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Elderflower Liqueur",
+          "zh": "接骨木花利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds floral notes and subtle sweetness.",
+          "zh": "增添花香和微妙的甜味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Brewed Green Tea, cooled",
+          "zh": "冷卻的綠茶"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the tea flavor and a subtle bitterness.",
+          "zh": "提供茶味和淡淡的苦味。"
+        }
+      },
+      {
+        "amount": 22,
+        "name": {
+          "en": "Lemon Juice, freshly squeezed",
+          "zh": "新鮮檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds acidity and balances the sweetness.",
+          "zh": "增加酸度並平衡甜度。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Egg White",
+          "zh": "蛋白"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Creates a smooth, silky texture and adds body.",
+          "zh": "創造柔滑的口感並增加酒體。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Grassy",
+        "zh": "草青"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 4,
+      "sourness": 6,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
     }
   },
   {
@@ -45408,7 +47755,7 @@
         "amount": 30,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -45417,7 +47764,17 @@
         "rationale": {
           "en": "Adds complexity and fruity notes to complement the rye.",
           "zh": "增加複雜性和水果風味，以補充黑麥威士忌。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -46353,6 +48710,154 @@
   },
   {
     "name": {
+      "en": "Mandarin Moon",
+      "zh": "橘子月亮"
+    },
+    "description": {
+      "en": "**A Refreshing Citrus Cocktail**\n\nThe Mandarin Moon is a bright and aromatic cocktail featuring:\n*   Fresh mandarin juice for a vibrant citrus note.\n*   A touch of herbal liqueur for complexity.\n*   Egg white for a silky texture.",
+      "zh": "**清爽的柑橘雞尾酒**\n\n柑橘月亮是一款明亮而芳香的雞尾酒，特色：\n*   新鮮的柑橘汁帶來鮮明的柑橘味。\n*   少量草本利口酒增添複雜性。\n*   蛋白帶來絲滑的口感。"
+    },
+    "historical_reference": {
+      "en": "**Modern Creation**\n\nThe Mandarin Moon is a modern cocktail and does not have a long historical background. It's designed to showcase the unique flavors of mandarin oranges and herbal liqueurs.\n\n*   Developed as a modern twist on classic sours.",
+      "zh": "**現代創作**\n\n柑橘月亮是一種現代雞尾酒，沒有悠久的歷史背景。 它旨在展示柑橘和草本利口酒的獨特風味。\n\n*   作為經典酸酒的現代演變而開發。"
+    },
+    "technique": {
+      "en": "Dry shake all ingredients, then shake again with ice. Double strain into a chilled coupe glass.",
+      "zh": "將所有材料乾搖，然後再次加冰搖晃。 雙重過濾到冰鎮的高腳杯中。"
+    },
+    "garnish": {
+      "en": "Mandarin orange slice",
+      "zh": "橘子片"
+    },
+    "serve_in_glass": {
+      "en": "Coupe glass",
+      "zh": "高腳杯"
+    },
+    "appearance": {
+      "en": "Vibrant orange, slightly cloudy, with a frothy top.",
+      "zh": "鮮豔的橙色，略帶混濁，頂部有泡沫。"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a botanical backbone and strength.",
+          "zh": "提供植物風味的骨幹和強度。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Herbal Liqueur",
+          "zh": "草本利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a layer of herbal complexity.",
+          "zh": "增加一層草本的複雜性。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 60,
+        "name": {
+          "en": "Fresh Mandarin Juice",
+          "zh": "新鮮橘子汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the main citrus flavor.",
+          "zh": "提供主要的柑橘風味。"
+        }
+      },
+      {
+        "amount": 20,
+        "name": {
+          "en": "Egg White",
+          "zh": "蛋白"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a silky texture and frothy head.",
+          "zh": "增加絲滑的口感和泡沫。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Balances the tartness of the citrus.",
+          "zh": "平衡柑橘的酸味。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 5,
+      "sourness": 6,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Spiced Horsefeather",
       "zh": "香料馬尾"
     },
@@ -46943,23 +49448,7 @@
       "zh": "清澈無色"
     },
     "allergens": [],
-    "base_spirits": [
-      {
-        "amount": 75,
-        "name": {
-          "en": "Sake (Junmai or Ginjo)",
-          "zh": "清酒（純米或吟釀）"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Forms the base of the cocktail, providing a unique rice-wine flavor.",
-          "zh": "構成雞尾酒的基底，提供獨特的米酒風味。"
-        }
-      }
-    ],
+    "base_spirits": [],
     "liqueurs": [
       {
         "amount": 15,
@@ -46977,7 +49466,23 @@
         }
       }
     ],
-    "ingredients": [],
+    "ingredients": [
+      {
+        "amount": 75,
+        "name": {
+          "en": "Sake",
+          "zh": "清酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Forms the base of the cocktail, providing a unique rice-wine flavor.",
+          "zh": "構成雞尾酒的基底，提供獨特的米酒風味。"
+        }
+      }
+    ],
     "flavor_descriptors": [
       {
         "en": "Umami",
@@ -52635,7 +55140,7 @@
         "amount": 50,
         "name": {
           "en": "Cognac",
-          "zh": "白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -52644,7 +55149,17 @@
         "rationale": {
           "en": "Provides the main alcoholic body and flavor base of the cocktail.",
           "zh": "提供雞尾酒的主要酒體和風味基礎。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [
@@ -57143,6 +59658,143 @@
   },
   {
     "name": {
+      "en": "Sakura Spritz",
+      "zh": "櫻花Spritz"
+    },
+    "description": {
+      "en": "**A refreshing and floral Spritz variation**\n\nThis delightful Spritz combines the botanical notes of gin with the delicate sweetness of cherry blossom and the bubbly refreshment of prosecco. A perfect cocktail for spring celebrations or any occasion that calls for a light and elegant drink.\n\n*   Gin provides the base spirit.\n*   Cherry Blossom Liqueur adds floral sweetness.\n*   Prosecco and Soda Water add effervescence and lightness.",
+      "zh": "**清爽且充滿花香的Spritz變奏**\n\n這款令人愉悅的Spritz結合了琴酒的植物香氣、櫻花的精緻甜味以及普羅賽克的氣泡感。 適合春季慶祝活動或任何需要清淡優雅飲品的場合。\n\n* 琴酒提供基酒。\n* 櫻花利口酒增添花香甜味。\n* 普羅賽克和蘇打水增加氣泡感和清爽度。"
+    },
+    "historical_reference": {
+      "en": "**Modern Creation**\n\nThe Sakura Spritz is a contemporary cocktail, inspired by the classic Italian Spritz but adapted with Japanese floral flavors.\n\n*   It leverages the Spritz's inherent adaptability.\n*   Emphasizes the seasonal appeal of cherry blossoms.\n*   Reflects a fusion of cocktail traditions.",
+      "zh": "**現代創作**\n\n櫻花Spritz是一款現代雞尾酒，靈感來自經典的義大利Spritz，但採用了日本花卉風味。\n\n* 它利用了Spritz固有的適應性。\n* 強調櫻花的季節性吸引力。\n* 反映了雞尾酒傳統的融合。"
+    },
+    "technique": {
+      "en": "Build over ice, gently stir to combine. Garnish.",
+      "zh": "在冰上調製，輕輕攪拌均勻。 裝飾。"
+    },
+    "garnish": {
+      "en": "Cherry blossom or edible flower",
+      "zh": "櫻花或食用花"
+    },
+    "serve_in_glass": {
+      "en": "Wine glass or large coupe glass",
+      "zh": "葡萄酒杯或大型碟型香檳杯"
+    },
+    "appearance": {
+      "en": "Pale pink, effervescent, with delicate bubbles",
+      "zh": "淡粉色，有氣泡，帶有細膩的氣泡"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the spirituous backbone and botanical notes.",
+          "zh": "提供酒體骨幹和植物風味。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 22,
+        "name": {
+          "en": "Generic Cherry Blossom Liqueur",
+          "zh": "櫻花利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Contributes the key cherry blossom flavor and subtle sweetness.",
+          "zh": "貢獻了主要的櫻花風味和微妙的甜味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 90,
+        "name": {
+          "en": "Prosecco",
+          "zh": "普羅塞克"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds effervescence and a light, fruity flavor.",
+          "zh": "增加氣泡感和清淡的果味。"
+        }
+      },
+      {
+        "amount": 30,
+        "name": {
+          "en": "Soda Water",
+          "zh": "梳打水"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a refreshing top note and dilutes the drink slightly.",
+          "zh": "增加清爽的口感，並稍微稀釋飲料。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 6,
+      "sourness": 3,
+      "booziness": 4,
+      "body": 3,
+      "complexity": 5,
+      "bubbles": true
+    }
+  },
+  {
+    "name": {
       "en": "Egg Nog",
       "zh": "蛋酒"
     },
@@ -59198,8 +61850,8 @@
       {
         "amount": 30,
         "name": {
-          "en": "Tequila (Blanco)",
-          "zh": "龍舌蘭酒（白色）"
+          "en": "Blanco Tequila",
+          "zh": "白龍舌蘭"
         },
         "unit": {
           "en": "ml",
@@ -59208,7 +61860,21 @@
         "rationale": {
           "en": "Provides the alcoholic base and characteristic agave flavor.",
           "zh": "提供酒精基底和標誌性的龍舌蘭風味。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Tequila",
+            "zh": "龍舌蘭"
+          },
+          {
+            "en": "mexican",
+            "zh": "墨西哥"
+          },
+          {
+            "en": "distilled",
+            "zh": "蒸餾"
+          }
+        ]
       }
     ],
     "liqueurs": [],
@@ -61014,6 +63680,31 @@
       {
         "amount": 30,
         "name": {
+          "en": "Cognac",
+          "zh": "干邑"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds body and rich flavor.",
+          "zh": "增加酒體和濃郁的風味。"
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
+      },
+      {
+        "amount": 30,
+        "name": {
           "en": "Apple Brandy (Calvados)",
           "zh": "蘋果白蘭地"
         },
@@ -61042,21 +63733,6 @@
       }
     ],
     "liqueurs": [
-      {
-        "amount": 30,
-        "name": {
-          "en": "Cognac",
-          "zh": "干邑白蘭地"
-        },
-        "unit": {
-          "en": "ml",
-          "zh": "毫升"
-        },
-        "rationale": {
-          "en": "Adds body and rich flavor.",
-          "zh": "增加酒體和濃郁的風味。"
-        }
-      },
       {
         "amount": 15,
         "name": {
@@ -63572,6 +66248,124 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
+    }
+  },
+  {
+    "name": {
+      "en": "Kyoto Cooler",
+      "zh": "京都冷飲"
+    },
+    "description": {
+      "en": "**Refreshing Japanese-Inspired Cocktail**\n\nA light and effervescent cooler, perfect for warm weather, featuring:\n*   A base spirit for a solid foundation.\n*   Citrus to add a bright, tart element.\n*   A touch of sugar and sparkling components for sweetness and fizz.",
+      "zh": "**清爽的日式靈感雞尾酒**\n\n輕盈氣泡的冷飲，非常適合溫暖的天氣，特色：\n*   基酒提供堅實的基礎。\n*   柑橘增添明亮、酸澀的元素。\n*   少許糖和氣泡成分帶來甜味和氣泡感。"
+    },
+    "historical_reference": {
+      "en": "While the exact origin is unclear, the Kyoto Cooler is inspired by Japanese flavors and drinking culture. It's a modern creation, not a historically documented cocktail. Variations may exist.",
+      "zh": "雖然確切的起源尚不清楚，但京都冷飲的靈感來自日本風味和飲酒文化。這是一個現代創作，而不是歷史記載的雞尾酒。可能存在變化。"
+    },
+    "technique": {
+      "en": "Build in glass over ice; stir gently.",
+      "zh": "在裝有冰塊的杯中調製；輕輕攪拌。"
+    },
+    "garnish": {
+      "en": "Lemon or lime wedge",
+      "zh": "檸檬或青檸角"
+    },
+    "serve_in_glass": {
+      "en": "Highball glass",
+      "zh": "高杯玻璃杯"
+    },
+    "appearance": {
+      "en": "Pale yellow, effervescent",
+      "zh": "淡黃色，有氣泡"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Generic Spirit",
+          "zh": "通用烈酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the alcoholic base and structure.",
+          "zh": "提供酒精基底和結構。"
+        }
+      }
+    ],
+    "liqueurs": [],
+    "ingredients": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Generic Citrus Juice",
+          "zh": "通用柑橘果汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds acidity and citrus notes.",
+          "zh": "增加酸度和柑橘味。"
+        }
+      },
+      {
+        "amount": 10,
+        "name": {
+          "en": "Generic Simple Syrup",
+          "zh": "通用簡糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness to balance the citrus.",
+          "zh": "增加甜度以平衡柑橘味。"
+        }
+      },
+      {
+        "amount": 90,
+        "name": {
+          "en": "Sparkling Component",
+          "zh": "氣泡成分"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds effervescence and volume.",
+          "zh": "增加氣泡和體積。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 5,
+      "sourness": 6,
+      "booziness": 5,
+      "body": 3,
+      "complexity": 6,
+      "bubbles": true
     }
   },
   {
@@ -68297,6 +71091,149 @@
   },
   {
     "name": {
+      "en": "Industry Sour",
+      "zh": "行業酸酒"
+    },
+    "description": {
+      "en": "**Modern Sour Variation**\n\nA well-balanced cocktail featuring:\n*   Rye whiskey for spice\n*   Yellow Chartreuse for herbal complexity\n*   Lemon juice for acidity\n*   Egg white for texture",
+      "zh": "**現代酸味雞尾酒變體**\n\n一款平衡良好的雞尾酒，特色：\n*   黑麥威士忌帶來辛辣味\n*   黃色查特酒帶來草本複雜性\n*   檸檬汁帶來酸度\n*   蛋白帶來質感"
+    },
+    "historical_reference": {
+      "en": "**Modern Classic**\n\n*   Created by bartender Sam Ross at Attaboy in New York City.\n*   A riff on the classic Whiskey Sour, incorporating Yellow Chartreuse.",
+      "zh": "**現代經典**\n\n*   由紐約市Attaboy的調酒師Sam Ross創作。\n*   經典威士忌酸酒的變體，加入了黃色查特酒。"
+    },
+    "technique": {
+      "en": "Dry shake all ingredients, then shake with ice and double strain into a chilled glass.",
+      "zh": "將所有材料乾搖，然後加冰搖晃，再雙重過濾到冰鎮的玻璃杯中。"
+    },
+    "garnish": {
+      "en": "3 drops of Angostura bitters floated on top of the foam and a lemon peel",
+      "zh": "3滴安哥斯圖娜苦精浮在泡沫頂部，並附有檸檬皮"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Nick & Nora glass",
+      "zh": "淺碟香檳杯或尼克與諾拉杯"
+    },
+    "appearance": {
+      "en": "Cloudy, pale yellow with a frothy white head",
+      "zh": "多雲，淡黃色，帶有泡沫狀的白色泡沫"
+    },
+    "allergens": [
+      {
+        "en": "egg white",
+        "zh": "蛋白"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Rye Whiskey",
+          "zh": "黑麥威士忌"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a spicy and robust base.",
+          "zh": "提供辛辣和濃郁的基底。"
+        }
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Yellow Chartreuse",
+          "zh": "黃色夏翠絲"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds herbal and slightly sweet notes.",
+          "zh": "增加草本和略帶甜味的風味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 22,
+        "name": {
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds acidity and balance.",
+          "zh": "增加酸度和平衡感。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness to balance the sourness.",
+          "zh": "增加甜度以平衡酸味。"
+        }
+      },
+      {
+        "amount": 22,
+        "name": {
+          "en": "Egg White",
+          "zh": "蛋白"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a silky texture and frothy head.",
+          "zh": "增加柔滑的質感和泡沫。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Spicy",
+        "zh": "辛辣"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 5,
+      "sourness": 7,
+      "booziness": 6,
+      "body": 6,
+      "complexity": 8,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Cosmopolitan",
       "zh": "柯夢波丹"
     },
@@ -68346,8 +71283,8 @@
       {
         "amount": 15,
         "name": {
-          "en": "Orange Liqueur (e.g., Cointreau)",
-          "zh": "橙味利口酒（例如：君度橙酒）"
+          "en": "Cointreau",
+          "zh": "君度橙酒"
         },
         "unit": {
           "en": "ml",
@@ -71988,6 +74925,158 @@
   },
   {
     "name": {
+      "en": "Sesame Seed Swirl",
+      "zh": "芝麻漩渦"
+    },
+    "description": {
+      "en": "**Sesame Seed Swirl Cocktail**\n\nA unique and savory cocktail featuring:\n*   Creamy texture from sesame paste.\n*   Subtle sweetness balanced by a hint of salt.\n*   Elegant and flavorful.",
+      "zh": "**芝麻漩渦雞尾酒**\n\n一款獨特而美味的雞尾酒，特色：\n*   芝麻醬帶來的奶油般質感。\n*   微妙的甜味與一絲鹹味平衡。\n*   優雅且風味十足。"
+    },
+    "historical_reference": {
+      "en": "The **Sesame Seed Swirl** is a modern creation, inspired by the flavors of Asian cuisine and desserts. This cocktail is designed to offer a savory and nutty experience, combining the richness of sesame with the smoothness of vodka. While it does not have a long-standing history, it represents a contemporary approach to cocktail crafting, focusing on innovative flavor combinations and textures.",
+      "zh": "**芝麻漩渦**是一款現代創作，靈感來自亞洲美食和甜點的風味。 這款雞尾酒旨在提供美味和堅果的體驗，將芝麻的濃鬱與伏特加的順滑相結合。 雖然它沒有悠久的歷史，但它代表了一種現代的雞尾酒製作方法，專注於創新的風味組合和質地。"
+    },
+    "technique": {
+      "en": "Shake all ingredients with ice and strain into a rocks glass with a large ice cube. Swirl a small amount of dark sesame paste at the bottom of the glass before pouring.",
+      "zh": "將所有材料與冰塊搖勻，倒入裝有大冰塊的岩石杯中。 倒入前，在杯底旋入少量黑芝麻醬。"
+    },
+    "garnish": {
+      "en": "Sesame seeds rim and a sesame cracker on the side.",
+      "zh": "杯口一圈芝麻粒，旁邊佐以芝麻薄餅。"
+    },
+    "serve_in_glass": {
+      "en": "Rocks glass",
+      "zh": "岩石杯"
+    },
+    "appearance": {
+      "en": "Opaque, creamy beige with a swirl of dark sesame at the bottom.",
+      "zh": "不透明的奶油米色，底部有黑芝麻漩渦。"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Vodka",
+          "zh": "伏特加"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides a clean base for the other flavors to shine.",
+          "zh": "為其他風味提供乾淨的基底。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "neutral",
+            "zh": "中性"
+          },
+          {
+            "en": "filtration",
+            "zh": "過濾"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Sesame Liqueur",
+          "zh": "芝麻利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Boosts the sesame flavor.",
+          "zh": "加強芝麻風味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 20,
+        "name": {
+          "en": "Sesame Paste",
+          "zh": "芝麻醬"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the primary nutty and creamy flavor.",
+          "zh": "提供主要的堅果和奶油風味。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness to balance the savory notes.",
+          "zh": "增加甜度以平衡鹹味。"
+        }
+      },
+      {
+        "amount": 2,
+        "name": {
+          "en": "Salt",
+          "zh": "鹽"
+        },
+        "unit": {
+          "en": "pinch",
+          "zh": "撮"
+        },
+        "rationale": {
+          "en": "Enhances the savory character of the cocktail.",
+          "zh": "增強雞尾酒的鹹味。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Nutty",
+        "zh": "堅果"
+      },
+      {
+        "en": "Umami",
+        "zh": "鮮味"
+      },
+      {
+        "en": "Salty",
+        "zh": "鹹味"
+      },
+      {
+        "en": "Creamy",
+        "zh": "乳脂"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 4,
+      "sourness": 2,
+      "booziness": 5,
+      "body": 7,
+      "complexity": 6,
+      "bubbles": false
+    }
+  },
+  {
+    "name": {
       "en": "Brandy Sour",
       "zh": "白蘭地酸酒"
     },
@@ -72219,6 +75308,129 @@
       "booziness": 6,
       "body": 5,
       "complexity": 7,
+      "bubbles": true
+    }
+  },
+  {
+    "name": {
+      "en": "Hojicha Highball",
+      "zh": "焙茶 Highball"
+    },
+    "description": {
+      "en": "**Elegant and Refreshing Highball**\n\nA simple yet sophisticated cocktail featuring:\n*   Whisky for a smooth base\n*   Hojicha tea for a roasted, earthy flavor\n*   Soda water for effervescence",
+      "zh": "**優雅清爽的Highball**\n\n一款簡單而精緻的雞尾酒，特色：\n*   威士忌提供柔滑的基底\n*   焙茶帶來烘焙、泥土風味\n*   蘇打水增加氣泡感"
+    },
+    "historical_reference": {
+      "en": "The Highball is a classic cocktail format dating back to the late 19th century. This variation uses hojicha, a Japanese roasted green tea, to add a unique twist.",
+      "zh": "Highball 是一種可以追溯到 19 世紀末的經典雞尾酒形式。 這種變體使用日本焙茶綠茶，增添了獨特的風味。"
+    },
+    "technique": {
+      "en": "Build over ice. Add whisky and hojicha tea syrup, top with soda water. Gently stir to combine.",
+      "zh": "在冰上調製。 加入威士忌和焙茶糖漿，倒入蘇打水。 輕輕攪拌均勻。"
+    },
+    "garnish": {
+      "en": "Lemon peel or charred orange peel",
+      "zh": "檸檬皮或焦香橙皮"
+    },
+    "serve_in_glass": {
+      "en": "Highball glass",
+      "zh": "Highball 杯"
+    },
+    "appearance": {
+      "en": "Light amber with gentle bubbles",
+      "zh": "淡琥珀色與柔和氣泡"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Whisky",
+          "zh": "威士忌"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the alcoholic base and complexity.",
+          "zh": "提供酒精基底和複雜性。"
+        },
+        "tags": [
+          {
+            "en": "Whisky",
+            "zh": "威士忌"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Hojicha Tea Syrup",
+          "zh": "焙茶糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness and the distinctive hojicha flavor.",
+          "zh": "增加甜味和獨特的焙茶風味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 90,
+        "name": {
+          "en": "Soda Water",
+          "zh": "梳打水"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds volume and effervescence to the cocktail.",
+          "zh": "為雞尾酒增加體積和氣泡。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Smoky",
+        "zh": "煙燻"
+      },
+      {
+        "en": "Umami",
+        "zh": "鮮味"
+      },
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Woody",
+        "zh": "木質"
+      },
+      {
+        "en": "Bitter",
+        "zh": "苦味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 3,
+      "sourness": 1,
+      "booziness": 5,
+      "body": 4,
+      "complexity": 6,
       "bubbles": true
     }
   },
@@ -72462,6 +75674,144 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
+    }
+  },
+  {
+    "name": {
+      "en": "Lychee Lantern",
+      "zh": "荔枝燈籠"
+    },
+    "description": {
+      "en": "A refreshing and aromatic cocktail with a balanced sweetness and floral notes. The lychee liqueur and rose syrup create a delicate and fragrant experience, complemented by the spirit's subtle warmth and a touch of citrus from the lemon juice. Served tall and garnished for an elegant presentation.",
+      "zh": "一款清新芳香的雞尾酒，具有均衡的甜味和花香。荔枝酒和玫瑰糖漿營造出精緻而芬芳的體驗，並以烈酒的微妙溫暖和檸檬汁的一絲柑橘味作為補充。以高杯盛裝並加以裝飾，呈現優雅的外觀。"
+    },
+    "historical_reference": {
+      "en": "This is a modern cocktail creation, drawing inspiration from the flavors of Asia. The combination of lychee and rose is designed to create a unique and refreshing drinking experience. *There is no particular historical origin.*",
+      "zh": "這是一款現代雞尾酒，其靈感來自亞洲的風味。 荔枝和玫瑰的結合旨在創造獨特而清新的飲用體驗。 *沒有特定的歷史起源。*"
+    },
+    "technique": {
+      "en": "Shake spirit, lychee liqueur, rose syrup and lemon juice with ice. Strain into a highball glass filled with ice. Top with soda water. Garnish with a lychee fruit and a rose petal.",
+      "zh": "將烈酒、荔枝酒、玫瑰糖漿和檸檬汁與冰塊一起搖勻。 濾入裝滿冰塊的高杯玻璃杯中。 加入蘇打水。 用荔枝果和玫瑰花瓣裝飾。"
+    },
+    "garnish": {
+      "en": "Lychee fruit and a rose petal.",
+      "zh": "荔枝果實和玫瑰花瓣。"
+    },
+    "serve_in_glass": {
+      "en": "Highball glass",
+      "zh": "高杯玻璃杯"
+    },
+    "appearance": {
+      "en": "Clear, pale pink with a slight effervescence.",
+      "zh": "清澈的淡粉色，略帶氣泡感。"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Generic White Spirit",
+          "zh": "通用白色烈酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the alcoholic base and structure for the cocktail.",
+          "zh": "為雞尾酒提供酒精基底和結構。"
+        }
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Lychee Liqueur",
+          "zh": "荔枝酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the primary lychee flavor and sweetness.",
+          "zh": "提供主要的荔枝風味和甜味。"
+        }
+      },
+      {
+        "amount": 15,
+        "name": {
+          "en": "Generic Rose Syrup",
+          "zh": "通用玫瑰糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Enhances the floral notes and adds a touch of sweetness.",
+          "zh": "增強花香，並增添一絲甜味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 20,
+        "name": {
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds acidity and balance to the sweetness of the liqueurs.",
+          "zh": "增加酸度，平衡利口酒的甜味。"
+        }
+      },
+      {
+        "amount": 60,
+        "name": {
+          "en": "Soda Water",
+          "zh": "梳打水"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds fizz and dilutes the drink.",
+          "zh": "增加氣泡並稀釋飲料。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Floral",
+        "zh": "花香"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Tropical",
+        "zh": "熱帶"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 7,
+      "sourness": 3,
+      "booziness": 5,
+      "body": 4,
+      "complexity": 6,
+      "bubbles": true
     }
   },
   {
@@ -73628,7 +76978,7 @@
         "amount": 15,
         "name": {
           "en": "Cognac",
-          "zh": "干邑白蘭地"
+          "zh": "干邑"
         },
         "unit": {
           "en": "ml",
@@ -73637,7 +76987,17 @@
         "rationale": {
           "en": "Adds fruit and spice notes.",
           "zh": "增加水果和香料的味道。"
-        }
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
       }
     ],
     "liqueurs": [],
