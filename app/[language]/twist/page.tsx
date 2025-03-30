@@ -1,9 +1,11 @@
 import { Suspense } from 'react';
 import { TwistFinder } from "@/components/twist-finder/twist-finder";
 import { WandSparkles } from 'lucide-react';
-import cocktails from "@/data/cocktails.json";
+import { cocktailService } from "@/lib/cocktail-service";
 
 export default function TwistPage() {
+  const cocktails = cocktailService.getAllCocktails();
+
   return (
     <Suspense fallback={
       <div className="h-screen flex items-center justify-center">

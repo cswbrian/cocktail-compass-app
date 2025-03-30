@@ -2,9 +2,9 @@
 
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Cocktail, RankedCocktail } from '@/types/cocktail';
-import cocktailsData from "@/data/cocktails.json";
 import { useLanguage } from "@/context/LanguageContext";
 import { rankCocktails } from '@/lib/cocktail-ranking';
+import { cocktailService } from '@/lib/cocktail-service';
 
 type CocktailContextType = {
   // State
@@ -40,7 +40,7 @@ type CocktailContextType = {
   startOver: () => void;
 };
 
-const cocktails = cocktailsData as Cocktail[];
+const cocktails = cocktailService.getAllCocktails();
 
 const CocktailContext = createContext<CocktailContextType | null>(null);
 

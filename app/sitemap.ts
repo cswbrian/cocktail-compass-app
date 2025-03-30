@@ -1,12 +1,14 @@
 import { MetadataRoute } from 'next'
-import cocktails from "@/data/cocktails.json"
 import { slugify } from "@/lib/utils"
+import { cocktailService } from "@/lib/cocktail-service";
 
 export const dynamic = "force-static";
 
 type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const cocktails = cocktailService.getAllCocktails();
+  
   // Get all unique flavors
   const allFlavors = new Set<string>()
   cocktails.forEach((cocktail) => {

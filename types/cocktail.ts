@@ -35,6 +35,7 @@ export interface Cocktail {
   flavor_descriptors: LocalizedString[];
   technique?: LocalizedString;  // Add since it's used in the component
   garnish?: LocalizedString;    // Add since it's used in the component
+  description?: LocalizedString; // Add description field
 }
 
 export interface RankedCocktail extends Cocktail {

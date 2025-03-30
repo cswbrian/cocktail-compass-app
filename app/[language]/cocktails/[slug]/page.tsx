@@ -1,4 +1,3 @@
-import cocktails from "@/data/cocktails.json";
 import { slugify, getLocalizedText, validLanguages } from "@/lib/utils";
 import Link from "next/link";
 import FlavorRadar from "@/components/flavor-radar";
@@ -12,6 +11,7 @@ import { ExternalLink } from "@/components/external-link";
 import { Search } from "lucide-react";
 import { flavorColorMap } from "@/constants";
 import { TwistButton } from "@/components/twist-button";
+import { cocktailService } from "@/lib/cocktail-service";
 
 type Props = {
   params: Promise<{ language: string; slug: string }>;
@@ -24,9 +24,7 @@ export default async function CocktailPage({ params }: Props) {
     return <div>Invalid language</div>;
   }
 
-  const cocktail = cocktails.find(
-    (cocktail) => slugify(cocktail.name.en) === slug
-  );
+  const cocktail = cocktailService.getCocktailBySlug(slug);
 
   if (!cocktail) {
     return <div>Cocktail not found</div>;
@@ -162,7 +160,7 @@ export default async function CocktailPage({ params }: Props) {
         <div>
           <h2 className="font-bold mb-4">{t.instructions}</h2>
           <p className="text-gray-300">
-            {getLocalizedText(cocktail.technique, language)}
+            {cocktail.technique ? getLocalizedText(cocktail.technique, language) : ''}
           </p>
         </div>
       </div>
@@ -179,6 +177,7 @@ export default async function CocktailPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
+  const cocktails = cocktailService.getAllCocktails();
   const params = [];
 
   for (const cocktail of cocktails) {
@@ -191,15 +190,17 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { language, slug } = await params;
-  const cocktail = cocktails.find(
-    (cocktail) => slugify(cocktail.name.en) === slug
-  );
+  const cocktail = cocktailService.getCocktailBySlug(slug);
 
   if (!cocktail) {
     return {
       title: translations[language as keyof typeof translations].appName,
     };
   }
+
+  const description = cocktail.description 
+    ? getLocalizedText(cocktail.description, language)
+    : '';
 
   return {
     title: `${cocktail.name.en} | ${
@@ -212,7 +213,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       cocktail.flavor_descriptors?.[0]?.[
         language as keyof (typeof cocktail.flavor_descriptors)[0]
       ] || ""
-    )} | ${getLocalizedText(cocktail.description, language)}`,
+    )} | ${description}`,
     openGraph: {
       title: `${cocktail.name.en} | ${
         translations[language as keyof typeof translations].appName
@@ -224,7 +225,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         cocktail.flavor_descriptors?.[0]?.[
           language as keyof (typeof cocktail.flavor_descriptors)[0]
         ] || ""
-      )} | ${getLocalizedText(cocktail.description, language)}`,
+      )} | ${description}`,
       // images: cocktail.image ? [{ url: cocktail.image }] : [{ url: defaultImage }],
     },
     twitter: {
@@ -239,7 +240,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         cocktail.flavor_descriptors?.[0]?.[
           language as keyof (typeof cocktail.flavor_descriptors)[0]
         ] || ""
-      )} | ${getLocalizedText(cocktail.description, language)}`,
+      )} | ${description}`,
       // images: cocktail.image ? cocktail.image : defaultImage,
     },
   };

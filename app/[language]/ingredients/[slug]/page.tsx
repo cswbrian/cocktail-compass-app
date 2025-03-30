@@ -1,4 +1,3 @@
-import cocktails from "@/data/cocktails.json";
 import { slugify, getLocalizedText, validLanguages } from "@/lib/utils";
 import { CocktailCard } from "@/components/cocktail-card";
 import { Cocktail } from "@/types/cocktail";
@@ -6,6 +5,8 @@ import Link from "next/link";
 import { translations } from "@/translations/index";
 import { Metadata } from "next";
 import { ExternalLink } from "@/components/external-link";
+import { cocktailService } from "@/lib/cocktail-service";
+
 type Props = {
   params: Promise<{ language: string; slug: string }>;
 };
@@ -18,16 +19,7 @@ export default async function IngredientPage({ params }: Props) {
     return <div>Invalid language</div>;
   }
 
-  const matchingCocktails = cocktails.filter((cocktail) => {
-    const allIngredients = [
-      ...cocktail.base_spirits,
-      ...cocktail.liqueurs,
-      ...cocktail.ingredients,
-    ];
-    return allIngredients.some(
-      (ingredient) => slugify(ingredient.name.en) === slug
-    );
-  });
+  const matchingCocktails = cocktailService.getCocktailsByIngredient(slug);
 
   if (matchingCocktails.length === 0) {
     return <div>No cocktails found with this ingredient</div>;
@@ -69,20 +61,8 @@ export default async function IngredientPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  const allIngredients = new Set<string>();
-
-  cocktails.forEach((cocktail) => {
-    const ingredients = [
-      ...cocktail.base_spirits,
-      ...cocktail.liqueurs,
-      ...cocktail.ingredients,
-    ];
-    ingredients.forEach((ingredient) => {
-      allIngredients.add(slugify(ingredient.name.en));
-    });
-  });
-
-  return Array.from(allIngredients).flatMap((slug) => [
+  const allIngredients = cocktailService.getAllIngredients();
+  return allIngredients.flatMap((slug) => [
     { language: "en", slug },
     { language: "zh", slug },
   ]);
@@ -92,17 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { language, slug } = await params;
   const t = translations[language as keyof typeof translations];
 
-  const matchingCocktails = cocktails.filter((cocktail) => {
-    const allIngredients = [
-      ...cocktail.base_spirits,
-      ...cocktail.liqueurs,
-      ...cocktail.ingredients,
-    ];
-    return allIngredients.some(
-      (ingredient) => slugify(ingredient.name.en) === slug
-    );
-  });
-
+  const matchingCocktails = cocktailService.getCocktailsByIngredient(slug);
   const ingredient =
     matchingCocktails.length > 0
       ? [
@@ -117,8 +87,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: t.appName,
     };
   }
-
-  // const defaultImage = 'https://yourdomain.com/default-cocktail-image.jpg';
 
   return {
     title: `${t.cocktailsWithIngredient.replace(
@@ -138,7 +106,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "{ingredient}",
         getLocalizedText(ingredient.name, language)
       )} | ${t.appName}`,
-      // images: [{ url: defaultImage }],
     },
     twitter: {
       card: "summary_large_image",
@@ -150,7 +117,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "{ingredient}",
         getLocalizedText(ingredient.name, language)
       )} | ${t.appName}`,
-      // images: defaultImage,
     },
   };
 }

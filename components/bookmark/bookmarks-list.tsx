@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
-import cocktails from "@/data/cocktails.json";
 import { CocktailCard } from "@/components/cocktail-card";
 import { slugify } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
+import { cocktailService } from "@/lib/cocktail-service";
 
 const BOOKMARK_LISTS = [
   { id: "want-to-try", nameKey: "wantToTry" },
@@ -66,7 +66,8 @@ export function BookmarksList() {
     const bookmarkList = bookmarks.find(b => b.key === listKey);
     if (!bookmarkList) return [];
     
-    return cocktails.filter((cocktail) => 
+    const allCocktails = cocktailService.getAllCocktails();
+    return allCocktails.filter((cocktail) => 
       bookmarkList.items.includes(slugify(cocktail.name.en))
     );
   };

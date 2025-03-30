@@ -269,6 +269,14 @@
     },
     {
       "name": {
+        "en": "Irish Whiskey",
+        "zh": "愛爾蘭威士忌"
+      },
+      "count": 8,
+      "tags": []
+    },
+    {
+      "name": {
         "en": "Cachaça",
         "zh": "卡夏莎"
       },
@@ -279,14 +287,6 @@
           "zh": "卡夏莎"
         }
       ]
-    },
-    {
-      "name": {
-        "en": "Irish Whiskey",
-        "zh": "愛爾蘭威士忌"
-      },
-      "count": 7,
-      "tags": []
     },
     {
       "name": {
@@ -593,6 +593,14 @@
     },
     {
       "name": {
+        "en": "Laphroaig 10-year Scotch",
+        "zh": "拉弗格10年蘇格蘭威士忌"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
         "en": "Martinique Rhum Agricole",
         "zh": "馬提尼克農業蘭姆酒"
       },
@@ -726,14 +734,6 @@
     },
     {
       "name": {
-        "en": "Rye Whiskey",
-        "zh": "裸麥威士忌"
-      },
-      "count": 1,
-      "tags": []
-    },
-    {
-      "name": {
         "en": "Shochu",
         "zh": "燒酎"
       },
@@ -811,7 +811,7 @@
         "en": "Sweet Vermouth",
         "zh": "甜苦艾酒"
       },
-      "count": 42,
+      "count": 41,
       "tags": []
     },
     {
@@ -1544,6 +1544,14 @@
     },
     {
       "name": {
+        "en": "Elderflower liqueur",
+        "zh": "接骨木花利口酒"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
         "en": "Falernum Liqueur",
         "zh": "法勒南姆甜酒"
       },
@@ -2157,7 +2165,7 @@
         "en": "Simple Syrup",
         "zh": "糖漿"
       },
-      "count": 104,
+      "count": 103,
       "tags": []
     },
     {
@@ -2213,7 +2221,7 @@
         "en": "Orange Bitters",
         "zh": "橙味苦精"
       },
-      "count": 22,
+      "count": 23,
       "tags": []
     },
     {
@@ -3338,14 +3346,6 @@
     },
     {
       "name": {
-        "en": "Dashes Angostura Bitters",
-        "zh": "安格式苦精"
-      },
-      "count": 1,
-      "tags": []
-    },
-    {
-      "name": {
         "en": "Dashes Bitters",
         "zh": "苦精"
       },
@@ -4463,7 +4463,7 @@
         "en": "Spicy",
         "zh": "辛辣"
       },
-      "count": 176,
+      "count": 175,
       "tags": []
     },
     {
