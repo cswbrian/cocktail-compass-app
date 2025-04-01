@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cocktail Compass App
+
+A client-side only Progressive Web App (PWA) built with Next.js for exploring cocktail recipes and combinations.
+
+## Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org) with Static Site Generation (SSG)
+- **Package Manager**: [pnpm](https://pnpm.io) (v9.7.1)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com) with [tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate)
+- **UI Components**: [Radix UI](https://www.radix-ui.com/) primitives
+- **Data Visualization**: [D3.js](https://d3js.org/)
+- **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com)
 
 ## Getting Started
 
-First, run the development server:
-
+1. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Run the development server:
+```bash
+pnpm dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The app will be available at [http://localhost:3000](http://localhost:3000).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+- `/app` - Next.js app directory with route components
+- `/components` - Reusable UI components
+- `/data` - Static data and assets
+- `/lib` - Utility functions and shared logic
+- `/scripts` - Build and data processing scripts
+- `/public` - Static assets
+- `/types` - TypeScript type definitions
 
-To learn more about Next.js, take a look at the following resources:
+## Build Process
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project uses a two-step build process:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Compress cocktail data:
+```bash
+pnpm build:compress
+```
 
-## Deploy on Vercel
+2. Build the application:
+```bash
+pnpm build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is configured for deployment on Cloudflare Pages. The build output is static and optimized for edge delivery.
+
+To deploy:
+1. Ensure your repository is connected to Cloudflare Pages
+2. Push to your main branch
+3. Cloudflare Pages will automatically build and deploy your site
+
+## Development Notes
+
+- This is a client-side only application - all data is processed at build time and served statically
+- The app uses static site generation (SSG) for optimal performance
+- Progressive Web App features are enabled for offline capability
+- Firebase is integrated for additional functionality
+
+## License
+
+[Add your license information here]
