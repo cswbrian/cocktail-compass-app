@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import pako from 'pako';
 
-// Read the cocktails data from private directory
-const cocktailsPath = path.join(process.cwd(), 'private', 'data', 'cocktails.json');
+// Read the cocktails data from data directory
+const cocktailsPath = path.join(process.cwd(), 'data', 'cocktails.json');
 const cocktailsData = JSON.parse(fs.readFileSync(cocktailsPath, 'utf-8'));
 
 // Compress the data
