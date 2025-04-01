@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { auth } from "@/lib/firebase";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { toast } from "sonner";
 
 export function LoginPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { language } = useLanguage();
+  const [isLoading, setIsLoading] = useState(false);
   const t = translations[language];
 
   useEffect(() => {
@@ -21,18 +23,33 @@ export function LoginPage() {
     if (user) {
       const returnUrl = localStorage.getItem('returnUrl') || `/${language}`;
       localStorage.removeItem('returnUrl'); // Clean up
+      
+      // Show welcome back toast
+      toast.success(t.welcomeBack, {
+        description: user.displayName ? `${t.welcomeBackMessage} ${user.displayName}!` : t.welcomeBackMessage,
+        duration: 3000,
+      });
+      
       router.push(returnUrl);
     }
-  }, [user, router, language]);
+  }, [user, router, language, t]);
 
   const handleGoogleLogin = async () => {
     if (!auth) return;
+    
+    setIsLoading(true);
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       // Redirect will happen automatically via the useEffect above
     } catch (error) {
       console.error("Error signing in with Google:", error);
+      toast.error(t.errorSigningIn, {
+        description: t.pleaseTryAgain,
+        duration: 3000,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -42,7 +59,7 @@ export function LoginPage() {
         {t.loginToUnlockFeatures}
       </h1>
       <ul className="mb-8 space-y-2 list-none">
-      <li className="flex items-center justify-start">
+        <li className="flex items-center justify-start">
           <span className="inline-block w-2 h-2 rounded-full bg-primary/60 mr-2" />
           {t.freeOfCharge}
         </li>
@@ -54,21 +71,30 @@ export function LoginPage() {
           <span className="inline-block w-2 h-2 rounded-full bg-primary/60 mr-2" />
           {t.personalizedRecommendations}
         </li>
-        {/* Add more feature items here based on your translations */}
       </ul>
       <Button
         variant="outline"
         className="w-full max-w-sm"
         onClick={handleGoogleLogin}
+        disabled={isLoading}
       >
-        <Image
-          src="/google.svg"
-          alt="Google"
-          width={20}
-          height={20}
-          className="mr-2"
-        />
-        {t.signInWithGoogle}
+        {isLoading ? (
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            {t.signingIn}
+          </div>
+        ) : (
+          <>
+            <Image
+              src="/google.svg"
+              alt="Google"
+              width={20}
+              height={20}
+              className="mr-2"
+            />
+            {t.signInWithGoogle}
+          </>
+        )}
       </Button>
     </div>
   );

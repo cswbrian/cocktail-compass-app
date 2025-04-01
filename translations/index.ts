@@ -131,6 +131,11 @@ export const translations = {
     freeOfCharge: "Free of charge!",
     personalizedRecommendations: "Personalized recommendations (coming soon)",
     featureBookmark: "Bookmark your favorite cocktails",
+    welcomeBack: "Welcome back!",
+    welcomeBackMessage: "Great to see you again",
+    errorSigningIn: "Error signing in",
+    pleaseTryAgain: "Please try again later",
+    signingIn: "Signing in...",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -259,5 +264,10 @@ export const translations = {
     freeOfCharge: "費用全免！",
     personalizedRecommendations: "個人化推薦（即將推出）",
     featureBookmark: "收藏喜愛的調酒",
+    welcomeBack: "歡迎回來！",
+    welcomeBackMessage: "很高興再次見到你",
+    errorSigningIn: "登入錯誤",
+    pleaseTryAgain: "請稍後重試",
+    signingIn: "正在登入...",
   },
 };
