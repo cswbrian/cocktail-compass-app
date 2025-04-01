@@ -9,6 +9,7 @@ import { slugify } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { cocktailService } from "@/lib/cocktail-service";
+import { Loading } from "@/components/ui/loading";
 
 const BOOKMARK_LISTS = [
   { id: "want-to-try", nameKey: "wantToTry" },
@@ -22,7 +23,7 @@ interface BookmarkItem {
 }
 
 export function BookmarksList() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { language } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
@@ -37,26 +38,36 @@ export function BookmarksList() {
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
 
   useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       localStorage.setItem('returnUrl', pathname || '/');
       router.push(`/${language}/login`);
       return;
     }
 
-    // Load bookmarks from localStorage
-    const savedBookmarks = localStorage.getItem("bookmarks");
-    if (savedBookmarks) {
-      setBookmarks(JSON.parse(savedBookmarks));
-    } else {
-      // Initialize with empty lists if no bookmarks exist
-      const initialBookmarks: BookmarkItem[] = BOOKMARK_LISTS.map(list => ({
-        key: list.id,
-        items: []
-      }));
-      setBookmarks(initialBookmarks);
-      localStorage.setItem("bookmarks", JSON.stringify(initialBookmarks));
+    if (user) {
+      // Load bookmarks from localStorage
+      const savedBookmarks = localStorage.getItem("bookmarks");
+      if (savedBookmarks) {
+        setBookmarks(JSON.parse(savedBookmarks));
+      } else {
+        // Initialize with empty lists if no bookmarks exist
+        const initialBookmarks: BookmarkItem[] = BOOKMARK_LISTS.map(list => ({
+          key: list.id,
+          items: []
+        }));
+        setBookmarks(initialBookmarks);
+        localStorage.setItem("bookmarks", JSON.stringify(initialBookmarks));
+      }
     }
-  }, [user, language, router, pathname]);
+  }, [user, loading, language, router, pathname]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <Loading size="md" />
+      </div>
+    );
+  }
 
   if (!user) {
     return null; // Return null since we're redirecting

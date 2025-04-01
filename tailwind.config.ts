@@ -9,6 +9,12 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        fadeInOut: {
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '1' },
+        },
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

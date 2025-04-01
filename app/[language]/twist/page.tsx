@@ -1,20 +1,13 @@
 import { Suspense } from 'react';
 import { TwistFinder } from "@/components/twist-finder/twist-finder";
-import { WandSparkles } from 'lucide-react';
 import { cocktailService } from "@/lib/cocktail-service";
+import { Loading } from "@/components/ui/loading";
 
 export default function TwistPage() {
   const cocktails = cocktailService.getAllCocktails();
 
   return (
-    <Suspense fallback={
-      <div className="h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-primary">
-          <WandSparkles className="w-8 h-8 animate-pulse" />
-          <span className="text-lg">Loading...</span>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<Loading fullScreen size="lg" />}>
       <div className="container mx-auto px-6 py-8">
         <TwistFinder cocktails={cocktails} />
       </div>

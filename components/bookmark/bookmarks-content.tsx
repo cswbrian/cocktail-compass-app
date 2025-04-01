@@ -6,21 +6,30 @@ import { translations } from "@/translations";
 import { BookmarksList } from "./bookmarks-list";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { Loading } from "@/components/ui/loading";
 
 export function BookmarksContent() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { language } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       // Store the current path in localStorage for redirect after login
       localStorage.setItem('returnUrl', pathname || '/');
       // Redirect to login page with the current language
       router.push(`/${language}/login`);
     }
-  }, [user, language, router, pathname]);
+  }, [user, loading, language, router, pathname]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <Loading />
+      </div>
+    );
+  }
 
   if (!user) {
     return null; // Return null since we're redirecting
