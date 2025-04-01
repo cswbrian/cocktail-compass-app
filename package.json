@@ -7,8 +7,7 @@
     "build:compress": "tsx scripts/compress-cocktails.ts",
     "build": "pnpm build:compress && next build",
     "start": "next start",
-    "lint": "next lint",
-    "deploy": "pnpm build && touch ./out/.nojekyll && cp CNAME ./out/CNAME && gh-pages -d out -b gh-pages --dotfiles"
+    "lint": "next lint"
   },
   "dependencies": {
     "@next/third-parties": "^15.1.7",
