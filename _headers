@@ -1,0 +1,32 @@
+# HTML and Data API responses - no cache to ensure fresh content
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Service Worker - special cache control for PWA
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+  Service-Worker-Allowed: /
+
+# Web App Manifest - cache but verify periodically
+/manifest.json
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# PWA Icons and Images - long term cache
+/*.{png,ico,svg}
+  Cache-Control: public, max-age=31536000, immutable
+
+# Static Assets (JS, CSS, etc)
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Compressed Data Files - shorter cache with validation
+/data/*.compressed.*
+  Cache-Control: public, max-age=3600, immutable
+
+# Security Headers for PWA
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:;

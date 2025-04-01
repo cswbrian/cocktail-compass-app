@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "export",
   compress: true,
+  swcMinify: true,
   images: {
     unoptimized: true,
     remotePatterns: [
