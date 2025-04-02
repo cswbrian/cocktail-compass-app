@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { TwistFinder } from "@/components/twist-finder/twist-finder";
-import { cocktailService } from "@/lib/cocktail-service";
+import { cocktailService } from "@/services/cocktail-service";
 import { Loading } from "@/components/ui/loading";
 
 export default function TwistPage() {

@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 import { slugify } from "@/lib/utils"
-import { cocktailService } from "@/lib/cocktail-service";
+import { cocktailService } from "@/services/cocktail-service";
 
 export const dynamic = "force-static";
 

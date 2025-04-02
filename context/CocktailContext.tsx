@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useCallback, useEffect } from 'rea
 import { Cocktail, RankedCocktail } from '@/types/cocktail';
 import { useLanguage } from "@/context/LanguageContext";
 import { rankCocktails } from '@/lib/cocktail-ranking';
-import { cocktailService } from '@/lib/cocktail-service';
+import { cocktailService } from '@/services/cocktail-service';
 
 type CocktailContextType = {
   // State

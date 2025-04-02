@@ -11,7 +11,7 @@ import { ExternalLink } from "@/components/external-link";
 import { Search } from "lucide-react";
 import { flavorColorMap } from "@/constants";
 import { TwistButton } from "@/components/twist-button";
-import { cocktailService } from "@/lib/cocktail-service";
+import { cocktailService } from "@/services/cocktail-service";
 
 type Props = {
   params: Promise<{ language: string; slug: string }>;

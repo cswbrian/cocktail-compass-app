@@ -5,7 +5,7 @@ import Link from "next/link";
 import { translations } from "@/translations/index";
 import { Metadata } from "next";
 import { ExternalLink } from "@/components/external-link";
-import { cocktailService } from "@/lib/cocktail-service";
+import { cocktailService } from "@/services/cocktail-service";
 
 type Props = {
   params: Promise<{ language: string; slug: string }>;

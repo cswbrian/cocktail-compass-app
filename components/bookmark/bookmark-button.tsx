@@ -22,15 +22,12 @@ import { cn } from "@/lib/utils";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
+import { bookmarkService, BookmarkList } from "@/services/bookmark-service";
+import { toast } from "sonner";
 
 interface BookmarkButtonProps {
   cocktailSlug: string;
   cocktailName: string;
-}
-
-interface BookmarkItem {
-  key: string;
-  items: string[];
 }
 
 const BOOKMARK_LISTS = [
@@ -46,64 +43,70 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
   const pathname = usePathname();
   const t = translations[language];
   const [open, setOpen] = React.useState(false);
-  const [bookmarks, setBookmarks] = React.useState<BookmarkItem[]>([]);
+  const [bookmarks, setBookmarks] = React.useState<BookmarkList[]>([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleBookmarkClick = () => {
     if (!user) {
-      // Store the current path in localStorage for redirect after login
       localStorage.setItem('returnUrl', pathname || '/');
-      // Redirect to login page with the current language
       router.push(`/${language}/login`);
       return;
     }
     setOpen(true);
   };
 
-  // Load bookmarks from localStorage on component mount
+  // Load bookmarks from Firestore on component mount
   React.useEffect(() => {
-    if (!user) return; // Only load bookmarks if user is logged in
-    
-    const savedBookmarks = localStorage.getItem("bookmarks");
-    if (savedBookmarks) {
-      setBookmarks(JSON.parse(savedBookmarks));
-    } else {
-      // Initialize with empty lists if no bookmarks exist
-      const initialBookmarks: BookmarkItem[] = BOOKMARK_LISTS.map(list => ({
-        key: list.id,
-        items: []
-      }));
-      setBookmarks(initialBookmarks);
-      localStorage.setItem("bookmarks", JSON.stringify(initialBookmarks));
-    }
+    if (!user) return;
+    loadBookmarks();
   }, [user]);
 
-  const toggleList = (listId: string) => {
-    const newBookmarks = bookmarks.map(bookmark => {
-      if (bookmark.key === listId) {
-        const items = bookmark.items.includes(cocktailSlug)
-          ? bookmark.items.filter(slug => slug !== cocktailSlug)
-          : [...bookmark.items, cocktailSlug];
-        
-        // Track the event
-        const action = items.includes(cocktailSlug) ? 'add' : 'remove';
-        sendGAEvent('bookmark', {
-          action: `bookmark_${action}`,
-          list_type: listId,
-          cocktail_name: cocktailName,
-          cocktail_slug: cocktailSlug
-        });
-        
-        return { ...bookmark, items };
+  const loadBookmarks = async () => {
+    try {
+      setIsLoading(true);
+      const firestoreBookmarks = await bookmarkService.getBookmarks();
+      setBookmarks(firestoreBookmarks);
+    } catch (error) {
+      console.error('Error loading bookmarks:', error);
+      toast.error(t.errorLoadingBookmarks);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const toggleList = async (listId: string) => {
+    try {
+      setIsLoading(true);
+      const bookmarkList = bookmarks.find(b => b.id === listId);
+      const isInList = bookmarkList?.items.some(item => item.cocktailId === cocktailSlug) ?? false;
+
+      if (isInList) {
+        await bookmarkService.removeBookmark(listId, cocktailSlug);
+      } else {
+        await bookmarkService.addBookmark(listId, cocktailSlug);
       }
-      return bookmark;
-    });
-    
-    setBookmarks(newBookmarks);
-    localStorage.setItem("bookmarks", JSON.stringify(newBookmarks));
+
+      // Track the event
+      const action = isInList ? 'remove' : 'add';
+      sendGAEvent('bookmark', {
+        action: `bookmark_${action}`,
+        list_type: listId,
+        cocktail_name: cocktailName,
+        cocktail_slug: cocktailSlug
+      });
+
+      // Reload bookmarks to get the updated state
+      await loadBookmarks();
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+      toast.error(t.errorMigratingBookmarks);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isInAnyList = user ? bookmarks.some(bookmark => 
-    bookmark.items.includes(cocktailSlug)
+    bookmark.items.some(item => item.cocktailId === cocktailSlug)
   ) : false;
 
   return (
@@ -117,6 +120,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
             isInAnyList && "bg-accent text-accent-foreground"
           )}
           onClick={handleBookmarkClick}
+          disabled={isLoading}
         >
           {isInAnyList ? (
             <BookmarkCheck className="h-4 w-4" />
@@ -132,12 +136,13 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
               <CommandEmpty>{t.noResultsFound}</CommandEmpty>
               <CommandGroup>
                 {BOOKMARK_LISTS.map((list) => {
-                  const bookmarkList = bookmarks.find(b => b.key === list.id);
-                  const isSelected = bookmarkList?.items.includes(cocktailSlug) ?? false;
+                  const bookmarkList = bookmarks.find(b => b.id === list.id);
+                  const isSelected = bookmarkList?.items.some(item => item.cocktailId === cocktailSlug) ?? false;
                   return (
                     <CommandItem
                       key={list.id}
                       onSelect={() => toggleList(list.id)}
+                      disabled={isLoading}
                     >
                       <div
                         className={cn(

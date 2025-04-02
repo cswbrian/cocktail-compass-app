@@ -20,6 +20,7 @@ export function BookmarksContent() {
       localStorage.setItem('returnUrl', pathname || '/');
       // Redirect to login page with the current language
       router.push(`/${language}/login`);
+      return;
     }
   }, [user, loading, language, router, pathname]);
 

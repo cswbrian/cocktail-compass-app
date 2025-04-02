@@ -1,7 +1,7 @@
 import { compressedCocktails } from "@/data/cocktails.compressed";
 import { Cocktail } from "@/types/cocktail";
 import { slugify } from "@/lib/utils";
-import { decompress } from "./decompress";
+import { decompress } from "@/lib/decompress";
 
 class CocktailService {
   private static instance: CocktailService;
