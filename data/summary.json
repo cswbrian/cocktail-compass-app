@@ -113,7 +113,7 @@
         "en": "Cognac",
         "zh": "干邑"
       },
-      "count": 18,
+      "count": 19,
       "tags": [
         {
           "en": "Brandy",
@@ -803,7 +803,7 @@
         "en": "Dry Vermouth",
         "zh": "不甜苦艾酒"
       },
-      "count": 46,
+      "count": 47,
       "tags": []
     },
     {
@@ -1506,6 +1506,14 @@
       "name": {
         "en": "Drambuie",
         "zh": "尊美醇香甜酒"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
+        "en": "Drambuie",
+        "zh": "杜林標利口酒"
       },
       "count": 1,
       "tags": []
@@ -4447,7 +4455,7 @@
         "en": "Herbal",
         "zh": "草本"
       },
-      "count": 339,
+      "count": 340,
       "tags": []
     },
     {
@@ -4616,6 +4624,38 @@
         "zh": "甜味"
       },
       "count": 2,
+      "tags": []
+    },
+    {
+      "name": {
+        "en": "Complex",
+        "zh": "複雜"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
+        "en": "Grape",
+        "zh": "葡萄"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
+        "en": "Honey",
+        "zh": "蜂蜜"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
+        "en": "Wine",
+        "zh": "葡萄酒"
+      },
+      "count": 1,
       "tags": []
     }
   ]
