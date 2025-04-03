@@ -13,7 +13,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import Image from "next/image";
-import { Menu as MenuIcon } from "lucide-react";
 import { BUY_ME_A_DRINK_URL, FEEDBACK_FORM_URL } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
 import { auth } from "@/lib/firebase";
@@ -49,7 +48,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout, t }) => (
           className="rounded-full"
         />
       )}
-      <span className="font-medium">Halo, {user.displayName || 'User'}!</span>
+      <span className="font-medium">Halo, {user.displayName || "User"}!</span>
     </div>
     <div className="text-sm text-primary" onClick={onLogout}>
       {t.signOut}
@@ -66,7 +65,11 @@ interface LanguageSelectorProps {
   };
 }
 
-const LanguageSelector: React.FC<LanguageSelectorProps> = ({ language, toggleLanguage, t }) => (
+const LanguageSelector: React.FC<LanguageSelectorProps> = ({
+  language,
+  toggleLanguage,
+  t,
+}) => (
   <li className="flex items-center justify-between py-2">
     <span className="font-medium">{t.language}</span>
     <Tabs defaultValue={language} className="w-[200px]">
@@ -128,12 +131,7 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ t }) => (
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            src="/github.svg"
-            alt="GitHub"
-            width={24}
-            height={24}
-          />
+          <Image src="/github.svg" alt="GitHub" width={24} height={24} />
         </a>
       </SheetClose>
       <SheetClose asChild>
@@ -143,12 +141,7 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ t }) => (
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            src="/threads.svg"
-            alt="Threads"
-            width={24}
-            height={24}
-          />
+          <Image src="/threads.svg" alt="Threads" width={24} height={24} />
         </a>
       </SheetClose>
     </div>
@@ -190,10 +183,32 @@ export function Menu() {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-3 right-4 z-50">
       <Sheet>
         <SheetTrigger asChild>
-          <MenuIcon className="h-6 w-6" />
+          {loading ? (
+            <div className="h-6 w-6 animate-pulse bg-gray-200 rounded-full" />
+          ) : user ? (
+            <div className="h-[30px] w-[30px] rounded-full overflow-hidden cursor-pointer">
+              {user.photoURL ? (
+                <Image
+                  src={user.photoURL}
+                  alt="Profile"
+                  width={30}
+                  height={30}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-primary flex items-center justify-center text-white">
+                  {user.displayName?.[0]?.toUpperCase() || "U"}
+                </div>
+              )}
+            </div>
+          ) : (
+            <Button variant="default" size="sm" className="px-4">
+              {t.login}
+            </Button>
+          )}
         </SheetTrigger>
         <SheetContent side="right" className="h-full w-full sm:w-[540px]">
           <div className="flex flex-col justify-between h-full">
