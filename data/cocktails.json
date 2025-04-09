@@ -7238,7 +7238,7 @@
         "amount": 22,
         "name": {
           "en": "Mezcal",
-          "zh": "梅茲卡爾"
+          "zh": "梅斯卡爾"
         },
         "unit": {
           "en": "ml",
@@ -10522,7 +10522,7 @@
         "amount": 30,
         "name": {
           "en": "Heavy Cream",
-          "zh": "濃奶油"
+          "zh": "鮮奶油"
         },
         "unit": {
           "en": "ml",
@@ -12413,7 +12413,7 @@
       {
         "amount": 25,
         "name": {
-          "en": "Generic Coffee Liqueur",
+          "en": "Coffee Liqueur",
           "zh": "咖啡利口酒"
         },
         "unit": {
@@ -13123,8 +13123,8 @@
       {
         "amount": 50,
         "name": {
-          "en": "Generic Irish Cream",
-          "zh": "通用愛爾蘭奶油"
+          "en": "Irish Cream",
+          "zh": "愛爾蘭奶油"
         },
         "unit": {
           "en": "ml",
@@ -14066,7 +14066,7 @@
         "amount": 30,
         "name": {
           "en": "Heavy Cream",
-          "zh": "濃奶油"
+          "zh": "鮮奶油"
         },
         "unit": {
           "en": "ml",
@@ -18198,7 +18198,8 @@
         ]
       }
     ],
-    "liqueurs": [
+    "liqueurs": [],
+    "ingredients": [
       {
         "amount": 30,
         "name": {
@@ -18213,9 +18214,7 @@
           "en": "Adds sweetness and creamy texture with intense coconut flavor.",
           "zh": "增加甜味和奶油般的質地，帶有濃郁的椰子味。"
         }
-      }
-    ],
-    "ingredients": [
+      },
       {
         "amount": 120,
         "name": {
@@ -18314,8 +18313,8 @@
       {
         "amount": 15,
         "name": {
-          "en": "Generic Fruit Liqueur",
-          "zh": "一般水果利口酒"
+          "en": "Fruit Liqueur",
+          "zh": "水果利口酒"
         },
         "unit": {
           "en": "ml",
@@ -18504,9 +18503,7 @@
           "en": "Provides the agave base and subtle sweetness.",
           "zh": "提供龍舌蘭的基底和微妙的甜味。"
         }
-      }
-    ],
-    "liqueurs": [
+      },
       {
         "amount": 15,
         "name": {
@@ -18523,6 +18520,7 @@
         }
       }
     ],
+    "liqueurs": [],
     "ingredients": [
       {
         "amount": 15,
@@ -18543,7 +18541,7 @@
         "amount": 90,
         "name": {
           "en": "Grapefruit Soda",
-          "zh": "葡萄柚汽水"
+          "zh": "葡萄柚蘇打水"
         },
         "unit": {
           "en": "ml",
@@ -20694,8 +20692,8 @@
       {
         "amount": 15,
         "name": {
-          "en": "Generic Lime Juice",
-          "zh": "通用青檸汁"
+          "en": "Lime Juice",
+          "zh": "青檸汁"
         },
         "unit": {
           "en": "ml",
@@ -20959,8 +20957,8 @@
       {
         "amount": 30,
         "name": {
-          "en": "Lime Juice, freshly squeezed",
-          "zh": "新鮮現榨萊姆汁"
+          "en": "Lime Juice",
+          "zh": "青檸汁"
         },
         "unit": {
           "en": "ml",
@@ -21795,7 +21793,7 @@
         "amount": 60,
         "name": {
           "en": "Heavy Cream",
-          "zh": "濃奶油"
+          "zh": "鮮奶油"
         },
         "unit": {
           "en": "ml",
@@ -22704,8 +22702,8 @@
       {
         "amount": 15,
         "name": {
-          "en": "Lime Juice (Freshly Squeezed)",
-          "zh": "鮮榨萊姆汁"
+          "en": "Lime Juice",
+          "zh": "青檸汁"
         },
         "unit": {
           "en": "ml",
@@ -23678,8 +23676,8 @@
       {
         "amount": 30,
         "name": {
-          "en": "Amaretto Liqueur",
-          "zh": "杏仁利口酒"
+          "en": "Amaretto",
+          "zh": "杏仁酒"
         },
         "unit": {
           "en": "ml",
@@ -24289,8 +24287,8 @@
       {
         "amount": 22,
         "name": {
-          "en": "Lime Juice (Freshly Squeezed)",
-          "zh": "鮮榨萊姆汁"
+          "en": "Lime Juice",
+          "zh": "青檸汁"
         },
         "unit": {
           "en": "ml",
@@ -25269,8 +25267,8 @@
       {
         "amount": 45,
         "name": {
-          "en": "Generic Coffee Liqueur",
-          "zh": "通用咖啡利口酒"
+          "en": "Coffee Liqueur",
+          "zh": "咖啡利口酒"
         },
         "unit": {
           "en": "ml",
@@ -27049,7 +27047,7 @@
         "amount": 25,
         "name": {
           "en": "Heavy Cream",
-          "zh": "濃奶油"
+          "zh": "鮮奶油"
         },
         "unit": {
           "en": "ml",
@@ -28419,7 +28417,7 @@
         "amount": 30,
         "name": {
           "en": "Heavy Cream",
-          "zh": "濃奶油"
+          "zh": "鮮奶油"
         },
         "unit": {
           "en": "ml",
@@ -32165,8 +32163,8 @@
       {
         "amount": 15,
         "name": {
-          "en": "Generic Amaretto",
-          "zh": "通用阿瑪雷托"
+          "en": "Amaretto",
+          "zh": "杏仁酒"
         },
         "unit": {
           "en": "ml",
@@ -32182,8 +32180,8 @@
       {
         "amount": 15,
         "name": {
-          "en": "Generic Orange Juice",
-          "zh": "通用橙汁"
+          "en": "Orange Juice",
+          "zh": "橙汁"
         },
         "unit": {
           "en": "ml",
@@ -32197,8 +32195,8 @@
       {
         "amount": 15,
         "name": {
-          "en": "Generic Pineapple Juice",
-          "zh": "通用鳳梨汁"
+          "en": "Pineapple Juice",
+          "zh": "菠蘿汁"
         },
         "unit": {
           "en": "ml",
@@ -32227,8 +32225,8 @@
       {
         "amount": 2,
         "name": {
-          "en": "Generic Angostura Bitters",
-          "zh": "通用安格式苦酒"
+          "en": "Angostura Bitters",
+          "zh": "安格斯特拉苦精"
         },
         "unit": {
           "en": "dashes",
@@ -33652,7 +33650,7 @@
         "amount": 60,
         "name": {
           "en": "Mezcal",
-          "zh": "梅茲卡爾"
+          "zh": "梅斯卡爾"
         },
         "unit": {
           "en": "ml",
@@ -33833,7 +33831,8 @@
         }
       }
     ],
-    "liqueurs": [
+    "liqueurs": [],
+    "ingredients": [
       {
         "amount": 30,
         "name": {
@@ -33848,9 +33847,7 @@
           "en": "Adds sweetness and a creamy texture.",
           "zh": "增加甜味和奶油般的質地。"
         }
-      }
-    ],
-    "ingredients": [
+      },
       {
         "amount": 30,
         "name": {
@@ -34431,7 +34428,7 @@
         "amount": 60,
         "name": {
           "en": "Cream of Coconut",
-          "zh": "椰奶"
+          "zh": "椰奶霜"
         },
         "unit": {
           "en": "ml",
@@ -38419,7 +38416,9 @@
           "en": "Adds the distinctive blue color and a hint of orange flavor.",
           "zh": "增添獨特的藍色和淡淡的橙子風味。"
         }
-      },
+      }
+    ],
+    "ingredients": [
       {
         "amount": 30,
         "name": {
@@ -38434,9 +38433,7 @@
           "en": "Adds sweetness and a creamy texture with coconut flavor.",
           "zh": "增加甜味和奶油質地，帶有椰子味。"
         }
-      }
-    ],
-    "ingredients": [
+      },
       {
         "amount": 90,
         "name": {
@@ -38973,7 +38970,7 @@
   {
     "name": {
       "en": "Boulevardier",
-      "zh": "布列瓦迪"
+      "zh": "花花公子"
     },
     "description": {
       "en": "**The Boulevardier: A Whiskey Negroni**\n\nA sophisticated and boozy cocktail that replaces gin in a Negroni with whiskey. The result is a richer, warmer, and more robust cocktail with a pleasant bitter edge.\n\nKey characteristics:\n*   Whiskey base for warmth\n*   Sweet vermouth for sweetness and body\n*   Campari for bitterness and complexity",
@@ -44041,7 +44038,7 @@
         "amount": 22,
         "name": {
           "en": "Mezcal",
-          "zh": "梅茲卡爾"
+          "zh": "梅斯卡爾"
         },
         "unit": {
           "en": "ml",
@@ -44745,8 +44742,8 @@
       {
         "amount": 22,
         "name": {
-          "en": "Lemon Juice, freshly squeezed",
-          "zh": "新鮮檸檬汁"
+          "en": "Lemon Juice",
+          "zh": "檸檬汁"
         },
         "unit": {
           "en": "ml",
@@ -44881,12 +44878,14 @@
           "en": "Adds coffee flavor and sweetness.",
           "zh": "增加咖啡風味和甜味。"
         }
-      },
+      }
+    ],
+    "ingredients": [
       {
         "amount": 30,
         "name": {
           "en": "Heavy Cream",
-          "zh": "濃奶油"
+          "zh": "鮮奶油"
         },
         "unit": {
           "en": "ml",
@@ -44898,7 +44897,6 @@
         }
       }
     ],
-    "ingredients": [],
     "flavor_descriptors": [
       {
         "en": "Coffee",
@@ -51983,12 +51981,14 @@
           "en": "Provides the distinctive blue color and a sweet orange flavor.",
           "zh": "提供獨特的藍色和甜橙味。"
         }
-      },
+      }
+    ],
+    "ingredients": [
       {
         "amount": 15,
         "name": {
           "en": "Cream of Coconut",
-          "zh": "椰奶"
+          "zh": "椰奶霜"
         },
         "unit": {
           "en": "ml",
@@ -51998,9 +51998,7 @@
           "en": "Adds a rich creaminess and coconut flavor.",
           "zh": "增添濃郁的奶油味和椰子味。"
         }
-      }
-    ],
-    "ingredients": [
+      },
       {
         "amount": 15,
         "name": {
@@ -56316,14 +56314,12 @@
             "zh": "蒸餾"
           }
         ]
-      }
-    ],
-    "liqueurs": [
+      },
       {
         "amount": 7,
         "name": {
-          "en": "Generic Mezcal",
-          "zh": "通用梅斯卡爾酒"
+          "en": "Mezcal",
+          "zh": "梅斯卡爾"
         },
         "unit": {
           "en": "ml",
@@ -56335,6 +56331,7 @@
         }
       }
     ],
+    "liqueurs": [],
     "ingredients": [
       {
         "amount": 15,
@@ -57600,7 +57597,7 @@
         "amount": 30,
         "name": {
           "en": "Heavy Cream",
-          "zh": "濃奶油"
+          "zh": "鮮奶油"
         },
         "unit": {
           "en": "ml",
@@ -59709,7 +59706,7 @@
         "amount": 90,
         "name": {
           "en": "Grapefruit Soda",
-          "zh": "葡萄柚蘇打"
+          "zh": "葡萄柚蘇打水"
         },
         "unit": {
           "en": "ml",
@@ -60077,7 +60074,7 @@
         "amount": 60,
         "name": {
           "en": "Heavy Cream",
-          "zh": "濃奶油"
+          "zh": "鮮奶油"
         },
         "unit": {
           "en": "ml",
@@ -62222,7 +62219,7 @@
         "amount": 60,
         "name": {
           "en": "Mezcal",
-          "zh": "梅斯卡爾酒"
+          "zh": "梅斯卡爾"
         },
         "unit": {
           "en": "ml",
@@ -62379,13 +62376,12 @@
         ]
       }
     ],
-    "liqueurs": [],
-    "ingredients": [
+    "liqueurs": [
       {
         "amount": 15,
         "name": {
-          "en": "Generic Dry Vermouth",
-          "zh": "通用 Dry Vermouth"
+          "en": "Dry Vermouth",
+          "zh": "不甜苦艾酒"
         },
         "unit": {
           "en": "ml",
@@ -62395,7 +62391,9 @@
           "en": "Adds subtle herbal and wine-like notes, balancing the gin.",
           "zh": "添加微妙的草本和類似葡萄酒的風味，平衡琴酒。"
         }
-      },
+      }
+    ],
+    "ingredients": [
       {
         "amount": 2,
         "name": {
@@ -66439,8 +66437,8 @@
       {
         "amount": 10,
         "name": {
-          "en": "Generic Simple Syrup",
-          "zh": "通用簡糖漿"
+          "en": "Simple Syrup",
+          "zh": "糖漿"
         },
         "unit": {
           "en": "ml",
@@ -66632,7 +66630,7 @@
         "amount": 50,
         "name": {
           "en": "Mezcal",
-          "zh": "梅茲卡爾"
+          "zh": "梅斯卡爾"
         },
         "unit": {
           "en": "ml",
@@ -69627,7 +69625,8 @@
         }
       }
     ],
-    "liqueurs": [
+    "liqueurs": [],
+    "ingredients": [
       {
         "amount": 30,
         "name": {
@@ -69642,9 +69641,7 @@
           "en": "Provides creaminess and coconut flavor.",
           "zh": "提供奶油味和椰子風味。"
         }
-      }
-    ],
-    "ingredients": [
+      },
       {
         "amount": 60,
         "name": {
@@ -74266,7 +74263,9 @@
           "en": "Adds a rich chocolate and coffee flavor.",
           "zh": "增添濃郁的巧克力和咖啡風味。"
         }
-      },
+      }
+    ],
+    "ingredients": [
       {
         "amount": 50,
         "name": {
@@ -74283,7 +74282,6 @@
         }
       }
     ],
-    "ingredients": [],
     "flavor_descriptors": [
       {
         "en": "Chocolate",
@@ -74618,8 +74616,8 @@
       {
         "amount": 90,
         "name": {
-          "en": "Grapefruit Juice, freshly squeezed",
-          "zh": "新鮮的葡萄柚汁"
+          "en": "Grapefruit Juice",
+          "zh": "葡萄柚汁"
         },
         "unit": {
           "en": "ml",
@@ -74844,8 +74842,8 @@
       {
         "amount": 15,
         "name": {
-          "en": "Generic Triple Sec",
-          "zh": "通用橙皮酒"
+          "en": "Triple Sec",
+          "zh": "橙酒"
         },
         "unit": {
           "en": "ml",
@@ -76951,7 +76949,7 @@
         "amount": 30,
         "name": {
           "en": "Mezcal",
-          "zh": "梅茲卡爾"
+          "zh": "梅斯卡爾"
         },
         "unit": {
           "en": "ml",
