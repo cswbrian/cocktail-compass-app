@@ -4,7 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Sparkles, Bookmark } from "lucide-react";
+import { Compass, Search, Bookmark } from "lucide-react";
 
 export function BottomNav() {
   const { language } = useLanguage();
@@ -18,9 +18,9 @@ export function BottomNav() {
       label: t.bottomNavExplorer,
     },
     {
-      href: `/${language}/twist`,
-      icon: Sparkles,
-      label: t.bottomNavTwist,
+      href: `/${language}/search`,
+      icon: Search,
+      label: t.bottomNavSearch,
     },
     {
       href: `/${language}/bookmarks`,

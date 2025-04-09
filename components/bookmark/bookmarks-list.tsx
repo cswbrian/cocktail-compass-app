@@ -186,6 +186,7 @@ export function BookmarksList() {
                   <CocktailCard
                     key={slugify(cocktail.name.en)}
                     cocktail={cocktail}
+                    variant="compact"
                   />
                 ))}
               </div>

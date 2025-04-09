@@ -2,7 +2,6 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
 import { BookmarksList } from "./bookmarks-list";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -38,7 +37,6 @@ export function BookmarksContent() {
 
   return (
     <>
-      <h1 className="text-4xl mb-6">{translations[language].bookmarks}</h1>
       <BookmarksList />
     </>
   );

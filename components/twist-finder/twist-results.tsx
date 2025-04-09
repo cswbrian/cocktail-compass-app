@@ -2,7 +2,6 @@ import { Cocktail } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { CocktailCard } from "@/components/cocktail-card";
-import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { BasedCocktailCard } from "./based-cocktail-card";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -11,13 +10,11 @@ import { useState } from "react";
 interface TwistResultsProps {
   twists: Array<{ cocktail: Cocktail; distance: number }>;
   baseCocktail: Cocktail;
-  onFindAgain: () => void;
 }
 
 export function TwistResults({
   twists,
   baseCocktail,
-  onFindAgain,
 }: TwistResultsProps) {
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
@@ -69,10 +66,6 @@ export function TwistResults({
           )}
         </AnimatePresence>
       </div>
-
-      <Button className="mb-8" variant="secondary" onClick={onFindAgain}>
-        {t.reset}
-      </Button>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {twists.map(({ cocktail, distance }, index) => (

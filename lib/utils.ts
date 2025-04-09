@@ -5,9 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function slugify(text: string) {
+export function normalizeText(text: string) {
   return text
-    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+    .toLowerCase();
+}
+
+export function slugify(text: string) {
+  return normalizeText(text)
     .replace(/ /g, "-")
     .replace(/[^\w-]+/g, "");
 }
