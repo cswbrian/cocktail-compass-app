@@ -1,5 +1,5 @@
 import { compressedCocktails } from "@/data/cocktails.compressed";
-import { Cocktail } from "@/types/cocktail";
+import { Cocktail, RankedCocktail } from "@/types/cocktail";
 import { slugify } from "@/lib/utils";
 import { decompress } from "@/lib/decompress";
 
@@ -127,6 +127,60 @@ class CocktailService {
   public clearCaches(): void {
     this.flavorToCocktails.clear();
     this.ingredientToCocktails.clear();
+  }
+
+  public getCocktailsByMood(category: 'Strong & Spirit-Focused' | 'Sweet & Tart' | 'Tall & Bubbly' | 'Rich & Creamy', spirit?: string, preference?: string): RankedCocktail[] {
+    console.log(`🔍 Searching for cocktails with category: ${category}${spirit ? ` and spirit: ${spirit}` : ''}${preference ? ` and preference: ${preference}` : ''}`);
+    
+    // First filter: Match by category
+    let filteredCocktails = this.cocktails.filter(cocktail => 
+      cocktail.categories.includes(category)
+    );
+    console.log(`📊 Found ${filteredCocktails.length} cocktails matching category`);
+
+    // Second filter: Match by selected spirit if provided
+    if (spirit) {
+      filteredCocktails = filteredCocktails.filter(cocktail =>
+        cocktail.base_spirits.some(
+          baseSpirit => slugify(baseSpirit.name.en) === spirit
+        )
+      );
+      console.log(`📊 After spirit filter: ${filteredCocktails.length} cocktails remaining`);
+    }
+
+    // Third filter: Match by preference if provided and category is Sweet & Tart
+    if (preference && category === 'Sweet & Tart') {
+      filteredCocktails = filteredCocktails.filter(cocktail => {
+        const sweetness = cocktail.flavor_profile.sweetness;
+        const sourness = cocktail.flavor_profile.sourness;
+        
+        switch (preference) {
+          case 'More Sweet':
+            return sweetness > sourness;
+          case 'More Tart':
+            return sourness > sweetness;
+          case 'Balanced':
+            return Math.abs(sweetness - sourness) <= 1;
+          default:
+            return true;
+        }
+      });
+      console.log(`📊 After preference filter: ${filteredCocktails.length} cocktails remaining`);
+    }
+
+    // Fourth step: Randomly select one cocktail if any are available
+    if (filteredCocktails.length > 0) {
+      const randomIndex = Math.floor(Math.random() * filteredCocktails.length);
+      const selectedCocktail = filteredCocktails[randomIndex];
+      console.log(`🎲 Randomly selected: ${selectedCocktail.name.en}`);
+      return [{
+        ...selectedCocktail,
+        distance: 0
+      }];
+    }
+
+    console.log('❌ No cocktails found matching the criteria');
+    return [];
   }
 }
 

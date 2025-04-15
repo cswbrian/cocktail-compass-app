@@ -36,6 +36,7 @@ export interface Cocktail {
   technique?: LocalizedString;  // Add since it's used in the component
   garnish?: LocalizedString;    // Add since it's used in the component
   description?: LocalizedString; // Add description field
+  categories: ('Strong & Spirit-Focused' | 'Sweet & Tart' | 'Tall & Bubbly' | 'Rich & Creamy')[]; // Add categories field with possible values
 }
 
 export interface RankedCocktail extends Cocktail {

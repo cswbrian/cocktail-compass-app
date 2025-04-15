@@ -113,7 +113,7 @@
         "en": "Cognac",
         "zh": "干邑"
       },
-      "count": 19,
+      "count": 20,
       "tags": [
         {
           "en": "Brandy",
@@ -1864,6 +1864,14 @@
     },
     {
       "name": {
+        "en": "Raspberry Liqueur",
+        "zh": "覆盆子利口酒"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
         "en": "Red Berry Liqueur",
         "zh": "紅色漿果利口酒"
       },
@@ -2141,7 +2149,7 @@
         "en": "Heavy Cream",
         "zh": "鮮奶油"
       },
-      "count": 13,
+      "count": 14,
       "tags": []
     },
     {
@@ -4207,7 +4215,7 @@
         "en": "Citrus",
         "zh": "柑橘"
       },
-      "count": 373,
+      "count": 374,
       "tags": []
     },
     {
@@ -4215,7 +4223,7 @@
         "en": "Fruity",
         "zh": "果香"
       },
-      "count": 349,
+      "count": 350,
       "tags": []
     },
     {
@@ -4247,7 +4255,7 @@
         "en": "Vanilla",
         "zh": "香草"
       },
-      "count": 115,
+      "count": 116,
       "tags": []
     },
     {
@@ -4271,7 +4279,7 @@
         "en": "Creamy",
         "zh": "乳脂"
       },
-      "count": 99,
+      "count": 100,
       "tags": []
     },
     {
@@ -4392,38 +4400,6 @@
         "zh": "甜味"
       },
       "count": 2,
-      "tags": []
-    },
-    {
-      "name": {
-        "en": "Complex",
-        "zh": "複雜"
-      },
-      "count": 1,
-      "tags": []
-    },
-    {
-      "name": {
-        "en": "Grape",
-        "zh": "葡萄"
-      },
-      "count": 1,
-      "tags": []
-    },
-    {
-      "name": {
-        "en": "Honey",
-        "zh": "蜂蜜"
-      },
-      "count": 1,
-      "tags": []
-    },
-    {
-      "name": {
-        "en": "Wine",
-        "zh": "葡萄酒"
-      },
-      "count": 1,
       "tags": []
     }
   ]

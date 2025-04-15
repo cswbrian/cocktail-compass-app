@@ -146,10 +146,14 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
   const nextStep = useCallback(() => {
     if (state.currentStep < 3) {
       setState(prev => ({ ...prev, currentStep: prev.currentStep + 1 }));
+      // Push new state to history
+      window.history.pushState({ step: state.currentStep + 1 }, '', '');
     } else {
       const newResults = handleSubmit();
       if (newResults.length > 0) {
         setState(prev => ({ ...prev, currentStep: 4 }));
+        // Push new state to history
+        window.history.pushState({ step: 4 }, '', '');
       }
     }
   }, [state.currentStep, handleSubmit]);
@@ -157,13 +161,30 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
   const prevStep = useCallback(() => {
     if (state.currentStep > 1) {
       setState(prev => ({ ...prev, currentStep: prev.currentStep - 1 }));
+      window.history.back();
     }
   }, [state.currentStep]);
+
+  useEffect(() => {
+    // Handle browser back/forward buttons
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state?.step) {
+        setState(prev => ({ ...prev, currentStep: event.state.step }));
+      } else {
+        setState(prev => ({ ...prev, currentStep: 1 }));
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const goToResults = useCallback(() => {
     const newResults = handleSubmit();
     if (newResults.length > 0) {
       setState(prev => ({ ...prev, currentStep: 4 }));
+      // Push new state to history
+      window.history.pushState({ step: 4 }, '', '');
     }
   }, [handleSubmit]);
 

@@ -145,7 +145,11 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly",
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -262,7 +266,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -363,7 +370,10 @@
       "body": 6,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -492,7 +502,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -633,7 +646,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -785,7 +801,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -876,7 +895,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -982,7 +1004,11 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly",
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -1070,7 +1096,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -1176,7 +1205,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -1332,7 +1364,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -1493,7 +1528,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -1612,7 +1650,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -1738,7 +1779,11 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Sweet & Tart",
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -1829,7 +1874,10 @@
       "body": 5,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -1970,7 +2018,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -2067,7 +2118,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -2196,7 +2250,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -2333,7 +2390,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -2454,7 +2514,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -2561,7 +2624,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -2736,7 +2802,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -2878,7 +2947,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -2981,7 +3053,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -3099,7 +3174,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -3256,7 +3334,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -3423,7 +3504,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -3525,7 +3609,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -3662,7 +3749,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -3783,7 +3873,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -3912,7 +4005,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -4033,7 +4129,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -4190,7 +4289,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -4331,7 +4433,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -4429,7 +4534,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -4521,7 +4629,10 @@
       "body": 2,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -4715,7 +4826,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -4857,7 +4971,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -4979,7 +5096,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -5086,7 +5206,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -5169,7 +5292,10 @@
       "body": 3,
       "complexity": 2,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -5296,7 +5422,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -5474,7 +5603,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -5622,7 +5754,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -5714,7 +5849,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -5826,7 +5964,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -5981,7 +6122,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -6079,7 +6223,10 @@
       "body": 3,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -6250,7 +6397,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -6407,7 +6557,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -6514,7 +6667,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -6628,7 +6784,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -6762,7 +6921,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -6932,7 +7094,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -7020,7 +7185,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -7201,7 +7369,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -7324,7 +7495,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -7515,7 +7689,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -7686,7 +7863,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -7762,7 +7942,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -7948,7 +8131,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -8057,7 +8243,10 @@
       "body": 3,
       "complexity": 1,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -8150,7 +8339,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -8312,7 +8504,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -8468,7 +8663,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -8595,7 +8793,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -8686,7 +8887,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -8792,7 +8996,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -8883,7 +9090,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -9005,7 +9215,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -9116,7 +9329,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -9266,7 +9482,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -9383,7 +9602,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -9500,7 +9722,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -9607,7 +9832,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -9733,7 +9961,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -9846,7 +10077,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -9948,7 +10182,137 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
+  },
+  {
+    "name": {
+      "en": "French Kiss",
+      "zh": "法式之吻"
+    },
+    "description": {
+      "en": "**A Classic Dessert Cocktail**\n\nA delightful blend of spirits and cream, offering:\n*   A smooth and rich mouthfeel\n*   A balance of sweet and tart flavors\n*   An elegant presentation",
+      "zh": "**經典甜點雞尾酒**\n\n混合了烈酒和奶油，帶來愉悅的口感，特色：\n*   口感柔滑濃郁\n*   甜味和酸味之間的平衡\n*   優雅的呈現方式"
+    },
+    "historical_reference": {
+      "en": "*Origins are debated, possibly dating back to the early 20th century.*\n\n*   Likely created as a decadent after-dinner drink.\n*   Popularized in various cocktail books throughout the mid-20th century.",
+      "zh": "*起源存在爭議，可能可以追溯到20世紀初。*\n\n*   可能被創造為頹廢的餐後飲品。\n*   在20世紀中期的各種雞尾酒書籍中普及。"
+    },
+    "technique": {
+      "en": "Shake all ingredients with ice and strain into a chilled glass.",
+      "zh": "將所有材料與冰塊搖勻，然後濾入冰鎮的杯子中"
+    },
+    "garnish": {
+      "en": "Raspberries or a cherry",
+      "zh": "覆盆子或櫻桃"
+    },
+    "serve_in_glass": {
+      "en": "Coupe or Martini glass",
+      "zh": "淺碟香檳杯或馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Pink, frothy, and elegant.",
+      "zh": "粉紅色、泡沫豐富且優雅"
+    },
+    "allergens": [
+      {
+        "en": "None",
+        "zh": "無"
+      }
+    ],
+    "base_spirits": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Cognac",
+          "zh": "干邑"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the base spirit and adds depth.",
+          "zh": "提供基酒並增加深度"
+        },
+        "tags": [
+          {
+            "en": "Brandy",
+            "zh": "白蘭地"
+          },
+          {
+            "en": "aged",
+            "zh": "陳年"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Raspberry Liqueur",
+          "zh": "覆盆子利口酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds raspberry flavor and sweetness.",
+          "zh": "添加覆盆子風味和甜味"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 15,
+        "name": {
+          "en": "Heavy Cream",
+          "zh": "鮮奶油"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds richness and creaminess.",
+          "zh": "增加濃郁度和奶油味"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Citrus",
+        "zh": "柑橘"
+      },
+      {
+        "en": "Creamy",
+        "zh": "乳脂"
+      },
+      {
+        "en": "Vanilla",
+        "zh": "香草"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 7,
+      "sourness": 5,
+      "booziness": 5,
+      "body": 7,
+      "complexity": 6,
+      "bubbles": false
+    },
+    "categories": [
+      "Sweet & Tart",
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -10081,7 +10445,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -10184,7 +10551,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -10314,7 +10684,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -10440,7 +10813,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -10555,7 +10931,10 @@
       "body": 8,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -10677,7 +11056,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -10829,7 +11211,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -10957,7 +11342,10 @@
       "body": 7,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -11097,7 +11485,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -11215,7 +11606,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -11378,7 +11772,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -11511,7 +11908,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -11613,7 +12013,10 @@
       "body": 4,
       "complexity": 2,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -11711,7 +12114,10 @@
       "body": 3,
       "complexity": 2,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -11842,7 +12248,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12003,7 +12412,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12125,7 +12537,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12242,7 +12657,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12346,7 +12764,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12448,7 +12869,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12593,7 +13017,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12750,7 +13177,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12852,7 +13282,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -12958,7 +13391,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -13081,7 +13517,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -13193,7 +13632,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -13378,7 +13820,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -13500,7 +13945,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -13704,7 +14152,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -13870,7 +14321,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -13958,7 +14412,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -14163,7 +14620,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -14285,7 +14745,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -14372,7 +14835,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -14468,7 +14934,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -14629,7 +15098,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -14785,7 +15257,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -14879,7 +15354,10 @@
       "body": 3,
       "complexity": 2,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15055,7 +15533,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15167,7 +15648,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15304,7 +15788,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15392,7 +15879,10 @@
       "body": 6,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15517,7 +16007,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15624,7 +16117,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15736,7 +16232,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15838,7 +16337,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -15951,7 +16453,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -16073,7 +16578,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -16210,7 +16718,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -16318,7 +16829,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -16410,7 +16924,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -16512,7 +17029,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -16634,7 +17154,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -16776,7 +17299,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -16921,7 +17447,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -17046,7 +17575,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -17153,7 +17685,10 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -17276,7 +17811,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -17412,7 +17950,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -17519,7 +18060,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -17669,7 +18213,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -17775,7 +18322,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -17893,7 +18443,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18025,7 +18578,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18131,7 +18687,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18260,7 +18819,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18368,7 +18930,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18456,7 +19021,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18597,7 +19165,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18715,7 +19286,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18836,7 +19410,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -18996,7 +19573,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -19123,7 +19703,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -19284,7 +19867,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -19440,7 +20026,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -19613,7 +20202,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -19735,7 +20327,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -19852,7 +20447,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -19959,7 +20557,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -20071,7 +20672,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -20182,7 +20786,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -20319,7 +20926,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -20456,7 +21066,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -20608,7 +21221,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -20745,7 +21361,10 @@
       "body": 5,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -20889,7 +21508,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -21006,7 +21628,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -21143,7 +21768,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -21332,7 +21960,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -21479,7 +22110,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -21566,7 +22200,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -21703,7 +22340,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -21826,7 +22466,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -21949,7 +22592,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -22086,7 +22732,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -22207,7 +22856,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -22363,7 +23015,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -22496,7 +23151,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -22633,7 +23291,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -22740,7 +23401,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -22852,7 +23516,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -22968,7 +23635,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -23143,7 +23813,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -23235,7 +23908,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -23331,7 +24007,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -23487,7 +24166,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -23609,7 +24291,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -23715,7 +24400,10 @@
       "body": 7,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -23803,7 +24491,10 @@
       "body": 4,
       "complexity": 2,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -23940,7 +24631,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -24057,7 +24751,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -24217,7 +24914,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -24355,7 +25055,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -24497,7 +25200,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -24638,7 +25344,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -24745,7 +25454,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -24876,7 +25588,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -24983,7 +25698,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -25111,7 +25829,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -25209,7 +25930,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -25337,7 +26061,11 @@
       "body": 5,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Rich & Creamy",
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -25438,7 +26166,10 @@
       "body": 6,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -25569,7 +26300,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -25724,7 +26458,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -25890,7 +26627,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -26042,7 +26782,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -26179,7 +26922,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -26287,7 +27033,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -26433,7 +27182,11 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart",
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -26565,7 +27318,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -26721,7 +27477,11 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly",
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -26827,7 +27587,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -26928,22 +27691,6 @@
       {
         "en": "Herbal",
         "zh": "草本"
-      },
-      {
-        "en": "Honey",
-        "zh": "蜂蜜"
-      },
-      {
-        "en": "Wine",
-        "zh": "葡萄酒"
-      },
-      {
-        "en": "Grape",
-        "zh": "葡萄"
-      },
-      {
-        "en": "Complex",
-        "zh": "複雜"
       }
     ],
     "flavor_profile": {
@@ -26953,7 +27700,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -27084,7 +27834,10 @@
       "body": 8,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -27206,7 +27959,11 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly",
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -27386,7 +28143,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -27507,7 +28267,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -27659,7 +28422,10 @@
       "body": 5,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -27761,7 +28527,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -27864,7 +28633,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -27999,7 +28771,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -28171,7 +28946,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -28298,7 +29076,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -28450,7 +29231,10 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -28552,7 +29336,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -28684,7 +29471,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -28796,7 +29586,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -28922,7 +29715,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -29039,7 +29835,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -29190,7 +29989,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -29308,7 +30110,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -29406,7 +30211,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -29645,7 +30453,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -29798,7 +30609,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -29954,7 +30768,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -30030,7 +30847,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -30168,7 +30988,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -30302,7 +31125,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -30427,7 +31253,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -30564,7 +31393,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -30731,7 +31563,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -30837,7 +31672,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -30925,7 +31763,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -31021,7 +31862,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -31112,7 +31956,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -31245,7 +32092,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -31368,7 +32218,10 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -31515,7 +32368,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -31641,7 +32497,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -31827,7 +32686,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -31964,7 +32826,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -32072,7 +32937,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -32263,7 +33131,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -32385,7 +33256,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -32589,7 +33463,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -32711,7 +33588,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -32844,7 +33724,10 @@
       "body": 6,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -32990,7 +33873,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -33096,7 +33982,10 @@
       "body": 6,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -33271,7 +34160,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -33363,7 +34255,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -33505,7 +34400,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -33608,7 +34506,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -33724,7 +34625,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -33908,7 +34812,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -34049,7 +34956,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -34171,7 +35081,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -34344,7 +35257,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -34465,7 +35381,10 @@
       "body": 7,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -34581,7 +35500,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -34702,7 +35624,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -34823,7 +35748,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -34938,7 +35866,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -35074,7 +36005,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -35227,7 +36161,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -35384,7 +36321,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -35500,7 +36440,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -35641,7 +36584,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -35763,7 +36709,10 @@
       "body": 5,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -35894,7 +36843,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -35991,7 +36943,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -36082,7 +37037,10 @@
       "body": 4,
       "complexity": 2,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -36199,7 +37157,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -36306,7 +37267,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -36424,7 +37388,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -36561,7 +37528,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -36721,7 +37691,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -36858,7 +37831,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -36982,7 +37958,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -37128,7 +38107,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -37281,7 +38263,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -37451,7 +38436,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -37573,7 +38561,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -37752,7 +38743,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -37838,7 +38832,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -37987,7 +38984,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -38089,7 +39089,10 @@
       "body": 3,
       "complexity": 2,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -38240,7 +39243,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -38347,7 +39353,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -38479,7 +39488,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -38649,7 +39661,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -38786,7 +39801,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -38888,7 +39906,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -38965,7 +39986,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -39087,7 +40111,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -39197,7 +40224,10 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -39315,7 +40345,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -39411,7 +40444,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -39513,7 +40549,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -39673,7 +40712,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -39809,7 +40851,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -39946,7 +40991,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -40068,7 +41116,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -40209,7 +41260,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -40369,7 +41423,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -40501,7 +41558,11 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart",
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -40654,7 +41715,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -40780,7 +41844,10 @@
       "body": 6,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -40924,7 +41991,11 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart",
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -41056,7 +42127,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -41193,7 +42267,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -41339,7 +42416,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -41476,7 +42556,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -41574,7 +42657,11 @@
       "body": 4,
       "complexity": 2,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart",
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -41711,7 +42798,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -41829,7 +42919,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -41966,7 +43059,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -42103,7 +43199,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -42228,7 +43327,11 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly",
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -42355,7 +43458,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -42453,7 +43559,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -42620,7 +43729,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -42746,7 +43858,10 @@
       "body": 7,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -42842,7 +43957,10 @@
       "body": 6,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -42975,7 +44093,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -43112,7 +44233,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -43250,7 +44374,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -43407,7 +44534,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -43548,7 +44678,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -43665,7 +44798,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -43776,7 +44912,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -43890,7 +45029,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -43996,7 +45138,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -44108,7 +45253,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -44257,7 +45405,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -44364,7 +45515,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -44428,7 +45582,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -44566,7 +45723,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -44638,7 +45798,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -44795,7 +45958,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -44922,7 +46088,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -45048,7 +46217,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -45204,7 +46376,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -45320,7 +46495,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -45472,7 +46650,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -45599,7 +46780,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -45725,7 +46909,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -45817,7 +47004,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -45955,7 +47145,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -46163,7 +47356,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -46255,7 +47451,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -46382,7 +47581,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -46519,7 +47721,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -46645,7 +47850,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -46759,7 +47967,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -46919,7 +48130,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -47117,7 +48331,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -47254,7 +48471,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -47394,7 +48614,10 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -47550,7 +48773,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -47677,7 +48903,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -47823,7 +49052,10 @@
       "body": 7,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -47971,7 +49203,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -48069,7 +49304,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -48207,7 +49445,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -48372,7 +49613,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -48505,7 +49749,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -48596,7 +49843,10 @@
       "body": 4,
       "complexity": 2,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -48704,7 +49954,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -48826,7 +50079,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -48974,7 +50230,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -49099,7 +50358,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -49278,7 +50540,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -49415,7 +50680,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -49536,7 +50804,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -49628,7 +50899,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -49730,7 +51004,10 @@
       "body": 6,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -49833,7 +51110,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -49948,7 +51228,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -50060,7 +51343,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -50212,7 +51498,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -50310,7 +51599,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -50481,7 +51773,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -50587,7 +51882,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -50728,7 +52026,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -50865,7 +52166,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -50975,7 +52279,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -51063,7 +52370,10 @@
       "body": 5,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -51170,7 +52480,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -51303,7 +52616,10 @@
       "body": 3,
       "complexity": 2,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -51406,7 +52722,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -51528,7 +52847,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -51653,7 +52975,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -51771,7 +53096,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -51898,7 +53226,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -52040,7 +53371,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -52182,7 +53516,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -52318,7 +53655,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -52429,7 +53769,10 @@
       "body": 8,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -52527,7 +53870,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -52708,7 +54054,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -52796,7 +54145,10 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -52919,7 +54271,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -53055,7 +54410,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -53177,7 +54535,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -53313,7 +54674,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -53450,7 +54814,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -53583,7 +54950,10 @@
       "body": 3,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -53705,7 +55075,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -53803,7 +55176,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -53938,7 +55314,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -54026,7 +55405,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -54114,7 +55496,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -54216,7 +55601,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -54343,12 +55731,15 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
-      "en": "20th Century Cocktail",
-      "zh": "20世紀雞尾酒"
+      "en": "20th Century",
+      "zh": "20世紀"
     },
     "description": {
       "en": "**Elegant and Sophisticated**\n\nA pre-prohibition classic featuring:\n*   Gin base for a clean taste.\n*   Lillet Blanc for floral and honeyed notes.\n*   White Creme de Cacao for subtle chocolate richness.\n*   Lemon juice for bright acidity.",
@@ -54485,7 +55876,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -54630,7 +56024,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -54682,7 +56079,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -54789,7 +56189,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -54911,7 +56314,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -55007,7 +56413,10 @@
       "body": 3,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -55108,7 +56517,10 @@
       "body": 7,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -55223,7 +56635,10 @@
       "body": 6,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -55337,7 +56752,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -55465,7 +56883,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -55612,7 +57033,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -55768,7 +57192,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -55889,7 +57316,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -56015,7 +57445,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -56107,7 +57540,11 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly",
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -56262,7 +57699,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -56384,7 +57824,11 @@
       "body": 7,
       "complexity": 8,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused",
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -56516,7 +57960,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -56633,7 +58080,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -56750,7 +58200,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -56880,7 +58333,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -56967,7 +58423,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Tall & Bubbly"
+    ]
   },
   {
     "name": {
@@ -57088,7 +58547,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -57244,7 +58706,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -57366,7 +58831,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -57464,7 +58932,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -57551,7 +59022,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -57757,7 +59231,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -57880,7 +59357,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -57967,7 +59447,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -58043,7 +59526,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -58143,7 +59629,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -58241,7 +59730,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -58372,7 +59864,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -58489,7 +59984,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -58606,7 +60104,10 @@
       "body": 7,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -58732,7 +60233,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -58884,7 +60388,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -59006,7 +60513,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -59128,7 +60638,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -59241,7 +60754,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -59353,7 +60869,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -59505,7 +61024,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -59642,7 +61164,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -59858,7 +61383,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -59990,7 +61518,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -60097,7 +61628,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -60210,7 +61744,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -60308,7 +61845,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -60427,7 +61967,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -60534,7 +62077,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -60672,7 +62218,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -60780,7 +62329,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -60868,7 +62420,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61001,7 +62556,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61094,7 +62652,10 @@
       "body": 3,
       "complexity": 2,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61189,7 +62750,10 @@
       "body": 3,
       "complexity": 2,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61310,7 +62874,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61436,7 +63003,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61558,7 +63128,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61665,7 +63238,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61767,7 +63343,10 @@
       "body": 3,
       "complexity": 2,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -61909,7 +63488,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62040,7 +63622,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62167,7 +63752,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62274,7 +63862,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62380,7 +63971,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62472,7 +64066,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62595,7 +64192,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62718,7 +64318,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62840,7 +64443,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -62972,7 +64578,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -63109,7 +64718,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -63326,7 +64938,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -63467,7 +65082,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -63627,7 +65245,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -63744,7 +65365,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -63866,7 +65490,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -64011,7 +65638,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -64129,7 +65759,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -64291,7 +65924,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -64408,7 +66044,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -64560,7 +66199,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -64677,7 +66319,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -64796,7 +66441,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -64902,7 +66550,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65004,7 +66655,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65137,7 +66791,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65254,7 +66911,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65394,7 +67054,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65516,7 +67179,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65629,7 +67295,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65736,7 +67405,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65829,7 +67501,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -65952,7 +67627,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -66100,7 +67778,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -66218,7 +67899,10 @@
       "body": 3,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -66325,7 +68009,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -66452,7 +68139,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -66569,7 +68259,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -66704,7 +68397,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -66827,7 +68523,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -66934,7 +68633,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -67157,7 +68859,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -67294,7 +68999,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -67382,7 +69090,10 @@
       "body": 5,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -67488,7 +69199,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -67645,7 +69359,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -67779,7 +69496,10 @@
       "body": 8,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -67881,7 +69601,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -68023,7 +69746,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -68145,7 +69871,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -68321,7 +70050,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -68465,7 +70197,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -68590,7 +70325,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -68713,7 +70451,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -68789,7 +70530,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -68911,7 +70655,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -69025,7 +70772,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -69148,7 +70898,10 @@
       "body": 5,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -69303,7 +71056,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -69430,7 +71186,10 @@
       "body": 5,
       "complexity": 3,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -69576,7 +71335,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -69714,7 +71476,10 @@
       "body": 8,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -69826,7 +71591,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -69985,7 +71753,10 @@
       "body": 7,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -70091,7 +71862,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -70207,7 +71981,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -70314,7 +72091,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -70456,7 +72236,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -70563,7 +72346,10 @@
       "body": 3,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -70684,7 +72470,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -70827,7 +72616,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -70950,7 +72742,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -71121,7 +72916,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -71266,7 +73064,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Rich & Creamy"
+    ]
   },
   {
     "name": {
@@ -71390,7 +73191,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -71531,7 +73335,10 @@
       "body": 6,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Sweet & Tart"
+    ]
   },
   {
     "name": {
@@ -71625,7 +73432,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -71850,7 +73660,10 @@
       "body": 8,
       "complexity": 9,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -71956,7 +73769,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -72102,7 +73918,10 @@
       "body": 4,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -72220,7 +74039,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -72334,7 +74156,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -72466,7 +74291,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -72618,7 +74446,10 @@
       "body": 5,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -72804,7 +74635,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -72953,7 +74787,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -73055,7 +74892,10 @@
       "body": 3,
       "complexity": 4,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -73222,7 +75062,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -73343,7 +75186,10 @@
       "body": 4,
       "complexity": 3,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -73435,7 +75281,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -73537,7 +75386,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -73663,7 +75515,10 @@
       "body": 6,
       "complexity": 4,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -73785,7 +75640,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -73910,7 +75768,10 @@
       "body": 5,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -74026,7 +75887,10 @@
       "body": 8,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -74162,7 +76026,10 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -74386,7 +76253,10 @@
       "body": 6,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -74519,7 +76389,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -74671,7 +76544,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -74800,7 +76676,10 @@
       "body": 5,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -74907,7 +76786,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -75030,7 +76912,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -75181,7 +77066,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -75272,7 +77160,10 @@
       "body": 6,
       "complexity": 5,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -75410,7 +77301,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -75547,7 +77441,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -75688,7 +77585,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -75819,7 +77719,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -75961,7 +77864,10 @@
       "body": 4,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -76054,7 +77960,10 @@
       "body": 3,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -76208,7 +78117,10 @@
       "body": 8,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -76390,7 +78302,10 @@
       "body": 7,
       "complexity": 8,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -76497,7 +78412,10 @@
       "body": 7,
       "complexity": 9,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -76701,7 +78619,10 @@
       "body": 7,
       "complexity": 6,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -76799,7 +78720,10 @@
       "body": 7,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -76935,7 +78859,10 @@
       "body": 5,
       "complexity": 7,
       "bubbles": false
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   },
   {
     "name": {
@@ -77058,6 +78985,9 @@
       "body": 4,
       "complexity": 5,
       "bubbles": true
-    }
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
   }
 ]
