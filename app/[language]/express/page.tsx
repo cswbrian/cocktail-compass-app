@@ -1,12 +1,16 @@
 import { ExpressPageClient } from "@/components/express/page-client"
 import { CocktailProvider } from "@/context/CocktailContext"
 import { GradientBackground } from "@/components/GradientBackground"
+import { Suspense } from "react"
+import { Loading } from "@/components/ui/loading"
 
 export default function ExpressPage() {
   return (
     <CocktailProvider>
       <GradientBackground />
-      <ExpressPageClient />
+      <Suspense fallback={<Loading fullScreen size="lg" />}>
+        <ExpressPageClient />
+      </Suspense>
     </CocktailProvider>
   );
 }
