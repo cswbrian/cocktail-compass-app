@@ -4,6 +4,8 @@ import { translations } from "@/translations";
 import { SpiritSelector } from "./spirit-selector";
 import { SweetTartPreference } from "./sweet-tart-preference";
 import { FlavorSelector } from "./flavor-selector";
+import { BackButton } from "./back-button";
+import { motion } from "framer-motion";
 
 type TranslationKey = keyof typeof translations.en;
 
@@ -15,12 +17,32 @@ interface Step2BaseProps {
 
 // Strong & Spirit-Focused
 export function Step2Strong({ onSelect, onBack }: Step2BaseProps) {
-  return <SpiritSelector onSelect={onSelect} onBack={onBack} />;
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="relative"
+    >
+      <BackButton onClick={onBack} />
+      <SpiritSelector onSelect={onSelect} onBack={onBack} />
+    </motion.div>
+  );
 }
 
 // Sweet & Tart
 export function Step2SweetTart({ onSelect, onBack }: Step2BaseProps) {
-  return <SweetTartPreference onSelect={onSelect} onBack={onBack} />;
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="relative"
+    >
+      <BackButton onClick={onBack} />
+      <SweetTartPreference onSelect={onSelect} onBack={onBack} />
+    </motion.div>
+  );
 }
 
 // Tall & Bubbly and Rich & Creamy shared options
@@ -43,23 +65,41 @@ const RICH_CREAMY_OPTIONS = [
 // Tall & Bubbly
 export function Step2Bubbly({ onSelect, onBack }: Step2BaseProps) {
   return (
-    <FlavorSelector
-      options={TALL_BUBBLY_OPTIONS}
-      titleKey="step2Title"
-      onSelect={onSelect}
-      onBack={onBack}
-    />
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="relative"
+    >
+      <BackButton onClick={onBack} />
+      <FlavorSelector
+        options={TALL_BUBBLY_OPTIONS}
+        titleKey="expressStep2BubblyTitle"
+        subtitleKey="expressStep2BubblySubtitle"
+        onSelect={onSelect}
+        onBack={onBack}
+      />
+    </motion.div>
   );
 }
 
 // Rich & Creamy
 export function Step2Creamy({ onSelect, onBack }: Step2BaseProps) {
   return (
-    <FlavorSelector
-      options={RICH_CREAMY_OPTIONS}
-      titleKey="step2Title"
-      onSelect={onSelect}
-      onBack={onBack}
-    />
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="relative"
+    >
+      <BackButton onClick={onBack} />
+      <FlavorSelector
+        options={RICH_CREAMY_OPTIONS}
+        titleKey="expressStep2CreamyTitle"
+        subtitleKey="expressStep2CreamySubtitle"
+        onSelect={onSelect}
+        onBack={onBack}
+      />
+    </motion.div>
   );
 }

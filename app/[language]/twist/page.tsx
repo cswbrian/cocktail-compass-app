@@ -8,7 +8,7 @@ export default function TwistPage() {
 
   return (
     <Suspense fallback={<Loading fullScreen size="lg" />}>
-      <div className="container mx-auto px-6 py-8">
+      <div className="px-6 py-8">
         <TwistFinder cocktails={cocktails} />
       </div>
     </Suspense>

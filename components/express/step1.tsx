@@ -4,6 +4,7 @@ import { useState } from "react";
 import { translations } from "@/translations";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 type Language = "en" | "zh";
 type TranslationKey = keyof typeof translations.en;
@@ -61,30 +62,49 @@ export function Step1({ onSelect }: Step1Props) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4">
-      <h1 className="text-3xl mb-8 text-center">{t.expressTitle}</h1>
-      <div className="grid grid-cols-2 gap-4 w-full max-w-4xl">
-        {CATEGORIES.map((category) => (
-          <motion.button
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col items-center justify-center p-4 h-[calc(100vh-8rem)] overflow-hidden"
+    >
+      <motion.h1 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="text-3xl mb-8 text-center"
+      >
+        {t.expressTitle}
+      </motion.h1>
+      <div className="grid grid-cols-2 gap-2 w-full max-w-4xl">
+        {CATEGORIES.map((category, index) => (
+          <motion.div
             key={category.id}
-            onClick={() => handleSelect(category.id)}
-            className={`flex flex-col items-center justify-center p-6 rounded-xl text-xl font-semibold transition-all duration-200 border-2
-              ${
-                selectedCategory === category.id
-                  ? "border-white bg-white/10 text-white scale-105"
-                  : "border-white/50 text-white/80 hover:bg-white/5 hover:border-white"
-              }`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="text-3xl mb-2">{category.emoji}</span>
-            <span className="text-center">{t[category.labelKey]}</span>
-            <span className="text-sm mt-2 text-center opacity-80">
-              {t[category.descKey]}
-            </span>
-          </motion.button>
+            <Button
+              variant="outline"
+              onClick={() => handleSelect(category.id)}
+              className={`flex flex-col items-center justify-center p-6 rounded-xl text-xl font-semibold transition-all duration-200 border-2 bg-white/5 backdrop-blur-sm min-h-[200px] w-full
+                ${
+                  selectedCategory === category.id
+                    ? "border-white bg-white/15 text-white scale-105"
+                    : "border-white/50 text-white/80 hover:bg-white/10 hover:border-white"
+                }`}
+            >
+              <span className="text-3xl mb-2">{category.emoji}</span>
+              <span className="text-center font-bold text-2xl">{t[category.labelKey]}</span>
+              <span className="text-sm font-bold mt-2 text-center opacity-80">
+                {t[category.descKey]}
+              </span>
+            </Button>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

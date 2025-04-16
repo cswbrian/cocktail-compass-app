@@ -67,7 +67,7 @@ export function TwistResults({
         </AnimatePresence>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2">
         {twists.map(({ cocktail, distance }, index) => (
           <motion.div
             key={cocktail.name.en}

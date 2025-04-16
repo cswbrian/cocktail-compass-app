@@ -110,13 +110,19 @@ export default function RootLayout({
           </head>
           <GoogleAnalytics gaId="G-P79BEGY4R7" />
           <body
-            className={`${inter.variable} antialiased max-w-4xl mx-auto pb-16`}
+            className={`${inter.variable} antialiased`}
           >
-            <Header />
-            <Menu />
-            {children}
-            <BottomNav />
-            <Toaster />
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <Menu />
+              <main className="w-full max-w-4xl mx-auto h-[calc(100vh-8rem)]">
+                <div className="h-full overflow-auto">
+                  {children}
+                </div>
+              </main>
+              <BottomNav />
+              <Toaster />
+            </div>
           </body>
         </html>
       </AuthProvider>

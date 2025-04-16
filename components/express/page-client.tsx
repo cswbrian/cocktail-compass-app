@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Step1 } from "@/components/express/step1";
-import { Results } from "@/components/express/results";
-import {
-  Step2Strong,
-  Step2SweetTart,
-  Step2Bubbly,
-  Step2Creamy,
-} from "@/components/express/step2";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Step1 } from "./step1";
+import { Step2Strong, Step2SweetTart, Step2Bubbly, Step2Creamy } from "./step2";
+import { Results } from "./results";
+import { sendGAEvent } from "@next/third-parties/google";
 
 type Category =
   | "Strong & Spirit-Focused"
@@ -16,109 +13,98 @@ type Category =
   | "Tall & Bubbly"
   | "Rich & Creamy";
 
-export function PageClient() {
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
+export function ExpressPageClient() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [step, setStep] = useState<string>(searchParams?.get("step") || "1");
+  const [category, setCategory] = useState<Category | null>(
+    (searchParams?.get("category") as Category) || null
   );
-  const [selectedPreference, setSelectedPreference] = useState<string | null>(
-    null
+  const [preference, setPreference] = useState<string | null>(
+    searchParams?.get("preference") || null
   );
-  const [selectedSpirit, setSelectedSpirit] = useState<string | null>(null);
+  const [spirit, setSpirit] = useState<string | null>(
+    searchParams?.get("spirit") || null
+  );
 
-  const handleCategorySelect = (category: Category) => {
-    setSelectedCategory(category);
-    window.history.pushState({ step: "step2", category }, "", "");
+  // Update URL when state changes
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (step) params.set("step", step);
+    if (category) params.set("category", category);
+    if (preference) params.set("preference", preference);
+    if (spirit) params.set("spirit", spirit);
+    
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [step, category, preference, spirit, router]);
+
+  const handleCategorySelect = (selectedCategory: Category) => {
+    setCategory(selectedCategory);
+    setStep("2");
+    sendGAEvent("express_category_selected", { category: selectedCategory });
   };
 
-  const handlePreferenceSelect = (preference: string) => {
-    setSelectedPreference(preference);
-    window.history.pushState(
-      { step: "results", category: selectedCategory, preference },
-      "",
-      ""
-    );
+  const handlePreferenceSelect = (selectedPreference: string) => {
+    setPreference(selectedPreference);
+    setStep("3");
+    sendGAEvent("express_preference_selected", { preference: selectedPreference });
   };
 
-  const handleSpiritSelect = (spirit: string) => {
-    setSelectedSpirit(spirit);
-    window.history.pushState(
-      { step: "results", category: selectedCategory, spirit },
-      "",
-      ""
-    );
+  const handleSpiritSelect = (selectedSpirit: string) => {
+    setSpirit(selectedSpirit);
+    setStep("3");
+    sendGAEvent("express_spirit_selected", { spirit: selectedSpirit });
   };
 
   const handleBack = () => {
-    if (selectedSpirit) {
-      setSelectedSpirit(null);
-      window.history.back();
-    } else if (selectedPreference) {
-      setSelectedPreference(null);
-      window.history.back();
-    } else if (selectedCategory) {
-      setSelectedCategory(null);
-      window.history.back();
+    if (step === "3") {
+      if (spirit) {
+        setSpirit(null);
+      } else if (preference) {
+        setPreference(null);
+      }
+      setStep("2");
+    } else if (step === "2") {
+      setCategory(null);
+      setStep("1");
     }
   };
 
-  useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      if (event.state?.step === "results") {
-        setSelectedCategory(event.state.category);
-        setSelectedPreference(event.state.preference);
-        setSelectedSpirit(event.state.spirit);
-      } else if (event.state?.step === "step2") {
-        setSelectedCategory(event.state.category);
-        setSelectedPreference(null);
-        setSelectedSpirit(null);
-      } else {
-        setSelectedCategory(null);
-        setSelectedPreference(null);
-        setSelectedSpirit(null);
-      }
-    };
+  const handleRestart = () => {
+    setStep("1");
+    setCategory(null);
+    setPreference(null);
+    setSpirit(null);
+  };
 
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
-
-  // Show results if we have all necessary selections
-  if (selectedCategory && (selectedSpirit || selectedPreference)) {
-    return (
-      <Results
-        category={selectedCategory}
-        spirit={selectedSpirit || undefined}
-        preference={selectedPreference || undefined}
-        onBack={handleBack}
-      />
-    );
-  }
-
-  // Show appropriate step 2 based on category
-  if (selectedCategory) {
-    switch (selectedCategory) {
-      case "Strong & Spirit-Focused":
-        return (
-          <Step2Strong onSelect={handleSpiritSelect} onBack={handleBack} />
-        );
-      case "Sweet & Tart":
-        return (
-          <Step2SweetTart
-            onSelect={handlePreferenceSelect}
-            onBack={handleBack}
-          />
-        );
-      case "Tall & Bubbly":
-        return (
-          <Step2Bubbly onSelect={handlePreferenceSelect} onBack={handleBack} />
-        );
-      case "Rich & Creamy":
-        return (
-          <Step2Creamy onSelect={handlePreferenceSelect} onBack={handleBack} />
-        );
-    }
-  }
-
-  // Show step 1 by default
-  return <Step1 onSelect={handleCategorySelect} />;
+  return (
+    <>
+      {step === "1" && <Step1 onSelect={handleCategorySelect} />}
+      {step === "2" && category && (
+        <>
+          {category === "Strong & Spirit-Focused" && (
+            <Step2Strong onSelect={handleSpiritSelect} onBack={handleBack} />
+          )}
+          {category === "Sweet & Tart" && (
+            <Step2SweetTart onSelect={handlePreferenceSelect} onBack={handleBack} />
+          )}
+          {category === "Tall & Bubbly" && (
+            <Step2Bubbly onSelect={handlePreferenceSelect} onBack={handleBack} />
+          )}
+          {category === "Rich & Creamy" && (
+            <Step2Creamy onSelect={handlePreferenceSelect} onBack={handleBack} />
+          )}
+        </>
+      )}
+      {step === "3" && category && (
+        <Results
+          category={category}
+          preference={preference || undefined}
+          spirit={spirit || undefined}
+          onBack={handleBack}
+          onRestart={handleRestart}
+        />
+      )}
+    </>
+  );
 }

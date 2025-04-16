@@ -20,6 +20,7 @@ interface FlavorOption {
 interface FlavorSelectorProps {
   options: FlavorOption[];
   titleKey: TranslationKey;
+  subtitleKey: TranslationKey;
   onSelect: (flavors: string) => void;
   onBack: () => void;
 }
@@ -27,6 +28,7 @@ interface FlavorSelectorProps {
 export function FlavorSelector({
   options,
   titleKey,
+  subtitleKey,
   onSelect,
   onBack,
 }: FlavorSelectorProps) {
@@ -52,11 +54,11 @@ export function FlavorSelector({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4">
+    <div className="w-full flex flex-col justify-center p-4">
       <div className="space-y-4">
-        <h2 className="text-2xl mb-4 text-center">{t.primaryFlavor}</h2>
-        <p className="text-center text-sm text-white/70 mb-4">{t[titleKey]}</p>
-        <div className="grid grid-cols-2 gap-4">
+        <h2 className="text-2xl mb-4 text-center">{t[titleKey]}</h2>
+        <p className="text-lg mb-8 text-center text-white/80">{t[subtitleKey]}</p>
+        <div className="grid grid-cols-2 gap-2">
           {options.map((option) => (
             <motion.button
               key={option.id}

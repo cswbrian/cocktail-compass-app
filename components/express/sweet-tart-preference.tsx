@@ -35,7 +35,6 @@ interface SweetTartPreferenceProps {
 
 export function SweetTartPreference({
   onSelect,
-  onBack,
 }: SweetTartPreferenceProps) {
   const params = useParams();
   const language = (params?.language as Language) || "en";
@@ -51,10 +50,13 @@ export function SweetTartPreference({
 
   return (
     <div className="flex flex-col items-center justify-center p-4">
-      <h2 className="text-3xl mb-8 text-center text-white">
+      <h2 className="text-3xl mb-4 text-center text-white">
         {t.expressSelectPreference}
       </h2>
-      <div className="grid grid-cols-3 gap-4 w-full max-w-4xl">
+      <p className="text-lg mb-8 text-center text-white/80">
+        {t.expressPreferenceQuestion}
+      </p>
+      <div className="flex flex-col gap-4 w-full max-w-4xl">
         {PREFERENCE_OPTIONS.map((option) => (
           <motion.button
             key={option.id}
@@ -67,18 +69,18 @@ export function SweetTartPreference({
               }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            aria-label={`Select ${option.id} preference`}
           >
             <span className="text-3xl mb-2">{option.emoji}</span>
-            <span className="text-center">{t[option.labelKey]}</span>
+            <span className="text-center font-bold">{t[option.labelKey]}</span>
+            <span className="mt-2 text-center opacity-80">
+              {option.id === "sweet" && t.expressSweetDescription}
+              {option.id === "balanced" && t.expressBalancedDescription}
+              {option.id === "tart" && t.expressTartDescription}
+            </span>
           </motion.button>
         ))}
       </div>
-      <button
-        onClick={onBack}
-        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-xl text-white border-2 border-white/50 hover:border-white hover:bg-white/5 transition-all duration-200"
-      >
-        {language === "zh" ? "返回" : "Back"}
-      </button>
     </div>
   );
 }

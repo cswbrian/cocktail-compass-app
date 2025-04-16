@@ -2,7 +2,7 @@ import { BookmarksContent } from "@/components/bookmark/bookmarks-content";
 
 export default async function BookmarksPage() {
   return (
-    <div className="container mx-auto p-6">
+    <div className="px-6">
       <BookmarksContent />
     </div>
   );

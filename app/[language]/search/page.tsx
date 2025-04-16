@@ -8,7 +8,7 @@ export default function SearchPage() {
 
   return (
     <Suspense fallback={<Loading fullScreen size="lg" />}>
-      <div className="container mx-auto px-6">
+      <div className="px-6">
         <SearchClient cocktails={cocktails} />
       </div>
     </Suspense>

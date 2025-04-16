@@ -14,7 +14,6 @@ interface NavigationProps {
 }
 
 export function Navigation({
-  onBack,
   onNext,
   nextDisabled = false,
 }: NavigationProps) {
@@ -23,10 +22,15 @@ export function Navigation({
   const t = (translations as Translations)[language];
 
   return (
-    <div className="flex justify-between w-full mt-8 gap-4">
-      <Button onClick={onBack}>{t.previous}</Button>
+    <div className="flex justify-end w-full mt-8">
       {onNext && (
-        <Button onClick={onNext} disabled={nextDisabled}>
+        <Button 
+          variant="outline" 
+          onClick={onNext} 
+          disabled={nextDisabled}
+          className="w-full"
+          size="lg"
+        >
           {t.next}
         </Button>
       )}

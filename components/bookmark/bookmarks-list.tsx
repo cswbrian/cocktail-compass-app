@@ -26,10 +26,10 @@ export function BookmarksList() {
   const pathname = usePathname();
   const t = translations[language];
   const [activeTab, setActiveTab] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('bookmarks-active-tab') || 'want-to-try';
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("bookmarks-active-tab") || "want-to-try";
     }
-    return 'want-to-try';
+    return "want-to-try";
   });
   const [bookmarks, setBookmarks] = useState<BookmarkList[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,15 +37,19 @@ export function BookmarksList() {
 
   useEffect(() => {
     // Check for migration success parameter in URL
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('migrated') === 'true') {
-        toast.success(t.bookmarksMigratedToCloud || 'Your bookmarks are now stored in the cloud and accessible everywhere!', {
-          duration: 6000
-        });
+      if (params.get("migrated") === "true") {
+        toast.success(
+          t.bookmarksMigratedToCloud ||
+            "Your bookmarks are now stored in the cloud and accessible everywhere!",
+          {
+            duration: 6000,
+          }
+        );
         // Remove the parameter from URL without page reload
         const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
+        window.history.replaceState({}, "", newUrl);
       }
     }
   }, []); // Run once when component mounts
@@ -53,21 +57,23 @@ export function BookmarksList() {
   const migrateLocalStorageToCloud = async () => {
     try {
       setIsMigrating(true);
-      
+
       // Check for local bookmarks with the single 'bookmarks' key
-      const localBookmarksStr = localStorage.getItem('bookmarks');
+      const localBookmarksStr = localStorage.getItem("bookmarks");
       if (!localBookmarksStr) {
         return false; // No local bookmarks to migrate
       }
 
       // Parse the local bookmarks
-      const localBookmarks = JSON.parse(localBookmarksStr).map((list: {key: string, items: string[]}) => ({
-        key: list.key,
-        items: list.items.map((cocktailId: string) => ({
-          cocktailId,
-          addedAt: new Date()
-        }))
-      }));
+      const localBookmarks = JSON.parse(localBookmarksStr).map(
+        (list: { key: string; items: string[] }) => ({
+          key: list.key,
+          items: list.items.map((cocktailId: string) => ({
+            cocktailId,
+            addedAt: new Date(),
+          })),
+        })
+      );
 
       if (localBookmarks.length === 0) {
         return false; // No local bookmarks to migrate
@@ -83,15 +89,17 @@ export function BookmarksList() {
       await bookmarkService.migrateFromLocalStorage(localBookmarks);
 
       // Clear local storage bookmarks
-      localStorage.removeItem('bookmarks');
+      localStorage.removeItem("bookmarks");
 
       // Instead of showing toast here, redirect with parameter
       const currentPath = window.location.pathname;
       window.location.href = `${currentPath}?migrated=true`;
       return true;
     } catch (error) {
-      console.error('Error migrating bookmarks:', error);
-      toast.error(t.errorMigratingBookmarks || 'Error migrating bookmarks to cloud');
+      console.error("Error migrating bookmarks:", error);
+      toast.error(
+        t.errorMigratingBookmarks || "Error migrating bookmarks to cloud"
+      );
       return false;
     } finally {
       setIsMigrating(false);
@@ -100,7 +108,7 @@ export function BookmarksList() {
 
   useEffect(() => {
     if (!loading && !user) {
-      localStorage.setItem('returnUrl', pathname || '/');
+      localStorage.setItem("returnUrl", pathname || "/");
       router.push(`/${language}/login`);
       return;
     }
@@ -111,12 +119,12 @@ export function BookmarksList() {
         try {
           // Attempt migration first
           const migrated = await migrateLocalStorageToCloud();
-          console.log('migrated', migrated);
+          console.log("migrated", migrated);
           // Load cloud bookmarks (whether migration happened or not)
           const firestoreBookmarks = await bookmarkService.getBookmarks();
           setBookmarks(firestoreBookmarks);
         } catch (error) {
-          console.error('Error initializing bookmarks:', error);
+          console.error("Error initializing bookmarks:", error);
           toast.error(t.errorLoadingBookmarks);
         } finally {
           setIsLoading(false);
@@ -140,27 +148,29 @@ export function BookmarksList() {
   }
 
   const getBookmarkedCocktails = (listId: string) => {
-    const bookmarkList = bookmarks.find(b => b.id === listId);
+    const bookmarkList = bookmarks.find((b) => b.id === listId);
     if (!bookmarkList) return [];
-    
+
     const allCocktails = cocktailService.getAllCocktails();
-    return allCocktails.filter((cocktail) => 
-      bookmarkList.items.some(item => item.cocktailId === slugify(cocktail.name.en))
+    return allCocktails.filter((cocktail) =>
+      bookmarkList.items.some(
+        (item) => item.cocktailId === slugify(cocktail.name.en)
+      )
     );
   };
 
   return (
-    <Tabs 
-      defaultValue="want-to-try" 
-      value={activeTab} 
+    <Tabs
+      defaultValue="want-to-try"
+      value={activeTab}
       onValueChange={(value) => {
         setActiveTab(value);
-        localStorage.setItem('bookmarks-active-tab', value);
+        localStorage.setItem("bookmarks-active-tab", value);
       }}
     >
       <TabsList className="mb-4">
         {BOOKMARK_LISTS.map((list) => {
-          const bookmarkList = bookmarks.find(b => b.id === list.id);
+          const bookmarkList = bookmarks.find((b) => b.id === list.id);
           return (
             <TabsTrigger key={list.id} value={list.id}>
               {t[list.nameKey as keyof typeof t]}
@@ -173,7 +183,7 @@ export function BookmarksList() {
       </TabsList>
 
       {BOOKMARK_LISTS.map((list) => {
-        const bookmarkList = bookmarks.find(b => b.id === list.id);
+        const bookmarkList = bookmarks.find((b) => b.id === list.id);
         return (
           <TabsContent key={list.id} value={list.id}>
             {!bookmarkList || bookmarkList.items.length === 0 ? (
@@ -186,7 +196,6 @@ export function BookmarksList() {
                   <CocktailCard
                     key={slugify(cocktail.name.en)}
                     cocktail={cocktail}
-                    variant="compact"
                   />
                 ))}
               </div>
@@ -196,4 +205,4 @@ export function BookmarksList() {
       })}
     </Tabs>
   );
-} 
+}
