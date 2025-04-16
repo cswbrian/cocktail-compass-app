@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   title: '溝酒神燈 | 新手調酒推介 | Cocktail Cult | Cocktail Finder for Beginners',
   description: '新手調酒推介！按照甜度、酸度、口感等條件，為你推介最適合的雞尾酒。',
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
+
   openGraph: {
     title: '溝酒神燈 | 新手調酒推介 | Cocktail Cult | Cocktail finder for Beginners',
     description: '新手調酒推介！按照甜度、酸度、口感等條件，為你推介最適合的雞尾酒。',
@@ -37,12 +38,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+
   twitter: {
     card: 'summary_large_image',
     title: '溝酒神燈 | 新手調酒推介 | Cocktail Cult',
     description: '新手調酒推介！按照甜度、酸度、口感等條件，為你推介最適合的雞尾酒。',
     images: ['/og-image.png'],
   },
+
   alternates: {
     languages: {
       'zh-HK': process.env.NEXT_PUBLIC_BASE_URL,
@@ -51,11 +54,7 @@ export const metadata: Metadata = {
     },
     canonical: process.env.NEXT_PUBLIC_BASE_URL,
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
+
   robots: {
     index: true,
     follow: true,
@@ -67,9 +66,10 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+
   verification: {
     google: 'your-google-site-verification',
-  },
+  }
 };
 
 export default function RootLayout({
@@ -129,3 +129,9 @@ export default function RootLayout({
     </LanguageProvider>
   );
 }
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1
+};
