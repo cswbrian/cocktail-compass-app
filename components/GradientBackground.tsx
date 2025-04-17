@@ -5,20 +5,48 @@ import styles from './GradientBackground.module.css';
 
 export function GradientBackground() {
   const interactiveRef = useRef<HTMLDivElement>(null);
+  const curX = useRef(0);
+  const curY = useRef(0);
+  const tgX = useRef(0);
+  const tgY = useRef(0);
 
   useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
+    const move = () => {
       if (!interactiveRef.current) return;
       
-      const { clientX, clientY } = event;
-      const x = clientX / window.innerWidth;
-      const y = clientY / window.innerHeight;
+      curX.current += (tgX.current - curX.current) / 20;
+      curY.current += (tgY.current - curY.current) / 20;
       
-      interactiveRef.current.style.transform = `translate(${x * 50}px, ${y * 50}px)`;
+      interactiveRef.current.style.transform = `translate(${Math.round(curX.current)}px, ${Math.round(curY.current)}px)`;
+      requestAnimationFrame(move);
     };
 
+    const handleMouseMove = (event: MouseEvent) => {
+      tgX.current = event.clientX;
+      tgY.current = event.clientY;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      // Prevent scrolling while touching
+      event.preventDefault();
+      
+      // Get the first touch point
+      const touch = event.touches[0];
+      tgX.current = touch.clientX;
+      tgY.current = touch.clientY;
+    };
+
+    // Add both mouse and touch event listeners
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    
+    // Start the animation loop
+    move();
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+    };
   }, []);
 
   return (
