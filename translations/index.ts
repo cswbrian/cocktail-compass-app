@@ -188,6 +188,7 @@ export const translations = {
     addToHomeScreen: "Add to Home Screen",
     installAppDescription: "Get quick access! To add this app to your Home Screen, tap the Share button and choose 'Add to Home Screen'.",
     addToHomeScreenDescription: "Install this app for the best experience! Tap 'Install' or 'Add to Home Screen' when prompted.",
+    addToHomeScreenInstructions: "To install this app, tap the Share button (box with arrow) at the bottom of your screen, then select 'Add to Home Screen'.",
     dismiss: "Dismiss",
   },
   "zh": {
@@ -374,6 +375,7 @@ export const translations = {
     addToHomeScreen: "加入主畫面",
     installAppDescription: "快速存取！要將此應用程式加入主畫面，請點擊分享按鈕並選擇「加入主畫面」。",
     addToHomeScreenDescription: "安裝此應用程式以獲得最佳體驗！當提示出現時，點擊「安裝」或「加入主畫面」。",
+    addToHomeScreenInstructions: "要安裝此應用程式，請點擊螢幕底部的分享按鈕（帶箭頭的方框），然後選擇「加入主畫面」。",
     dismiss: "關閉",
   },
 };

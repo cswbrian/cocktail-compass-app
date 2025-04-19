@@ -28,7 +28,7 @@ export function Header() {
 
   useEffect(() => {
     // Check if app is installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
       setIsInstalled(true);
       return;
     }
@@ -52,16 +52,23 @@ export function Header() {
 
   const handleInstallClick = async () => {
     if (isIOS) {
-      // For iOS, we need to show the share sheet
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: t.appName,
-            text: t.installApp,
-            url: window.location.href
-          });
-        } catch (error) {
-          console.error('Error sharing:', error);
+      // For iOS, we need to show a custom message since we can't programmatically trigger the Add to Home Screen prompt
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      if (isSafari) {
+        // Show instructions for iOS Safari
+        alert(t.addToHomeScreenInstructions || 'To install this app, tap the Share button and select "Add to Home Screen"');
+      } else {
+        // For other iOS browsers, use the share API
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: t.appName,
+              text: t.installApp,
+              url: window.location.href
+            });
+          } catch (error) {
+            console.error('Error sharing:', error);
+          }
         }
       }
     } else if (deferredPrompt) {
@@ -72,6 +79,7 @@ export function Header() {
         
         if (outcome === 'accepted') {
           setDeferredPrompt(null);
+          setIsInstalled(true);
         }
       } catch (error) {
         console.error('Error showing install prompt:', error);
