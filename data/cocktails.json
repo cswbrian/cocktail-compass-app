@@ -147,8 +147,7 @@
       "bubbles": true
     },
     "categories": [
-      "Tall & Bubbly",
-      "Sweet & Tart"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -1006,8 +1005,7 @@
       "bubbles": true
     },
     "categories": [
-      "Tall & Bubbly",
-      "Sweet & Tart"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -1781,7 +1779,6 @@
       "bubbles": true
     },
     "categories": [
-      "Sweet & Tart",
       "Tall & Bubbly"
     ]
   },
@@ -2626,7 +2623,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -3506,7 +3503,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -4631,7 +4628,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -5213,6 +5210,121 @@
   },
   {
     "name": {
+      "en": "Zacapa Martini",
+      "zh": "薩卡帕馬丁尼"
+    },
+    "description": {
+      "en": "**Luxurious Martini Variation**\n\nA sophisticated twist on the classic martini, emphasizing the rich and nuanced flavors of Zacapa Rum:\n\n*   Uses Zacapa Rum as the primary spirit for a uniquely decadent experience.\n*   A small amount of dry vermouth balances the sweetness of the rum.\n*   Orange bitters add complexity and aromatic depth.",
+      "zh": "**奢華的馬丁尼變奏**\n\n經典馬丁尼的精緻轉變，強調薩卡帕蘭姆酒的豐富而細膩的風味：\n\n*   使用薩卡帕蘭姆酒作為主要烈酒，帶來獨特而頹廢的體驗。\n*   少量乾味美思平衡了蘭姆酒的甜度。\n*   橙味苦精增添了複雜性和芳香深度。"
+    },
+    "historical_reference": {
+      "en": "The Zacapa Martini is a modern variation on the classic martini, designed to showcase the unique characteristics of Zacapa Rum. It builds upon the traditional martini formula but substitutes gin or vodka with a premium aged rum.\n\n*   Evolved from the classic dry martini\n*   Highlights the rum's complexity",
+      "zh": "薩卡帕馬丁尼是經典馬丁尼的現代變奏，旨在展示薩卡帕蘭姆酒的獨特之處。它以傳統馬丁尼的配方為基礎，但用優質陳年蘭姆酒代替了琴酒或伏特加。\n\n*   從經典的乾馬丁尼演變而來\n*   突顯了蘭姆酒的複雜性"
+    },
+    "technique": {
+      "en": "Stir with ice and strain into a chilled glass.",
+      "zh": "與冰塊攪拌後倒入冰鎮的杯子。"
+    },
+    "garnish": {
+      "en": "Orange peel twist",
+      "zh": "橙皮扭花"
+    },
+    "serve_in_glass": {
+      "en": "Chilled martini glass",
+      "zh": "冰鎮馬丁尼杯"
+    },
+    "appearance": {
+      "en": "Clear, deep amber with golden highlights",
+      "zh": "清澈、深琥珀色，帶金色光澤"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 60,
+        "name": {
+          "en": "Zacapa Rum",
+          "zh": "薩卡帕蘭姆酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the rich, complex base with notes of caramel, vanilla, and dried fruit.",
+          "zh": "提供豐富、複雜的基底，帶有焦糖、香草和乾果的風味。"
+        }
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 10,
+        "name": {
+          "en": "Dry Vermouth",
+          "zh": "不甜苦艾酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds a subtle herbal and dry counterpoint to the rum's sweetness.",
+          "zh": "為蘭姆酒的甜味增添微妙的草本和乾燥的對比。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 2,
+        "name": {
+          "en": "Orange Bitters",
+          "zh": "橙味苦精"
+        },
+        "unit": {
+          "en": "dashes",
+          "zh": "滴"
+        },
+        "rationale": {
+          "en": "Enhances the aromatic profile and adds a layer of citrus complexity.",
+          "zh": "增強了芳香氣息，並增加了一層柑橘的複雜性。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Vanilla",
+        "zh": "香草"
+      },
+      {
+        "en": "Nutty",
+        "zh": "堅果"
+      },
+      {
+        "en": "Chocolate",
+        "zh": "朱古力"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Woody",
+        "zh": "木質"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 5,
+      "sourness": 1,
+      "booziness": 8,
+      "body": 7,
+      "complexity": 9,
+      "bubbles": false
+    },
+    "categories": [
+      "Strong & Spirit-Focused"
+    ]
+  },
+  {
+    "name": {
       "en": "Roy Rogers",
       "zh": "羅伊·羅傑斯"
     },
@@ -5294,7 +5406,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -6225,7 +6337,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -6924,6 +7036,127 @@
     },
     "categories": [
       "Strong & Spirit-Focused"
+    ]
+  },
+  {
+    "name": {
+      "en": "Zaza",
+      "zh": "札札"
+    },
+    "description": {
+      "en": "*A classic cocktail with a rich and slightly tart flavor.*\n\nThe Zaza is a refreshing and balanced cocktail, showcasing:\n*   The botanical complexity of gin\n*   The delightful sweetness of Dubonnet\n*   Orange bitters for aromatic depth",
+      "zh": "*一款經典雞尾酒，口感濃郁，略帶酸味。*\n\nZaza 是一款清爽且平衡的雞尾酒，展示了：\n*   琴酒的植物複雜性\n*   杜本內酒的令人愉悅的甜味\n*   橙子苦精帶來芳香深度"
+    },
+    "historical_reference": {
+      "en": "**Origin**: Attributed to the Harry's New York Bar in Paris, during the 1920s.\n\n*   The exact origins are debated, named after Zaza, a famous dancer of that time.\n*   Similar to the Adonis cocktail, but using Gin instead of vermouth.",
+      "zh": "**起源**：據說起源於 1920 年代的巴黎 Harry's New York Bar。\n\n*   確切起源存在爭議，以當時著名的舞者 Zaza 命名。\n*   與 Adonis 雞尾酒相似，但使用琴酒代替苦艾酒。"
+    },
+    "technique": {
+      "en": "Stirred, strained.",
+      "zh": "攪拌，過濾。"
+    },
+    "garnish": {
+      "en": "Lemon twist",
+      "zh": "檸檬皮扭轉"
+    },
+    "serve_in_glass": {
+      "en": "Coupe glass",
+      "zh": "高腳杯"
+    },
+    "appearance": {
+      "en": "Pale yellow, cloudy",
+      "zh": "淡黃色，混濁"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 45,
+        "name": {
+          "en": "Gin",
+          "zh": "琴酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the base spirit and botanical notes.",
+          "zh": "提供基酒和植物風味。"
+        },
+        "tags": [
+          {
+            "en": "clear spirit",
+            "zh": "清澈烈酒"
+          },
+          {
+            "en": "juniper",
+            "zh": "杜松子"
+          },
+          {
+            "en": "botanical",
+            "zh": "植物香料"
+          }
+        ]
+      }
+    ],
+    "liqueurs": [
+      {
+        "amount": 30,
+        "name": {
+          "en": "Dubonnet Rouge",
+          "zh": "杜本內紅酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds sweetness and a fortified wine flavor.",
+          "zh": "增加甜味和強化葡萄酒的風味。"
+        }
+      }
+    ],
+    "ingredients": [
+      {
+        "amount": 2,
+        "name": {
+          "en": "Orange Bitters",
+          "zh": "橙味苦精"
+        },
+        "unit": {
+          "en": "dashes",
+          "zh": "滴"
+        },
+        "rationale": {
+          "en": "Adds aromatic complexity.",
+          "zh": "增加香氣複雜性。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Herbal",
+        "zh": "草本"
+      },
+      {
+        "en": "Fruity",
+        "zh": "果香"
+      },
+      {
+        "en": "Bitter",
+        "zh": "苦味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 6,
+      "sourness": 4,
+      "booziness": 6,
+      "body": 5,
+      "complexity": 7,
+      "bubbles": false
+    },
+    "categories": [
+      "Sweet & Tart"
     ]
   },
   {
@@ -7944,7 +8177,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -8245,7 +8478,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -10815,7 +11048,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -12414,7 +12647,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -12659,7 +12892,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -13393,7 +13626,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -14154,7 +14387,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -14622,7 +14855,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -14837,7 +15070,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -14936,7 +15169,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -15259,7 +15492,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -15356,7 +15589,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -16009,7 +16242,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -16455,7 +16688,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -16926,7 +17159,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -17577,7 +17810,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -18580,7 +18813,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -18689,7 +18922,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -18932,7 +19165,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -19023,7 +19256,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -19167,7 +19400,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -20028,7 +20261,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -21068,7 +21301,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -21630,7 +21863,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -22202,7 +22435,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -24753,7 +24986,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -24916,7 +25149,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -26063,7 +26296,6 @@
       "bubbles": true
     },
     "categories": [
-      "Rich & Creamy",
       "Tall & Bubbly"
     ]
   },
@@ -26302,7 +26534,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -27479,8 +27711,7 @@
       "bubbles": true
     },
     "categories": [
-      "Tall & Bubbly",
-      "Sweet & Tart"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -27961,8 +28192,7 @@
       "bubbles": true
     },
     "categories": [
-      "Tall & Bubbly",
-      "Sweet & Tart"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -29338,7 +29568,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -29473,7 +29703,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -29588,7 +29818,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -29717,7 +29947,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -30990,7 +31220,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -31255,7 +31485,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -31958,7 +32188,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -33258,7 +33488,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -34162,7 +34392,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -34257,7 +34487,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -34402,7 +34632,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -35083,7 +35313,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -35750,7 +35980,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -36586,7 +36816,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -36845,7 +37075,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -37269,7 +37499,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -38265,7 +38495,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -39091,7 +39321,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -39355,7 +39585,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -39663,7 +39893,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -39803,7 +40033,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -39988,7 +40218,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -40853,7 +41083,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -41118,7 +41348,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -43959,7 +44189,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -44235,7 +44465,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -44800,7 +45030,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -45584,7 +45814,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -45800,7 +46030,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -47147,7 +47377,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -47583,7 +47813,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -49845,7 +50075,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -50081,7 +50311,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -51601,7 +51831,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -52618,7 +52848,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -52724,7 +52954,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -53098,7 +53328,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -54412,7 +54642,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -55603,7 +55833,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -55733,7 +55963,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -56081,7 +56311,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -56415,7 +56645,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -58708,7 +58938,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -59233,7 +59463,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -59449,7 +59679,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -59528,7 +59758,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -59986,7 +60216,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -60115,24 +60345,24 @@
       "zh": "多倫多"
     },
     "description": {
-      "en": "**A Canadian Classic**\n\nA stirred cocktail featuring Canadian rye whisky, Bénédictine, and Angostura bitters.\n\n*   Known for its smooth and slightly sweet profile.\n*   Often enjoyed as an after-dinner drink.",
-      "zh": "**加拿大經典**\n\n一款以加拿大黑麥威士忌、廊酒和安哥斯圖娜苦精調製的攪拌式雞尾酒。\n\n*   以其柔順和微甜的口感而聞名。\n*   經常作為餐後飲品享用。"
+      "en": "**A Canadian Classic**\n\nA stirred cocktail featuring Canadian rye whisky, Fernet-Branca, and Angostura bitters.\n\n*   Known for its whiskey-forward profile with a bitter bite.\n*   Often considered a variation of the Manhattan or Old Fashioned.",
+      "zh": "**加拿大經典**\n\n一款以加拿大黑麥威士忌、菲奈特布蘭卡和安哥斯圖娜苦精調製的攪拌式雞尾酒。\n\n*   以其威士忌主導的風味和苦味尾韻而聞名。\n*   常被視為曼哈頓或古典雞尾酒的變體。"
     },
     "historical_reference": {
-      "en": "**Origin**: Canada\n\n*   Created at the King Edward Hotel in Toronto.\n*   Date of origin is debated, but likely around the mid-20th century.\n*   Named after the city of Toronto.",
-      "zh": "**起源**: 加拿大\n\n*   在多倫多愛德華國王酒店創作。\n*   起源日期存在爭議，但可能在20世紀中葉左右。\n*   以多倫多市命名。"
+      "en": "**Origin**: Canada\n\n*   First appeared in print in Robert Vermeire's 1922 book 'Cocktails: How to Mix Them' as the Fernet Cocktail.\n*   Later renamed to Toronto in David Embury's 'The Fine Art of Mixing Drinks'.\n*   Named after the city of Toronto.",
+      "zh": "**起源**: 加拿大\n\n*   首次出現在1922年Robert Vermeire的著作《Cocktails: How to Mix Them》中，當時名為Fernet Cocktail。\n*   後來在David Embury的《The Fine Art of Mixing Drinks》中更名為Toronto。\n*   以多倫多市命名。"
     },
     "technique": {
-      "en": "Stir with ice and strain into glass.",
-      "zh": "與冰塊攪拌並濾入杯中。"
+      "en": "Stir with ice and strain into a chilled coupe glass.",
+      "zh": "與冰塊攪拌並濾入冰鎮的香檳杯。"
     },
     "garnish": {
-      "en": "Maraschino cherry or lemon twist (optional)",
-      "zh": "馬拉斯奇諾櫻桃或檸檬皮扭花（可選）"
+      "en": "Orange twist",
+      "zh": "橙皮扭花"
     },
     "serve_in_glass": {
-      "en": "Old-fashioned glass or coupe",
-      "zh": "古典杯或高腳杯"
+      "en": "Chilled coupe glass",
+      "zh": "冰鎮香檳杯"
     },
     "appearance": {
       "en": "Clear amber liquid",
@@ -60176,22 +60406,37 @@
     ],
     "liqueurs": [
       {
-        "amount": 10,
+        "amount": 7.5,
         "name": {
-          "en": "Bénédictine",
-          "zh": "廊酒"
+          "en": "Fernet-Branca",
+          "zh": "芙內布蘭卡香甜利口酒"
         },
         "unit": {
           "en": "ml",
           "zh": "毫升"
         },
         "rationale": {
-          "en": "Adds sweetness and herbal notes.",
-          "zh": "增加甜味和草本味。"
+          "en": "Adds herbal complexity and bitterness.",
+          "zh": "增加草本複雜性和苦味。"
         }
       }
     ],
     "ingredients": [
+      {
+        "amount": 7.5,
+        "name": {
+          "en": "Simple Syrup",
+          "zh": "糖漿"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Balances the bitterness of Fernet-Branca.",
+          "zh": "平衡菲奈特布蘭卡的苦味。"
+        }
+      },
       {
         "amount": 2,
         "name": {
@@ -60203,8 +60448,8 @@
           "zh": "滴"
         },
         "rationale": {
-          "en": "Adds complexity and bitterness.",
-          "zh": "增加複雜性和苦味。"
+          "en": "Adds complexity and aromatic notes.",
+          "zh": "增加複雜性和芳香氣息。"
         }
       }
     ],
@@ -60227,11 +60472,11 @@
       }
     ],
     "flavor_profile": {
-      "sweetness": 5,
+      "sweetness": 4,
       "sourness": 2,
       "booziness": 7,
       "body": 6,
-      "complexity": 7,
+      "complexity": 8,
       "bubbles": false
     },
     "categories": [
@@ -61166,7 +61411,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -62331,7 +62576,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -62422,7 +62667,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -62558,7 +62803,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -62752,7 +62997,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -63973,7 +64218,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -64580,7 +64825,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -64940,7 +65185,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -65084,7 +65329,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -65248,6 +65493,112 @@
     },
     "categories": [
       "Strong & Spirit-Focused"
+    ]
+  },
+  {
+    "name": {
+      "en": "Red Eye",
+      "zh": "紅眼"
+    },
+    "description": {
+      "en": "**Simple yet Bold Cocktail**\n\nA rudimentary combination of beer and tomato juice:\n\n*   Layered flavors of malty beer and savory tomato.\n*   Best enjoyed cold and with a palate for the unusual.",
+      "zh": "**簡單而大胆的雞尾酒**\n\n啤酒和番茄汁的初級混合：\n\n*   麥芽啤酒和鹹味番茄的層次風味。\n*   最好冷飲，並帶有對不尋常風味的鑑賞力。"
+    },
+    "historical_reference": {
+      "en": "The Red Eye's origins are murky, with no definitive creator or date. It appears to have emerged as a hangover cure or a 'hair of the dog' remedy. Similar drinks combining beer and tomato juice have existed under different names and variations for several decades. The earliest written reference to this combination seems to date back to the mid-20th century.",
+      "zh": "紅眼雞尾酒的起源很模糊，沒有明確的創造者或日期。它似乎是作為一種宿醉療法或“以毒攻毒”的補救措施而出現的。幾十年來，結合啤酒和番茄汁的類似飲料以不同的名稱和變體存在。關於這種組合最早的書面參考似乎可以追溯到20世紀中葉。"
+    },
+    "technique": {
+      "en": "Pour chilled beer into a glass, then gently add chilled tomato juice. Season with salt.",
+      "zh": "將冰鎮啤酒倒入杯中，然後輕輕加入冰鎮番茄汁。用鹽調味。"
+    },
+    "garnish": {
+      "en": "Optional: Lime wedge or celery stalk",
+      "zh": "可選：檸檬角或芹菜梗"
+    },
+    "serve_in_glass": {
+      "en": "Pint glass or highball glass",
+      "zh": "品脫杯或高球杯"
+    },
+    "appearance": {
+      "en": "Dark brown or reddish-brown, opaque, with minimal head",
+      "zh": "深棕色或紅棕色，不透明，幾乎沒有泡沫"
+    },
+    "allergens": [],
+    "base_spirits": [
+      {
+        "amount": 120,
+        "name": {
+          "en": "Light Lager",
+          "zh": "淡啤酒"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Provides the beer base and body of the drink.",
+          "zh": "提供飲料的啤酒基底和酒體。"
+        }
+      }
+    ],
+    "liqueurs": [],
+    "ingredients": [
+      {
+        "amount": 120,
+        "name": {
+          "en": "Tomato Juice",
+          "zh": "番茄汁"
+        },
+        "unit": {
+          "en": "ml",
+          "zh": "毫升"
+        },
+        "rationale": {
+          "en": "Adds savory and tangy flavors to the beer.",
+          "zh": "為啤酒增添鹹味和濃郁的風味。"
+        }
+      },
+      {
+        "amount": 1,
+        "name": {
+          "en": "Salt",
+          "zh": "鹽"
+        },
+        "unit": {
+          "en": "dash",
+          "zh": "少許"
+        },
+        "rationale": {
+          "en": "Enhance flavor and give the drink a savory taste.",
+          "zh": "增強風味，使飲品具有鹹味。"
+        }
+      }
+    ],
+    "flavor_descriptors": [
+      {
+        "en": "Umami",
+        "zh": "鮮味"
+      },
+      {
+        "en": "Salty",
+        "zh": "鹹味"
+      },
+      {
+        "en": "Savory",
+        "zh": "鮮味"
+      }
+    ],
+    "flavor_profile": {
+      "sweetness": 2,
+      "sourness": 3,
+      "booziness": 2,
+      "body": 4,
+      "complexity": 3,
+      "bubbles": true
+    },
+    "categories": [
+      "Tall & Bubbly"
     ]
   },
   {
@@ -66793,7 +67144,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -67181,7 +67532,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -67407,7 +67758,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -67901,7 +68252,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -70052,7 +70403,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -70532,7 +70883,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -74637,7 +74988,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -74789,7 +75140,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -74894,7 +75245,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -75188,7 +75539,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -75283,7 +75634,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -75388,7 +75739,7 @@
       "bubbles": false
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Sweet & Tart"
     ]
   },
   {
@@ -76914,7 +77265,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -77303,7 +77654,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -77962,7 +78313,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   },
   {
@@ -78987,7 +79338,7 @@
       "bubbles": true
     },
     "categories": [
-      "Strong & Spirit-Focused"
+      "Tall & Bubbly"
     ]
   }
 ]

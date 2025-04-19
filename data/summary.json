@@ -5,7 +5,7 @@
         "en": "Gin",
         "zh": "琴酒"
       },
-      "count": 142,
+      "count": 143,
       "tags": [
         {
           "en": "botanical",
@@ -601,6 +601,14 @@
     },
     {
       "name": {
+        "en": "Light Lager",
+        "zh": "淡啤酒"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
         "en": "Martinique Rhum Agricole",
         "zh": "馬提尼克農業蘭姆酒"
       },
@@ -787,6 +795,14 @@
       },
       "count": 1,
       "tags": []
+    },
+    {
+      "name": {
+        "en": "Zacapa Rum",
+        "zh": "薩卡帕蘭姆酒"
+      },
+      "count": 1,
+      "tags": []
     }
   ],
   "liqueurs": [
@@ -795,7 +811,7 @@
         "en": "Dry Vermouth",
         "zh": "不甜苦艾酒"
       },
-      "count": 47,
+      "count": 48,
       "tags": []
     },
     {
@@ -848,14 +864,6 @@
     },
     {
       "name": {
-        "en": "Bénédictine",
-        "zh": "廊酒"
-      },
-      "count": 14,
-      "tags": []
-    },
-    {
-      "name": {
         "en": "Campari",
         "zh": "金巴利"
       },
@@ -868,6 +876,14 @@
         "zh": "接骨木花利口酒"
       },
       "count": 14,
+      "tags": []
+    },
+    {
+      "name": {
+        "en": "Bénédictine",
+        "zh": "廊酒"
+      },
+      "count": 13,
       "tags": []
     },
     {
@@ -984,6 +1000,14 @@
     },
     {
       "name": {
+        "en": "Fernet-Branca",
+        "zh": "芙內布蘭卡香甜利口酒"
+      },
+      "count": 4,
+      "tags": []
+    },
+    {
+      "name": {
         "en": "Lillet Blanc",
         "zh": "麗葉酒"
       },
@@ -1058,14 +1082,6 @@
       "name": {
         "en": "Crème de Cassis",
         "zh": "黑醋栗酒"
-      },
-      "count": 3,
-      "tags": []
-    },
-    {
-      "name": {
-        "en": "Fernet-Branca",
-        "zh": "芙內布蘭卡香甜利口酒"
       },
       "count": 3,
       "tags": []
@@ -1514,6 +1530,14 @@
       "name": {
         "en": "Dry Red Wine (Cabernet Sauvignon or Shiraz)",
         "zh": "乾紅葡萄酒（卡本內蘇維翁或希拉）"
+      },
+      "count": 1,
+      "tags": []
+    },
+    {
+      "name": {
+        "en": "Dubonnet Rouge",
+        "zh": "杜本內紅酒"
       },
       "count": 1,
       "tags": []
@@ -2061,7 +2085,7 @@
         "en": "Simple Syrup",
         "zh": "糖漿"
       },
-      "count": 104,
+      "count": 105,
       "tags": []
     },
     {
@@ -2106,18 +2130,18 @@
     },
     {
       "name": {
-        "en": "Soda Water",
-        "zh": "梳打水"
+        "en": "Orange Bitters",
+        "zh": "橙味苦精"
       },
-      "count": 24,
+      "count": 25,
       "tags": []
     },
     {
       "name": {
-        "en": "Orange Bitters",
-        "zh": "橙味苦精"
+        "en": "Soda Water",
+        "zh": "梳打水"
       },
-      "count": 23,
+      "count": 24,
       "tags": []
     },
     {
@@ -2162,6 +2186,14 @@
     },
     {
       "name": {
+        "en": "Tomato Juice",
+        "zh": "番茄汁"
+      },
+      "count": 13,
+      "tags": []
+    },
+    {
+      "name": {
         "en": "Bitters",
         "zh": "苦精"
       },
@@ -2172,14 +2204,6 @@
       "name": {
         "en": "Cranberry Juice",
         "zh": "蔓越莓汁"
-      },
-      "count": 12,
-      "tags": []
-    },
-    {
-      "name": {
-        "en": "Tomato Juice",
-        "zh": "番茄汁"
       },
       "count": 12,
       "tags": []
@@ -2322,6 +2346,14 @@
     },
     {
       "name": {
+        "en": "Salt",
+        "zh": "鹽"
+      },
+      "count": 6,
+      "tags": []
+    },
+    {
+      "name": {
         "en": "Sparkling Wine",
         "zh": "氣泡酒"
       },
@@ -2388,14 +2420,6 @@
       "name": {
         "en": "Lime",
         "zh": "萊姆"
-      },
-      "count": 5,
-      "tags": []
-    },
-    {
-      "name": {
-        "en": "Salt",
-        "zh": "鹽"
       },
       "count": 5,
       "tags": []
@@ -4223,7 +4247,7 @@
         "en": "Fruity",
         "zh": "果香"
       },
-      "count": 350,
+      "count": 352,
       "tags": []
     },
     {
@@ -4231,7 +4255,7 @@
         "en": "Herbal",
         "zh": "草本"
       },
-      "count": 337,
+      "count": 338,
       "tags": []
     },
     {
@@ -4239,7 +4263,7 @@
         "en": "Bitter",
         "zh": "苦味"
       },
-      "count": 205,
+      "count": 206,
       "tags": []
     },
     {
@@ -4255,7 +4279,7 @@
         "en": "Vanilla",
         "zh": "香草"
       },
-      "count": 116,
+      "count": 117,
       "tags": []
     },
     {
@@ -4287,7 +4311,7 @@
         "en": "Woody",
         "zh": "木質"
       },
-      "count": 85,
+      "count": 86,
       "tags": []
     },
     {
@@ -4295,7 +4319,7 @@
         "en": "Nutty",
         "zh": "堅果"
       },
-      "count": 77,
+      "count": 78,
       "tags": []
     },
     {
@@ -4311,7 +4335,7 @@
         "en": "Chocolate",
         "zh": "朱古力"
       },
-      "count": 45,
+      "count": 46,
       "tags": []
     },
     {
@@ -4319,7 +4343,7 @@
         "en": "Salty",
         "zh": "鹹味"
       },
-      "count": 45,
+      "count": 46,
       "tags": []
     },
     {
@@ -4332,16 +4356,16 @@
     },
     {
       "name": {
-        "en": "Grassy",
-        "zh": "草青"
+        "en": "Umami",
+        "zh": "鮮味"
       },
-      "count": 31,
+      "count": 32,
       "tags": []
     },
     {
       "name": {
-        "en": "Umami",
-        "zh": "鮮味"
+        "en": "Grassy",
+        "zh": "草青"
       },
       "count": 31,
       "tags": []
@@ -4359,7 +4383,7 @@
         "en": "Savory",
         "zh": "鮮味"
       },
-      "count": 16,
+      "count": 17,
       "tags": []
     },
     {
