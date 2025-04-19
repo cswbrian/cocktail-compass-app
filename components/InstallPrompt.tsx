@@ -12,10 +12,14 @@ interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
-// Extend Window interface to include MSStream
+
+// Extend Window interface to include MSStream and navigator.standalone
 declare global {
   interface Window {
     MSStream?: unknown;
+  }
+  interface Navigator {
+    standalone?: boolean;
   }
 }
 
@@ -27,10 +31,26 @@ export function InstallPrompt() {
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 
+  const checkIfInstalled = () => {
+    return window.matchMedia('(display-mode: standalone)').matches || 
+           window.navigator.standalone || 
+           document.referrer.includes('android-app://');
+  };
+
   useEffect(() => {
     // Check if app is installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (checkIfInstalled()) {
       setIsInstalled(true);
+      if (toastId) {
+        toast.dismiss(toastId);
+        setToastId(undefined);
+      }
+      return;
+    }
+
+    // Check if prompt was already shown in this session
+    const promptShown = sessionStorage.getItem('installPromptShown');
+    if (promptShown === 'true') {
       return;
     }
 
@@ -42,7 +62,7 @@ export function InstallPrompt() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      if (!toastId) {
+      if (!toastId && !isInstalled) {
         showInstallToast();
       }
     };
@@ -50,7 +70,7 @@ export function InstallPrompt() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // For iOS, show the prompt after a short delay
-    if (isIOSDevice && !toastId) {
+    if (isIOSDevice && !toastId && !isInstalled) {
       const timer = setTimeout(() => {
         showInstallToast();
       }, 3000); // Show after 3 seconds
@@ -60,10 +80,13 @@ export function InstallPrompt() {
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, [language, toastId]);
+  }, [language, toastId, isInstalled]);
 
   const showInstallToast = () => {
     if (isInstalled) return;
+
+    // Mark prompt as shown in session storage
+    sessionStorage.setItem('installPromptShown', 'true');
 
     const id = toast(
       <div className="flex flex-col gap-2">
@@ -100,7 +123,7 @@ export function InstallPrompt() {
   };
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt || isInstalled) return;
 
     try {
       // Show the install prompt
@@ -111,6 +134,7 @@ export function InstallPrompt() {
       
       if (outcome === 'accepted') {
         setDeferredPrompt(null);
+        setIsInstalled(true);
         if (toastId) {
           toast.dismiss(toastId);
           setToastId(undefined);

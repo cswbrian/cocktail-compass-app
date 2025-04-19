@@ -12,11 +12,19 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+// Extend the Window interface to include MSStream
+declare global {
+  interface Window {
+    MSStream?: unknown;
+  }
+}
+
 export function Header() {
   const { language } = useLanguage()
   const t = translations[language]
   const [isInstalled, setIsInstalled] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [isIOS, setIsIOS] = useState(false)
 
   useEffect(() => {
     // Check if app is installed
@@ -25,7 +33,11 @@ export function Header() {
       return;
     }
 
-    // Listen for the beforeinstallprompt event
+    // Check if device is iOS
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    setIsIOS(isIOSDevice);
+
+    // Listen for the beforeinstallprompt event (Android/Chrome)
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -39,17 +51,31 @@ export function Header() {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    try {
-      await deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        setDeferredPrompt(null);
+    if (isIOS) {
+      // For iOS, we need to show the share sheet
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: t.appName,
+            text: t.installApp,
+            url: window.location.href
+          });
+        } catch (error) {
+          console.error('Error sharing:', error);
+        }
       }
-    } catch (error) {
-      console.error('Error showing install prompt:', error);
+    } else if (deferredPrompt) {
+      // For Android/Chrome
+      try {
+        await deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        if (outcome === 'accepted') {
+          setDeferredPrompt(null);
+        }
+      } catch (error) {
+        console.error('Error showing install prompt:', error);
+      }
     }
   };
 
@@ -57,7 +83,7 @@ export function Header() {
     <header className="flex justify-between items-center px-6 py-4 sticky top-0 z-50">
       <div className="flex items-center gap-2">
         <Link href="/" className="font-medium">{t.appName}</Link>
-        {!isInstalled && deferredPrompt && (
+        {!isInstalled && (deferredPrompt || isIOS) && (
           <button
             onClick={handleInstallClick}
             className="text-sm text-muted-foreground hover:text-muted-foreground/80 flex items-center gap-1"
