@@ -184,6 +184,11 @@ export const translations = {
     expressBalancedDescription: "Perfect balance of sweet and tart",
     expressTartDescription: "More tart and citrus-forward cocktails",
     suggestAnother: "Suggest Another Cocktail",
+    installApp: "Install App",
+    addToHomeScreen: "Add to Home Screen",
+    installAppDescription: "Install our app for a better experience",
+    addToHomeScreenDescription: "Tap the share button and select 'Add to Home Screen'",
+    dismiss: "Dismiss",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -365,5 +370,10 @@ export const translations = {
     expressBalancedDescription: "甜酸完美平衡",
     expressTartDescription: "偏酸調酒，帶有柑橘風味",
     suggestAnother: "再推薦一杯",
+    installApp: "安裝應用程式",
+    addToHomeScreen: "加入主畫面",
+    installAppDescription: "安裝應用程式以獲得更好的體驗",
+    addToHomeScreenDescription: "點擊分享按鈕並選擇「加入主畫面」",
+    dismiss: "關閉",
   },
 };

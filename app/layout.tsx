@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { Inter } from 'next/font/google'
 import { BottomNav } from "@/components/ui/bottom-nav";
 import { AuthProvider } from "@/context/AuthContext";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -120,6 +121,7 @@ export default function RootLayout({
                   {children}
                 </div>
               </main>
+              <InstallPrompt />
               <BottomNav />
               <Toaster />
             </div>
