@@ -46,34 +46,37 @@ export function CocktailCard({ cocktail, distance, variant = 'default' }: Cockta
   if (variant === 'compact') {
     return (
       <Link href={cocktailPath} onClick={handleClick}>
-        <div className="border rounded-3xl bg-neutral-900 p-4 cursor-pointer hover:bg-neutral-800 transition-colors">
-          <div className="flex justify-between items-start gap-x-2">
-            <div>
-              <h3 className="text-xl mb-1">{cocktail.name.en}</h3>
-              {language === "zh" && (
-                <div className="text-gray-400">{cocktail.name.zh}</div>
+        <div className="relative border border-white/20 rounded-3xl bg-white/5 backdrop-blur-sm p-4 cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-[1.02] group">
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500/20 to-teal-500/20 blur-xl group-hover:blur-2xl transition-all duration-300 opacity-50 group-hover:opacity-70" />
+          <div className="relative">
+            <div className="flex justify-between items-start gap-x-2">
+              <div>
+                <h3 className="text-xl mb-1 text-white/90">{cocktail.name.en}</h3>
+                {language === "zh" && (
+                  <div className="text-white/60">{cocktail.name.zh}</div>
+                )}
+              </div>
+              {typeof distance === "number" && (
+                <div className="text-sm px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full whitespace-nowrap text-white/80">
+                  {`${t.similarity}: ${(100 - Math.min(distance, 100)).toFixed(1)}`}
+                </div>
               )}
             </div>
-            {typeof distance === "number" && (
-              <div className="text-sm px-2 py-1 bg-neutral-800 rounded-full whitespace-nowrap">
-                {`${t.similarity}: ${(100 - Math.min(distance, 100)).toFixed(1)}`}
+            {cocktail.flavor_descriptors && (
+              <div className="mt-2">
+                <div className="flex flex-wrap gap-2">
+                  {cocktail.flavor_descriptors.map((descriptor, i) => (
+                    <FlavorDescriptor
+                      key={i}
+                      descriptor={descriptor}
+                      language={language}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  ))}
+                </div>
               </div>
             )}
           </div>
-          {cocktail.flavor_descriptors && (
-            <div className="mt-2">
-              <div className="flex flex-wrap gap-2">
-                {cocktail.flavor_descriptors.map((descriptor, i) => (
-                  <FlavorDescriptor
-                    key={i}
-                    descriptor={descriptor}
-                    language={language}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </Link>
     );

@@ -12,6 +12,10 @@ import { cocktailService } from "@/services/cocktail-service";
 import { Loading } from "@/components/ui/loading";
 import { bookmarkService, BookmarkList } from "@/services/bookmark-service";
 import { toast } from "sonner";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { ArrowUpDown, LayoutGrid, List } from "lucide-react";
 
 const BOOKMARK_LISTS = [
   { id: "want-to-try", nameKey: "wantToTry" },
@@ -34,6 +38,19 @@ export function BookmarksList() {
   const [bookmarks, setBookmarks] = useState<BookmarkList[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isMigrating, setIsMigrating] = useState(false);
+  const [sortBy, setSortBy] = useState<"recentlyAdded" | "alphabetical">(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("bookmarks-sort-by") as "recentlyAdded" | "alphabetical") || "recentlyAdded";
+    }
+    return "recentlyAdded";
+  });
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"default" | "compact">(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("bookmarks-view-mode") as "default" | "compact") || "compact";
+    }
+    return "compact";
+  });
 
   useEffect(() => {
     // Check for migration success parameter in URL
@@ -152,57 +169,131 @@ export function BookmarksList() {
     if (!bookmarkList) return [];
 
     const allCocktails = cocktailService.getAllCocktails();
-    return allCocktails.filter((cocktail) =>
+    const cocktails = allCocktails.filter((cocktail) =>
       bookmarkList.items.some(
         (item) => item.cocktailId === slugify(cocktail.name.en)
       )
     );
+
+    // Sort cocktails based on selected sort option
+    if (sortBy === "alphabetical") {
+      return cocktails.sort((a, b) => a.name.en.localeCompare(b.name.en));
+    } else {
+      // Sort by recently added (default)
+      return cocktails.sort((a, b) => {
+        const aItem = bookmarkList.items.find(
+          (item) => item.cocktailId === slugify(a.name.en)
+        );
+        const bItem = bookmarkList.items.find(
+          (item) => item.cocktailId === slugify(b.name.en)
+        );
+        // Convert Firestore Timestamp to milliseconds for comparison
+        const aTime = aItem?.addedAt?.toDate?.()?.getTime() || 0;
+        const bTime = bItem?.addedAt?.toDate?.()?.getTime() || 0;
+        return bTime - aTime;
+      });
+    }
   };
 
   return (
-    <Tabs
-      defaultValue="want-to-try"
-      value={activeTab}
-      onValueChange={(value) => {
-        setActiveTab(value);
-        localStorage.setItem("bookmarks-active-tab", value);
-      }}
-    >
-      <TabsList className="mb-4">
+    <div>
+      <Tabs
+        defaultValue="want-to-try"
+        value={activeTab}
+        onValueChange={(value) => {
+          setActiveTab(value);
+          localStorage.setItem("bookmarks-active-tab", value);
+        }}
+      >
+        <TabsList className="mb-4">
+          {BOOKMARK_LISTS.map((list) => {
+            const bookmarkList = bookmarks.find((b) => b.id === list.id);
+            return (
+              <TabsTrigger key={list.id} value={list.id}>
+                {t[list.nameKey as keyof typeof t]}
+                <span className="ml-2 text-xs">
+                  ({bookmarkList?.items.length || 0})
+                </span>
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
+
+        <div className="mb-6 flex justify-between items-center">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setIsDrawerOpen(true)}>
+            <ArrowUpDown className="h-4 w-4 text-white" />
+            <span className="text-sm text-white">
+              {sortBy === "recentlyAdded" ? t.recentlyAdded : t.alphabetical}
+            </span>
+          </div>
+
+          <div 
+            className="flex items-center cursor-pointer"
+            onClick={() => {
+              const newViewMode = viewMode === "default" ? "compact" : "default";
+              setViewMode(newViewMode);
+              localStorage.setItem("bookmarks-view-mode", newViewMode);
+            }}
+          >
+            {viewMode === "default" ? (
+              <List className="h-4 w-4 text-white" />
+            ) : (
+              <LayoutGrid className="h-4 w-4 text-white" />
+            )}
+          </div>
+        </div>
+
+        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>{t.sortBy}</DrawerTitle>
+            </DrawerHeader>
+            <div className="p-4">
+              <RadioGroup
+                value={sortBy}
+                onValueChange={(value) => {
+                  const newSortBy = value as "recentlyAdded" | "alphabetical";
+                  setSortBy(newSortBy);
+                  localStorage.setItem("bookmarks-sort-by", newSortBy);
+                  setIsDrawerOpen(false);
+                }}
+              >
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+                  <RadioGroupItem value="recentlyAdded" id="recentlyAdded" />
+                  <Label htmlFor="recentlyAdded" className="text-base cursor-pointer">{t.recentlyAdded}</Label>
+                </div>
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+                  <RadioGroupItem value="alphabetical" id="alphabetical" />
+                  <Label htmlFor="alphabetical" className="text-base cursor-pointer">{t.alphabetical}</Label>
+                </div>
+              </RadioGroup>
+            </div>
+          </DrawerContent>
+        </Drawer>
+
         {BOOKMARK_LISTS.map((list) => {
           const bookmarkList = bookmarks.find((b) => b.id === list.id);
           return (
-            <TabsTrigger key={list.id} value={list.id}>
-              {t[list.nameKey as keyof typeof t]}
-              <span className="ml-2 text-xs">
-                ({bookmarkList?.items.length || 0})
-              </span>
-            </TabsTrigger>
+            <TabsContent key={list.id} value={list.id}>
+              {!bookmarkList || bookmarkList.items.length === 0 ? (
+                <div className="text-center text-muted-foreground py-8">
+                  {t.noBookmarksYet}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {getBookmarkedCocktails(list.id).map((cocktail) => (
+                    <CocktailCard
+                      key={slugify(cocktail.name.en)}
+                      cocktail={cocktail}
+                      variant={viewMode}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
           );
         })}
-      </TabsList>
-
-      {BOOKMARK_LISTS.map((list) => {
-        const bookmarkList = bookmarks.find((b) => b.id === list.id);
-        return (
-          <TabsContent key={list.id} value={list.id}>
-            {!bookmarkList || bookmarkList.items.length === 0 ? (
-              <div className="text-center text-muted-foreground py-8">
-                {t.noBookmarksYet}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {getBookmarkedCocktails(list.id).map((cocktail) => (
-                  <CocktailCard
-                    key={slugify(cocktail.name.en)}
-                    cocktail={cocktail}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-        );
-      })}
-    </Tabs>
+      </Tabs>
+    </div>
   );
 }

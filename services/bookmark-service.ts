@@ -14,7 +14,7 @@ export interface BookmarkItem {
   key: string;
   items: Array<{
     cocktailId: string;
-    addedAt: Date;
+    addedAt: Timestamp;
   }>;
 }
 
@@ -23,7 +23,7 @@ export interface BookmarkList {
   name: string;
   items: Array<{
     cocktailId: string;
-    addedAt: Date;
+    addedAt: Timestamp;
   }>;
 }
 
