@@ -9,7 +9,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       className="toaster group"
-      position="top-center"
+      position="bottom-center"
       toastOptions={{
         classNames: {
           toast:
@@ -20,6 +20,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
           cancelButton:
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },
+      }}
+      style={{
+        bottom: "5rem", // 4rem for bottom nav + 1rem for spacing
       }}
       {...props}
     />

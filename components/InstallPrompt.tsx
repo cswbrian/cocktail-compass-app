@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { Download } from "lucide-react";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
-
 // Extend Window interface to include MSStream
 declare global {
   interface Window {
@@ -22,9 +23,9 @@ export function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [showPrompt, setShowPrompt] = useState(false);
+  const [toastId, setToastId] = useState<string | number | undefined>();
   const { language } = useLanguage();
-  const t = translations[language];
+  const t = translations[language as keyof typeof translations];
 
   useEffect(() => {
     // Check if app is installed
@@ -41,15 +42,17 @@ export function InstallPrompt() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowPrompt(true);
+      if (!toastId) {
+        showInstallToast();
+      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // For iOS, show the prompt after a short delay
-    if (isIOSDevice) {
+    if (isIOSDevice && !toastId) {
       const timer = setTimeout(() => {
-        setShowPrompt(true);
+        showInstallToast();
       }, 3000); // Show after 3 seconds
       return () => clearTimeout(timer);
     }
@@ -57,7 +60,44 @@ export function InstallPrompt() {
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, []);
+  }, [language, toastId]);
+
+  const showInstallToast = () => {
+    if (isInstalled) return;
+
+    const id = toast(
+      <div className="flex flex-col gap-2">
+        <h3 className="font-semibold">
+          {isIOS ? t.addToHomeScreen : t.installApp}
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          {isIOS ? t.addToHomeScreenDescription : t.installAppDescription}
+        </p>
+        {!isIOS && deferredPrompt && (
+          <Button onClick={handleInstallClick} size="sm" className="mt-2">
+            <Download className="h-4 w-4 mr-2" />
+            {t.installApp}
+          </Button>
+        )}
+      </div>,
+      {
+        duration: Infinity,
+        position: "bottom-center",
+        cancel: {
+          label: t.dismiss,
+          onClick: () => {
+            toast.dismiss(id);
+            setToastId(undefined);
+          },
+        },
+        cancelButtonStyle: {
+          background: "var(--muted)",
+          color: "var(--muted-foreground)",
+        },
+      }
+    );
+    setToastId(id);
+  };
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
@@ -71,43 +111,19 @@ export function InstallPrompt() {
       
       if (outcome === 'accepted') {
         setDeferredPrompt(null);
-        setShowPrompt(false);
+        if (toastId) {
+          toast.dismiss(toastId);
+          setToastId(undefined);
+        }
       }
     } catch (error) {
       console.error('Error showing install prompt:', error);
     }
   };
 
-  const handleDismiss = () => {
-    setShowPrompt(false);
-  };
-
-  // Don't show anything if already installed or no install prompt available
-  if (isInstalled || !showPrompt) {
-    return null;
-  }
-
   return (
-    <div className="fixed bottom-20 left-4 right-4 bg-card p-4 rounded-lg shadow-lg z-50 flex items-center justify-between border border-border">
-      <div className="flex-1">
-        <h3 className="font-semibold mb-1">
-          {isIOS ? t.addToHomeScreen : t.installApp}
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          {isIOS ? t.addToHomeScreenDescription : t.installAppDescription}
-        </p>
-      </div>
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={handleDismiss}>
-          {t.dismiss}
-        </Button>
-        {!isIOS && deferredPrompt && (
-          <Button onClick={handleInstallClick} size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            {t.installApp}
-          </Button>
-        )}
-      </div>
-    </div>
+    <>
+      <Toaster />
+    </>
   );
 } 

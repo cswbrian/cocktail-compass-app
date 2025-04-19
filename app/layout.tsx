@@ -83,6 +83,7 @@ export default function RootLayout({
       <AuthProvider>
         <html lang="zh-HK" className="dark">
           <head>
+            <link rel="manifest" href="/manifest.json" />
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
             <link

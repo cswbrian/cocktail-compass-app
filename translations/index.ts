@@ -372,8 +372,8 @@ export const translations = {
     suggestAnother: "再推薦一杯",
     installApp: "安裝應用程式",
     addToHomeScreen: "加入主畫面",
-    installAppDescription: "安裝此應用程式以獲得最佳體驗！當提示出現時，請點擊「安裝」或「新增至主畫面」。",
-    addToHomeScreenDescription: "快速啟動 App：點一下「分享」按鈕，然後選擇「加入主畫面」，即可將 App 加到您的主畫面。",
+    installAppDescription: "快速存取！要將此應用程式加入主畫面，請點擊分享按鈕並選擇「加入主畫面」。",
+    addToHomeScreenDescription: "安裝此應用程式以獲得最佳體驗！當提示出現時，點擊「安裝」或「加入主畫面」。",
     dismiss: "關閉",
   },
 };
