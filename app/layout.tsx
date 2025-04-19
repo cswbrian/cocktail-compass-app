@@ -9,6 +9,8 @@ import { Inter } from 'next/font/google'
 import { BottomNav } from "@/components/ui/bottom-nav";
 import { AuthProvider } from "@/context/AuthContext";
 import { InstallPrompt } from "@/components/InstallPrompt";
+import { BottomNavProvider } from "@/context/BottomNavContext";
+import { MainContent } from "@/components/ui/main-content";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -81,53 +83,55 @@ export default function RootLayout({
   return (
     <LanguageProvider>
       <AuthProvider>
-        <html lang="zh-HK" className="dark">
-          <head>
-            <link rel="manifest" href="/manifest.json" />
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-            <link
-              href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-              rel="preload"
-              as="style"
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  if ('serviceWorker' in navigator) {
-                    window.addEventListener('load', function() {
-                      navigator.serviceWorker.register('/sw.js').then(
-                        function(registration) {
-                          console.log('ServiceWorker registration successful');
-                        },
-                        function(err) {
-                          console.log('ServiceWorker registration failed: ', err);
-                        }
-                      );
-                    });
-                  }
-                `,
-              }}
-            />
-          </head>
-          <GoogleAnalytics gaId="G-P79BEGY4R7" />
-          <body
-            className={`${inter.variable} antialiased`}
-          >
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <Menu />
-              <main className="w-full max-w-4xl mx-auto h-[calc(100vh-8rem)]">
-                <div className="h-full overflow-auto">
-                  {children}
-                </div>
-              </main>
-              <InstallPrompt />
-              <BottomNav />
-              <Toaster />
-            </div>
-          </body>
-        </html>
+        <BottomNavProvider>
+          <html lang="zh-HK" className="dark">
+            <head>
+              <link rel="manifest" href="/manifest.json" />
+              <link rel="preconnect" href="https://fonts.googleapis.com" />
+              <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+              <link
+                href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+                rel="preload"
+                as="style"
+              />
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    if ('serviceWorker' in navigator) {
+                      window.addEventListener('load', function() {
+                        navigator.serviceWorker.register('/sw.js').then(
+                          function(registration) {
+                            console.log('ServiceWorker registration successful');
+                          },
+                          function(err) {
+                            console.log('ServiceWorker registration failed: ', err);
+                          }
+                        );
+                      });
+                    }
+                  `,
+                }}
+              />
+            </head>
+            <GoogleAnalytics gaId="G-P79BEGY4R7" />
+            <body
+              className={`${inter.variable} antialiased`}
+            >
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <Menu />
+                <main className="w-full max-w-4xl mx-auto h-[calc(100vh-8rem)]">
+                  <MainContent>
+                    {children}
+                  </MainContent>
+                </main>
+                <InstallPrompt />
+                <BottomNav />
+                <Toaster />
+              </div>
+            </body>
+          </html>
+        </BottomNavProvider>
       </AuthProvider>
     </LanguageProvider>
   );

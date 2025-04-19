@@ -5,11 +5,17 @@ import { translations } from "@/translations";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, Search, Bookmark } from "lucide-react";
+import { useBottomNav } from "@/context/BottomNavContext";
 
 export function BottomNav() {
   const { language } = useLanguage();
   const pathname = usePathname();
   const t = translations[language];
+  const { isBottomNavVisible } = useBottomNav();
+
+  if (!isBottomNavVisible) {
+    return null;
+  }
 
   const navItems = [
     {
