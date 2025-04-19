@@ -205,21 +205,23 @@ export function BookmarksList() {
           localStorage.setItem("bookmarks-active-tab", value);
         }}
       >
-        <TabsList className="mb-4">
-          {BOOKMARK_LISTS.map((list) => {
-            const bookmarkList = bookmarks.find((b) => b.id === list.id);
-            return (
-              <TabsTrigger key={list.id} value={list.id}>
-                {t[list.nameKey as keyof typeof t]}
-                <span className="ml-2 text-xs">
-                  ({bookmarkList?.items.length || 0})
-                </span>
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+        <div className="sticky top-0 z-10 bg-background px-6">
+          <TabsList className="mb-4">
+            {BOOKMARK_LISTS.map((list) => {
+              const bookmarkList = bookmarks.find((b) => b.id === list.id);
+              return (
+                <TabsTrigger key={list.id} value={list.id}>
+                  {t[list.nameKey as keyof typeof t]}
+                  <span className="ml-2 text-xs">
+                    ({bookmarkList?.items.length || 0})
+                  </span>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+        </div>
 
-        <div className="mb-6 flex justify-between items-center">
+        <div className="mb-6 flex justify-between items-center px-6">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => setIsDrawerOpen(true)}>
             <ArrowUpDown className="h-4 w-4 text-white" />
             <span className="text-sm text-white">
@@ -274,7 +276,7 @@ export function BookmarksList() {
         {BOOKMARK_LISTS.map((list) => {
           const bookmarkList = bookmarks.find((b) => b.id === list.id);
           return (
-            <TabsContent key={list.id} value={list.id}>
+            <TabsContent key={list.id} value={list.id} className="px-6">
               {!bookmarkList || bookmarkList.items.length === 0 ? (
                 <div className="text-center text-muted-foreground py-8">
                   {t.noBookmarksYet}

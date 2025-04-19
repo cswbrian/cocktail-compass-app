@@ -120,7 +120,7 @@ export default function RootLayout({
               <div className="flex flex-col min-h-screen">
                 <Header />
                 <Menu />
-                <main className="w-full max-w-4xl mx-auto h-[calc(100vh-8rem)]">
+                <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
                   <MainContent>
                     {children}
                   </MainContent>
