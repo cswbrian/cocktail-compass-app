@@ -12,6 +12,7 @@ import { Search } from "lucide-react";
 import { flavorColorMap } from "@/constants";
 import { TwistButton } from "@/components/twist-button";
 import { cocktailService } from "@/services/cocktail-service";
+import { CocktailNoteSection } from "@/components/note/cocktail-note-section";
 
 type Props = {
   params: Promise<{ language: string; slug: string }>;
@@ -172,6 +173,14 @@ export default async function CocktailPage({ params }: Props) {
           </ReactMarkdown>
         </div>
       )}
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">{t.notes}</h2>
+        <CocktailNoteSection
+          cocktailSlug={slug}
+          cocktailName={cocktail.name.en}
+        />
+      </div>
     </div>
   );
 }

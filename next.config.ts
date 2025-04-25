@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'fonts.gstatic.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'maps.googleapis.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.googleapis.com',
+      },
     ],
   },
 };
