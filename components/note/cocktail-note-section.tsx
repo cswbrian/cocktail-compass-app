@@ -2,13 +2,11 @@
 
 import { NoteButton } from "./note-button";
 import { CocktailNoteList } from "./cocktail-note-list";
-import { Note } from "@/types/note";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useRouter, usePathname } from "next/navigation";
 import { translations } from "@/translations";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
 
 interface CocktailNoteSectionProps {
   cocktailSlug: string;
@@ -22,7 +20,7 @@ export function CocktailNoteSection({ cocktailSlug, cocktailName }: CocktailNote
   const pathname = usePathname();
   const t = translations[language];
 
-  const handleNoteSaved = (note: Note) => {
+  const handleNoteSaved = () => {
     // This will trigger a re-render of the NoteList component
     window.location.reload();
   };

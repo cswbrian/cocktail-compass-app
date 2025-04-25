@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { GooglePlace } from '@/types/note';
 
 // Your web app's Firebase configuration
 // Get this from Firebase Console -> Project Settings

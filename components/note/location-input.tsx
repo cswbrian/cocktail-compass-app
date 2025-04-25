@@ -15,7 +15,6 @@ interface LocationInputProps {
 function LocationInputComponent({ value, googlePlace, onChange }: LocationInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const placesLib = useMapsLibrary('places');
-  const geocodingLib = useMapsLibrary('geocoding');
   const [predictions, setPredictions] = useState<google.maps.places.AutocompletePrediction[]>([]);
   const [showPredictions, setShowPredictions] = useState(false);
   const [inputValue, setInputValue] = useState(value);

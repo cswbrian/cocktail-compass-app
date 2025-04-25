@@ -1,16 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trash2, Pencil, Star } from "lucide-react";
-import { notesService } from "@/services/notes-service";
+import { Pencil, Star } from "lucide-react";
 import { Note } from "@/types/note";
-import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
 import { NoteDrawer } from "./note-drawer";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 interface BaseNoteListProps {
   fetchNotesFunction: () => Promise<Note[]>;
@@ -32,7 +30,6 @@ export function BaseNoteList({
   const [error, setError] = useState<string | null>(null);
   const [isNoteDrawerOpen, setIsNoteDrawerOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
-  const { toast } = useToast();
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 
@@ -50,24 +47,6 @@ export function BaseNoteList({
   useEffect(() => {
     fetchNotes();
   }, [fetchNotesFunction]);
-
-  const handleDelete = async (noteId: string) => {
-    try {
-      await notesService.deleteNote(noteId);
-      setNotes(notes.filter(note => note.id !== noteId));
-      toast({
-        title: t.success,
-        description: t.noteDeleted,
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t.errorDeletingNote);
-      toast({
-        title: t.error,
-        description: t.errorDeletingNote,
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleEdit = (note: Note) => {
     setEditingNote(note);
