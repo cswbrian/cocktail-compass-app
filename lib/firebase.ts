@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+
 import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
@@ -12,7 +12,7 @@ const firebaseConfig = {
 
 // Initialize Firebase only on client side
 const app = typeof window !== "undefined" ? initializeApp(firebaseConfig) : null;
-export const auth = app ? getAuth(app) : null;
+
 export const db = app ? getFirestore(app) : null;
 
 // Add Google Places script to the page

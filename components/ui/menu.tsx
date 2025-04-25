@@ -15,14 +15,15 @@ import { translations } from "@/translations";
 import Image from "next/image";
 import { BUY_ME_A_DRINK_URL, FEEDBACK_FORM_URL } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
-import { auth } from "@/lib/firebase";
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { signInWithProvider, signOut as supaSignOut } from "@/lib/supabase";
 import { Button } from "./button";
 // User Profile Component
 interface UserProfileProps {
   user: {
-    photoURL: string | null;
-    displayName: string | null;
+    user_metadata?: {
+      avatar_url?: string;
+      name?: string;
+    };
   };
   onLogout: () => void;
   t: {
@@ -39,16 +40,16 @@ interface UserProfileProps {
 const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout, t }) => (
   <div className="flex justify-between gap-2 items-center">
     <div className="flex items-center gap-2">
-      {user.photoURL && (
+      {user.user_metadata?.avatar_url && (
         <Image
-          src={user.photoURL}
+          src={user.user_metadata.avatar_url}
           alt="Profile"
           width={32}
           height={32}
           className="rounded-full"
         />
       )}
-      <span className="font-medium">Halo, {user.displayName || "User"}!</span>
+      <span className="font-medium">Halo, {user.user_metadata?.name || "User"}!</span>
     </div>
     <div className="text-sm text-primary" onClick={onLogout}>
       {t.signOut}
@@ -164,19 +165,16 @@ export function Menu() {
   const t = translations[language];
 
   const handleGoogleLogin = async () => {
-    if (!auth) return;
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      await signInWithProvider('google');
     } catch (error) {
       console.error("Error signing in with Google:", error);
     }
   };
 
   const handleLogout = async () => {
-    if (!auth) return;
     try {
-      await signOut(auth);
+      await supaSignOut();
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -190,9 +188,9 @@ export function Menu() {
             <div className="h-6 w-6 animate-pulse bg-gray-200 rounded-full" />
           ) : user ? (
             <div className="h-[30px] w-[30px] rounded-full overflow-hidden cursor-pointer">
-              {user.photoURL ? (
+              {user.user_metadata?.avatar_url ? (
                 <Image
-                  src={user.photoURL}
+                  src={user.user_metadata.avatar_url}
                   alt="Profile"
                   width={30}
                   height={30}
@@ -200,7 +198,7 @@ export function Menu() {
                 />
               ) : (
                 <div className="w-full h-full bg-primary flex items-center justify-center text-white">
-                  {user.displayName?.[0]?.toUpperCase() || "U"}
+                  {user.user_metadata?.name?.[0]?.toUpperCase() || "U"}
                 </div>
               )}
             </div>

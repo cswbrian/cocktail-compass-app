@@ -7,8 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { auth } from "@/lib/firebase";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signInWithProvider } from "@/lib/supabase";
 import { toast } from "sonner";
 
 export function LoginPage() {
@@ -26,7 +25,7 @@ export function LoginPage() {
       
       // Show welcome back toast
       toast.success(t.welcomeBack, {
-        description: user.displayName ? `${t.welcomeBackMessage} ${user.displayName}!` : t.welcomeBackMessage,
+        description: user.user_metadata?.name ? `${t.welcomeBackMessage} ${user.user_metadata.name}!` : t.welcomeBackMessage,
         duration: 3000,
       });
       
@@ -35,13 +34,10 @@ export function LoginPage() {
   }, [user, router, language, t]);
 
   const handleGoogleLogin = async () => {
-    if (!auth) return;
-    
     setIsLoading(true);
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      // Redirect will happen automatically via the useEffect above
+      await signInWithProvider('google');
+      // Supabase will handle the redirect, and useEffect will catch the user
     } catch (error) {
       console.error("Error signing in with Google:", error);
       toast.error(t.errorSigningIn, {

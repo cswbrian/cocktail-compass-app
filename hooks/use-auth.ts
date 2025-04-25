@@ -1,20 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth } from "@/lib/firebase";
-import { User } from "firebase/auth";
+import { getCurrentUser } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth?.onAuthStateChanged((user) => {
-      setUser(user);
+    let mounted = true;
+    setLoading(true);
+    getCurrentUser().then(({ data, error }) => {
+      if (!mounted) return;
+      setUser(data?.user ?? null);
       setLoading(false);
     });
-
-    return () => unsubscribe?.();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return { user, loading };

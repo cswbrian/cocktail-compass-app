@@ -1,7 +1,7 @@
 'use client'
 import { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { getCurrentUser, signOut as supaSignOut } from '@/lib/supabase';
+import type { User } from '@supabase/supabase-js';
 
 type AuthContextType = {
   user: User | null;
@@ -18,14 +18,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!auth) return;
-    
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    let mounted = true;
+    setLoading(true);
+    getCurrentUser().then(({ data, error }) => {
+      if (!mounted) return;
+      setUser(data?.user ?? null);
       setLoading(false);
     });
-
-    return () => unsubscribe();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (

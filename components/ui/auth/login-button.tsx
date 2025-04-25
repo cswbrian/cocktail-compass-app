@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react';
-import { auth } from '@/lib/firebase';
-import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { signInWithProvider, signOut } from '@/lib/supabase';
 import { Button } from "@/components/ui/button"; // Using your existing button component
 import { useAuth } from '@/context/AuthContext';
 
@@ -10,12 +9,9 @@ export function LoginButton() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!auth) return;
-    
     try {
       setIsLoading(true);
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      await signInWithProvider('google');
     } catch (error) {
       console.error('Error signing in:', error);
     } finally {
@@ -24,11 +20,9 @@ export function LoginButton() {
   };
 
   const handleLogout = async () => {
-    if (!auth) return;
-    
     try {
       setIsLoading(true);
-      await signOut(auth);
+      await signOut();
     } catch (error) {
       console.error('Error signing out:', error);
     } finally {

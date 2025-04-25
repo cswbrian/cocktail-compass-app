@@ -1,4 +1,5 @@
-import { db, auth } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
+import { supabase, getCurrentUser } from '@/lib/supabase';
 import { 
   collection, 
   doc, 
@@ -28,19 +29,23 @@ export interface BookmarkList {
 }
 
 class BookmarkService {
-  private get userId() {
-    return auth?.currentUser?.uid;
+  private async getUserId(): Promise<string | null> {
+    const { data, error } = await getCurrentUser();
+    if (error || !data?.user) return null;
+    return data.user.id;
   }
 
-  private get userBookmarksRef() {
-    if (!this.userId) throw new Error('User not authenticated');
-    return collection(db!, 'users', this.userId, 'bookmarks');
+  private async getUserBookmarksRef() {
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    return collection(db!, 'users', userId, 'bookmarks');
   }
 
   async getBookmarks(): Promise<BookmarkList[]> {
-    if (!this.userId) return [];
-
-    const bookmarksSnapshot = await getDocs(this.userBookmarksRef);
+    const userId = await this.getUserId();
+    if (!userId) return [];
+    const userBookmarksRef = collection(db!, 'users', userId, 'bookmarks');
+    const bookmarksSnapshot = await getDocs(userBookmarksRef);
     return bookmarksSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -48,11 +53,11 @@ class BookmarkService {
   }
 
   async addBookmark(listId: string, cocktailId: string): Promise<void> {
-    if (!this.userId) throw new Error('User not authenticated');
-
-    const bookmarkRef = doc(this.userBookmarksRef, listId);
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    const userBookmarksRef = collection(db!, 'users', userId, 'bookmarks');
+    const bookmarkRef = doc(userBookmarksRef, listId);
     const bookmarkDoc = await getDoc(bookmarkRef);
-
     if (!bookmarkDoc.exists()) {
       // Create new list
       await setDoc(bookmarkRef, {
@@ -75,11 +80,11 @@ class BookmarkService {
   }
 
   async removeBookmark(listId: string, cocktailId: string): Promise<void> {
-    if (!this.userId) throw new Error('User not authenticated');
-
-    const bookmarkRef = doc(this.userBookmarksRef, listId);
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    const userBookmarksRef = collection(db!, 'users', userId, 'bookmarks');
+    const bookmarkRef = doc(userBookmarksRef, listId);
     const bookmarkDoc = await getDoc(bookmarkRef);
-
     if (bookmarkDoc.exists()) {
       const data = bookmarkDoc.data() as BookmarkList;
       const items = data.items.filter(item => item.cocktailId !== cocktailId);
@@ -88,9 +93,10 @@ class BookmarkService {
   }
 
   async createList(listId: string, name: string): Promise<void> {
-    if (!this.userId) throw new Error('User not authenticated');
-
-    const bookmarkRef = doc(this.userBookmarksRef, listId);
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    const userBookmarksRef = collection(db!, 'users', userId, 'bookmarks');
+    const bookmarkRef = doc(userBookmarksRef, listId);
     await setDoc(bookmarkRef, {
       id: listId,
       name,
@@ -99,15 +105,17 @@ class BookmarkService {
   }
 
   async deleteList(listId: string): Promise<void> {
-    if (!this.userId) throw new Error('User not authenticated');
-
-    const bookmarkRef = doc(this.userBookmarksRef, listId);
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    const userBookmarksRef = collection(db!, 'users', userId, 'bookmarks');
+    const bookmarkRef = doc(userBookmarksRef, listId);
     await deleteDoc(bookmarkRef);
   }
 
   async migrateFromLocalStorage(localBookmarks: BookmarkItem[]): Promise<void> {
-    if (!this.userId) throw new Error('User not authenticated');
-
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    const userBookmarksRef = collection(db!, 'users', userId, 'bookmarks');
     // Convert localStorage format to Firestore format
     const bookmarksToMigrate = localBookmarks.map(list => ({
       id: list.key,
@@ -117,10 +125,9 @@ class BookmarkService {
         addedAt: Timestamp.now() // Use current time for migrated items
       }))
     }));
-
     // Save each list to Firestore
     for (const bookmark of bookmarksToMigrate) {
-      await setDoc(doc(this.userBookmarksRef, bookmark.id), bookmark);
+      await setDoc(doc(userBookmarksRef, bookmark.id), bookmark);
     }
   }
 }

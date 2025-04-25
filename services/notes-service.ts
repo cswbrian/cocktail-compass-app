@@ -1,4 +1,5 @@
-import { db, auth } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
+import { supabase, getCurrentUser } from '@/lib/supabase';
 import { 
   collection, 
   doc, 
@@ -15,19 +16,23 @@ import {
 import { Note, GooglePlace } from '@/types/note';
 
 class NotesService {
-  private get userId() {
-    return auth?.currentUser?.uid;
+  private async getUserId(): Promise<string | null> {
+    const { data, error } = await getCurrentUser();
+    if (error || !data?.user) return null;
+    return data.user.id;
   }
 
-  private get userNotesRef() {
-    if (!this.userId) throw new Error('User not authenticated');
-    return collection(db!, 'users', this.userId, 'notes');
+  private async getUserNotesRef() {
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    return collection(db!, 'users', userId, 'notes');
   }
 
   async getNotes(): Promise<Note[]> {
-    if (!this.userId) return [];
-
-    const notesSnapshot = await getDocs(this.userNotesRef);
+    const userId = await this.getUserId();
+    if (!userId) return [];
+    const userNotesRef = collection(db!, 'users', userId, 'notes');
+    const notesSnapshot = await getDocs(userNotesRef);
     return notesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -35,10 +40,11 @@ class NotesService {
   }
 
   async getNotesByCocktailSlug(cocktailSlug: string): Promise<Note[]> {
-    if (!this.userId) return [];
-
+    const userId = await this.getUserId();
+    if (!userId) return [];
+    const userNotesRef = collection(db!, 'users', userId, 'notes');
     const q = query(
-      this.userNotesRef, 
+      userNotesRef, 
       where('cocktailSlug', '==', cocktailSlug),
       orderBy('lastModified', 'desc')
     );
@@ -62,9 +68,10 @@ class NotesService {
     drinkDate?: Timestamp,
     googlePlace?: GooglePlace
   ): Promise<Note> {
-    if (!this.userId) throw new Error('User not authenticated');
-
-    const noteRef = doc(this.userNotesRef);
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    const userNotesRef = collection(db!, 'users', userId, 'notes');
+    const noteRef = doc(userNotesRef);
     const noteData = {
       id: noteRef.id,
       cocktailSlug,
@@ -76,7 +83,7 @@ class NotesService {
       bartender,
       tags: tags || [],
       lastModified: Timestamp.now(),
-      userId: this.userId,
+      userId,
       drinkDate,
       googlePlace
     };
@@ -95,9 +102,10 @@ class NotesService {
     drinkDate?: Timestamp,
     googlePlace?: GooglePlace
   ): Promise<void> {
-    if (!this.userId) throw new Error('User not authenticated');
-
-    const noteRef = doc(this.userNotesRef, noteId);
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    const userNotesRef = collection(db!, 'users', userId, 'notes');
+    const noteRef = doc(userNotesRef, noteId);
     await updateDoc(noteRef, {
       rating,
       specialIngredients,
@@ -112,9 +120,10 @@ class NotesService {
   }
 
   async deleteNote(noteId: string): Promise<void> {
-    if (!this.userId) throw new Error('User not authenticated');
-
-    const noteRef = doc(this.userNotesRef, noteId);
+    const userId = await this.getUserId();
+    if (!userId) throw new Error('User not authenticated (Supabase)');
+    const userNotesRef = collection(db!, 'users', userId, 'notes');
+    const noteRef = doc(userNotesRef, noteId);
     await deleteDoc(noteRef);
   }
 }
