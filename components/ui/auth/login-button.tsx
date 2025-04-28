@@ -1,11 +1,10 @@
 'use client'
 import { useState } from 'react';
-import { signInWithProvider, signOut } from '@/lib/supabase';
-import { Button } from "@/components/ui/button"; // Using your existing button component
+import { Button } from "@/components/ui/button";
 import { useAuth } from '@/context/AuthContext';
 
 export function LoginButton() {
-  const { user, loading } = useAuth();
+  const { user, loading, signInWithProvider, signOut } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {

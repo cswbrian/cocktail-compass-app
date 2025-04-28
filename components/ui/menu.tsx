@@ -15,7 +15,6 @@ import { translations } from "@/translations";
 import Image from "next/image";
 import { BUY_ME_A_DRINK_URL, FEEDBACK_FORM_URL } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
-import { signInWithProvider, signOut as supaSignOut } from "@/lib/supabase";
 import { Button } from "./button";
 // User Profile Component
 interface UserProfileProps {
@@ -161,7 +160,7 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ t }) => (
 // Main Menu Component
 export function Menu() {
   const { language, toggleLanguage } = useLanguage();
-  const { user, loading } = useAuth();
+  const { user, loading, signInWithProvider, signOut } = useAuth();
   const t = translations[language];
 
   const handleGoogleLogin = async () => {
@@ -174,7 +173,7 @@ export function Menu() {
 
   const handleLogout = async () => {
     try {
-      await supaSignOut();
+      await signOut();
     } catch (error) {
       console.error("Error signing out:", error);
     }

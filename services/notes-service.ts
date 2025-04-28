@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { supabase, getCurrentUser } from '@/lib/supabase';
+import { AuthService } from '@/services/auth-service';
 import { 
   collection, 
   doc, 
@@ -17,9 +17,9 @@ import { Note, GooglePlace } from '@/types/note';
 
 class NotesService {
   private async getUserId(): Promise<string | null> {
-    const { data, error } = await getCurrentUser();
-    if (error || !data?.user) return null;
-    return data.user.id;
+    const user = await AuthService.getCurrentUser();
+    if (!user) return null;
+    return user.id;
   }
 
   private async getUserNotesRef() {
