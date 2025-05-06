@@ -19,7 +19,6 @@ export default async function IngredientPage({ params }: Props) {
     return <div>Invalid language</div>;
   }
 
-  await cocktailService.initialize();
   const matchingCocktails = cocktailService.getCocktailsByIngredient(slug);
 
   if (matchingCocktails.length === 0) {
@@ -62,7 +61,6 @@ export default async function IngredientPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  await cocktailService.initialize();
   const allIngredients = cocktailService.getAllIngredients();
   return allIngredients.flatMap((ingredient: string) => [
     { language: "en", slug: ingredient },

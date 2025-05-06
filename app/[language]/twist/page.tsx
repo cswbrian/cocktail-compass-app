@@ -4,7 +4,6 @@ import { cocktailService } from "@/services/cocktail-service";
 import { Loading } from "@/components/ui/loading";
 
 export default async function TwistPage() {
-  await cocktailService.initialize();
   const cocktails = cocktailService.getAllCocktails();
 
   return (

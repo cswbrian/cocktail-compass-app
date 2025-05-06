@@ -21,7 +21,6 @@ export default async function FlavorsPage({
     return <div>Invalid language</div>;
   }
 
-  await cocktailService.initialize();
   const matchingCocktails = cocktailService.getCocktailsByFlavor(slug);
 
   if (matchingCocktails.length === 0) {
@@ -60,7 +59,6 @@ export default async function FlavorsPage({
 }
 
 export async function generateStaticParams() {
-  await cocktailService.initialize();
   const allFlavors = cocktailService.getAllFlavors();
   return allFlavors.flatMap((flavor: string) => [
     { language: "en", slug: flavor },
@@ -74,7 +72,6 @@ export async function generateMetadata({
   const { language, slug } = await params;
   const t = translations[language as keyof typeof translations];
   
-  await cocktailService.initialize();
   const matchingCocktails = cocktailService.getCocktailsByFlavor(slug);
   const flavor = matchingCocktails.length > 0
     ? matchingCocktails[0].flavor_descriptors.find(

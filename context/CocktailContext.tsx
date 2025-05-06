@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { Cocktail, RankedCocktail } from '@/types/cocktail';
+import { RankedCocktail } from '@/types/cocktail';
 import { useLanguage } from "@/context/LanguageContext";
 import { rankCocktails } from '@/lib/cocktail-ranking';
 import { cocktailService } from '@/services/cocktail-service';
@@ -31,7 +31,6 @@ type CocktailContextType = {
   setSelectedLiqueurs: (value: string[]) => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
-  isLoading: boolean;
   
   // Methods
   handleFlavorSelect: (flavor: string) => void;
@@ -61,11 +60,11 @@ interface CocktailExplorerState {
 
 export function CocktailProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<CocktailExplorerState>({
-    sweetness: null,
-    sourness: null,
-    body: null,
-    complexity: null,
-    booziness: null,
+    sweetness: 5,
+    sourness: 5,
+    body: 5,
+    complexity: 5,
+    booziness: 5,
     bubbles: null,
     selectedFlavors: [],
     selectedBaseSpirits: [],
@@ -75,23 +74,8 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
     results: [],
   });
 
-  const [isLoading, setIsLoading] = useState(true);
   const { language } = useLanguage();
   const t = translations[language];
-
-  // Initialize cocktail service
-  useEffect(() => {
-    const init = async () => {
-      try {
-        await cocktailService.initialize();
-      } catch (error) {
-        console.error('Failed to initialize cocktail service:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    init();
-  }, []);
 
   // Individual setters that update the consolidated state
   const setSweetness = (value: number | null) => 
@@ -231,7 +215,6 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
     selectedIngredients: state.selectedIngredients,
     selectedLiqueurs: state.selectedLiqueurs,
     currentStep: state.currentStep,
-    isLoading,
     
     // Setters
     setSweetness,

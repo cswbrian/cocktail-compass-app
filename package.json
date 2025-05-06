@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm build:compress && next dev --turbopack",
+    "fetch:cocktails": "tsx scripts/fetch-cocktails.ts",
+    "dev": "pnpm fetch:cocktails && pnpm build:compress && next dev --turbopack",
     "build:compress": "tsx scripts/compress-cocktails.ts",
-    "build": "pnpm build:compress && next build",
+    "build": "pnpm fetch:cocktails && pnpm build:compress && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -53,6 +54,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^16.5.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.0",
     "gh-pages": "^6.3.0",

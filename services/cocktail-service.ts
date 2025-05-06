@@ -1,11 +1,12 @@
+import { compressedCocktails } from "@/data/cocktails.compressed";
 import { Cocktail, RankedCocktail } from "@/types/cocktail";
 import { slugify } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
+import { decompress } from "@/lib/decompress";
 
 class CocktailService {
   private static instance: CocktailService;
   private static isInitialized = false;
-  private cocktails: Cocktail[] = [];
+  private cocktails: Cocktail[];
   
   // Cache for frequently accessed data
   private slugToCocktail: Map<string, Cocktail>;
@@ -19,51 +20,39 @@ class CocktailService {
       console.warn('CocktailService is being instantiated multiple times!');
     }
     
+    // Initialize with decompressed data
+    console.log('🔄 Decompressing cocktails data...');
+    this.cocktails = decompress(compressedCocktails) as Cocktail[];
+    console.log(`✅ Decompressed ${this.cocktails.length} cocktails`);
+    
     this.slugToCocktail = new Map();
     this.flavorToCocktails = new Map();
     this.ingredientToCocktails = new Map();
     this.allFlavors = new Set();
     this.allIngredients = new Set();
     
+    // Initialize caches
+    this.initializeCaches();
     CocktailService.isInitialized = true;
   }
 
   public static getInstance(): CocktailService {
     if (!CocktailService.instance) {
+      console.log('🎯 Creating new CocktailService instance');
       CocktailService.instance = new CocktailService();
     }
     return CocktailService.instance;
   }
 
   public async initialize(): Promise<void> {
-    if (this.cocktails.length > 0) return;
-
-    console.log('🔄 Fetching cocktails data from Supabase...');
-    const { data, error } = await supabase
-      .from('cocktails')
-      .select('id, slug, data')
-      .order('created_at', { ascending: true });
-
-    if (error) {
-      console.error('Error fetching cocktails:', error);
-      throw error;
-    }
-
-    this.cocktails = data.map(row => ({
-      ...row.data as Cocktail,
-      id: row.id,
-      slug: row.slug
-    }));
-    console.log(`✅ Fetched ${this.cocktails.length} cocktails`);
-    
-    // Initialize caches
-    this.initializeCaches();
+    // No-op since data is already loaded in constructor
+    return;
   }
 
   private initializeCaches() {
     // Build slug to cocktail map
     this.cocktails.forEach(cocktail => {
-      this.slugToCocktail.set(cocktail.slug, cocktail);
+      this.slugToCocktail.set(slugify(cocktail.name.en), cocktail);
     });
 
     // Build flavor descriptors set

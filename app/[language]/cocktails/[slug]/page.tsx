@@ -25,7 +25,6 @@ export default async function CocktailPage({ params }: Props) {
     return <div>Invalid language</div>;
   }
 
-  await cocktailService.initialize();
   const cocktail = cocktailService.getCocktailBySlug(slug);
 
   if (!cocktail) {
@@ -187,7 +186,6 @@ export default async function CocktailPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  await cocktailService.initialize();
   const cocktails = cocktailService.getAllCocktails();
   const params = [];
 
@@ -201,7 +199,6 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { language, slug } = await params;
-  await cocktailService.initialize();
   const cocktail = cocktailService.getCocktailBySlug(slug);
 
   if (!cocktail) {
@@ -238,7 +235,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           language as keyof (typeof cocktail.flavor_descriptors)[0]
         ] || ""
       )} | ${description}`,
-      // images: cocktail.image ? [{ url: cocktail.image }] : [{ url: defaultImage }],
     },
     twitter: {
       card: "summary_large_image",
@@ -253,7 +249,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           language as keyof (typeof cocktail.flavor_descriptors)[0]
         ] || ""
       )} | ${description}`,
-      // images: cocktail.image ? cocktail.image : defaultImage,
     },
   };
 }

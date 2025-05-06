@@ -60,14 +60,10 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
 
   // Get cocktail ID from slug
   React.useEffect(() => {
-    const loadCocktailId = async () => {
-      await cocktailService.initialize();
-      const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
-      if (cocktail) {
-        setCocktailId(cocktail.id);
-      }
-    };
-    loadCocktailId();
+    const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
+    if (cocktail) {
+      setCocktailId(cocktail.id);
+    }
   }, [cocktailSlug]);
 
   const loadBookmarks = async () => {

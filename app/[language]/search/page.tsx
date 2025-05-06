@@ -4,7 +4,6 @@ import { Loading } from "@/components/ui/loading";
 import { SearchClient } from "@/components/search/search-client";
 
 export default async function SearchPage() {
-  await cocktailService.initialize();
   const cocktails = cocktailService.getAllCocktails();
 
   return (
