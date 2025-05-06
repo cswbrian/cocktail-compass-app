@@ -22,19 +22,14 @@ import { cn } from "@/lib/utils";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
-import { bookmarkService, BookmarkList } from "@/services/bookmark-service";
+import { bookmarkService, BookmarkList, BookmarkedItem } from "@/services/bookmark-service";
 import { toast } from "sonner";
+import { cocktailService } from "@/services/cocktail-service";
 
 interface BookmarkButtonProps {
   cocktailSlug: string;
   cocktailName: string;
 }
-
-const BOOKMARK_LISTS = [
-  { id: "want-to-try", nameKey: "wantToTry" },
-  { id: "favorites", nameKey: "favorites" },
-  { id: "dont-like", nameKey: "dontLike" },
-];
 
 export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonProps) {
   const { user } = useAuth();
@@ -44,7 +39,9 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
   const t = translations[language];
   const [open, setOpen] = React.useState(false);
   const [bookmarks, setBookmarks] = React.useState<BookmarkList[]>([]);
+  const [bookmarkedItems, setBookmarkedItems] = React.useState<{ [key: string]: BookmarkedItem[] }>({});
   const [isLoading, setIsLoading] = React.useState(false);
+  const [cocktailId, setCocktailId] = React.useState<string | null>(null);
 
   const handleBookmarkClick = () => {
     if (!user) {
@@ -55,17 +52,37 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
     setOpen(true);
   };
 
-  // Load bookmarks from Firestore on component mount
+  // Load bookmarks from Supabase on component mount
   React.useEffect(() => {
     if (!user) return;
     loadBookmarks();
   }, [user]);
 
+  // Get cocktail ID from slug
+  React.useEffect(() => {
+    const loadCocktailId = async () => {
+      await cocktailService.initialize();
+      const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
+      if (cocktail) {
+        setCocktailId(cocktail.id);
+      }
+    };
+    loadCocktailId();
+  }, [cocktailSlug]);
+
   const loadBookmarks = async () => {
     try {
       setIsLoading(true);
-      const firestoreBookmarks = await bookmarkService.getBookmarks();
-      setBookmarks(firestoreBookmarks);
+      await bookmarkService.initializeDefaultLists();
+      const lists = await bookmarkService.getBookmarks();
+      setBookmarks(lists);
+
+      const itemsMap: { [key: string]: BookmarkedItem[] } = {};
+      for (const list of lists) {
+        const items = await bookmarkService.getBookmarkedItems(list.id);
+        itemsMap[list.id] = items;
+      }
+      setBookmarkedItems(itemsMap);
     } catch (error) {
       console.error('Error loading bookmarks:', error);
       toast.error(t.errorLoadingBookmarks);
@@ -75,15 +92,20 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
   };
 
   const toggleList = async (listId: string) => {
+    if (!cocktailId) {
+      toast.error(t.errorLoadingCocktail);
+      return;
+    }
+
     try {
       setIsLoading(true);
-      const bookmarkList = bookmarks.find(b => b.id === listId);
-      const isInList = bookmarkList?.items.some(item => item.cocktailId === cocktailSlug) ?? false;
+      const items = bookmarkedItems[listId] || [];
+      const isInList = items.some(item => item.cocktail_id === cocktailId);
 
       if (isInList) {
-        await bookmarkService.removeBookmark(listId, cocktailSlug);
+        await bookmarkService.removeBookmark(listId, cocktailId);
       } else {
-        await bookmarkService.addBookmark(listId, cocktailSlug);
+        await bookmarkService.addBookmark(listId, cocktailId);
       }
 
       // Track the event
@@ -92,7 +114,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
         action: `bookmark_${action}`,
         list_type: listId,
         cocktail_name: cocktailName,
-        cocktail_slug: cocktailSlug
+        cocktail_id: cocktailId
       });
 
       // Reload bookmarks to get the updated state
@@ -105,8 +127,8 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
     }
   };
 
-  const isInAnyList = user ? bookmarks.some(bookmark => 
-    bookmark.items.some(item => item.cocktailId === cocktailSlug)
+  const isInAnyList = user && cocktailId ? Object.values(bookmarkedItems).some(items => 
+    items.some(item => item.cocktail_id === cocktailId)
   ) : false;
 
   return (
@@ -120,7 +142,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
             isInAnyList && "bg-accent text-accent-foreground"
           )}
           onClick={handleBookmarkClick}
-          disabled={isLoading}
+          disabled={isLoading || !cocktailId}
         >
           {isInAnyList ? (
             <BookmarkCheck className="h-4 w-4" />
@@ -135,14 +157,14 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
             <CommandList>
               <CommandEmpty>{t.noResultsFound}</CommandEmpty>
               <CommandGroup>
-                {BOOKMARK_LISTS.map((list) => {
-                  const bookmarkList = bookmarks.find(b => b.id === list.id);
-                  const isSelected = bookmarkList?.items.some(item => item.cocktailId === cocktailSlug) ?? false;
+                {bookmarks.map((list) => {
+                  const items = bookmarkedItems[list.id] || [];
+                  const isSelected = items.some(item => item.cocktail_id === cocktailId);
                   return (
                     <CommandItem
                       key={list.id}
                       onSelect={() => toggleList(list.id)}
-                      disabled={isLoading}
+                      disabled={isLoading || !cocktailId}
                     >
                       <div
                         className={cn(
@@ -154,7 +176,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
                       >
                         <CheckIcon className={cn("h-4 w-4")} />
                       </div>
-                      <span>{String(t[list.nameKey as keyof typeof t])}</span>
+                      <span>{list.is_default ? String(t[list.name_key as keyof typeof t]) : list.name}</span>
                     </CommandItem>
                   );
                 })}

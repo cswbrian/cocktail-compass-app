@@ -21,18 +21,19 @@ export default async function FlavorsPage({
     return <div>Invalid language</div>;
   }
 
+  await cocktailService.initialize();
   const matchingCocktails = cocktailService.getCocktailsByFlavor(slug);
 
   if (matchingCocktails.length === 0) {
-    return <div>No cocktails found with this flavor profile</div>;
+    return <div>No cocktails found with this flavor</div>;
   }
 
-  const flavorName = matchingCocktails[0].flavor_descriptors.find(
+  const flavor = matchingCocktails[0].flavor_descriptors.find(
     (descriptor) => slugify(descriptor.en) === slug
   );
 
-  if (!flavorName) {
-    return <div>No flavor name found</div>;
+  if (!flavor) {
+    return <div>No flavor found</div>;
   }
 
   return (
@@ -40,7 +41,7 @@ export default async function FlavorsPage({
       <h1 className="text-4xl mb-6">
         {t.cocktailsWithFlavor.replace(
           "{flavor}",
-          getLocalizedText(flavorName, language)
+          getLocalizedText(flavor, language)
         )}
       </h1>
       <ExternalLink message={t.feedbackMessage} />
@@ -48,7 +49,7 @@ export default async function FlavorsPage({
         {matchingCocktails.map((cocktail) => (
           <Link
             key={cocktail.name.en}
-            href={`/${language}/cocktails/${slugify(cocktail.name.en)}`}
+            href={`/${language}/cocktails/${cocktail.slug}`}
           >
             <CocktailCard cocktail={cocktail as Cocktail} />
           </Link>
@@ -59,8 +60,9 @@ export default async function FlavorsPage({
 }
 
 export async function generateStaticParams() {
+  await cocktailService.initialize();
   const allFlavors = cocktailService.getAllFlavors();
-  return allFlavors.flatMap((flavor) => [
+  return allFlavors.flatMap((flavor: string) => [
     { language: "en", slug: flavor },
     { language: "zh", slug: flavor },
   ]);
@@ -72,30 +74,31 @@ export async function generateMetadata({
   const { language, slug } = await params;
   const t = translations[language as keyof typeof translations];
   
+  await cocktailService.initialize();
   const matchingCocktails = cocktailService.getCocktailsByFlavor(slug);
-  const flavorName = matchingCocktails.length > 0
+  const flavor = matchingCocktails.length > 0
     ? matchingCocktails[0].flavor_descriptors.find(
         (descriptor) => slugify(descriptor.en) === slug
       )
     : null;
 
-  if (!flavorName) {
+  if (!flavor) {
     return {
       title: t.appName,
     };
   }
 
   return {
-    title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
-    description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+    title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavor, language))} | ${t.appName}`,
+    description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavor, language))} | ${t.appName}`,
     openGraph: {
-      title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
-      description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+      title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavor, language))} | ${t.appName}`,
+      description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavor, language))} | ${t.appName}`,
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
-      description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavorName, language))} | ${t.appName}`,
+      title: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavor, language))} | ${t.appName}`,
+      description: `${t.cocktailsWithFlavor.replace("{flavor}", getLocalizedText(flavor, language))} | ${t.appName}`,
     },
   };
 }

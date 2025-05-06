@@ -7,7 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { signInWithProvider } from "@/lib/supabase";
+import { AuthService } from "@/services/auth-service";
 import { toast } from "sonner";
 
 export function LoginPage() {
@@ -36,7 +36,7 @@ export function LoginPage() {
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      await signInWithProvider('google');
+      await AuthService.signInWithProvider('google');
       // Supabase will handle the redirect, and useEffect will catch the user
     } catch (error) {
       console.error("Error signing in with Google:", error);

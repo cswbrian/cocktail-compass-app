@@ -3,7 +3,8 @@ import { TwistFinder } from "@/components/twist-finder/twist-finder";
 import { cocktailService } from "@/services/cocktail-service";
 import { Loading } from "@/components/ui/loading";
 
-export default function TwistPage() {
+export default async function TwistPage() {
+  await cocktailService.initialize();
   const cocktails = cocktailService.getAllCocktails();
 
   return (

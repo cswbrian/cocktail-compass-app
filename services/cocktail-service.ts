@@ -1,12 +1,11 @@
-import { compressedCocktails } from "@/data/cocktails.compressed";
 import { Cocktail, RankedCocktail } from "@/types/cocktail";
 import { slugify } from "@/lib/utils";
-import { decompress } from "@/lib/decompress";
+import { supabase } from "@/lib/supabase";
 
 class CocktailService {
   private static instance: CocktailService;
   private static isInitialized = false;
-  private cocktails: Cocktail[];
+  private cocktails: Cocktail[] = [];
   
   // Cache for frequently accessed data
   private slugToCocktail: Map<string, Cocktail>;
@@ -20,26 +19,51 @@ class CocktailService {
       console.warn('CocktailService is being instantiated multiple times!');
     }
     
-    // Initialize with decompressed data
-    console.log('🔄 Decompressing cocktails data...');
-    this.cocktails = decompress(compressedCocktails) as Cocktail[];
-    console.log(`✅ Decompressed ${this.cocktails.length} cocktails`);
-    
     this.slugToCocktail = new Map();
     this.flavorToCocktails = new Map();
     this.ingredientToCocktails = new Map();
     this.allFlavors = new Set();
     this.allIngredients = new Set();
     
+    CocktailService.isInitialized = true;
+  }
+
+  public static getInstance(): CocktailService {
+    if (!CocktailService.instance) {
+      CocktailService.instance = new CocktailService();
+    }
+    return CocktailService.instance;
+  }
+
+  public async initialize(): Promise<void> {
+    if (this.cocktails.length > 0) return;
+
+    console.log('🔄 Fetching cocktails data from Supabase...');
+    const { data, error } = await supabase
+      .from('cocktails')
+      .select('id, slug, data')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching cocktails:', error);
+      throw error;
+    }
+
+    this.cocktails = data.map(row => ({
+      ...row.data as Cocktail,
+      id: row.id,
+      slug: row.slug
+    }));
+    console.log(`✅ Fetched ${this.cocktails.length} cocktails`);
+    
     // Initialize caches
     this.initializeCaches();
-    CocktailService.isInitialized = true;
   }
 
   private initializeCaches() {
     // Build slug to cocktail map
     this.cocktails.forEach(cocktail => {
-      this.slugToCocktail.set(slugify(cocktail.name.en), cocktail);
+      this.slugToCocktail.set(cocktail.slug, cocktail);
     });
 
     // Build flavor descriptors set
@@ -59,14 +83,6 @@ class CocktailService {
         this.allIngredients.add(slugify(ingredient.name.en));
       });
     });
-  }
-
-  public static getInstance(): CocktailService {
-    if (!CocktailService.instance) {
-      console.log('🎯 Creating new CocktailService instance');
-      CocktailService.instance = new CocktailService();
-    }
-    return CocktailService.instance;
   }
 
   public getAllCocktails(): Cocktail[] {
@@ -112,21 +128,6 @@ class CocktailService {
     
     this.ingredientToCocktails.set(ingredientSlug, matchingCocktails);
     return matchingCocktails;
-  }
-
-  // Utility methods for static generation
-  public getAllFlavors(): string[] {
-    return Array.from(this.allFlavors);
-  }
-
-  public getAllIngredients(): string[] {
-    return Array.from(this.allIngredients);
-  }
-
-  // Method to clear caches if needed (e.g., for testing)
-  public clearCaches(): void {
-    this.flavorToCocktails.clear();
-    this.ingredientToCocktails.clear();
   }
 
   public getCocktailsByMood(category: 'Strong & Spirit-Focused' | 'Sweet & Tart' | 'Tall & Bubbly' | 'Rich & Creamy', spirit?: string, preference?: string): RankedCocktail[] {
@@ -181,6 +182,21 @@ class CocktailService {
 
     console.log('❌ No cocktails found matching the criteria');
     return [];
+  }
+
+  // Utility methods for static generation
+  public getAllFlavors(): string[] {
+    return Array.from(this.allFlavors);
+  }
+
+  public getAllIngredients(): string[] {
+    return Array.from(this.allIngredients);
+  }
+
+  // Method to clear caches if needed (e.g., for testing)
+  public clearCaches(): void {
+    this.flavorToCocktails.clear();
+    this.ingredientToCocktails.clear();
   }
 }
 

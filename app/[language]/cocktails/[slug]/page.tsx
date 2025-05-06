@@ -25,6 +25,7 @@ export default async function CocktailPage({ params }: Props) {
     return <div>Invalid language</div>;
   }
 
+  await cocktailService.initialize();
   const cocktail = cocktailService.getCocktailBySlug(slug);
 
   if (!cocktail) {
@@ -52,7 +53,7 @@ export default async function CocktailPage({ params }: Props) {
         <div className="flex flex-col gap-2 items-end">
           <div className="flex gap-2">
             <BookmarkButton
-              cocktailSlug={slugify(cocktail.name.en)}
+              cocktailSlug={cocktail.slug}
               cocktailName={cocktail.name.en}
             />
             <ShareButton
@@ -64,7 +65,7 @@ export default async function CocktailPage({ params }: Props) {
             />
           </div>
           <TwistButton 
-            href={`/${language}/twist?cocktail=${slugify(cocktail.name.en)}`}
+            href={`/${language}/twist?cocktail=${cocktail.slug}`}
             cocktailName={cocktail.name.en}
           >
             {t.findTwists}
@@ -186,6 +187,7 @@ export default async function CocktailPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
+  await cocktailService.initialize();
   const cocktails = cocktailService.getAllCocktails();
   const params = [];
 
@@ -199,6 +201,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { language, slug } = await params;
+  await cocktailService.initialize();
   const cocktail = cocktailService.getCocktailBySlug(slug);
 
   if (!cocktail) {

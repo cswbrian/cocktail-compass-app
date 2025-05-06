@@ -27,6 +27,8 @@ type BaseIngredient = {
 };
 
 export interface Cocktail {
+  id: string;  // UUID from Supabase
+  slug: string;  // Slug from Supabase
   name: LocalizedString;
   flavor_profile: FlavorProfile;
   base_spirits: BaseIngredient[];

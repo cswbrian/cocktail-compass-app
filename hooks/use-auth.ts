@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getCurrentUser } from "@/lib/supabase";
+import { AuthService } from "@/services/auth-service";
 import type { User } from "@supabase/supabase-js";
 
 export function useAuth() {
@@ -11,9 +11,9 @@ export function useAuth() {
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    getCurrentUser().then(({ data, error }) => {
+    AuthService.getCurrentUser().then((user) => {
       if (!mounted) return;
-      setUser(data?.user ?? null);
+      setUser(user);
       setLoading(false);
     });
     return () => {

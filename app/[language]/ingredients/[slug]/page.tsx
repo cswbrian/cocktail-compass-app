@@ -19,6 +19,7 @@ export default async function IngredientPage({ params }: Props) {
     return <div>Invalid language</div>;
   }
 
+  await cocktailService.initialize();
   const matchingCocktails = cocktailService.getCocktailsByIngredient(slug);
 
   if (matchingCocktails.length === 0) {
@@ -50,7 +51,7 @@ export default async function IngredientPage({ params }: Props) {
         {matchingCocktails.map((cocktail) => (
           <Link
             key={cocktail.name.en}
-            href={`/${language}/cocktails/${slugify(cocktail.name.en)}`}
+            href={`/${language}/cocktails/${cocktail.slug}`}
           >
             <CocktailCard cocktail={cocktail as Cocktail} />
           </Link>
@@ -61,10 +62,11 @@ export default async function IngredientPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
+  await cocktailService.initialize();
   const allIngredients = cocktailService.getAllIngredients();
-  return allIngredients.flatMap((slug) => [
-    { language: "en", slug },
-    { language: "zh", slug },
+  return allIngredients.flatMap((ingredient: string) => [
+    { language: "en", slug: ingredient },
+    { language: "zh", slug: ingredient },
   ]);
 }
 

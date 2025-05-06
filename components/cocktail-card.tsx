@@ -1,6 +1,5 @@
 "use client";
 
-import { slugify } from "@/lib/utils";
 import { Cocktail } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -20,7 +19,7 @@ export function CocktailCard({ cocktail, distance, variant = 'default' }: Cockta
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 
-  const cocktailPath = `/${language}/cocktails/${slugify(cocktail.name.en)}`;
+  const cocktailPath = `/${language}/cocktails/${cocktail.slug}`;
   const shareUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}${cocktailPath}`
