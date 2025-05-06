@@ -161,7 +161,7 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ t }) => (
 export function Menu() {
   const { language, toggleLanguage } = useLanguage();
   const { user, loading, signInWithProvider, signOut } = useAuth();
-  const t = translations[language];
+  const t = translations[language as keyof typeof translations];
 
   const handleGoogleLogin = async () => {
     try {

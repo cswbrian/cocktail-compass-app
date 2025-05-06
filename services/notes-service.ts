@@ -1,62 +1,49 @@
-import { db } from '@/lib/firebase';
+import { createClient } from '@supabase/supabase-js';
 import { AuthService } from '@/services/auth-service';
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  setDoc, 
-  updateDoc, 
-  deleteDoc,
-  getDocs,
-  Timestamp,
-  query,
-  where,
-  orderBy
-} from 'firebase/firestore';
-import { Note, GooglePlace } from '@/types/note';
+import { CocktailLog } from '@/types/cocktail-log';
 
-class NotesService {
+class CocktailLogService {
+  private supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
   private async getUserId(): Promise<string | null> {
     const user = await AuthService.getCurrentUser();
     if (!user) return null;
     return user.id;
   }
 
-  private async getUserNotesRef() {
-    const userId = await this.getUserId();
-    if (!userId) throw new Error('User not authenticated (Supabase)');
-    return collection(db!, 'users', userId, 'notes');
-  }
-
-  async getNotes(): Promise<Note[]> {
+  async getLogs(): Promise<CocktailLog[]> {
     const userId = await this.getUserId();
     if (!userId) return [];
-    const userNotesRef = collection(db!, 'users', userId, 'notes');
-    const notesSnapshot = await getDocs(userNotesRef);
-    return notesSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as Note[];
-  }
-
-  async getNotesByCocktailSlug(cocktailSlug: string): Promise<Note[]> {
-    const userId = await this.getUserId();
-    if (!userId) return [];
-    const userNotesRef = collection(db!, 'users', userId, 'notes');
-    const q = query(
-      userNotesRef, 
-      where('cocktailSlug', '==', cocktailSlug),
-      orderBy('lastModified', 'desc')
-    );
-    const querySnapshot = await getDocs(q);
     
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as Note[];
+    const { data, error } = await this.supabase
+      .from('cocktail_logs')
+      .select('*')
+      .eq('user_id', userId)
+      .order('last_modified', { ascending: false });
+
+    if (error) throw error;
+    return data as CocktailLog[];
   }
 
-  async createNote(
+  async getLogsByCocktailSlug(cocktailSlug: string): Promise<CocktailLog[]> {
+    const userId = await this.getUserId();
+    if (!userId) return [];
+    
+    const { data, error } = await this.supabase
+      .from('cocktail_logs')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('cocktail_slug', cocktailSlug)
+      .order('last_modified', { ascending: false });
+
+    if (error) throw error;
+    return data as CocktailLog[];
+  }
+
+  async createLog(
     cocktailSlug: string,
     cocktailName: string,
     rating: number,
@@ -65,67 +52,78 @@ class NotesService {
     location: string,
     bartender: string,
     tags: string[] = [],
-    drinkDate?: Timestamp,
-    googlePlace?: GooglePlace
-  ): Promise<Note> {
+    drinkDate?: Date
+  ): Promise<CocktailLog> {
     const userId = await this.getUserId();
-    if (!userId) throw new Error('User not authenticated (Supabase)');
-    const userNotesRef = collection(db!, 'users', userId, 'notes');
-    const noteRef = doc(userNotesRef);
-    const noteData = {
-      id: noteRef.id,
-      cocktailSlug,
-      cocktailName,
+    if (!userId) throw new Error('User not authenticated');
+
+    const logData = {
+      cocktail_slug: cocktailSlug,
+      cocktail_name: cocktailName,
       rating,
-      specialIngredients,
+      special_ingredients: specialIngredients,
       comments,
       location,
       bartender,
-      tags: tags || [],
-      lastModified: Timestamp.now(),
-      userId,
-      drinkDate,
-      googlePlace
+      tags,
+      user_id: userId,
+      drink_date: drinkDate,
+      last_modified: new Date()
     };
-    await setDoc(noteRef, noteData);
-    return noteData;
+
+    const { data, error } = await this.supabase
+      .from('cocktail_logs')
+      .insert(logData)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as CocktailLog;
   }
 
-  async updateNote(
-    noteId: string,
+  async updateLog(
+    logId: string,
     rating: number,
     specialIngredients: string,
     comments: string,
     location: string,
     bartender: string,
     tags: string[],
-    drinkDate?: Timestamp,
-    googlePlace?: GooglePlace
+    drinkDate?: Date
   ): Promise<void> {
     const userId = await this.getUserId();
-    if (!userId) throw new Error('User not authenticated (Supabase)');
-    const userNotesRef = collection(db!, 'users', userId, 'notes');
-    const noteRef = doc(userNotesRef, noteId);
-    await updateDoc(noteRef, {
-      rating,
-      specialIngredients,
-      comments,
-      location,
-      bartender,
-      tags,
-      drinkDate,
-      googlePlace,
-      lastModified: Timestamp.now()
-    });
+    if (!userId) throw new Error('User not authenticated');
+
+    const { error } = await this.supabase
+      .from('cocktail_logs')
+      .update({
+        rating,
+        special_ingredients: specialIngredients,
+        comments,
+        location,
+        bartender,
+        tags,
+        drink_date: drinkDate,
+        last_modified: new Date()
+      })
+      .eq('id', logId)
+      .eq('user_id', userId);
+
+    if (error) throw error;
   }
 
-  async deleteNote(noteId: string): Promise<void> {
+  async deleteLog(logId: string): Promise<void> {
     const userId = await this.getUserId();
-    if (!userId) throw new Error('User not authenticated (Supabase)');
-    const userNotesRef = collection(db!, 'users', userId, 'notes');
-    const noteRef = doc(userNotesRef, noteId);
-    await deleteDoc(noteRef);
+    if (!userId) throw new Error('User not authenticated');
+
+    const { error } = await this.supabase
+      .from('cocktail_logs')
+      .delete()
+      .eq('id', logId)
+      .eq('user_id', userId);
+
+    if (error) throw error;
   }
 }
 
-export const notesService = new NotesService(); 
+export const cocktailLogService = new CocktailLogService(); 

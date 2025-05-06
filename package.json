@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "fetch:cocktails": "tsx scripts/fetch-cocktails.ts",
-    "dev": "pnpm fetch:cocktails && pnpm build:compress && next dev --turbopack",
+    "generate:summary": "tsx scripts/generate-summary.ts",
+    "dev": "pnpm fetch:cocktails && pnpm generate:summary && pnpm build:compress && next dev --turbopack",
     "build:compress": "tsx scripts/compress-cocktails.ts",
-    "build": "pnpm fetch:cocktails && pnpm build:compress && next build",
+    "build": "pnpm fetch:cocktails && pnpm generate:summary && pnpm build:compress && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -34,7 +35,6 @@
     "cmdk": "1.0.0",
     "d3": "^7.9.0",
     "date-fns": "^4.1.0",
-    "firebase": "^11.6.1",
     "framer-motion": "^12.4.7",
     "lucide-react": "^0.476.0",
     "next": "15.1.7",

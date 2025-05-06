@@ -21,7 +21,7 @@ declare global {
 
 export function Header() {
   const { language } = useLanguage()
-  const t = translations[language]
+  const t = translations[language as keyof typeof translations]
   const [isInstalled, setIsInstalled] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [isIOS, setIsIOS] = useState(false)

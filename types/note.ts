@@ -1,14 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-export interface GooglePlace {
-  placeId: string;
-  name: string;
-  address: string;
-  lat: number;
-  lng: number;
-}
-
-export interface Note {
+export interface CocktailLog {
   id: string;
   cocktailSlug: string;
   cocktailName: string;
@@ -16,7 +8,6 @@ export interface Note {
   specialIngredients: string;
   comments: string;
   location: string;
-  googlePlace?: GooglePlace; // Optional Google Place information
   bartender: string;
   tags: string[];
   lastModified: Timestamp;

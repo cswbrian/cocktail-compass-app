@@ -6,40 +6,41 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { notesService } from "@/services/notes-service";
-import { Note, GooglePlace } from "@/types/note";
+import { cocktailLogService } from "@/services/cocktail-log-service";
+import { CocktailLog } from "@/types/cocktail-log";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
-import { Timestamp } from "firebase/firestore";
 import { Star, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import LocationInput from '@/components/note/location-input';
+import { supabase } from "@/lib/supabase";
 
-interface NoteDrawerProps {
+interface CocktailLogDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   cocktailSlug: string;
   cocktailName: string;
-  onNoteSaved?: (note: Note) => void;
-  existingNote?: Note | null;
+  onLogSaved?: (log: CocktailLog) => void;
+  existingLog?: CocktailLog | null;
   isFromCocktailPage?: boolean;
-  onNoteDeleted?: (noteId: string) => void;
+  onLogDeleted?: (logId: string) => void;
+  onLogsChange: (logs: CocktailLog[]) => void;
 }
 
-export function NoteDrawer({ 
+export function CocktailLogDrawer({ 
   isOpen, 
   onClose, 
   cocktailSlug, 
   cocktailName,
-  onNoteSaved,
-  existingNote,
+  onLogSaved,
+  existingLog,
   isFromCocktailPage = false,
-  onNoteDeleted
-}: NoteDrawerProps) {
+  onLogDeleted,
+  onLogsChange
+}: CocktailLogDrawerProps) {
   const [rating, setRating] = useState(0);
   const [cocktailNameInput, setCocktailNameInput] = useState("");
   const [specialIngredients, setSpecialIngredients] = useState("");
@@ -50,22 +51,20 @@ export function NoteDrawer({
   const [newTag, setNewTag] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [drinkDate, setDrinkDate] = useState<Date | undefined>(undefined);
-  const [googlePlace, setGooglePlace] = useState<GooglePlace | undefined>(undefined);
   const { toast } = useToast();
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 
   useEffect(() => {
-    if (existingNote) {
-      setRating(existingNote.rating);
-      setCocktailNameInput(existingNote.cocktailName);
-      setSpecialIngredients(existingNote.specialIngredients);
-      setComments(existingNote.comments);
-      setLocation(existingNote.location);
-      setBartender(existingNote.bartender);
-      setTags(existingNote.tags);
-      setDrinkDate(existingNote.drinkDate?.toDate());
-      setGooglePlace(existingNote.googlePlace);
+    if (existingLog) {
+      setRating(existingLog.rating);
+      setCocktailNameInput(cocktailName);
+      setSpecialIngredients(existingLog.special_ingredients || "");
+      setComments(existingLog.comments || "");
+      setLocation(existingLog.location || "");
+      setBartender(existingLog.bartender || "");
+      setTags(existingLog.tags);
+      setDrinkDate(existingLog.drink_date ? new Date(existingLog.drink_date) : undefined);
     } else {
       setRating(0);
       setCocktailNameInput(cocktailName);
@@ -75,65 +74,55 @@ export function NoteDrawer({
       setBartender("");
       setTags([]);
       setDrinkDate(undefined);
-      setGooglePlace(undefined);
     }
-  }, [existingNote, cocktailName]);
+  }, [existingLog, cocktailName]);
 
   const handleSave = async () => {
     try {
       setIsLoading(true);
-      let savedNote: Note;
+      let savedLog: CocktailLog;
       
-      if (existingNote) {
-        await notesService.updateNote(
-          existingNote.id,
+      if (existingLog) {
+        savedLog = await cocktailLogService.updateLog(
+          existingLog.id,
           rating,
-          specialIngredients,
-          comments,
-          location,
-          bartender,
+          specialIngredients || null,
+          comments || null,
+          location || null,
+          bartender || null,
           tags,
-          drinkDate ? Timestamp.fromDate(drinkDate) : undefined,
-          googlePlace
+          drinkDate || null
         );
-        savedNote = {
-          ...existingNote,
-          rating,
-          specialIngredients,
-          comments,
-          location,
-          bartender,
-          tags,
-          drinkDate: drinkDate ? Timestamp.fromDate(drinkDate) : undefined,
-          googlePlace,
-          lastModified: new Timestamp(Math.floor(Date.now() / 1000), 0)
-        };
       } else {
-        savedNote = await notesService.createNote(
+        // Get the current user's ID from Supabase auth
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("User not authenticated");
+
+        savedLog = await cocktailLogService.createLog(
           cocktailSlug,
-          cocktailNameInput,
+          user.id,
           rating,
-          specialIngredients,
-          comments,
-          location,
-          bartender,
+          specialIngredients || null,
+          comments || null,
+          location || null,
+          bartender || null,
           tags,
-          drinkDate ? Timestamp.fromDate(drinkDate) : undefined,
-          googlePlace
+          drinkDate || null
         );
       }
 
       toast({
         title: t.success,
-        description: existingNote ? t.noteUpdated : t.noteSaved,
+        description: existingLog ? t.updateLog : t.saveLog,
       });
       onClose();
-      onNoteSaved?.(savedNote);
+      onLogSaved?.(savedLog);
+      await handleLogSaved();
     } catch (error) {
-      console.error("Error saving note:", error);
+      console.error("Error saving log:", error);
       toast({
         title: t.error,
-        description: t.errorSavingNote,
+        description: t.errorSavingLog,
         variant: "destructive",
       });
     } finally {
@@ -153,22 +142,23 @@ export function NoteDrawer({
   };
 
   const handleDelete = async () => {
-    if (!existingNote) return;
+    if (!existingLog) return;
     
     try {
       setIsLoading(true);
-      await notesService.deleteNote(existingNote.id);
+      await cocktailLogService.deleteLog(existingLog.id);
       toast({
         title: t.success,
-        description: t.noteDeleted,
+        description: t.logDeleted,
       });
       onClose();
-      onNoteDeleted?.(existingNote.id);
+      onLogDeleted?.(existingLog.id);
+      await handleLogDeleted();
     } catch (error) {
-      console.error("Error deleting note:", error);
+      console.error("Error deleting log:", error);
       toast({
         title: t.error,
-        description: t.errorDeletingNote,
+        description: t.errorDeletingLog,
         variant: "destructive",
       });
     } finally {
@@ -176,11 +166,39 @@ export function NoteDrawer({
     }
   };
 
+  const handleLogSaved = async () => {
+    try {
+      const updatedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
+      onLogsChange(updatedLogs);
+    } catch (error) {
+      console.error("Error refreshing logs:", error);
+      toast({
+        title: t.error,
+        description: t.errorRefreshingLogs,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleLogDeleted = async () => {
+    try {
+      const updatedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
+      onLogsChange(updatedLogs);
+    } catch (error) {
+      console.error("Error refreshing logs:", error);
+      toast({
+        title: t.error,
+        description: t.errorRefreshingLogs,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="h-[100vh]">
         <DrawerHeader>
-          <DrawerTitle>{existingNote ? t.editNote : t.addNote}</DrawerTitle>
+          <DrawerTitle>{existingLog ? t.editLog : t.addLog}</DrawerTitle>
         </DrawerHeader>
         <div className="flex flex-col h-[calc(100vh-8rem)] overflow-y-auto">
           <div className="p-4 space-y-4">
@@ -264,14 +282,13 @@ export function NoteDrawer({
             </div>
 
             <div className="space-y-2">
-              <Label>{t.location}</Label>
-              <LocationInput
-                value={googlePlace?.name || location}
-                googlePlace={googlePlace}
-                onChange={(location, googlePlace) => {
-                  setLocation(googlePlace?.name || location);
-                  setGooglePlace(googlePlace);
-                }}
+              <Label htmlFor="location">{t.location}</Label>
+              <Input
+                id="location"
+                value={location}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)}
+                placeholder={t.location}
+                className="w-full"
               />
             </div>
 
@@ -322,9 +339,9 @@ export function NoteDrawer({
               disabled={isLoading}
               className="flex-1"
             >
-              {isLoading ? t.saving : (existingNote ? t.updateNote : t.saveNote)}
+              {isLoading ? t.saving : (existingLog ? t.updateLog : t.saveLog)}
             </Button>
-            {existingNote && (
+            {existingLog && (
               <Button 
                 variant="ghost" 
                 onClick={handleDelete} 
