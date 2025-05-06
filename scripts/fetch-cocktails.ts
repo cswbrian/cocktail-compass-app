@@ -1,21 +1,18 @@
+import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
 import { config } from 'dotenv';
-import { createClient } from '@supabase/supabase-js';
 
-// Load environment variables from .env files
-config({ path: '.env' });
+// Load environment variables
 config({ path: '.env.local' });
+config({ path: '.env' });
 
-// Create Supabase client with environment variables
+// Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ Missing required environment variables:');
-  if (!supabaseUrl) console.error('  - NEXT_PUBLIC_SUPABASE_URL');
-  if (!supabaseAnonKey) console.error('  - NEXT_PUBLIC_SUPABASE_ANON_KEY');
-  process.exit(1);
+  throw new Error('Missing Supabase credentials');
 }
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -49,21 +46,20 @@ async function fetchAndSaveCocktails() {
       throw new Error('No cocktails found');
     }
 
-    // Transform the cocktails data
+    // Transform the data to match the Cocktail interface
     const transformedCocktails = transformCocktails(cocktails);
 
-    // Ensure data directory exists
+    // Create data directory if it doesn't exist
     const dataDir = path.join(process.cwd(), 'data');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir);
     }
 
-    // Write cocktails to JSON file
-    const outputPath = path.join(dataDir, 'cocktails.json');
-    fs.writeFileSync(outputPath, JSON.stringify(transformedCocktails, null, 2));
+    // Save the transformed data
+    const filePath = path.join(dataDir, 'cocktails.json');
+    fs.writeFileSync(filePath, JSON.stringify(transformedCocktails, null, 2));
 
     console.log('✅ Cocktails data fetched and saved successfully');
-    console.log(`📊 Total cocktails: ${transformedCocktails.length}`);
   } catch (error) {
     console.error('❌ Error fetching cocktails:', error);
     process.exit(1);
