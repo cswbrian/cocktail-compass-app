@@ -240,6 +240,7 @@ export const translations = {
     logDeleted: "Log deleted successfully",
     errorSavingLog: "Error saving log",
     errorDeletingLog: "Error deleting log",
+    pleaseLoginToViewLogs: "Please sign in to view and add your cocktail logs",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -477,5 +478,6 @@ export const translations = {
     logDeleted: "日誌刪除成功",
     errorSavingLog: "儲存日誌失敗",
     errorDeletingLog: "刪除日誌失敗",
+    pleaseLoginToViewLogs: "請登入以查看和新增你的調酒日誌",
   },
 };
