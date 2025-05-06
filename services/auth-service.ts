@@ -3,7 +3,16 @@ import { supabase } from '@/lib/supabase';
 
 export class AuthService {
   static async signInWithProvider(provider: 'google' | 'github') {
-    const { error } = await supabase.auth.signInWithOAuth({ provider });
+    const redirectTo = process.env.NEXT_PUBLIC_BASE_URL 
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`
+      : 'http://localhost:3000/auth/callback';
+
+    const { error } = await supabase.auth.signInWithOAuth({ 
+      provider,
+      options: {
+        redirectTo
+      }
+    });
     if (error) throw error;
   }
 
