@@ -24,7 +24,8 @@ export class CocktailLogService {
     location?: string | null,
     bartender?: string | null,
     tags?: string[] | null,
-    drinkDate?: Date | null
+    drinkDate?: Date | null,
+    media?: { url: string; type: 'image' | 'video' }[] | null
   ): Promise<CocktailLog> {
     const cocktailId = await this.getCocktailIdBySlug(cocktailSlug);
     
@@ -39,7 +40,8 @@ export class CocktailLogService {
         location,
         bartender,
         tags,
-        drink_date: drinkDate
+        drink_date: drinkDate,
+        media
       }])
       .select()
       .single();
@@ -56,7 +58,8 @@ export class CocktailLogService {
     location?: string | null,
     bartender?: string | null,
     tags?: string[] | null,
-    drinkDate?: Date | null
+    drinkDate?: Date | null,
+    media?: { url: string; type: 'image' | 'video' }[] | null
   ): Promise<CocktailLog> {
     const { data, error } = await supabase
       .from("cocktail_logs")
@@ -68,6 +71,7 @@ export class CocktailLogService {
         bartender,
         tags,
         drink_date: drinkDate,
+        media,
         updated_at: new Date()
       })
       .eq("id", id)

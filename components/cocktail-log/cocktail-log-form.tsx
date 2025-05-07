@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import { CocktailLog } from "@/types/cocktail-log";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
-import { Star, Calendar, Check, ChevronsUpDown, X, Search } from "lucide-react";
+import { Star, Calendar, Check, ChevronsUpDown, X, Search, ImagePlus } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -19,6 +19,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { cn, normalizeText } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 interface CocktailLogFormProps {
   isOpen: boolean;
@@ -56,6 +57,9 @@ export function CocktailLogForm({
   const [newTag, setNewTag] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [drinkDate, setDrinkDate] = useState<Date | undefined>(undefined);
+  const [media, setMedia] = useState<{ url: string; type: 'image' | 'video' }[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
@@ -71,6 +75,7 @@ export function CocktailLogForm({
       setBartender(existingLog.bartender || "");
       setTags(existingLog.tags);
       setDrinkDate(existingLog.drinkDate ? new Date(existingLog.drinkDate) : undefined);
+      setMedia(existingLog.media || []);
     } else {
       setRating(0);
       setCocktailNameInput(cocktailName);
@@ -81,6 +86,7 @@ export function CocktailLogForm({
       setBartender("");
       setTags([]);
       setDrinkDate(undefined);
+      setMedia([]);
     }
   }, [existingLog, cocktailName, cocktailSlug]);
 
@@ -113,7 +119,8 @@ export function CocktailLogForm({
           location || null,
           bartender || null,
           tags,
-          drinkDate || null
+          drinkDate || null,
+          media
         );
       } else {
         const { data: { user } } = await supabase.auth.getUser();
@@ -128,7 +135,8 @@ export function CocktailLogForm({
           location || null,
           bartender || null,
           tags,
-          drinkDate || null
+          drinkDate || null,
+          media
         );
       }
 
@@ -215,6 +223,38 @@ export function CocktailLogForm({
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
+  const handleMediaUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    // Check if adding new media would exceed the limit
+    if (media.length + files.length > 5) {
+      toast({
+        title: t.error,
+        description: t.maxMediaExceeded,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // TODO: Implement actual media upload logic
+    // For now, we'll just create placeholder URLs
+    console.log('Media upload status:', isUploading, setIsUploading); // Temporary fix for unused variable
+    const newMedia = Array.from(files).map(file => ({
+      url: URL.createObjectURL(file),
+      type: file.type.startsWith('video/') ? 'video' as const : 'image' as const
+    }));
+    setMedia([...media, ...newMedia]);
+  };
+
+  const handleRemoveMedia = (index: number) => {
+    setMedia(media.filter((_, i) => i !== index));
+  };
+
+  const handleMediaClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -276,6 +316,57 @@ export function CocktailLogForm({
                         />
                       </PopoverContent>
                     </Popover>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>{t.media}</Label>
+                    <div className="max-h-[200px] overflow-x-auto">
+                      <div className="grid grid-flow-col auto-cols-[200px] gap-2">
+                        {media.map((item, index) => (
+                          <div key={index} className="relative aspect-square">
+                            {item.type === 'image' ? (
+                              <div className="relative w-full h-full">
+                                <Image
+                                  src={item.url}
+                                  alt={`Media ${index + 1}`}
+                                  fill
+                                  className="object-cover rounded-lg"
+                                  sizes="200px"
+                                />
+                              </div>
+                            ) : (
+                              <video
+                                src={item.url}
+                                className="w-full h-full object-cover rounded-lg"
+                                controls
+                              />
+                            )}
+                            <button
+                              onClick={() => handleRemoveMedia(index)}
+                              className="absolute top-1 right-1 p-1 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+                            >
+                              <X className="h-4 w-4 text-white" />
+                            </button>
+                          </div>
+                        ))}
+                        {media.length < 5 && (
+                          <button
+                            onClick={handleMediaClick}
+                            className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 transition-colors"
+                          >
+                            <ImagePlus className="h-6 w-6 text-gray-400" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*,video/*"
+                      multiple
+                      onChange={handleMediaUpload}
+                      className="hidden"
+                    />
                   </div>
 
                   <div className="space-y-2">

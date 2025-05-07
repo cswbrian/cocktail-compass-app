@@ -251,6 +251,8 @@ export const translations = {
     errorLoadingStats: "Error loading statistics",
     searchCocktail: "Search for a cocktail...",
     noCocktailsFound: "No cocktails found",
+    media: "Media",
+    maxMediaExceeded: "Maximum 5 media items allowed",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -499,5 +501,7 @@ export const translations = {
     errorLoadingStats: "載入統計資料失敗",
     searchCocktail: "搜尋調酒...",
     noCocktailsFound: "找不到調酒",
+    media: "媒體",
+    maxMediaExceeded: "最多可上傳5個媒體檔案",
   },
 };

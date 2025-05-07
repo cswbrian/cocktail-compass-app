@@ -12,4 +12,8 @@ export interface CocktailLog {
   updatedAt: string;
   drinkDate: string | null;
   specialIngredients?: string;
+  media?: {
+    url: string;
+    type: 'image' | 'video';
+  }[];
 } 
