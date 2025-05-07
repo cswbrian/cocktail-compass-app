@@ -13,7 +13,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { cocktailLogService } from "@/services/cocktail-log-service";
 import { Button } from "@/components/ui/button";
-import { CocktailLogDrawer } from "@/components/cocktail-log/cocktail-log-drawer";
+import { CocktailLogForm } from "@/components/cocktail-log/cocktail-log-form";
 
 interface Stats {
   totalLogs: number;
@@ -231,7 +231,7 @@ export function JournalClient() {
         <NotebookPenIcon className="h-12 w-12" />
       </Button>
 
-      <CocktailLogDrawer
+      <CocktailLogForm
         isOpen={isDrawerOpen}
         onClose={() => {
           setIsDrawerOpen(false);

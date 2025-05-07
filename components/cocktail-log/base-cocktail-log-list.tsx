@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { CocktailLog } from "@/types/cocktail-log";
-import { CocktailLogDrawer } from "./cocktail-log-drawer";
-import { CocktailLogCard } from "./cocktail-log-card";
+import { CocktailLogForm } from "@/components/cocktail-log/cocktail-log-form";
+import { CocktailLogCard } from "@/components/cocktail-log/cocktail-log-card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
@@ -121,7 +121,7 @@ export function BaseCocktailLogList({
         </div>
       )}
 
-      <CocktailLogDrawer
+      <CocktailLogForm
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         cocktailSlug={cocktailSlug}
