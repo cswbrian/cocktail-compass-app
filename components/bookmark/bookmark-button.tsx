@@ -22,7 +22,8 @@ import { cn } from "@/lib/utils";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
-import { bookmarkService, BookmarkList, BookmarkedItem } from "@/services/bookmark-service";
+import { bookmarkService } from "@/services/bookmark-service";
+import { BookmarkList, BookmarkedItem } from "@/types/bookmark";
 import { toast } from "sonner";
 import { cocktailService } from "@/services/cocktail-service";
 

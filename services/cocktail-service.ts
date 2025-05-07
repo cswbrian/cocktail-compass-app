@@ -82,6 +82,10 @@ class CocktailService {
     return this.slugToCocktail.get(slug);
   }
 
+  public getCocktailById(id: string): Cocktail | undefined {
+    return this.cocktails.find(cocktail => cocktail.id === id);
+  }
+
   public getCocktailsByFlavor(flavorSlug: string): Cocktail[] {
     // Check cache first
     const cached = this.flavorToCocktails.get(flavorSlug);

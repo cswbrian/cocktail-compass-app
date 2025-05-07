@@ -1,16 +1,15 @@
-import { Timestamp } from 'firebase/firestore';
-
 export interface CocktailLog {
   id: string;
-  user_id: string;
-  cocktail_id: string;
+  cocktailId: string;
+  cocktailName: string;
+  userId: string;
   rating: number;
-  special_ingredients: string | null;
-  comments: string | null;
-  location: string | null;
-  bartender: string | null;
+  location?: string;
+  bartender?: string;
+  comments?: string;
   tags: string[];
-  drink_date: string | null;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
+  drinkDate: string | null;
+  specialIngredients?: string;
 } 

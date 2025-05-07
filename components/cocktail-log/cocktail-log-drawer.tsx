@@ -7,15 +7,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cocktailLogService } from "@/services/cocktail-log-service";
+import { cocktailService } from "@/services/cocktail-service";
 import { CocktailLog } from "@/types/cocktail-log";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
-import { Star, Calendar } from "lucide-react";
+import { Star, Calendar, Check, ChevronsUpDown, X, Search } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { cn, normalizeText } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 
 interface CocktailLogDrawerProps {
@@ -43,6 +45,9 @@ export function CocktailLogDrawer({
 }: CocktailLogDrawerProps) {
   const [rating, setRating] = useState(0);
   const [cocktailNameInput, setCocktailNameInput] = useState("");
+  const [open, setOpen] = useState(false);
+  const [filteredCocktails, setFilteredCocktails] = useState<{ value: string; label: string }[]>([]);
+  const [selectedCocktail, setSelectedCocktail] = useState<{ value: string; label: string } | null>(null);
   const [specialIngredients, setSpecialIngredients] = useState("");
   const [comments, setComments] = useState("");
   const [location, setLocation] = useState("");
@@ -59,15 +64,17 @@ export function CocktailLogDrawer({
     if (existingLog) {
       setRating(existingLog.rating);
       setCocktailNameInput(cocktailName);
-      setSpecialIngredients(existingLog.special_ingredients || "");
+      setSelectedCocktail({ value: cocktailSlug, label: cocktailName });
+      setSpecialIngredients(existingLog.specialIngredients || "");
       setComments(existingLog.comments || "");
       setLocation(existingLog.location || "");
       setBartender(existingLog.bartender || "");
       setTags(existingLog.tags);
-      setDrinkDate(existingLog.drink_date ? new Date(existingLog.drink_date) : undefined);
+      setDrinkDate(existingLog.drinkDate ? new Date(existingLog.drinkDate) : undefined);
     } else {
       setRating(0);
       setCocktailNameInput(cocktailName);
+      setSelectedCocktail({ value: cocktailSlug, label: cocktailName });
       setSpecialIngredients("");
       setComments("");
       setLocation("");
@@ -75,7 +82,22 @@ export function CocktailLogDrawer({
       setTags([]);
       setDrinkDate(undefined);
     }
-  }, [existingLog, cocktailName]);
+  }, [existingLog, cocktailName, cocktailSlug]);
+
+  useEffect(() => {
+    const cocktails = cocktailService.getAllCocktails() || [];
+    const filtered = cocktails
+      .filter(cocktail => {
+        const normalizedSearch = normalizeText(cocktailNameInput);
+        const normalizedName = normalizeText(`${cocktail.name.en} / ${cocktail.name.zh}`);
+        return normalizedName.includes(normalizedSearch);
+      })
+      .map(cocktail => ({
+        value: cocktail.id,
+        label: `${cocktail.name.en} / ${cocktail.name.zh}`
+      }));
+    setFilteredCocktails(filtered);
+  }, [cocktailNameInput]);
 
   const handleSave = async () => {
     try {
@@ -198,63 +220,20 @@ export function CocktailLogDrawer({
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="h-[100vh]">
         <DrawerHeader>
-          <DrawerTitle>{existingLog ? t.editLog : t.addLog}</DrawerTitle>
+          <div className="flex items-center relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute left-0"
+              onClick={onClose}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+            <DrawerTitle className="flex-1 text-center">{existingLog ? t.editLog : t.addLog}</DrawerTitle>
+          </div>
         </DrawerHeader>
         <div className="flex flex-col h-[calc(100vh-8rem)] overflow-y-auto">
           <div className="p-4 space-y-4">
-            <div className="space-y-2">
-              <Label>{t.rating}</Label>
-              <div className="flex items-center space-x-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    onClick={() => setRating(star)}
-                    className="focus:outline-none"
-                  >
-                    <Star
-                      className={`h-6 w-6 ${
-                        star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="cocktailName">{t.cocktailName}</Label>
-              <Input
-                id="cocktailName"
-                value={cocktailNameInput}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setCocktailNameInput(e.target.value)}
-                placeholder={t.cocktailName}
-                className="w-full"
-                disabled={isFromCocktailPage}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="specialIngredients">{t.specialIngredients}</Label>
-              <Input
-                id="specialIngredients"
-                value={specialIngredients}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setSpecialIngredients(e.target.value)}
-                placeholder={t.specialIngredients}
-                className="w-full"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="comments">{t.notePlaceholder}</Label>
-              <Textarea
-                id="comments"
-                value={comments}
-                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setComments(e.target.value)}
-                placeholder={t.notePlaceholder}
-                className="min-h-[200px]"
-              />
-            </div>
-
             <div className="space-y-2">
               <Label>{t.drinkDate}</Label>
               <Popover>
@@ -282,6 +261,87 @@ export function CocktailLogDrawer({
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="cocktailName">{t.cocktailName}</Label>
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="w-full justify-between"
+                  disabled={isFromCocktailPage}
+                  onClick={() => setOpen(!open)}
+                >
+                  {selectedCocktail ? selectedCocktail.label : t.selectCocktail}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+                {open && (
+                  <div className="absolute z-50 w-full mt-1 bg-popover rounded-md shadow-md">
+                    <Command>
+                      <div className="relative">
+                        <Search className="absolute left-2 top-2 h-4 w-4 text-muted-foreground" />
+                        <CommandInput 
+                          placeholder={t.searchCocktail} 
+                          value={cocktailNameInput}
+                          onValueChange={setCocktailNameInput}
+                          className="pl-8"
+                        />
+                        {cocktailNameInput && (
+                          <button
+                            onClick={() => setCocktailNameInput('')}
+                            className="absolute right-2 top-2 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                      <CommandEmpty>{t.noCocktailsFound}</CommandEmpty>
+                      <CommandGroup>
+                        {filteredCocktails.map((cocktail) => (
+                          <CommandItem
+                            key={cocktail.value}
+                            value={cocktail.value}
+                            onSelect={() => {
+                              setSelectedCocktail(cocktail);
+                              setCocktailNameInput(cocktail.label);
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                selectedCocktail?.value === cocktail.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {cocktail.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t.rating}</Label>
+              <div className="flex items-center space-x-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => setRating(star)}
+                    className="focus:outline-none"
+                  >
+                    <Star
+                      className={`h-6 w-6 ${
+                        star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="location">{t.location}</Label>
               <Input
                 id="location"
@@ -300,6 +360,28 @@ export function CocktailLogDrawer({
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBartender(e.target.value)}
                 placeholder={t.bartender}
                 className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="specialIngredients">{t.specialIngredients}</Label>
+              <Input
+                id="specialIngredients"
+                value={specialIngredients}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setSpecialIngredients(e.target.value)}
+                placeholder={t.specialIngredients}
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="comments">{t.notePlaceholder}</Label>
+              <Textarea
+                id="comments"
+                value={comments}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setComments(e.target.value)}
+                placeholder={t.notePlaceholder}
+                className="min-h-[200px]"
               />
             </div>
 

@@ -1,29 +1,12 @@
 import { supabase } from '@/lib/supabase';
 import { AuthService } from '@/services/auth-service';
+import { BookmarkList, BookmarkedItem } from "@/types/bookmark";
 
-export interface BookmarkList {
-  id: string;  // UUID
-  user_id: string;  // UUID
-  name: string;
-  name_key: string | null;
-  is_default: boolean;
-  created_at: string;
-  updated_at: string;
-  items?: BookmarkedItem[];  // Added for bulk fetching
-}
-
-export interface BookmarkedItem {
-  id: string;  // UUID
-  list_id: string;  // UUID
-  cocktail_id: string;
-  added_at: string;
-}
-
-class BookmarkService {
+export class BookmarkService {
   private readonly DEFAULT_LISTS = [
     { id: "want-to-try", nameKey: "wantToTry" },
     { id: "favorites", nameKey: "favorites" },
-    { id: "dont-like", nameKey: "dontLike" },
+    { id: "explore", nameKey: "explore" }
   ];
 
   private cachedUserId: string | null = null;
@@ -58,9 +41,8 @@ class BookmarkService {
       .from('bookmark_lists')
       .insert(
         this.DEFAULT_LISTS.map(list => ({
-          name: list.nameKey, // Store the key as name
-          name_key: list.nameKey,
-          is_default: true,
+          id: list.id,
+          name: list.nameKey,
           user_id: userId
         }))
       );
@@ -152,6 +134,49 @@ class BookmarkService {
       .eq('id', listId);
 
     if (error) throw error;
+  }
+
+  async getUserBookmarks(): Promise<BookmarkList[]> {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user.user) return [];
+
+    const { data, error } = await supabase
+      .from("bookmark_lists")
+      .select(`
+        id,
+        name,
+        name_key,
+        is_default,
+        user_id,
+        created_at,
+        updated_at,
+        bookmarked_items (
+          id,
+          cocktail_id,
+          list_id,
+          added_at
+        )
+      `)
+      .eq("user_id", user.user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data.map(list => ({
+      id: list.id,
+      name: list.name,
+      name_key: list.name_key,
+      is_default: list.is_default,
+      user_id: list.user_id,
+      created_at: list.created_at,
+      updated_at: list.updated_at,
+      items: list.bookmarked_items.map((item: any) => ({
+        id: item.id,
+        cocktail_id: item.cocktail_id,
+        list_id: item.list_id,
+        added_at: item.added_at
+      }))
+    }));
   }
 }
 
