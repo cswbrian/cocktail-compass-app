@@ -48,11 +48,17 @@ export function CocktailLogList({
   }
 
   return (
-    <BaseCocktailLogList
-      cocktailSlug={cocktailSlug}
-      cocktailName={cocktailName}
-      logs={logs}
-      onLogsChange={setLogs}
-    />
+    <div className="space-y-0">
+      {logs.map((log) => (
+        <div key={log.id} className="relative">
+          <BaseCocktailLogList
+            cocktailSlug={cocktailSlug}
+            cocktailName={cocktailName}
+            logs={[log]}
+            onLogsChange={setLogs}
+          />
+        </div>
+      ))}
+    </div>
   );
 } 

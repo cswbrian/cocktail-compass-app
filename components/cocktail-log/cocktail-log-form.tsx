@@ -30,7 +30,7 @@ interface CocktailLogFormProps {
   existingLog?: CocktailLog | null;
   isFromCocktailPage?: boolean;
   onLogDeleted?: (logId: string) => void;
-  onLogsChange: (logs: CocktailLog[]) => void;
+  onLogsChange?: (logs: CocktailLog[]) => void;
 }
 
 export function CocktailLogForm({ 
@@ -187,7 +187,7 @@ export function CocktailLogForm({
   const handleLogSaved = async () => {
     try {
       const updatedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
-      onLogsChange(updatedLogs);
+      onLogsChange?.(updatedLogs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
       toast({
@@ -201,7 +201,7 @@ export function CocktailLogForm({
   const handleLogDeleted = async () => {
     try {
       const updatedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
-      onLogsChange(updatedLogs);
+      onLogsChange?.(updatedLogs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
       toast({

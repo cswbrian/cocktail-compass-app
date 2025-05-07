@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { CocktailLog } from "@/types/cocktail-log";
 import { cocktailService } from "@/services/cocktail-service";
+import { cocktailLogsMediaService } from "@/services/media-service";
 
 export class CocktailLogService {
   private async getCocktailIdBySlug(slug: string): Promise<string> {
@@ -29,7 +30,8 @@ export class CocktailLogService {
   ): Promise<CocktailLog> {
     const cocktailId = await this.getCocktailIdBySlug(cocktailSlug);
     
-    const { data, error } = await supabase
+    // First create the log to get the ID
+    const { data: logData, error: createError } = await supabase
       .from("cocktail_logs")
       .insert([{
         cocktail_id: cocktailId,
@@ -41,13 +43,51 @@ export class CocktailLogService {
         bartender,
         tags,
         drink_date: drinkDate,
-        media
+        media: [] // Initialize with empty media array
       }])
       .select()
       .single();
 
-    if (error) throw error;
-    return data;
+    if (createError) throw createError;
+
+    // If there are media files to upload, handle them
+    if (media && media.length > 0) {
+      try {
+        // Upload each media file and get the URLs
+        const mediaUrls = await Promise.all(
+          media.map(async (item: { url: string; type: 'image' | 'video' }) => {
+            if (item.url.startsWith('blob:')) {
+              // This is a new file that needs to be uploaded
+              const response = await fetch(item.url);
+              const blob = await response.blob();
+              const file = new File([blob], `media-${Date.now()}.${item.type === 'video' ? 'mp4' : 'jpg'}`, {
+                type: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
+              });
+              const url = await cocktailLogsMediaService.uploadMedia(file, userId, logData.id);
+              return { url, type: item.type };
+            }
+            return item; // Keep existing media items
+          })
+        );
+
+        // Update the log with the new media URLs
+        const { data: updatedLog, error: updateError } = await supabase
+          .from("cocktail_logs")
+          .update({ media: mediaUrls })
+          .eq("id", logData.id)
+          .select()
+          .single();
+
+        if (updateError) throw updateError;
+        return updatedLog;
+      } catch (error) {
+        // If media upload fails, delete the log and throw the error
+        await this.deleteLog(logData.id);
+        throw error;
+      }
+    }
+
+    return logData;
   }
 
   async updateLog(
@@ -61,28 +101,108 @@ export class CocktailLogService {
     drinkDate?: Date | null,
     media?: { url: string; type: 'image' | 'video' }[] | null
   ): Promise<CocktailLog> {
-    const { data, error } = await supabase
+    // Get the existing log to compare media
+    const { data: existingLog, error: fetchError } = await supabase
       .from("cocktail_logs")
-      .update({
-        rating,
-        special_ingredients: specialIngredients,
-        comments,
-        location,
-        bartender,
-        tags,
-        drink_date: drinkDate,
-        media,
-        updated_at: new Date()
-      })
+      .select("*")
       .eq("id", id)
-      .select()
       .single();
 
-    if (error) throw error;
-    return data;
+    if (fetchError) throw fetchError;
+
+    // Handle media updates
+    if (media) {
+      try {
+        // Find media items to soft delete (items in existingLog.media but not in new media)
+        const mediaToDelete = existingLog.media
+          ?.filter((existing: { url: string; type: 'image' | 'video' }) => !media.some(newItem => newItem.url === existing.url))
+          .map((item: { url: string; type: 'image' | 'video' }) => item.url) || [];
+
+        // Soft delete removed media files
+        if (mediaToDelete.length > 0) {
+          await cocktailLogsMediaService.softDeleteMultipleMedia(mediaToDelete);
+        }
+
+        // Upload new media files
+        const updatedMedia = await Promise.all(
+          media.map(async (item: { url: string; type: 'image' | 'video' }) => {
+            if (item.url.startsWith('blob:')) {
+              // This is a new file that needs to be uploaded
+              const response = await fetch(item.url);
+              const blob = await response.blob();
+              const file = new File([blob], `media-${Date.now()}.${item.type === 'video' ? 'mp4' : 'jpg'}`, {
+                type: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
+              });
+              const url = await cocktailLogsMediaService.uploadMedia(file, existingLog.user_id, id);
+              return { url, type: item.type };
+            }
+            return item; // Keep existing media items
+          })
+        );
+
+        // Update the log with all changes
+        const { data, error } = await supabase
+          .from("cocktail_logs")
+          .update({
+            rating,
+            special_ingredients: specialIngredients,
+            comments,
+            location,
+            bartender,
+            tags,
+            drink_date: drinkDate,
+            media: updatedMedia,
+            updated_at: new Date()
+          })
+          .eq("id", id)
+          .select()
+          .single();
+
+        if (error) throw error;
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    } else {
+      // If no media changes, just update the other fields
+      const { data, error } = await supabase
+        .from("cocktail_logs")
+        .update({
+          rating,
+          special_ingredients: specialIngredients,
+          comments,
+          location,
+          bartender,
+          tags,
+          drink_date: drinkDate,
+          updated_at: new Date()
+        })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    }
   }
 
   async deleteLog(id: string): Promise<void> {
+    // Get the log to find media files to soft delete
+    const { data: log, error: fetchError } = await supabase
+      .from("cocktail_logs")
+      .select("media")
+      .eq("id", id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // Soft delete associated media files
+    if (log.media && log.media.length > 0) {
+      const mediaUrls = log.media.map((item: { url: string; type: 'image' | 'video' }) => item.url);
+      await cocktailLogsMediaService.softDeleteMultipleMedia(mediaUrls);
+    }
+
+    // Delete the log
     const { error } = await supabase
       .from("cocktail_logs")
       .delete()
@@ -111,7 +231,7 @@ export class CocktailLogService {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data.map(this.mapLog);
+    return Promise.all(data.map(log => this.mapLog(log)));
   }
 
   async getLogsByUserId(userId?: string): Promise<CocktailLog[]> {
@@ -125,7 +245,7 @@ export class CocktailLogService {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data.map(this.mapLog);
+    return Promise.all(data.map(log => this.mapLog(log)));
   }
 
   async getUserStats() {
@@ -198,10 +318,21 @@ export class CocktailLogService {
     };
   }
 
-  private mapLog(data: any): CocktailLog {
+  private async mapLog(data: any): Promise<CocktailLog> {
     // Get the cocktail from our in-memory data
     const allCocktails = cocktailService.getAllCocktails();
     const cocktail = allCocktails.find(c => c.id === data.cocktail_id);
+    
+    // Convert media URLs to signed URLs
+    const media = data.media ? await Promise.all(
+      data.media.map(async (item: { url: string; type: 'image' | 'video' }) => {
+        // Extract the file path from the URL
+        const urlParts = item.url.split('/');
+        const fileName = urlParts.slice(urlParts.indexOf('cocktail-logs') + 1).join('/');
+        const signedUrl = await cocktailLogsMediaService.getSignedUrl(fileName);
+        return { ...item, url: signedUrl };
+      })
+    ) : [];
     
     return {
       id: data.id,
@@ -215,7 +346,8 @@ export class CocktailLogService {
       tags: data.tags || [],
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      drinkDate: data.drink_date
+      drinkDate: data.drink_date,
+      media
     };
   }
 }

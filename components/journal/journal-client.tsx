@@ -115,16 +115,14 @@ export function JournalClient() {
     }
 
     return (
-      <div className="space-y-4">
+      <div>
         {logs.map((log) => (
           <CocktailLogCard
             key={log.id}
             log={log}
-            cocktailName={log.cocktailName}
-            onClick={() => {
-              setSelectedLog(log);
-              setIsDrawerOpen(true);
-            }}
+            onLogSaved={handleLogSaved}
+            onLogDeleted={handleLogDeleted}
+            onLogsChange={setLogs}
           />
         ))}
       </div>

@@ -46,17 +46,6 @@ export function BaseCocktailLogList({
     setIsDrawerOpen(true);
   };
 
-  const handleEditLog = (log: CocktailLog) => {
-    if (!user) {
-      // Store the current path for redirect after login
-      localStorage.setItem('returnUrl', window.location.pathname);
-      router.push(`/${language}/login`);
-      return;
-    }
-    setSelectedLog(log);
-    setIsDrawerOpen(true);
-  };
-
   const handleLogSaved = async () => {
     if (!user) return;
     try {
@@ -114,8 +103,9 @@ export function BaseCocktailLogList({
             <CocktailLogCard
               key={log.id}
               log={log}
-              cocktailName={cocktailName}
-              onClick={() => handleEditLog(log)}
+              onLogSaved={handleLogSaved}
+              onLogDeleted={handleLogDeleted}
+              onLogsChange={onLogsChange}
             />
           ))}
         </div>
