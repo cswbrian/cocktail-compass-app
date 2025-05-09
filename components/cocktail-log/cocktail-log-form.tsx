@@ -271,7 +271,7 @@ export function CocktailLogForm({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-x-0 bottom-0 z-50 h-[100vh] bg-background rounded-t-[10px] overflow-hidden"
+            className="fixed inset-x-0 bottom-0 z-50 h-screen bg-background rounded-t-[10px] overflow-hidden"
           >
             <div className="h-full flex flex-col">
               <div className="p-4 border-b">
