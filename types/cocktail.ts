@@ -44,3 +44,11 @@ export interface Cocktail {
 export interface RankedCocktail extends Cocktail {
   distance: number;
 }
+
+export interface CocktailPreview {
+  id: string;
+  slug: string;
+  name: LocalizedString;
+  categories: ('Strong & Spirit-Focused' | 'Sweet & Tart' | 'Tall & Bubbly' | 'Rich & Creamy')[];
+  flavor_descriptors: LocalizedString[];
+}
