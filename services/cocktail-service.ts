@@ -1,5 +1,5 @@
 import { compressedCocktails } from "@/data/cocktails.compressed";
-import { Cocktail, RankedCocktail } from "@/types/cocktail";
+import { Cocktail, RankedCocktail, CocktailPreview } from "@/types/cocktail";
 import { slugify } from "@/lib/utils";
 import { decompress } from "@/lib/decompress";
 
@@ -7,6 +7,7 @@ class CocktailService {
   private static instance: CocktailService;
   private static isInitialized = false;
   private cocktails: Cocktail[];
+  private cocktailPreviews: CocktailPreview[] = [];
   
   // Cache for frequently accessed data
   private slugToCocktail: Map<string, Cocktail>;
@@ -33,7 +34,18 @@ class CocktailService {
     
     // Initialize caches
     this.initializeCaches();
+    this.initializePreviewList();
     CocktailService.isInitialized = true;
+  }
+
+  private initializePreviewList() {
+    this.cocktailPreviews = this.cocktails.map(cocktail => ({
+      id: cocktail.id,
+      slug: cocktail.slug,
+      name: cocktail.name,
+      categories: cocktail.categories,
+      flavor_descriptors: cocktail.flavor_descriptors
+    }));
   }
 
   public static getInstance(): CocktailService {
@@ -74,8 +86,8 @@ class CocktailService {
     });
   }
 
-  public getAllCocktails(): Cocktail[] {
-    return this.cocktails;
+  public getAllCocktails(): CocktailPreview[] {
+    return this.cocktailPreviews;
   }
 
   public getCocktailBySlug(slug: string): Cocktail | undefined {
