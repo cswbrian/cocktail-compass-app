@@ -69,7 +69,7 @@ export function BookmarksList() {
         // Get bookmarks and cocktails
         const [lists, allCocktails] = await Promise.all([
           bookmarkService.getBookmarks(),
-          cocktailService.getAllCocktails()
+          cocktailService.getAllCocktailsWithDetails()
         ]);
 
         setBookmarks(lists);

@@ -276,7 +276,7 @@ export class CocktailLogService {
       .order("created_at", { ascending: false });
 
     // Get all cocktails from our in-memory data
-    const allCocktails = cocktailService.getAllCocktails();
+    const allCocktails = cocktailService.getAllCocktailsWithDetails();
 
     // Count cocktails
     const cocktailCounts = logs?.reduce((acc, curr) => {
@@ -315,6 +315,71 @@ export class CocktailLogService {
       averageRating,
       favoriteCocktails: favoriteCocktailsList,
       mostLoggedSpirits,
+    };
+  }
+
+  async getEnhancedUserStats() {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user.user) return null;
+
+    // Get all logs for the user
+    const { data: logs } = await supabase
+      .from("cocktail_logs")
+      .select("*")
+      .eq("user_id", user.user.id)
+      .order("created_at", { ascending: false });
+
+    if (!logs) return null;
+
+    // Get all cocktails from our in-memory data
+    const allCocktails = cocktailService.getAllCocktails();
+
+    // Calculate basic stats
+    const totalCocktailsDrunk = logs.length;
+    const uniqueCocktails = new Set(logs.map(log => log.cocktail_id)).size;
+    const uniqueBars = new Set(logs.map(log => log.location).filter(Boolean)).size;
+
+    // Get drinks logged over time (last 6 months)
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    
+    const drinksByMonth = logs.reduce((acc, log) => {
+      const date = new Date(log.drink_date || log.created_at);
+      if (date >= sixMonthsAgo) {
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        acc[monthKey] = (acc[monthKey] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+    // Get top bars with drink counts
+    const barDrinkCounts = logs.reduce((acc, log) => {
+      if (log.location) {
+        acc[log.location] = (acc[log.location] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+    const topBarsWithMostDrinks = Object.entries(barDrinkCounts)
+      .map(([name, count]) => ({ name, count: Number(count) }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    // Get recent photos
+    const recentPhotos = logs
+      .flatMap(log => log.media || [])
+      .filter(media => media.type === 'image')
+      .slice(0, 6);
+
+    return {
+      basicStats: {
+        totalCocktailsDrunk,
+        uniqueCocktails,
+        uniqueBars
+      },
+      drinksByMonth,
+      topBarsWithMostDrinks,
+      recentPhotos
     };
   }
 

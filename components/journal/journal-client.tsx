@@ -5,28 +5,36 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { CocktailLog } from "@/types/cocktail-log";
-import { CocktailLogCard } from "@/components/cocktail-log/cocktail-log-card";
-import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { StarIcon, ListIcon, NotebookPenIcon } from "lucide-react";
+import { ListIcon, NotebookPenIcon, BarChart3Icon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { cocktailLogService } from "@/services/cocktail-log-service";
 import { Button } from "@/components/ui/button";
 import { CocktailLogForm } from "@/components/cocktail-log/cocktail-log-form";
+import { JournalHighlights } from "./journal-highlights";
+import { Feeds } from "./feeds";
 
-interface Stats {
-  totalLogs: number;
-  averageRating: number;
-  favoriteCocktails: { name: string; count: number }[];
-  mostLoggedSpirits: { name: string; count: number }[];
+interface EnhancedStats {
+  basicStats: {
+    totalCocktailsDrunk: number;
+    uniqueCocktails: number;
+    uniqueBars: number;
+  };
+  drinksByMonth: Record<string, number>;
+  topBarsWithMostDrinks: { name: string; count: number }[];
+  recentPhotos: { url: string; type: string }[];
 }
 
-const DEFAULT_STATS: Stats = {
-  totalLogs: 0,
-  averageRating: 0,
-  favoriteCocktails: [],
-  mostLoggedSpirits: [],
+const DEFAULT_STATS: EnhancedStats = {
+  basicStats: {
+    totalCocktailsDrunk: 0,
+    uniqueCocktails: 0,
+    uniqueBars: 0
+  },
+  drinksByMonth: {},
+  topBarsWithMostDrinks: [],
+  recentPhotos: []
 };
 
 export function JournalClient() {
@@ -39,7 +47,7 @@ export function JournalClient() {
   const [isLoadingLogs, setIsLoadingLogs] = useState(true);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [logs, setLogs] = useState<CocktailLog[]>([]);
-  const [stats, setStats] = useState<Stats>(DEFAULT_STATS);
+  const [stats, setStats] = useState<EnhancedStats>(DEFAULT_STATS);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedLog, setSelectedLog] = useState<CocktailLog | null>(null);
 
@@ -69,7 +77,7 @@ export function JournalClient() {
     // Fetch stats
     const fetchStats = async () => {
       try {
-        const fetchedStats = await cocktailLogService.getUserStats();
+        const fetchedStats = await cocktailLogService.getEnhancedUserStats();
         setStats(fetchedStats || DEFAULT_STATS);
       } catch (error) {
         console.error("Error fetching stats:", error);
@@ -90,111 +98,20 @@ export function JournalClient() {
   const handleLogSaved = async () => {
     const updatedLogs = await cocktailLogService.getLogsByUserId();
     setLogs(updatedLogs);
-    const updatedStats = await cocktailLogService.getUserStats();
+    const updatedStats = await cocktailLogService.getEnhancedUserStats();
     setStats(updatedStats || DEFAULT_STATS);
   };
 
   const handleLogDeleted = async () => {
     const updatedLogs = await cocktailLogService.getLogsByUserId();
     setLogs(updatedLogs);
-    const updatedStats = await cocktailLogService.getUserStats();
+    const updatedStats = await cocktailLogService.getEnhancedUserStats();
     setStats(updatedStats || DEFAULT_STATS);
   };
 
   if (!user) {
     return null;
   }
-
-  const renderLogs = () => {
-    if (isLoadingLogs) {
-      return <div className="text-center py-8">{t.loading}</div>;
-    }
-
-    if (!logs || logs.length === 0) {
-      return <div className="text-center py-8">{t.noLogs}</div>;
-    }
-
-    return (
-      <div>
-        {logs.map((log) => (
-          <CocktailLogCard
-            key={log.id}
-            log={log}
-            onLogSaved={handleLogSaved}
-            onLogDeleted={handleLogDeleted}
-            onLogsChange={setLogs}
-          />
-        ))}
-      </div>
-    );
-  };
-
-  const renderHighlights = () => {
-    if (isLoadingStats) {
-      return (
-        <div className="flex items-center justify-center py-8">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
-            <p>{t.loading}</p>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">{t.totalLogs}</h3>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm text-muted-foreground">{t.totalLogs}</p>
-              <p className="text-2xl font-bold">{stats.totalLogs}</p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">{t.averageRating}</p>
-              <p className="text-2xl font-bold">
-                {stats.averageRating.toFixed(1)}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">{t.favoriteCocktails}</h3>
-          <div className="space-y-2">
-            {stats.favoriteCocktails.map((cocktail) => (
-              <div
-                key={cocktail.name}
-                className="flex justify-between items-center"
-              >
-                <span>{cocktail.name}</span>
-                <span className="text-muted-foreground">
-                  {cocktail.count} {t.times}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card className="p-6 md:col-span-2">
-          <h3 className="text-lg font-semibold mb-4">{t.mostLoggedSpirits}</h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            {stats.mostLoggedSpirits.map((spirit) => (
-              <div
-                key={spirit.name}
-                className="flex justify-between items-center"
-              >
-                <span>{spirit.name}</span>
-                <span className="text-muted-foreground">
-                  {spirit.count} {t.times}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
-    );
-  };
 
   return (
     <div className="container mx-auto pb-20">
@@ -205,17 +122,23 @@ export function JournalClient() {
             {t.yourLogs}
           </TabsTrigger>
           <TabsTrigger value="highlights" className="flex items-center gap-2">
-            <StarIcon className="w-4 h-4" />
+            <BarChart3Icon className="w-4 h-4" />
             {t.highlights}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="logs" className="space-y-6">
-          {renderLogs()}
+          <Feeds
+            logs={logs}
+            isLoading={isLoadingLogs}
+            onLogSaved={handleLogSaved}
+            onLogDeleted={handleLogDeleted}
+            onLogsChange={setLogs}
+          />
         </TabsContent>
 
         <TabsContent value="highlights" className="space-y-6">
-          {renderHighlights()}
+          <JournalHighlights stats={stats} isLoading={isLoadingStats} />
         </TabsContent>
       </Tabs>
 

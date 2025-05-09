@@ -7,7 +7,7 @@ export const dynamic = "force-static";
 type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const cocktails = cocktailService.getAllCocktails();
+  const cocktails = cocktailService.getAllCocktailsWithDetails();
   
   // Get all unique flavors
   const allFlavors = new Set<string>()

@@ -137,7 +137,7 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const handleSubmit = useCallback(() => {
-    const cocktails = cocktailService.getAllCocktails();
+    const cocktails = cocktailService.getAllCocktailsWithDetails();
     const rankedResults = rankCocktails(cocktails, {
       sweetness: state.sweetness,
       sourness: state.sourness,

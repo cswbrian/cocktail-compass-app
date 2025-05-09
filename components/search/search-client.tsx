@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Cocktail } from "@/types/cocktail";
+import { CocktailPreview } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface SearchClientProps {
-  cocktails: Cocktail[];
+  cocktails: CocktailPreview[];
 }
 
 interface SearchItem {

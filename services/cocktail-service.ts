@@ -90,6 +90,10 @@ class CocktailService {
     return this.cocktailPreviews;
   }
 
+  public getAllCocktailsWithDetails(): Cocktail[] {
+    return this.cocktails;
+  }
+
   public getCocktailBySlug(slug: string): Cocktail | undefined {
     return this.slugToCocktail.get(slug);
   }

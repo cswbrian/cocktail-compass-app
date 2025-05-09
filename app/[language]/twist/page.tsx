@@ -4,7 +4,7 @@ import { cocktailService } from "@/services/cocktail-service";
 import { Loading } from "@/components/ui/loading";
 
 export default async function TwistPage() {
-  const cocktails = cocktailService.getAllCocktails();
+  const cocktails = cocktailService.getAllCocktailsWithDetails();
 
   return (
     <Suspense fallback={<Loading fullScreen size="lg" />}>
