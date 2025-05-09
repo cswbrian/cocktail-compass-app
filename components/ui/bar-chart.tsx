@@ -1,8 +1,15 @@
 "use client";
 
-import { ReactNode } from "react"
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart as RechartsBarChart, CartesianGrid, LabelList, XAxis } from "recharts"
+import { ReactNode } from "react";
+import { TrendingUp, TrendingDown } from "lucide-react";
+import {
+  Bar,
+  BarChart as RechartsBarChart,
+  CartesianGrid,
+  LabelList,
+  XAxis,
+  ResponsiveContainer,
+} from "recharts";
 import {
   Card,
   CardContent,
@@ -10,16 +17,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
-export type ChartConfig = Record<string, {
-  label: string
-  color: string
-}>
+export type ChartConfig = Record<
+  string,
+  {
+    label: string;
+    color: string;
+  }
+>;
 
 interface ChartContainerProps {
-  children: ReactNode
-  config: ChartConfig
+  children: ReactNode;
+  config: ChartConfig;
 }
 
 function ChartContainer({ children, config }: ChartContainerProps) {
@@ -27,51 +37,15 @@ function ChartContainer({ children, config }: ChartContainerProps) {
     <div className="w-full">
       <style jsx global>{`
         :root {
-          ${Object.entries(config).map(
-            ([key, { color }]) => `--color-${key}: ${color};`
-          ).join("\n")}
+          ${Object.entries(config)
+            .map(([key, { color }]) => `--color-${key}: ${color};`)
+            .join("\n")}
         }
       `}</style>
       {children}
     </div>
-  )
+  );
 }
-
-interface ChartTooltipProps {
-  children: ReactNode
-  cursor?: boolean
-  content?: ReactNode
-}
-
-function ChartTooltip({ children, cursor = true, content }: ChartTooltipProps) {
-  return (
-    <div className={`relative ${cursor ? "cursor-pointer" : ""}`}>
-      {children}
-      {content && (
-        <div className="absolute z-50 hidden group-hover:block">
-          {content}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function ChartTooltipContent() {
-  return (
-    <div className="rounded-lg border bg-background p-2 shadow-sm">
-      <div className="grid gap-2">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-primary" />
-            <span className="text-sm font-medium">Value</span>
-          </div>
-          <span className="text-sm font-medium">123</span>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 interface BarChartProps {
   data: {
     month: string;
@@ -80,16 +54,28 @@ interface BarChartProps {
   title: string;
   description: string;
   footerText: string;
+  footerSubText: string;
+  trendInfo?: {
+    value: number;
+    isPositive: boolean;
+  };
 }
 
 const chartConfig = {
   drinks: {
     label: "Drinks",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--primary))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function BarChart({ data, title, description, footerText }: BarChartProps) {
+export function BarChart({
+  data,
+  title,
+  description,
+  footerText,
+  footerSubText,
+  trendInfo,
+}: BarChartProps) {
   return (
     <Card>
       <CardHeader>
@@ -98,43 +84,59 @@ export function BarChart({ data, title, description, footerText }: BarChartProps
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <RechartsBarChart
-            accessibilityLayer
-            data={data}
-            margin={{
-              top: 20,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip cursor={false}>
-              <ChartTooltipContent />
-            </ChartTooltip>
-            <Bar dataKey="drinks" fill="var(--color-drinks)" radius={8}>
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
-              />
-            </Bar>
-          </RechartsBarChart>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <RechartsBarChart
+                data={data}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                />
+                <Bar
+                  dataKey="drinks"
+                  fill="var(--color-drinks)"
+                  radius={[4, 4, 0, 0]}
+                  barSize={40}
+                >
+                  <LabelList
+                    dataKey="drinks"
+                    position="top"
+                    offset={12}
+                    className="fill-foreground"
+                    fontSize={12}
+                  />
+                </Bar>
+              </RechartsBarChart>
+            </ResponsiveContainer>
+          </div>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          {footerText} <TrendingUp className="h-4 w-4" />
-        </div>
+        {trendInfo && (
+          <div className="flex gap-2 font-medium leading-none">
+            {footerText}{" "}
+            {trendInfo.isPositive ? (
+              <TrendingUp className="h-4 w-4" />
+            ) : (
+              <TrendingDown className="h-4 w-4" />
+            )}
+          </div>
+        )}
         <div className="leading-none text-muted-foreground">
-          {footerText}
+          {footerSubText}
         </div>
       </CardFooter>
     </Card>
-  )
-} 
+  );
+}

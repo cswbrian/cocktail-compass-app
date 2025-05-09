@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { CocktailLogForm } from "@/components/cocktail-log/cocktail-log-form";
 import { JournalHighlights } from "./journal-highlights";
 import { Feeds } from "./feeds";
+import { BasicStats } from "./basic-stats";
 
 interface EnhancedStats {
   basicStats: {
@@ -128,6 +129,7 @@ export function JournalClient() {
         </TabsList>
 
         <TabsContent value="logs" className="space-y-6">
+          <BasicStats stats={stats.basicStats} />
           <Feeds
             logs={logs}
             isLoading={isLoadingLogs}

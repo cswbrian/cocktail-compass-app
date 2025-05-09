@@ -9,9 +9,9 @@ interface StatCardProps {
 
 function StatCard({ title, value }: StatCardProps) {
   return (
-    <Card className="p-6 text-center">
+    <Card className="p-0 border-none">
+      <p className="text-2xl">{value}</p>
       <h3 className="text-sm text-muted-foreground mb-2">{title}</h3>
-      <p className="text-3xl font-bold">{value}</p>
     </Card>
   );
 }
@@ -29,10 +29,10 @@ export function BasicStats({ stats }: BasicStatsProps) {
   const t = translations[language];
 
   return (
-    <div className="grid gap-2 grid-cols-3">
+    <div className="px-6 flex gap-6">
       <StatCard title={t.totalCocktailsDrunk} value={stats.totalCocktailsDrunk} />
-      <StatCard title={t.uniqueCocktails} value={stats.uniqueCocktails} />
       <StatCard title={t.totalBarsVisited} value={stats.uniqueBars} />
+      <StatCard title={t.uniqueCocktails} value={stats.uniqueCocktails} />
     </div>
   );
 } 
