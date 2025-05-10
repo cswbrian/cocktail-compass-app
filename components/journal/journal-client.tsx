@@ -13,7 +13,7 @@ import { CocktailLogForm } from "@/components/cocktail-log/cocktail-log-form";
 import { JournalHighlights } from "./journal-highlights";
 import { Feeds } from "./feeds";
 import { BasicStats } from "./basic-stats";
-import { useCocktailData } from "@/context/CocktailDataContext";
+import { useCocktailData } from "@/context/CocktailLogContext";
 
 export function JournalClient() {
   const { user } = useAuth();
@@ -53,7 +53,9 @@ export function JournalClient() {
         </TabsList>
 
         <TabsContent value="logs" className="space-y-6">
+          <div className="px-6">
           <BasicStats stats={stats.basicStats} />
+          </div>
           <Feeds
             logs={logs}
             isLoading={isLoading}

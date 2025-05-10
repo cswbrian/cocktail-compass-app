@@ -28,7 +28,7 @@ export function BasicStats({ stats }: BasicStatsProps) {
   const t = translations[language];
 
   return (
-    <div className="px-6 flex gap-6">
+    <div className="flex gap-6">
       <StatCard title={t.totalCocktailsDrunk} value={stats.totalCocktailsDrunk} />
       <StatCard title={t.totalBarsVisited} value={stats.uniqueBars} />
       <StatCard title={t.uniqueCocktails} value={stats.uniqueCocktails} />

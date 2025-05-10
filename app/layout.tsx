@@ -11,7 +11,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { BottomNavProvider } from "@/context/BottomNavContext";
 import { MainContent } from "@/components/ui/main-content";
-import { CocktailDataProvider } from "@/context/CocktailDataContext";
+import { CocktailDataProvider } from "@/context/CocktailLogContext";
 
 const inter = Inter({
   subsets: ['latin'],

@@ -84,18 +84,15 @@ export function BarChart({
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <div className="h-[300px] w-full">
+          <div className="h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <RechartsBarChart
                 data={data}
                 margin={{
                   top: 20,
-                  right: 30,
-                  left: 20,
                   bottom: 5,
                 }}
               >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis
                   dataKey="month"
                   tickLine={false}
@@ -105,8 +102,8 @@ export function BarChart({
                 />
                 <Bar
                   dataKey="drinks"
-                  fill="var(--color-drinks)"
-                  radius={[4, 4, 0, 0]}
+                  fill="var(--primary)"
+                  radius={[10, 10, 10, 10]}
                   barSize={40}
                 >
                   <LabelList

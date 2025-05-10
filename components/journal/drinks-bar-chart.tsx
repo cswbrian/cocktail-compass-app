@@ -1,5 +1,5 @@
 import { BarChart } from "@/components/ui/bar-chart";
-import { format } from "date-fns";
+import { format, subMonths, startOfMonth } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 
@@ -21,22 +21,27 @@ function prepareChartData(
   drinksByMonth: Record<string, number>,
   t: { drinksOverTime: string; drinksMoreThanLastMonth: string; drinksLessThanLastMonth: string }
 ): PreparedChartData {
-  const sortedEntries = Object.entries(drinksByMonth)
-    .sort(([monthA], [monthB]) => new Date(monthA).getTime() - new Date(monthB).getTime());
+  // Get the last 6 months
+  const today = new Date();
+  const last6Months = Array.from({ length: 6 }, (_, i) => {
+    const date = subMonths(today, i);
+    return format(startOfMonth(date), 'yyyy-MM');
+  }).reverse();
 
-  const data = sortedEntries.map(([month, count]) => ({
+  // Create data array with zero-filling for missing months
+  const data = last6Months.map(month => ({
     month: format(new Date(month), 'MMM'),
-    drinks: count
+    drinks: drinksByMonth[month] || 0
   }));
 
-  const description = `${format(new Date(sortedEntries[0]?.[0] || new Date()), 'MMMM yyyy')} - ${format(new Date(sortedEntries[sortedEntries.length - 1]?.[0] || new Date()), 'MMMM yyyy')}`;
+  const description = `${format(new Date(last6Months[0]), 'MMMM yyyy')} - ${format(new Date(last6Months[last6Months.length - 1]), 'MMMM yyyy')}`;
 
   let footerText = t.drinksOverTime;
   let trendInfo: PreparedChartData['trendInfo'] | undefined;
 
-  if (sortedEntries.length >= 2) {
-    const [, currentCount] = sortedEntries[sortedEntries.length - 1];
-    const [, prevCount] = sortedEntries[sortedEntries.length - 2];
+  if (data.length >= 2) {
+    const currentCount = data[data.length - 1].drinks;
+    const prevCount = data[data.length - 2].drinks;
     const difference = currentCount - prevCount;
     
     footerText = difference >= 0

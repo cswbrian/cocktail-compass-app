@@ -37,7 +37,7 @@ export function JournalHighlights({ stats, isLoading }: JournalHighlightsProps) 
   }
 
   return (
-    <div className="space-y-8">
+    <div className="px-6 space-y-8">
       {/* Basic Stats */}
       <BasicStats stats={stats.basicStats} />
 

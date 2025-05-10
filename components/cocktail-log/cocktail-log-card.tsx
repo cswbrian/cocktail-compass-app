@@ -22,7 +22,7 @@ export function CocktailLogCard({
   return (
     <>
       <div
-        className="bg-background border-b rounded-none p-4 cursor-pointer hover:shadow-md transition-shadow"
+        className="bg-background border-b rounded-none px-6 py-4 cursor-pointer hover:shadow-md transition-shadow"
         onClick={() => setIsDetailOpen(true)}
       >
         <div className="space-y-4">

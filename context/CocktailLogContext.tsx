@@ -17,7 +17,7 @@ interface EnhancedStats {
   recentPhotos: { url: string; type: 'image' | 'video' }[];
 }
 
-interface CocktailDataContextType {
+interface CocktailLogContextType {
   logs: CocktailLog[];
   stats: EnhancedStats;
   isLoading: boolean;
@@ -25,10 +25,10 @@ interface CocktailDataContextType {
   mutate: () => Promise<any>;
 }
 
-const CocktailDataContext = createContext<CocktailDataContextType | null>(null);
+const CocktailLogContext = createContext<CocktailLogContextType | null>(null);
 
-export function useCocktailData(): CocktailDataContextType {
-  const context = useContext(CocktailDataContext);
+export function useCocktailData(): CocktailLogContextType {
+  const context = useContext(CocktailLogContext);
   if (context === null) {
     throw new Error('useCocktailData must be used within a CocktailDataProvider');
   }
@@ -94,8 +94,8 @@ export function CocktailDataProvider({
   };
 
   return (
-    <CocktailDataContext.Provider value={value}>
+    <CocktailLogContext.Provider value={value}>
       {children}
-    </CocktailDataContext.Provider>
+    </CocktailLogContext.Provider>
   );
 } 
