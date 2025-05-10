@@ -110,6 +110,18 @@ export class MediaService {
       throw error;
     }
   }
+
+  async getSignedUrlForMediaItem(mediaItem: { url: string; type: 'image' | 'video' }): Promise<{ url: string; type: 'image' | 'video' }> {
+    // Extract the file path from the URL
+    const urlParts = mediaItem.url.split('/');
+    const fileName = urlParts.slice(urlParts.indexOf(this.bucket) + 1).join('/');
+    const signedUrl = await this.getSignedUrl(fileName);
+    return { ...mediaItem, url: signedUrl };
+  }
+
+  async getSignedUrlsForMediaItems(mediaItems: { url: string; type: 'image' | 'video' }[]): Promise<{ url: string; type: 'image' | 'video' }[]> {
+    return Promise.all(mediaItems.map(item => this.getSignedUrlForMediaItem(item)));
+  }
 }
 
 // Create instances for different buckets

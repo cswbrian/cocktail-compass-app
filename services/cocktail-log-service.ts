@@ -384,15 +384,7 @@ export class CocktailLogService {
     const cocktail = allCocktails.find(c => c.id === data.cocktail_id);
     
     // Convert media URLs to signed URLs
-    const media = data.media ? await Promise.all(
-      data.media.map(async (item: { url: string; type: 'image' | 'video' }) => {
-        // Extract the file path from the URL
-        const urlParts = item.url.split('/');
-        const fileName = urlParts.slice(urlParts.indexOf('cocktail-logs') + 1).join('/');
-        const signedUrl = await cocktailLogsMediaService.getSignedUrl(fileName);
-        return { ...item, url: signedUrl };
-      })
-    ) : [];
+    const media = data.media ? await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.media) : [];
     
     return {
       id: data.id,

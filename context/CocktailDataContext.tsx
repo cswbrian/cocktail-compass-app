@@ -3,6 +3,7 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { CocktailLog } from '@/types/cocktail-log';
 import { cocktailLogService } from '@/services/cocktail-log-service';
+import { cocktailLogsMediaService } from '@/services/media-service';
 import useSWR from 'swr';
 
 interface EnhancedStats {
@@ -13,7 +14,7 @@ interface EnhancedStats {
   };
   drinksByMonth: Record<string, number>;
   topBarsWithMostDrinks: { name: string; count: number }[];
-  recentPhotos: { url: string; type: string }[];
+  recentPhotos: { url: string; type: 'image' | 'video' }[];
 }
 
 interface CocktailDataContextType {
@@ -62,7 +63,13 @@ export function CocktailDataProvider({
           recentPhotos: []
         };
       }
-      return data;
+
+      // Convert recent photos to signed URLs
+      const recentPhotos = await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.recentPhotos);
+      return {
+        ...data,
+        recentPhotos
+      };
     }
   );
 
