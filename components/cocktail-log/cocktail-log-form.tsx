@@ -22,6 +22,7 @@ import Image from "next/image";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { customCocktailService } from "@/services/custom-cocktail-service";
 import { CustomCocktailModal } from "./custom-cocktail-modal";
+import { useRouter } from "next/navigation";
 
 interface CocktailLogFormProps {
   isOpen: boolean;
@@ -60,6 +61,7 @@ export function CocktailLogForm({
   onLogsChange,
   onSuccess
 }: CocktailLogFormProps) {
+  const router = useRouter();
   const [rating, setRating] = useState(0);
   const [cocktailNameInput, setCocktailNameInput] = useState("");
   const [open, setOpen] = useState(false);
@@ -168,7 +170,7 @@ export function CocktailLogForm({
             description: t.errorCreatingCocktail,
             variant: "destructive",
           });
-          return; // Stop here if custom cocktail creation fails
+          return;
         }
       }
 
@@ -206,6 +208,7 @@ export function CocktailLogForm({
           title: t.success,
           description: existingLog ? t.updateLog : t.saveLog,
         });
+
         onClose();
         onLogSaved?.({
           id: existingLog?.id || '',
@@ -219,8 +222,14 @@ export function CocktailLogForm({
           drinkDate: drinkDate || null,
           media: media.length > 0 ? media : null,
         } as CocktailLog);
+        
         await handleLogSaved();
         onSuccess();
+
+        // Redirect to journal page after successful creation
+        if (!existingLog) {
+          router.push(`/${language}/journal`);
+        }
       } catch (error) {
         console.error("Error saving log:", error);
         toast({
@@ -363,10 +372,10 @@ export function CocktailLogForm({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-x-0 bottom-0 z-50 h-dvh bg-background rounded-t-[10px] overflow-hidden"
+            className="fixed inset-0 z-50 bg-background"
           >
             <div className="h-full flex flex-col">
-              <div className="p-4 border-b">
+              <div className="px-4 py-3 border-b">
                 <div className="flex items-center relative">
                   <Button
                     variant="ghost"
@@ -383,7 +392,7 @@ export function CocktailLogForm({
               </div>
 
               <div className="flex-1 overflow-y-auto">
-                <div className="p-4 space-y-4">
+                <div className="px-4 py-4 space-y-4">
                   <div className="space-y-2">
                     <Label>{t.drinkDate}</Label>
                     <Popover>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, Search, Bookmark, BookHeart } from "lucide-react";
 import { useBottomNav } from "@/context/BottomNavContext";
+import { AddLogButton } from "@/components/cocktail-log/add-log-button";
 
 export function BottomNav() {
   const { language } = useLanguage();
@@ -19,15 +20,16 @@ export function BottomNav() {
 
   const navItems = [
     {
-      href: `/${language}/explorer`,
-      icon: Compass,
-      label: t.bottomNavExplorer,
-    },
-    {
       href: `/${language}/journal`,
       icon: BookHeart,
       label: t.bottomNavJournal,
     },
+    {
+      href: `/${language}/explorer`,
+      icon: Compass,
+      label: t.bottomNavExplorer,
+    },
+    null, // Middle position for AddLogButton
     {
       href: `/${language}/search`,
       icon: Search,
@@ -41,10 +43,18 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background z-40">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-around items-center h-16">
+        <div className="grid grid-cols-5 h-16">
           {navItems.map((item) => {
+            if (item === null) {
+              return (
+                <div key="add-log" className="flex items-center justify-center">
+                  <AddLogButton />
+                </div>
+              );
+            }
+
             const Icon = item.icon;
             const isActive = 
               pathname === item.href || 
@@ -54,7 +64,7 @@ export function BottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center justify-center flex-1 h-full ${
+                className={`flex flex-col items-center justify-center ${
                   isActive ? "text-primary" : "text-muted-foreground"
                 }`}
               >

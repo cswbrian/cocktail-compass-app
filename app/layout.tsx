@@ -12,6 +12,7 @@ import { InstallPrompt } from "@/components/InstallPrompt";
 import { BottomNavProvider } from "@/context/BottomNavContext";
 import { MainContent } from "@/components/ui/main-content";
 import { CocktailDataProvider } from "@/context/CocktailLogContext";
+import { GlobalCocktailLogForm } from "@/components/cocktail-log/global-cocktail-log-form";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -129,6 +130,7 @@ export default function RootLayout({
                   </main>
                   <InstallPrompt />
                   <BottomNav />
+                  <GlobalCocktailLogForm />
                   <Toaster />
                 </div>
               </body>

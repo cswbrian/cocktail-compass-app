@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 import { CocktailLog } from '@/types/cocktail-log';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { cocktailLogsMediaService } from '@/services/media-service';
@@ -23,6 +23,12 @@ interface CocktailLogContextType {
   isLoading: boolean;
   error: any;
   mutate: () => Promise<any>;
+  // Form state management
+  isFormOpen: boolean;
+  openForm: () => void;
+  closeForm: () => void;
+  selectedLog: CocktailLog | null;
+  setSelectedLog: (log: CocktailLog | null) => void;
 }
 
 const CocktailLogContext = createContext<CocktailLogContextType | null>(null);
@@ -40,6 +46,10 @@ export function CocktailDataProvider({
 }: {
   children: ReactNode;
 }) {
+  // Form state
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedLog, setSelectedLog] = useState<CocktailLog | null>(null);
+
   // Fetch logs using SWR
   const { data: logs = [], error: logsError, isLoading: isLoadingLogs, mutate: mutateLogs } = useSWR(
     'cocktail-logs',
@@ -90,7 +100,16 @@ export function CocktailDataProvider({
     error: logsError || statsError,
     mutate: async () => {
       await Promise.all([mutateLogs(), mutateStats()]);
-    }
+    },
+    // Form state management
+    isFormOpen,
+    openForm: () => setIsFormOpen(true),
+    closeForm: () => {
+      setIsFormOpen(false);
+      setSelectedLog(null);
+    },
+    selectedLog,
+    setSelectedLog
   };
 
   return (

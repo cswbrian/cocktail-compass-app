@@ -5,7 +5,6 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 import {
   Bar,
   BarChart as RechartsBarChart,
-  CartesianGrid,
   LabelList,
   XAxis,
   ResponsiveContainer,
