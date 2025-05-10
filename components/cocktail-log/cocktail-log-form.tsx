@@ -11,15 +11,15 @@ import { CocktailLog } from "@/types/cocktail-log";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
-import { Star, Calendar, Check, ChevronsUpDown, X, Search, ImagePlus } from "lucide-react";
+import { Star, Calendar, Check, X, Search, ImagePlus } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { cn, normalizeText } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CocktailLogFormProps {
   isOpen: boolean;
@@ -31,6 +31,13 @@ interface CocktailLogFormProps {
   isFromCocktailPage?: boolean;
   onLogDeleted?: (logId: string) => void;
   onLogsChange?: (logs: CocktailLog[]) => void;
+}
+
+interface SearchItem {
+  name: string;
+  value: string;
+  slug: string;
+  label: string;
 }
 
 export function CocktailLogForm({ 
@@ -47,8 +54,8 @@ export function CocktailLogForm({
   const [rating, setRating] = useState(0);
   const [cocktailNameInput, setCocktailNameInput] = useState("");
   const [open, setOpen] = useState(false);
-  const [filteredCocktails, setFilteredCocktails] = useState<{ value: string; label: string }[]>([]);
-  const [selectedCocktail, setSelectedCocktail] = useState<{ value: string; label: string } | null>(null);
+  const [filteredCocktails, setFilteredCocktails] = useState<SearchItem[]>([]);
+  const [selectedCocktail, setSelectedCocktail] = useState<SearchItem | null>(null);
   const [specialIngredients, setSpecialIngredients] = useState("");
   const [comments, setComments] = useState("");
   const [location, setLocation] = useState("");
@@ -67,8 +74,15 @@ export function CocktailLogForm({
   useEffect(() => {
     if (existingLog) {
       setRating(existingLog.rating);
-      setCocktailNameInput(cocktailName);
-      setSelectedCocktail({ value: cocktailSlug, label: cocktailName });
+      const cocktail = cocktailService.getCocktailById(existingLog.cocktailId);
+      const displayName = cocktail ? `${cocktail.name.en} / ${cocktail.name.zh}` : cocktailName;
+      setCocktailNameInput(displayName);
+      setSelectedCocktail({ 
+        value: existingLog.cocktailId, 
+        label: displayName, 
+        name: displayName, 
+        slug: cocktail?.slug || cocktailSlug 
+      });
       setSpecialIngredients(existingLog.specialIngredients || "");
       setComments(existingLog.comments || "");
       setLocation(existingLog.location || "");
@@ -79,7 +93,13 @@ export function CocktailLogForm({
     } else {
       setRating(0);
       setCocktailNameInput(cocktailName);
-      setSelectedCocktail({ value: cocktailSlug, label: cocktailName });
+      const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
+      setSelectedCocktail({ 
+        value: cocktail?.id || cocktailSlug, 
+        label: cocktailName, 
+        name: cocktailName, 
+        slug: cocktailSlug 
+      });
       setSpecialIngredients("");
       setComments("");
       setLocation("");
@@ -99,7 +119,9 @@ export function CocktailLogForm({
         return normalizedName.includes(normalizedSearch);
       })
       .map(cocktail => ({
+        name: `${cocktail.name.en} / ${cocktail.name.zh}`,
         value: cocktail.id,
+        slug: cocktail.slug,
         label: `${cocktail.name.en} / ${cocktail.name.zh}`
       }));
     setFilteredCocktails(filtered);
@@ -113,6 +135,7 @@ export function CocktailLogForm({
       if (existingLog) {
         savedLog = await cocktailLogService.updateLog(
           existingLog.id,
+          selectedCocktail?.value || existingLog.cocktailId,
           rating,
           specialIngredients || null,
           comments || null,
@@ -127,7 +150,7 @@ export function CocktailLogForm({
         if (!user) throw new Error("User not authenticated");
 
         savedLog = await cocktailLogService.createLog(
-          cocktailSlug,
+          selectedCocktail?.value || cocktailSlug,
           user.id,
           rating,
           specialIngredients || null,
@@ -186,7 +209,8 @@ export function CocktailLogForm({
 
   const handleLogSaved = async () => {
     try {
-      const updatedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
+      if (!selectedCocktail?.value) return;
+      const updatedLogs = await cocktailLogService.getLogsByCocktailId(selectedCocktail.value);
       onLogsChange?.(updatedLogs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
@@ -200,7 +224,8 @@ export function CocktailLogForm({
 
   const handleLogDeleted = async () => {
     try {
-      const updatedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
+      if (!selectedCocktail?.value) return;
+      const updatedLogs = await cocktailLogService.getLogsByCocktailId(selectedCocktail.value);
       onLogsChange?.(updatedLogs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
@@ -372,60 +397,67 @@ export function CocktailLogForm({
                   <div className="space-y-2">
                     <Label htmlFor="cocktailName">{t.cocktailName}</Label>
                     <div className="relative">
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-full justify-between"
-                        disabled={isFromCocktailPage}
-                        onClick={() => setOpen(!open)}
-                      >
-                        {selectedCocktail ? selectedCocktail.label : t.selectCocktail}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
+                      <div className="relative">
+                        <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          placeholder={t.searchCocktail}
+                          value={cocktailNameInput}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setCocktailNameInput(e.target.value);
+                            setOpen(true);
+                          }}
+                          onClick={() => setOpen(true)}
+                          onFocus={() => setOpen(true)}
+                          className="pl-9 pr-9"
+                          disabled={isFromCocktailPage}
+                        />
+                        {cocktailNameInput && (
+                          <button
+                            onClick={() => {
+                              setCocktailNameInput('');
+                              setOpen(true);
+                            }}
+                            className="absolute right-2 top-2 h-5 w-5 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <X className="h-5 w-5" />
+                          </button>
+                        )}
+                      </div>
                       {open && (
                         <div className="absolute z-50 w-full mt-1 bg-popover rounded-md shadow-md">
-                          <Command>
-                            <div className="relative">
-                              <Search className="absolute left-2 top-2 h-4 w-4 text-muted-foreground" />
-                              <CommandInput 
-                                placeholder={t.searchCocktail} 
-                                value={cocktailNameInput}
-                                onValueChange={setCocktailNameInput}
-                                className="pl-8"
-                              />
-                              {cocktailNameInput && (
-                                <button
-                                  onClick={() => setCocktailNameInput('')}
-                                  className="absolute right-2 top-2 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                  <X className="h-4 w-4" />
-                                </button>
-                              )}
-                            </div>
-                            <CommandEmpty>{t.noCocktailsFound}</CommandEmpty>
-                            <CommandGroup>
-                              {filteredCocktails.map((cocktail) => (
-                                <CommandItem
-                                  key={cocktail.value}
-                                  value={cocktail.value}
-                                  onSelect={() => {
-                                    setSelectedCocktail(cocktail);
-                                    setCocktailNameInput(cocktail.label);
-                                    setOpen(false);
-                                  }}
-                                >
-                                  <Check
+                          <ScrollArea className="h-[200px]">
+                            {filteredCocktails.length === 0 ? (
+                              <div className="text-center text-muted-foreground p-4">
+                                {t.noCocktailsFound}
+                              </div>
+                            ) : (
+                              <div className="p-2">
+                                {filteredCocktails.map((cocktail) => (
+                                  <button
+                                    key={cocktail.value}
+                                    onClick={() => {
+                                      setSelectedCocktail(cocktail);
+                                      setCocktailNameInput(cocktail.name);
+                                      setOpen(false);
+                                    }}
                                     className={cn(
-                                      "mr-2 h-4 w-4",
-                                      selectedCocktail?.value === cocktail.value ? "opacity-100" : "opacity-0"
+                                      "w-full text-left p-2 rounded-md hover:bg-accent transition-colors",
+                                      "flex items-center gap-2",
+                                      selectedCocktail?.value === cocktail.slug && "bg-accent"
                                     )}
-                                  />
-                                  {cocktail.label}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </Command>
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "h-4 w-4",
+                                        selectedCocktail?.value === cocktail.slug ? "opacity-100" : "opacity-0"
+                                      )}
+                                    />
+                                    {cocktail.name}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </ScrollArea>
                         </div>
                       )}
                     </div>

@@ -11,6 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { cocktailLogService } from "@/services/cocktail-log-service";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { cocktailService } from "@/services/cocktail-service";
 
 interface BaseCocktailLogListProps {
   cocktailSlug: string;
@@ -49,7 +50,9 @@ export function BaseCocktailLogList({
   const handleLogSaved = async () => {
     if (!user) return;
     try {
-      const updatedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
+      const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
+      if (!cocktail) return;
+      const updatedLogs = await cocktailLogService.getLogsByCocktailId(cocktail.id);
       onLogsChange(updatedLogs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
@@ -64,7 +67,9 @@ export function BaseCocktailLogList({
   const handleLogDeleted = async () => {
     if (!user) return;
     try {
-      const updatedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
+      const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
+      if (!cocktail) return;
+      const updatedLogs = await cocktailLogService.getLogsByCocktailId(cocktail.id);
       onLogsChange(updatedLogs);
     } catch (error) {
       console.error("Error refreshing logs:", error);

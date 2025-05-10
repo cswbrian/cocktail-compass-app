@@ -7,6 +7,7 @@ import { cocktailLogService } from "@/services/cocktail-log-service";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
+import { cocktailService } from "@/services/cocktail-service";
 
 interface CocktailLogSectionProps {
   cocktailSlug: string;
@@ -25,7 +26,9 @@ export function CocktailLogSection({
 
   const fetchLogs = async () => {
     try {
-      const fetchedLogs = await cocktailLogService.getLogsByCocktailSlug(cocktailSlug);
+      const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
+      if (!cocktail) return;
+      const fetchedLogs = await cocktailLogService.getLogsByCocktailId(cocktail.id);
       setLogs(fetchedLogs);
     } catch (error) {
       console.error("Error fetching logs:", error);

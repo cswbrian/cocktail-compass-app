@@ -4,20 +4,8 @@ import { cocktailService } from "@/services/cocktail-service";
 import { cocktailLogsMediaService } from "@/services/media-service";
 
 export class CocktailLogService {
-  private async getCocktailIdBySlug(slug: string): Promise<string> {
-    const { data, error } = await supabase
-      .from("cocktails")
-      .select("id")
-      .eq("slug", slug)
-      .single();
-
-    if (error) throw error;
-    if (!data) throw new Error(`Cocktail with slug ${slug} not found`);
-    return data.id;
-  }
-
   async createLog(
-    cocktailSlug: string,
+    cocktailId: string,
     userId: string,
     rating: number,
     specialIngredients?: string | null,
@@ -28,8 +16,6 @@ export class CocktailLogService {
     drinkDate?: Date | null,
     media?: { url: string; type: 'image' | 'video' }[] | null
   ): Promise<CocktailLog> {
-    const cocktailId = await this.getCocktailIdBySlug(cocktailSlug);
-    
     // First create the log to get the ID
     const { data: logData, error: createError } = await supabase
       .from("cocktail_logs")
@@ -92,6 +78,7 @@ export class CocktailLogService {
 
   async updateLog(
     id: string,
+    cocktailId: string,
     rating: number,
     specialIngredients?: string | null,
     comments?: string | null,
@@ -144,6 +131,7 @@ export class CocktailLogService {
         const { data, error } = await supabase
           .from("cocktail_logs")
           .update({
+            cocktail_id: cocktailId,
             rating,
             special_ingredients: specialIngredients,
             comments,
@@ -168,6 +156,7 @@ export class CocktailLogService {
       const { data, error } = await supabase
         .from("cocktail_logs")
         .update({
+          cocktail_id: cocktailId,
           rating,
           special_ingredients: specialIngredients,
           comments,
@@ -211,24 +200,16 @@ export class CocktailLogService {
     if (error) throw error;
   }
 
-  async getLogsByCocktailSlug(slug: string): Promise<CocktailLog[]> {
-    const { data: cocktail } = await supabase
-      .from("cocktails")
-      .select("id")
-      .eq("slug", slug)
-      .single();
-
-    if (!cocktail) return [];
-
+  async getLogsByCocktailId(cocktailId: string): Promise<CocktailLog[]> {
     const { data: user } = await supabase.auth.getUser();
     if (!user.user) return [];
 
     const { data, error } = await supabase
       .from("cocktail_logs")
       .select("*")
-      .eq("cocktail_id", cocktail.id)
+      .eq("cocktail_id", cocktailId)
       .eq("user_id", user.user.id)
-      .order("created_at", { ascending: false });
+      .order("drink_date", { ascending: false });
 
     if (error) throw error;
     return Promise.all(data.map(log => this.mapLog(log)));
@@ -242,7 +223,7 @@ export class CocktailLogService {
       .from("cocktail_logs")
       .select("*")
       .eq("user_id", userId || user.user.id)
-      .order("created_at", { ascending: false });
+      .order("drink_date", { ascending: false });
 
     if (error) throw error;
     return Promise.all(data.map(log => this.mapLog(log)));
