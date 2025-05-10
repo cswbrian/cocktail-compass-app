@@ -88,7 +88,9 @@ export function CocktailLogDetail({
                   />
 
                   {log.media && log.media.length > 0 && (
-                    <CocktailLogMedia media={log.media} size="lg" />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <CocktailLogMedia media={log.media} size="lg" />
+                    </div>
                   )}
                 </div>
               </div>

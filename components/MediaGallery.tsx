@@ -2,67 +2,59 @@ import { useState } from "react";
 import Image from "next/image";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import { Card } from "@/components/ui/card";
 
-interface CocktailLogMediaProps {
-  media: { url: string; type: 'image' | 'video' }[];
-  size?: 'sm' | 'lg';
+interface MediaItem {
+  url: string;
+  type: string;
+}
+
+interface MediaGalleryProps {
+  media: MediaItem[];
+  title?: string;
   className?: string;
 }
 
-export function CocktailLogMedia({ media, size = 'sm', className = '' }: CocktailLogMediaProps) {
+export function MediaGallery({ media, title, className = "" }: MediaGalleryProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  if (!media || media.length === 0) return null;
-
-  const sizeClasses = {
-    sm: {
-      container: 'max-h-[200px]',
-      grid: 'auto-cols-[200px]',
-      image: '200px'
-    },
-    lg: {
-      container: 'max-h-[300px]',
-      grid: 'auto-cols-[300px]',
-      image: '300px'
-    }
-  };
+  if (media.length === 0) return null;
 
   const slides: SlideImage[] = media
-    .filter((item) => item.type === 'image')
+    .filter((item) => item.type === "image")
     .map((item) => ({
       src: item.url,
-      type: 'image' as const,
+      type: "image" as const,
     }));
 
   return (
-    <div className={`overflow-x-auto -mx-6 ${sizeClasses[size].container} ${className}`}>
-      <div className={`grid grid-flow-col ${sizeClasses[size].grid} gap-2 px-6`}>
+    <Card className={`p-6 ${className}`}>
+      {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
+      <div className="grid grid-cols-3 gap-4">
         {media.map((item, index) => (
           <div
             key={index}
             className="relative aspect-square cursor-pointer"
             onClick={() => {
-              if (item.type === 'image') {
-                setCurrentIndex(index);
-                setLightboxOpen(true);
-              }
+              setCurrentIndex(index);
+              setLightboxOpen(true);
             }}
           >
-            {item.type === 'image' ? (
+            {item.type === "image" ? (
               <div className="relative w-full h-full">
                 <Image
                   src={item.url}
                   alt={`Media ${index + 1}`}
                   fill
                   className="object-cover rounded-lg hover:opacity-90 transition-opacity"
-                  sizes={sizeClasses[size].image}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
             ) : (
               <video
                 src={item.url}
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-cover rounded-lg hover:opacity-90 transition-opacity"
                 controls
               />
             )}
@@ -83,6 +75,6 @@ export function CocktailLogMedia({ media, size = 'sm', className = '' }: Cocktai
           closeOnBackdropClick: true,
         }}
       />
-    </div>
+    </Card>
   );
 } 

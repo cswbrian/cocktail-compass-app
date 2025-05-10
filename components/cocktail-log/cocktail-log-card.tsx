@@ -38,7 +38,9 @@ export function CocktailLogCard({
           />
 
           {log.media && log.media.length > 0 && (
-            <CocktailLogMedia media={log.media} size="sm" />
+            <div onClick={(e) => e.stopPropagation()}>
+              <CocktailLogMedia media={log.media} size="sm" />
+            </div>
           )}
         </div>
       </div>
