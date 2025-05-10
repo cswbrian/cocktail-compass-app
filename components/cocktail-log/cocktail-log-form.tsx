@@ -20,6 +20,8 @@ import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { customCocktailService } from "@/services/custom-cocktail-service";
+import { CustomCocktailModal } from "./custom-cocktail-modal";
 
 interface CocktailLogFormProps {
   isOpen: boolean;
@@ -31,6 +33,7 @@ interface CocktailLogFormProps {
   isFromCocktailPage?: boolean;
   onLogDeleted?: (logId: string) => void;
   onLogsChange?: (logs: CocktailLog[]) => void;
+  onSuccess: () => void;
 }
 
 interface SearchItem {
@@ -38,6 +41,11 @@ interface SearchItem {
   value: string;
   slug: string;
   label: string;
+}
+
+interface CustomCocktailValues {
+  nameEn: string;
+  nameZh: string;
 }
 
 export function CocktailLogForm({ 
@@ -49,7 +57,8 @@ export function CocktailLogForm({
   existingLog,
   isFromCocktailPage = false,
   onLogDeleted,
-  onLogsChange
+  onLogsChange,
+  onSuccess
 }: CocktailLogFormProps) {
   const [rating, setRating] = useState(0);
   const [cocktailNameInput, setCocktailNameInput] = useState("");
@@ -70,6 +79,8 @@ export function CocktailLogForm({
   const { toast } = useToast();
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
+  const [isCreatingCustom, setIsCreatingCustom] = useState(false);
+  const [customCocktailValues, setCustomCocktailValues] = useState<CustomCocktailValues | null>(null);
 
   useEffect(() => {
     if (existingLog) {
@@ -128,50 +139,98 @@ export function CocktailLogForm({
   }, [cocktailNameInput]);
 
   const handleSave = async () => {
+    if (!selectedCocktail) return;
+
     try {
       setIsLoading(true);
-      let savedLog: CocktailLog;
-      
-      if (existingLog) {
-        savedLog = await cocktailLogService.updateLog(
-          existingLog.id,
-          selectedCocktail?.value || existingLog.cocktailId,
-          rating,
-          specialIngredients || null,
-          comments || null,
-          location || null,
-          bartender || null,
-          tags,
-          drinkDate || null,
-          media
-        );
-      } else {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error("User not authenticated");
 
-        savedLog = await cocktailLogService.createLog(
-          selectedCocktail?.value || cocktailSlug,
-          user.id,
-          rating,
-          specialIngredients || null,
-          comments || null,
-          location || null,
-          bartender || null,
-          tags,
-          drinkDate || null,
-          media
-        );
+      // Get user ID first
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      let cocktailId = selectedCocktail.value;
+
+      // Check if we need to create a custom cocktail
+      if (customCocktailValues) {
+        try {
+          const cocktail = await customCocktailService.createCustomCocktail(
+            {
+              en: customCocktailValues.nameEn,
+              zh: customCocktailValues.nameZh
+            },
+            user.id
+          );
+          cocktailId = cocktail.id;
+        } catch (error) {
+          console.error("Error creating custom cocktail:", error);
+          toast({
+            title: t.error,
+            description: t.errorCreatingCocktail,
+            variant: "destructive",
+          });
+          return; // Stop here if custom cocktail creation fails
+        }
       }
 
-      toast({
-        title: t.success,
-        description: existingLog ? t.updateLog : t.saveLog,
-      });
-      onClose();
-      onLogSaved?.(savedLog);
-      await handleLogSaved();
+      // Create or update the log
+      try {
+        if (existingLog) {
+          await cocktailLogService.updateLog(
+            existingLog.id,
+            cocktailId,
+            rating || null,
+            specialIngredients || null,
+            comments || null,
+            location || null,
+            bartender || null,
+            tags.length > 0 ? tags : null,
+            drinkDate || null,
+            media.length > 0 ? media : null
+          );
+        } else {
+          await cocktailLogService.createLog(
+            cocktailId,
+            user.id,
+            rating || null,
+            specialIngredients || null,
+            comments || null,
+            location || null,
+            bartender || null,
+            tags.length > 0 ? tags : null,
+            drinkDate || null,
+            media.length > 0 ? media : null
+          );
+        }
+
+        toast({
+          title: t.success,
+          description: existingLog ? t.updateLog : t.saveLog,
+        });
+        onClose();
+        onLogSaved?.({
+          id: existingLog?.id || '',
+          cocktailId,
+          rating: rating || null,
+          specialIngredients: specialIngredients || null,
+          comments: comments || null,
+          location: location || null,
+          bartender: bartender || null,
+          tags: tags.length > 0 ? tags : null,
+          drinkDate: drinkDate || null,
+          media: media.length > 0 ? media : null,
+        } as CocktailLog);
+        await handleLogSaved();
+        onSuccess();
+      } catch (error) {
+        console.error("Error saving log:", error);
+        toast({
+          title: t.error,
+          description: t.errorSavingLog,
+          variant: "destructive",
+        });
+      }
     } catch (error) {
-      console.error("Error saving log:", error);
+      console.error("Error in form submission:", error);
       toast({
         title: t.error,
         description: t.errorSavingLog,
@@ -278,6 +337,14 @@ export function CocktailLogForm({
 
   const handleMediaClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleCustomCocktailValues = (values: CustomCocktailValues) => {
+    setCustomCocktailValues(values);
+    // Update the cocktail name input with the custom cocktail names
+    setCocktailNameInput(`${values.nameEn} / ${values.nameZh}`);
+    setIsCreatingCustom(false);
+    setOpen(false); // Close the dropdown
   };
 
   return (
@@ -427,8 +494,17 @@ export function CocktailLogForm({
                         <div className="absolute z-50 w-full mt-1 bg-popover rounded-md shadow-md">
                           <ScrollArea className="h-[200px]">
                             {filteredCocktails.length === 0 ? (
-                              <div className="text-center text-muted-foreground p-4">
-                                {t.noCocktailsFound}
+                              <div className="p-4 space-y-2">
+                                <div className="text-center text-muted-foreground">
+                                  {t.noCocktailsFound}
+                                </div>
+                                <Button
+                                  variant="outline"
+                                  className="w-full"
+                                  onClick={() => setIsCreatingCustom(true)}
+                                >
+                                  {t.createCustomCocktail}
+                                </Button>
                               </div>
                             ) : (
                               <div className="p-2">
@@ -579,6 +655,16 @@ export function CocktailLogForm({
               </div>
             </div>
           </motion.div>
+
+          {isCreatingCustom && (
+            <>
+              <CustomCocktailModal
+                isOpen={isCreatingCustom}
+                onClose={() => setIsCreatingCustom(false)}
+                onCustomCocktailValues={handleCustomCocktailValues}
+              />
+            </>
+          )}
         </>
       )}
     </AnimatePresence>

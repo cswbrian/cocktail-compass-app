@@ -126,6 +126,7 @@ export function BaseCocktailLogList({
         isFromCocktailPage={isFromCocktailPage}
         onLogDeleted={handleLogDeleted}
         onLogsChange={onLogsChange}
+        onSuccess={() => setIsDrawerOpen(false)}
       />
     </div>
   );

@@ -13,10 +13,12 @@ export function DrinksBarChart({ drinksByMonth }: DrinksBarChartProps) {
 
   return (
     <BarChart
-      data={Object.entries(drinksByMonth).map(([month, count]) => ({
-        month: format(new Date(month), 'MMM'),
-        drinks: count
-      }))}
+      data={Object.entries(drinksByMonth)
+        .sort(([monthA], [monthB]) => new Date(monthA).getTime() - new Date(monthB).getTime())
+        .map(([month, count]) => ({
+          month: format(new Date(month), 'MMM'),
+          drinks: count
+        }))}
       title={t.drinksOverTime}
       description={`${format(new Date(Object.keys(drinksByMonth)[0] || new Date()), 'MMMM yyyy')} - ${format(new Date(Object.keys(drinksByMonth).slice(-1)[0] || new Date()), 'MMMM yyyy')}`}
       footerText={(() => {

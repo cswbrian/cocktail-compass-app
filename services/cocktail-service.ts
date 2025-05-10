@@ -2,12 +2,14 @@ import { compressedCocktails } from "@/data/cocktails.compressed";
 import { Cocktail, RankedCocktail, CocktailPreview } from "@/types/cocktail";
 import { slugify } from "@/lib/utils";
 import { decompress } from "@/lib/decompress";
+import { supabase } from "@/lib/supabase";
 
 class CocktailService {
   private static instance: CocktailService;
   private static isInitialized = false;
   private cocktails: Cocktail[];
   private cocktailPreviews: CocktailPreview[] = [];
+  private customCocktails: Cocktail[] = [];
   
   // Cache for frequently accessed data
   private slugToCocktail: Map<string, Cocktail>;
@@ -38,30 +40,7 @@ class CocktailService {
     CocktailService.isInitialized = true;
   }
 
-  private initializePreviewList() {
-    this.cocktailPreviews = this.cocktails.map(cocktail => ({
-      id: cocktail.id,
-      slug: cocktail.slug,
-      name: cocktail.name,
-      categories: cocktail.categories,
-      flavor_descriptors: cocktail.flavor_descriptors
-    }));
-  }
-
-  public static getInstance(): CocktailService {
-    if (!CocktailService.instance) {
-      console.log('🎯 Creating new CocktailService instance');
-      CocktailService.instance = new CocktailService();
-    }
-    return CocktailService.instance;
-  }
-
-  public async initialize(): Promise<void> {
-    // No-op since data is already loaded in constructor
-    return;
-  }
-
-  private initializeCaches() {
+  private initializeCaches(): void {
     // Build slug to cocktail map
     this.cocktails.forEach(cocktail => {
       this.slugToCocktail.set(slugify(cocktail.name.en), cocktail);
@@ -86,12 +65,80 @@ class CocktailService {
     });
   }
 
+  private initializePreviewList() {
+    this.cocktailPreviews = this.cocktails.map(cocktail => ({
+      id: cocktail.id,
+      slug: cocktail.slug,
+      name: cocktail.name,
+      categories: cocktail.categories,
+      flavor_descriptors: cocktail.flavor_descriptors
+    }));
+  }
+
+  public static getInstance(): CocktailService {
+    if (!CocktailService.instance) {
+      console.log('🎯 Creating new CocktailService instance');
+      CocktailService.instance = new CocktailService();
+    }
+    return CocktailService.instance;
+  }
+
+  public async initialize(): Promise<void> {
+    await this.loadAllCocktails();
+  }
+
+  private async loadAllCocktails(): Promise<void> {
+    const { data, error } = await supabase
+      .from("cocktails")
+      .select("*");
+
+    if (error) {
+      console.error("Error loading cocktails:", error);
+      return;
+    }
+
+    // Separate standard and custom cocktails
+    this.customCocktails = data?.filter(cocktail => cocktail.is_custom) || [];
+    this.cocktails = [...this.cocktails, ...this.customCocktails];
+    
+    // Update caches with all cocktails
+    this.updateCaches();
+  }
+
+  private updateCaches(): void {
+    // Update slug to cocktail map with all cocktails
+    this.cocktails.forEach(cocktail => {
+      this.slugToCocktail.set(slugify(cocktail.name.en), cocktail);
+    });
+
+    // Update flavor descriptors set
+    this.cocktails.forEach(cocktail => {
+      cocktail.flavor_descriptors.forEach(flavor => {
+        this.allFlavors.add(slugify(flavor.en));
+      });
+    });
+
+    // Update ingredients set
+    this.cocktails.forEach(cocktail => {
+      [
+        ...cocktail.base_spirits,
+        ...cocktail.liqueurs,
+        ...cocktail.ingredients,
+      ].forEach(ingredient => {
+        this.allIngredients.add(slugify(ingredient.name.en));
+      });
+    });
+
+    // Update preview list
+    this.initializePreviewList();
+  }
+
   public getAllCocktails(): CocktailPreview[] {
     return this.cocktailPreviews;
   }
 
   public getAllCocktailsWithDetails(): Cocktail[] {
-    return this.cocktails;
+    return [...this.cocktails, ...this.customCocktails];
   }
 
   public getCocktailBySlug(slug: string): Cocktail | undefined {
@@ -161,8 +208,11 @@ class CocktailService {
     // Third filter: Match by preference if provided and category is Sweet & Tart
     if (preference && category === 'Sweet & Tart') {
       filteredCocktails = filteredCocktails.filter(cocktail => {
-        const sweetness = cocktail.flavor_profile.sweetness;
-        const sourness = cocktail.flavor_profile.sourness;
+        const flavorProfile = cocktail.flavor_profile;
+        if (!flavorProfile) return false;
+        
+        const sweetness = flavorProfile.sweetness;
+        const sourness = flavorProfile.sourness;
         
         switch (preference) {
           case 'More Sweet':
@@ -200,6 +250,23 @@ class CocktailService {
 
   public getAllIngredients(): string[] {
     return Array.from(this.allIngredients);
+  }
+
+  public getRecommendableCocktails(): Cocktail[] {
+    return this.cocktails.filter(cocktail => {
+      // Filter out custom cocktails
+      if (cocktail.is_custom) return false;
+
+      // Check flavor profile
+      const profile = cocktail.flavor_profile;
+      return profile && 
+        typeof profile.sweetness === 'number' &&
+        typeof profile.sourness === 'number' &&
+        typeof profile.body === 'number' &&
+        typeof profile.complexity === 'number' &&
+        typeof profile.booziness === 'number' &&
+        typeof profile.bubbles === 'boolean';
+    });
   }
 
   // Method to clear caches if needed (e.g., for testing)

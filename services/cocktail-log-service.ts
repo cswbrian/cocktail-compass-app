@@ -7,7 +7,7 @@ export class CocktailLogService {
   async createLog(
     cocktailId: string,
     userId: string,
-    rating: number,
+    rating?: number | null,
     specialIngredients?: string | null,
     comments?: string | null,
     location?: string | null,
@@ -16,13 +16,20 @@ export class CocktailLogService {
     drinkDate?: Date | null,
     media?: { url: string; type: 'image' | 'video' }[] | null
   ): Promise<CocktailLog> {
+    // Validate rating if provided
+    if (rating !== undefined && rating !== null) {
+      if (rating < 1 || rating > 5 || !Number.isInteger(rating)) {
+        throw new Error("Rating must be an integer between 1 and 5");
+      }
+    }
+
     // First create the log to get the ID
     const { data: logData, error: createError } = await supabase
       .from("cocktail_logs")
       .insert([{
         cocktail_id: cocktailId,
         user_id: userId,
-        rating,
+        rating: rating || null,
         special_ingredients: specialIngredients,
         comments,
         location,
@@ -79,7 +86,7 @@ export class CocktailLogService {
   async updateLog(
     id: string,
     cocktailId: string,
-    rating: number,
+    rating?: number | null,
     specialIngredients?: string | null,
     comments?: string | null,
     location?: string | null,
@@ -88,6 +95,13 @@ export class CocktailLogService {
     drinkDate?: Date | null,
     media?: { url: string; type: 'image' | 'video' }[] | null
   ): Promise<CocktailLog> {
+    // Validate rating if provided
+    if (rating !== undefined && rating !== null) {
+      if (rating < 1 || rating > 5 || !Number.isInteger(rating)) {
+        throw new Error("Rating must be an integer between 1 and 5");
+      }
+    }
+
     // Get the existing log to compare media
     const { data: existingLog, error: fetchError } = await supabase
       .from("cocktail_logs")
@@ -132,7 +146,7 @@ export class CocktailLogService {
           .from("cocktail_logs")
           .update({
             cocktail_id: cocktailId,
-            rating,
+            rating: rating || null,
             special_ingredients: specialIngredients,
             comments,
             location,
@@ -157,7 +171,7 @@ export class CocktailLogService {
         .from("cocktail_logs")
         .update({
           cocktail_id: cocktailId,
-          rating,
+          rating: rating || null,
           special_ingredients: specialIngredients,
           comments,
           location,

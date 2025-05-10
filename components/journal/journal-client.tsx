@@ -166,6 +166,10 @@ export function JournalClient() {
         onLogSaved={handleLogSaved}
         onLogDeleted={handleLogDeleted}
         onLogsChange={setLogs}
+        onSuccess={() => {
+          setIsDrawerOpen(false);
+          setSelectedLog(null);
+        }}
       />
     </div>
   );

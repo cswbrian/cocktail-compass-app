@@ -112,6 +112,10 @@ export function CocktailLogDetail({
               onLogDeleted?.(logId);
             }}
             onLogsChange={onLogsChange}
+            onSuccess={() => {
+              setIsEditing(false);
+              onClose();
+            }}
           />
         </>
       )}
