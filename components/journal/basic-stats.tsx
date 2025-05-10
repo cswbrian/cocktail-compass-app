@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 
@@ -9,10 +8,10 @@ interface StatCardProps {
 
 function StatCard({ title, value }: StatCardProps) {
   return (
-    <Card className="p-0 border-none">
+    <div>
       <p className="text-2xl">{value}</p>
       <h3 className="text-sm text-muted-foreground mb-2">{title}</h3>
-    </Card>
+    </div>
   );
 }
 

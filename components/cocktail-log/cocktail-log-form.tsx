@@ -271,7 +271,7 @@ export function CocktailLogForm({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-x-0 bottom-0 z-50 h-screen bg-background rounded-t-[10px] overflow-hidden"
+            className="fixed inset-x-0 bottom-0 z-50 h-dvh bg-background rounded-t-[10px] overflow-hidden"
           >
             <div className="h-full flex flex-col">
               <div className="p-4 border-b">
@@ -438,7 +438,7 @@ export function CocktailLogForm({
                         <button
                           key={star}
                           onClick={() => setRating(star)}
-                          className="focus:outline-none"
+                          className="focus:outline-hidden"
                         >
                           <Star
                             className={`h-6 w-6 ${

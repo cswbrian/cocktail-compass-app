@@ -45,8 +45,8 @@ export function CocktailCard({ cocktail, distance, variant = 'default' }: Cockta
   if (variant === 'compact') {
     return (
       <Link href={cocktailPath} onClick={handleClick}>
-        <div className="relative border border-white/20 rounded-3xl bg-white/5 backdrop-blur-sm p-4 cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-[1.02] group">
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500/20 to-teal-500/20 blur-xl group-hover:blur-2xl transition-all duration-300 opacity-50 group-hover:opacity-70" />
+        <div className="relative border border-white/20 rounded-3xl bg-white/5 backdrop-blur-xs p-4 cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-[1.02] group">
+          <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-orange-500/20 to-teal-500/20 blur-xl group-hover:blur-2xl transition-all duration-300 opacity-50 group-hover:opacity-70" />
           <div className="relative">
             <div className="flex justify-between items-start gap-x-2">
               <div>
@@ -56,7 +56,7 @@ export function CocktailCard({ cocktail, distance, variant = 'default' }: Cockta
                 )}
               </div>
               {typeof distance === "number" && (
-                <div className="text-sm px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full whitespace-nowrap text-white/80">
+                <div className="text-sm px-2 py-1 bg-white/10 backdrop-blur-xs rounded-full whitespace-nowrap text-white/80">
                   {`${t.similarity}: ${(100 - Math.min(distance, 100)).toFixed(1)}`}
                 </div>
               )}
@@ -83,8 +83,8 @@ export function CocktailCard({ cocktail, distance, variant = 'default' }: Cockta
 
   return (
     <Link href={cocktailPath} onClick={handleClick}>
-      <div className="relative border border-white/20 rounded-3xl bg-white/5 backdrop-blur-sm p-6 cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-[1.02] group">
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500/20 to-teal-500/20 blur-xl group-hover:blur-2xl transition-all duration-300 opacity-50 group-hover:opacity-70" />
+      <div className="relative border border-white/20 rounded-3xl bg-white/5 backdrop-blur-xs p-6 cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-[1.02] group">
+        <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-orange-500/20 to-teal-500/20 blur-xl group-hover:blur-2xl transition-all duration-300 opacity-50 group-hover:opacity-70" />
         <div className="relative">
           <div className="mb-4 flex justify-between items-start gap-x-2">
             <div>
@@ -94,7 +94,7 @@ export function CocktailCard({ cocktail, distance, variant = 'default' }: Cockta
               )}
             </div>
             {typeof distance === "number" && (
-              <div className="text-sm px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full whitespace-nowrap text-white/80">
+              <div className="text-sm px-3 py-1.5 bg-white/10 backdrop-blur-xs rounded-full whitespace-nowrap text-white/80">
                 {`${t.similarity}: ${(100 - Math.min(distance, 100)).toFixed(1)}`}
               </div>
             )}
@@ -150,7 +150,7 @@ export function CocktailCard({ cocktail, distance, variant = 'default' }: Cockta
             <Button
               onClick={handleSeeMoreClick}
               variant="secondary"
-              className="flex-1 bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+              className="flex-1 bg-white/10 hover:bg-white/20 backdrop-blur-xs"
             >
               {t.seeMore}
             </Button>

@@ -89,7 +89,7 @@ export function Step1({ onSelect }: Step1Props) {
             <Button
               variant="outline"
               onClick={() => handleSelect(category.id)}
-              className={`flex flex-col items-center justify-center p-6 rounded-xl text-xl font-semibold transition-all duration-200 border-2 bg-white/5 backdrop-blur-sm min-h-[200px] w-full
+              className={`flex flex-col items-center justify-center p-6 rounded-xl text-xl font-semibold transition-all duration-200 border-2 bg-white/5 backdrop-blur-xs min-h-[200px] w-full
                 ${
                   selectedCategory === category.id
                     ? "border-white bg-white/15 text-white scale-105"

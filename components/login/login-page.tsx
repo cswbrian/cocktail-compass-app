@@ -51,7 +51,7 @@ export function LoginPage() {
 
   return (
     <div className="flex flex-col mt-20 px-6">
-      <h1 className="text-3xl mb-6 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+      <h1 className="text-3xl mb-6 bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent">
         {t.loginToUnlockFeatures}
       </h1>
       <ul className="mb-8 space-y-2 list-none">

@@ -22,7 +22,7 @@ export function CocktailLogCard({
   return (
     <>
       <div
-        className="bg-card border-b rounded-lg shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+        className="bg-card border-b rounded-lg shadow-xs p-4 cursor-pointer hover:shadow-md transition-shadow"
         onClick={() => setIsDetailOpen(true)}
       >
         <div className="space-y-4">
