@@ -24,6 +24,7 @@ import { CustomCocktailModal } from "./custom-cocktail-modal";
 import { useRouter } from "next/navigation";
 import { LocationSelector } from "./location-selector";
 import { AuthService } from "@/services/auth-service";
+import { Loading } from "@/components/ui/loading";
 
 interface LocationData {
   name: string;
@@ -394,6 +395,11 @@ export function CocktailLogForm({
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed inset-0 z-50 bg-background"
           >
+            {isLoading && (
+              <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/80 backdrop-blur-xs">
+                <Loading size="lg" />
+              </div>
+            )}
             <div className="h-full flex flex-col">
               <div className="px-4 py-3 border-b">
                 <div className="flex items-center relative">
