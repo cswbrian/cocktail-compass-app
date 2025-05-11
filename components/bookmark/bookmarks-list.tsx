@@ -1,33 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { CocktailCard } from "@/components/cocktail-card";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { cocktailService } from "@/services/cocktail-service";
-import { bookmarkService } from "@/services/bookmark-service";
 import { BookmarkList } from "@/types/bookmark";
 import { Cocktail } from "@/types/cocktail";
-import { Loading } from "@/components/ui/loading";
-import { toast } from "sonner";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ArrowUpDown, LayoutGrid, List } from "lucide-react";
 
-// Default lists are now managed by the bookmark service
+interface BookmarksListProps {
+  bookmarks: BookmarkList[];
+  cocktails: Cocktail[];
+  isLoading: boolean;
+}
 
-export function BookmarksList() {
-  const { user, loading } = useAuth();
+export function BookmarksList({ bookmarks, cocktails }: BookmarksListProps) {
+  const { user } = useAuth();
   const { language } = useLanguage();
   const router = useRouter();
   const t = translations[language];
 
-  const [bookmarks, setBookmarks] = useState<BookmarkList[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [viewMode, setViewMode] = useState<'default' | 'compact'>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('bookmarks-view-mode') as 'default' | 'compact') || 'compact';
@@ -47,63 +45,17 @@ export function BookmarksList() {
     }
     return '';
   });
-  const [isMigrating, setIsMigrating] = useState(false);
-  const [cocktails, setCocktails] = useState<Cocktail[]>([]);
-
-  console.log('setIsMigrating', setIsMigrating);
-  useEffect(() => {
-    if (!user) {
-      router.push(`/${language}/login`);
-      return;
-    }
-
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        // Initialize both services
-        await Promise.all([
-          bookmarkService.initializeDefaultLists(),
-          cocktailService.initialize()
-        ]);
-
-        // Get bookmarks and cocktails
-        const [lists, allCocktails] = await Promise.all([
-          bookmarkService.getBookmarks(),
-          cocktailService.getAllCocktailsWithDetails()
-        ]);
-
-        setBookmarks(lists);
-        setCocktails(allCocktails);
-
-        // Set initial active tab if not set
-        if (!activeTab && lists.length > 0) {
-          const defaultList = lists.find(list => list.is_default) || lists[0];
-          setActiveTab(defaultList.id);
-          localStorage.setItem('bookmarks-active-tab', defaultList.id);
-        }
-      } catch (error) {
-        console.error('Error loading data:', error);
-        toast.error(t.errorLoadingBookmarks);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (!loading) {
-      loadData();
-    }
-  }, [user, loading, language, router, t, activeTab]);
-
-  if (loading || isLoading || isMigrating) {
-    return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <Loading size="md" />
-      </div>
-    );
-  }
 
   if (!user) {
+    router.push(`/${language}/login`);
     return null;
+  }
+
+  // Set initial active tab if not set
+  if (!activeTab && bookmarks.length > 0) {
+    const defaultList = bookmarks.find(list => list.is_default) || bookmarks[0];
+    setActiveTab(defaultList.id);
+    localStorage.setItem('bookmarks-active-tab', defaultList.id);
   }
 
   const getBookmarkedCocktails = (listId: string): Cocktail[] => {
