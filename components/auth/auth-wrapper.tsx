@@ -11,9 +11,10 @@ import { toast } from "sonner";
 
 interface AuthWrapperProps {
   children: React.ReactNode;
+  customLoading?: React.ReactNode;
 }
 
-export function AuthWrapper({ children }: AuthWrapperProps) {
+export function AuthWrapper({ children, customLoading }: AuthWrapperProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { language } = useLanguage();
@@ -36,7 +37,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   }, [user, router, language, t]);
 
   if (loading) {
-    return (
+    return customLoading || (
       <div className="flex items-center justify-center min-h-[200px]">
         <Loading />
       </div>
