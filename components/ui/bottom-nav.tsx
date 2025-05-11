@@ -57,8 +57,7 @@ export function BottomNav() {
 
             const Icon = item.icon;
             const isActive = 
-              pathname === item.href || 
-              (item.href.endsWith('/explorer') && pathname === `/${language}`);
+              pathname === item.href;
             
             return (
               <Link

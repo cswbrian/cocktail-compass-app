@@ -1,5 +1,5 @@
 import { Redirect } from "@/components/redirect";
 
 export default function Home() {
-  return <Redirect to="/explorer" />;
+  return <Redirect to="/journal/feeds" />;
 }
