@@ -23,10 +23,9 @@ interface LocationData {
 interface LocationSelectorProps {
   value: LocationData | null;
   onChange: (location: LocationData | null) => void;
-  label?: string;
 }
 
-export function LocationSelector({ value, onChange, label }: LocationSelectorProps) {
+export function LocationSelector({ value, onChange }: LocationSelectorProps) {
   const [isLocationDrawerOpen, setIsLocationDrawerOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const { language } = useLanguage();

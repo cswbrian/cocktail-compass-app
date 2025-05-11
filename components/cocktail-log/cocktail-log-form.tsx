@@ -519,16 +519,27 @@ export function CocktailLogForm({
                   <LocationSelector
                     value={location}
                     onChange={setLocation}
-                    label={t.location}
                   />
 
                   <div className="space-y-2">
-                    <Textarea
-                      value={comments}
-                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setComments(e.target.value)}
-                      placeholder={t.notePlaceholder}
-                      className="min-h-[200px]"
-                    />
+                    <div className="relative">
+                      <Textarea
+                        value={comments}
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+                          // Limit to 500 characters
+                          if (e.target.value.length <= 500) {
+                            setComments(e.target.value);
+                          }
+                        }}
+                        placeholder={t.notePlaceholder}
+                        className="min-h-[200px] resize-none pr-20"
+                      />
+                      <div className="absolute bottom-2 right-2">
+                        <span className="text-xs text-muted-foreground">
+                          {comments.length}/500
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="space-y-2">

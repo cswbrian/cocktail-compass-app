@@ -30,7 +30,7 @@ interface LogWithCocktail {
 interface LogWithCocktailDetails extends LogWithCocktail {
   id: string;
   rating: number;
-  location: string | null;
+  place_id: string | null;
   bartender: string | null;
   comments: string | null;
   tags: string[];
@@ -38,6 +38,12 @@ interface LogWithCocktailDetails extends LogWithCocktail {
   updated_at: string;
   drink_date: string | null;
   media: { url: string; type: 'image' | 'video' }[] | null;
+  places?: {
+    id: string;
+    name: string;
+    main_text: string;
+    secondary_text: string;
+  } | null;
 }
 
 interface LocationData {
@@ -424,6 +430,12 @@ export class CocktailLogService {
         *,
         cocktails (
           name
+        ),
+        places (
+          id,
+          name,
+          main_text,
+          secondary_text
         )
       `)
       .eq("user_id", user.user.id)
@@ -436,7 +448,7 @@ export class CocktailLogService {
     // Calculate basic stats
     const totalCocktailsDrunk = typedLogs.length;
     const uniqueCocktails = new Set(typedLogs.map(log => log.cocktail_id)).size;
-    const uniqueBars = new Set(typedLogs.map(log => log.location).filter(Boolean)).size;
+    const uniqueBars = new Set(typedLogs.map(log => log.places?.id).filter(Boolean)).size;
 
     // Get drinks logged over time (last 6 months)
     const sixMonthsAgo = new Date();
@@ -453,8 +465,9 @@ export class CocktailLogService {
 
     // Get top bars with drink counts
     const barDrinkCounts = typedLogs.reduce((acc, log) => {
-      if (log.location) {
-        acc[log.location] = (acc[log.location] || 0) + 1;
+      if (log.places) {
+        const placeName = log.places.main_text;
+        acc[placeName] = (acc[placeName] || 0) + 1;
       }
       return acc;
     }, {} as Record<string, number>);
