@@ -3,6 +3,40 @@ import { CocktailLog } from "@/types/cocktail-log";
 import { cocktailService } from "@/services/cocktail-service";
 import { cocktailLogsMediaService } from "@/services/media-service";
 
+interface CocktailWithNames {
+  name_en: string;
+  name_zh: string;
+}
+
+interface CocktailWithSpirits {
+  id: string;
+  data: {
+    base_spirits: Array<{
+      name: {
+        en: string;
+      };
+    }>;
+  };
+}
+
+interface LogWithCocktail {
+  cocktail_id: string;
+  cocktails: CocktailWithNames;
+}
+
+interface LogWithCocktailDetails extends LogWithCocktail {
+  id: string;
+  rating: number;
+  location: string | null;
+  bartender: string | null;
+  comments: string | null;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+  drink_date: string | null;
+  media: { url: string; type: 'image' | 'video' }[] | null;
+}
+
 export class CocktailLogService {
   async createLog(
     cocktailId: string,
@@ -263,21 +297,23 @@ export class CocktailLogService {
       ? ratings.reduce((acc, curr) => acc + curr.rating, 0) / ratings.length
       : 0;
 
-    // Get all logs with cocktail IDs
+    // Get all logs with cocktail IDs and join with cocktails table
     const { data: logs } = await supabase
       .from("cocktail_logs")
-      .select("cocktail_id")
+      .select(`
+        cocktail_id,
+        cocktails (
+          name_en,
+          name_zh
+        )
+      `)
       .eq("user_id", user.user.id)
       .order("created_at", { ascending: false });
 
-    // Get all cocktails from our in-memory data
-    const allCocktails = cocktailService.getAllCocktailsWithDetails();
-
     // Count cocktails
-    const cocktailCounts = logs?.reduce((acc, curr) => {
-      const cocktail = allCocktails.find(c => c.id === curr.cocktail_id);
-      if (cocktail) {
-        const name = cocktail.name.en;
+    const cocktailCounts = (logs as LogWithCocktail[] | null)?.reduce((acc, curr) => {
+      if (curr.cocktails) {
+        const name = curr.cocktails.name_en;
         acc[name] = (acc[name] || 0) + 1;
       }
       return acc;
@@ -288,11 +324,16 @@ export class CocktailLogService {
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
 
+    // Get all cocktails with their base spirits
+    const { data: cocktailsWithSpirits } = await supabase
+      .from("cocktails")
+      .select("id, data->base_spirits");
+
     // Count spirits
     const spiritCounts = logs?.reduce((acc, curr) => {
-      const cocktail = allCocktails.find(c => c.id === curr.cocktail_id);
-      if (cocktail) {
-        cocktail.base_spirits.forEach(spirit => {
+      const cocktail = (cocktailsWithSpirits as CocktailWithSpirits[] | null)?.find(c => c.id === curr.cocktail_id);
+      if (cocktail?.data?.base_spirits) {
+        cocktail.data.base_spirits.forEach(spirit => {
           const spiritName = spirit.name.en;
           acc[spiritName] = (acc[spiritName] || 0) + 1;
         });
@@ -317,28 +358,33 @@ export class CocktailLogService {
     const { data: user } = await supabase.auth.getUser();
     if (!user.user) return null;
 
-    // Get all logs for the user
+    // Get all logs for the user with cocktail names
     const { data: logs } = await supabase
       .from("cocktail_logs")
-      .select("*")
+      .select(`
+        *,
+        cocktails (
+          name_en,
+          name_zh
+        )
+      `)
       .eq("user_id", user.user.id)
       .order("created_at", { ascending: false });
 
     if (!logs) return null;
 
-    // Get all cocktails from our in-memory data
-    const allCocktails = cocktailService.getAllCocktails();
+    const typedLogs = logs as LogWithCocktailDetails[];
 
     // Calculate basic stats
-    const totalCocktailsDrunk = logs.length;
-    const uniqueCocktails = new Set(logs.map(log => log.cocktail_id)).size;
-    const uniqueBars = new Set(logs.map(log => log.location).filter(Boolean)).size;
+    const totalCocktailsDrunk = typedLogs.length;
+    const uniqueCocktails = new Set(typedLogs.map(log => log.cocktail_id)).size;
+    const uniqueBars = new Set(typedLogs.map(log => log.location).filter(Boolean)).size;
 
     // Get drinks logged over time (last 6 months)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
     
-    const drinksByMonth = logs.reduce((acc, log) => {
+    const drinksByMonth = typedLogs.reduce((acc, log) => {
       const date = new Date(log.drink_date || log.created_at);
       if (date >= sixMonthsAgo) {
         const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -348,7 +394,7 @@ export class CocktailLogService {
     }, {} as Record<string, number>);
 
     // Get top bars with drink counts
-    const barDrinkCounts = logs.reduce((acc, log) => {
+    const barDrinkCounts = typedLogs.reduce((acc, log) => {
       if (log.location) {
         acc[log.location] = (acc[log.location] || 0) + 1;
       }
@@ -361,7 +407,7 @@ export class CocktailLogService {
       .slice(0, 5);
 
     // Get recent photos
-    const recentPhotos = logs
+    const recentPhotos = typedLogs
       .flatMap(log => log.media || [])
       .filter(media => media.type === 'image')
       .slice(0, 6);
@@ -379,9 +425,16 @@ export class CocktailLogService {
   }
 
   private async mapLog(data: any): Promise<CocktailLog> {
-    // Get the cocktail from our in-memory data
-    const allCocktails = cocktailService.getAllCocktails();
-    const cocktail = allCocktails.find(c => c.id === data.cocktail_id);
+    // Get the cocktail from Supabase
+    const { data: cocktail, error } = await supabase
+      .from("cocktails")
+      .select("name_en, name_zh")
+      .eq("id", data.cocktail_id)
+      .single();
+    
+    if (error) {
+      console.error("Error fetching cocktail:", error);
+    }
     
     // Convert media URLs to signed URLs
     const media = data.media ? await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.media) : [];
@@ -389,7 +442,7 @@ export class CocktailLogService {
     return {
       id: data.id,
       cocktailId: data.cocktail_id,
-      cocktailName: cocktail?.name.en || "",
+      cocktailName: cocktail ? `${cocktail.name_en} / ${cocktail.name_zh}` : "",
       userId: data.user_id,
       rating: data.rating,
       location: data.location,

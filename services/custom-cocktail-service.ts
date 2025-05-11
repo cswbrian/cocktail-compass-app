@@ -31,7 +31,9 @@ export class CustomCocktailService {
         },
         slug,
         is_custom: true,
-        created_by: userId
+        created_by: userId,
+        name_en: name.en,
+        name_zh: name.zh
       }])
       .select()
       .single();
