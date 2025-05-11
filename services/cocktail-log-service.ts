@@ -3,6 +3,7 @@ import { CocktailLog } from "@/types/cocktail-log";
 import { cocktailService } from "@/services/cocktail-service";
 import { cocktailLogsMediaService } from "@/services/media-service";
 import { placeService } from "@/services/place-service";
+import { AuthService } from "@/services/auth-service";
 
 interface CocktailWithNames {
   name: {
@@ -293,8 +294,8 @@ export class CocktailLogService {
   }
 
   async getLogsByCocktailId(cocktailId: string): Promise<CocktailLog[]> {
-    const { data: user } = await supabase.auth.getUser();
-    if (!user.user) return [];
+    const user = await AuthService.getCurrentUser();
+    if (!user) return [];
 
     const { data, error } = await supabase
       .from("cocktail_logs")
@@ -311,7 +312,7 @@ export class CocktailLogService {
         )
       `)
       .eq("cocktail_id", cocktailId)
-      .eq("user_id", user.user.id)
+      .eq("user_id", user.id)
       .order("drink_date", { ascending: false });
 
     if (error) throw error;
@@ -319,8 +320,8 @@ export class CocktailLogService {
   }
 
   async getLogsByUserId(userId?: string): Promise<CocktailLog[]> {
-    const { data: user } = await supabase.auth.getUser();
-    if (!user.user) return [];
+    const user = await AuthService.getCurrentUser();
+    if (!user) return [];
 
     const { data, error } = await supabase
       .from("cocktail_logs")
@@ -336,7 +337,7 @@ export class CocktailLogService {
           lng
         )
       `)
-      .eq("user_id", userId || user.user.id)
+      .eq("user_id", userId || user.id)
       .order("drink_date", { ascending: false });
 
     if (error) throw error;
@@ -344,20 +345,20 @@ export class CocktailLogService {
   }
 
   async getUserStats() {
-    const { data: user } = await supabase.auth.getUser();
-    if (!user.user) return null;
+    const user = await AuthService.getCurrentUser();
+    if (!user) return null;
 
     // Get total logs
     const { count: totalLogs } = await supabase
       .from("cocktail_logs")
       .select("*", { count: "exact", head: true })
-      .eq("user_id", user.user.id);
+      .eq("user_id", user.id);
 
     // Get average rating
     const { data: ratings } = await supabase
       .from("cocktail_logs")
       .select("rating")
-      .eq("user_id", user.user.id);
+      .eq("user_id", user.id);
 
     const averageRating = ratings?.length
       ? ratings.reduce((acc, curr) => acc + curr.rating, 0) / ratings.length
@@ -372,7 +373,7 @@ export class CocktailLogService {
           name
         )
       `)
-      .eq("user_id", user.user.id)
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     // Count cocktails
@@ -420,9 +421,9 @@ export class CocktailLogService {
   }
 
   async getEnhancedUserStats() {
-    const { data: user } = await supabase.auth.getUser();
+    const user = await AuthService.getCurrentUser();
     console.log('user', user);
-    if (!user.user) return null;
+    if (!user) return null;
 
     // Get all logs for the user with cocktail names
     const { data: logs } = await supabase
@@ -439,7 +440,7 @@ export class CocktailLogService {
           secondary_text
         )
       `)
-      .eq("user_id", user.user.id)
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (!logs) return null;

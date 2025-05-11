@@ -137,8 +137,8 @@ export class BookmarkService {
   }
 
   async getUserBookmarks(): Promise<BookmarkList[]> {
-    const { data: user } = await supabase.auth.getUser();
-    if (!user.user) return [];
+    const user = await AuthService.getCurrentUser();
+    if (!user) return [];
 
     const { data, error } = await supabase
       .from("bookmark_lists")
@@ -157,7 +157,7 @@ export class BookmarkService {
           added_at
         )
       `)
-      .eq("user_id", user.user.id)
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) throw error;

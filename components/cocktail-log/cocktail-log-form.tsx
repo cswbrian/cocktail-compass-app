@@ -24,6 +24,7 @@ import { customCocktailService } from "@/services/custom-cocktail-service";
 import { CustomCocktailModal } from "./custom-cocktail-modal";
 import { useRouter } from "next/navigation";
 import { LocationSelector } from "./location-selector";
+import { AuthService } from "@/services/auth-service";
 
 interface LocationData {
   name: string;
@@ -167,7 +168,7 @@ export function CocktailLogForm({
       setIsLoading(true);
 
       // Get user ID first
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await AuthService.getCurrentUser();
       if (!user) throw new Error("User not authenticated");
 
       let cocktailId = selectedCocktail.value;
