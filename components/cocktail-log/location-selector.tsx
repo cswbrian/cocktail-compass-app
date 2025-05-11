@@ -3,7 +3,6 @@
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, MapPin, X, Navigation } from "lucide-react";
@@ -111,7 +110,6 @@ export function LocationSelector({ value, onChange, label }: LocationSelectorPro
 
   return (
     <div className="space-y-2">
-      {label && <Label>{label}</Label>}
       <Drawer open={isLocationDrawerOpen} onOpenChange={setIsLocationDrawerOpen}>
         <DrawerTrigger asChild>
           <Button

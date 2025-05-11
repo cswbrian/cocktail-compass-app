@@ -84,7 +84,7 @@ export function CocktailLogForm({
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [drinkDate, setDrinkDate] = useState<Date | undefined>(undefined);
+  const [drinkDate, setDrinkDate] = useState<Date | undefined>(new Date());
   const [media, setMedia] = useState<{ url: string; type: 'image' | 'video' }[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -96,7 +96,7 @@ export function CocktailLogForm({
 
   useEffect(() => {
     if (existingLog) {
-      setRating(existingLog.rating);
+      setRating(existingLog.rating || 0);
       const cocktail = cocktailService.getCocktailById(existingLog.cocktailId);
       const displayName = cocktail ? `${cocktail.name.en} / ${cocktail.name.zh}` : cocktailName;
       setCocktailNameInput(displayName);
@@ -120,7 +120,7 @@ export function CocktailLogForm({
         setLocation(null);
       }
       setBartender(existingLog.bartender || "");
-      setTags(existingLog.tags);
+      setTags(existingLog.tags || []);
       setDrinkDate(existingLog.drinkDate ? new Date(existingLog.drinkDate) : undefined);
       setMedia(existingLog.media || []);
     } else {
@@ -138,7 +138,7 @@ export function CocktailLogForm({
       setLocation(null);
       setBartender("");
       setTags([]);
-      setDrinkDate(undefined);
+      setDrinkDate(new Date());
       setMedia([]);
     }
   }, [existingLog, cocktailName, cocktailSlug]);
@@ -425,7 +425,7 @@ export function CocktailLogForm({
                           )}
                         >
                           <Calendar className="mr-2 h-4 w-4" />
-                          {drinkDate ? format(drinkDate, "PPP") : <span>Pick a date</span>}
+                          {drinkDate ? format(drinkDate, "PPP") : <span>{t.drinkDate}</span>}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
@@ -440,63 +440,11 @@ export function CocktailLogForm({
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t.media}</Label>
-                    <div className="max-h-[200px] overflow-x-auto">
-                      <div className="grid grid-flow-col auto-cols-[200px] gap-2">
-                        {media.map((item, index) => (
-                          <div key={index} className="relative aspect-square">
-                            {item.type === 'image' ? (
-                              <div className="relative w-full h-full">
-                                <Image
-                                  src={item.url}
-                                  alt={`Media ${index + 1}`}
-                                  fill
-                                  className="object-cover rounded-lg"
-                                  sizes="200px"
-                                />
-                              </div>
-                            ) : (
-                              <video
-                                src={item.url}
-                                className="w-full h-full object-cover rounded-lg"
-                                controls
-                              />
-                            )}
-                            <button
-                              onClick={() => handleRemoveMedia(index)}
-                              className="absolute top-1 right-1 p-1 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
-                            >
-                              <X className="h-4 w-4 text-white" />
-                            </button>
-                          </div>
-                        ))}
-                        {media.length < 5 && (
-                          <button
-                            onClick={handleMediaClick}
-                            className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 transition-colors"
-                          >
-                            <ImagePlus className="h-6 w-6 text-gray-400" />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*,video/*"
-                      multiple
-                      onChange={handleMediaUpload}
-                      className="hidden"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="cocktailName">{t.cocktailName}</Label>
                     <div className="relative">
                       <div className="relative">
                         <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
                         <Input
-                          placeholder={t.searchCocktail}
+                          placeholder={t.cocktailName}
                           value={cocktailNameInput}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setCocktailNameInput(e.target.value);
@@ -568,6 +516,72 @@ export function CocktailLogForm({
                     </div>
                   </div>
 
+                  <LocationSelector
+                    value={location}
+                    onChange={setLocation}
+                    label={t.location}
+                  />
+
+                  <div className="space-y-2">
+                    <Textarea
+                      value={comments}
+                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setComments(e.target.value)}
+                      placeholder={t.notePlaceholder}
+                      className="min-h-[200px]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>{t.media}</Label>
+                    <div className="max-h-[200px] overflow-x-auto">
+                      <div className="grid grid-flow-col auto-cols-[200px] gap-2">
+                        {media.map((item, index) => (
+                          <div key={index} className="relative aspect-square">
+                            {item.type === 'image' ? (
+                              <div className="relative w-full h-full">
+                                <Image
+                                  src={item.url}
+                                  alt={`Media ${index + 1}`}
+                                  fill
+                                  className="object-cover rounded-lg"
+                                  sizes="200px"
+                                />
+                              </div>
+                            ) : (
+                              <video
+                                src={item.url}
+                                className="w-full h-full object-cover rounded-lg"
+                                controls
+                              />
+                            )}
+                            <button
+                              onClick={() => handleRemoveMedia(index)}
+                              className="absolute top-1 right-1 p-1 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+                            >
+                              <X className="h-4 w-4 text-white" />
+                            </button>
+                          </div>
+                        ))}
+                        {media.length < 5 && (
+                          <button
+                            onClick={handleMediaClick}
+                            className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 transition-colors"
+                          >
+                            <ImagePlus className="h-6 w-6 text-gray-400" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*,video/*"
+                      multiple
+                      onChange={handleMediaUpload}
+                      className="hidden"
+                    />
+                  </div>
+
                   <div className="space-y-2">
                     <Label>{t.rating}</Label>
                     <div className="flex items-center space-x-2">
@@ -587,16 +601,8 @@ export function CocktailLogForm({
                     </div>
                   </div>
 
-                  <LocationSelector
-                    value={location}
-                    onChange={setLocation}
-                    label={t.location}
-                  />
-
                   <div className="space-y-2">
-                    <Label htmlFor="bartender">{t.bartender}</Label>
                     <Input
-                      id="bartender"
                       value={bartender}
                       onChange={(e: ChangeEvent<HTMLInputElement>) => setBartender(e.target.value)}
                       placeholder={t.bartender}
@@ -605,9 +611,7 @@ export function CocktailLogForm({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="specialIngredients">{t.specialIngredients}</Label>
                     <Input
-                      id="specialIngredients"
                       value={specialIngredients}
                       onChange={(e: ChangeEvent<HTMLInputElement>) => setSpecialIngredients(e.target.value)}
                       placeholder={t.specialIngredients}
@@ -616,18 +620,6 @@ export function CocktailLogForm({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="comments">{t.notePlaceholder}</Label>
-                    <Textarea
-                      id="comments"
-                      value={comments}
-                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setComments(e.target.value)}
-                      placeholder={t.notePlaceholder}
-                      className="min-h-[200px]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>{t.tags}</Label>
                     <div className="flex space-x-2">
                       <Input
                         value={newTag}

@@ -44,7 +44,7 @@ export function CocktailLogInfo({
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       {locationData && (
         <div className="flex items-center gap-2">
           {showHeadings && (
@@ -95,6 +95,15 @@ export function CocktailLogInfo({
         </div>
       )}
 
+      {comments && (
+        <div className="flex flex-col gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.notes}:</span>
+          )}
+          <p className="text-sm whitespace-pre-wrap">{comments}</p>
+        </div>
+      )}
+
       {tags && tags.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
           {showHeadings && (
@@ -111,15 +120,6 @@ export function CocktailLogInfo({
               </span>
             ))}
           </div>
-        </div>
-      )}
-
-      {comments && (
-        <div className="flex flex-col gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.notes}:</span>
-          )}
-          <p className="text-sm whitespace-pre-wrap">{comments}</p>
         </div>
       )}
     </div>
