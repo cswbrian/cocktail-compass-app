@@ -11,7 +11,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { BottomNavProvider } from "@/context/BottomNavContext";
 import { MainContent } from "@/components/ui/main-content";
-import { CocktailDataProvider } from "@/context/CocktailLogContext";
+import { CocktailLogDataProvider } from "@/context/CocktailLogContext";
 import { GlobalCocktailLogForm } from "@/components/cocktail-log/global-cocktail-log-form";
 
 const inter = Inter({
@@ -86,7 +86,7 @@ export default function RootLayout({
     <LanguageProvider>
       <AuthProvider>
         <BottomNavProvider>
-          <CocktailDataProvider>
+          <CocktailLogDataProvider>
             <html lang="zh-HK" className="dark">
               <head>
                 <link rel="manifest" href="/manifest.json" />
@@ -140,7 +140,7 @@ export default function RootLayout({
                 </div>
               </body>
             </html>
-          </CocktailDataProvider>
+          </CocktailLogDataProvider>
         </BottomNavProvider>
       </AuthProvider>
     </LanguageProvider>

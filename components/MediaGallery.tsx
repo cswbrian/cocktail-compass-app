@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";

@@ -10,13 +10,41 @@ import { useCocktailData } from "@/context/CocktailLogContext";
 import { JournalHighlights } from "./journal-highlights";
 import { Feeds } from "./feeds";
 import { BasicStats } from "./basic-stats";
+import { CocktailLog } from "@/types/cocktail-log";
+import { EnhancedStats } from "@/context/CocktailLogContext";
+import useSWR from 'swr';
+import { cocktailLogService } from '@/services/cocktail-log-service';
+import { cocktailLogsMediaService } from '@/services/media-service';
 
-export function JournalClient() {
+interface JournalClientProps {
+  initialLogs: CocktailLog[];
+  initialStats: EnhancedStats;
+}
+
+export function JournalClient({ initialLogs, initialStats }: JournalClientProps) {
   const { user } = useAuth();
   const router = useRouter();
   const { language } = useLanguage();
   const t = translations[language];
-  const { logs, stats, isLoading, mutate } = useCocktailData();
+  const { mutate } = useCocktailData();
+
+  // Use SWR for client-side updates
+  const { data: logs = initialLogs, isLoading: isLoadingLogs } = useSWR(
+    'cocktail-logs',
+    () => cocktailLogService.getLogsByUserId(),
+    { fallbackData: initialLogs }
+  );
+
+  const { data: stats = initialStats, isLoading: isLoadingStats } = useSWR(
+    'cocktail-stats',
+    async () => {
+      const data = await cocktailLogService.getEnhancedUserStats();
+      if (!data) return initialStats;
+      const recentPhotos = await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.recentPhotos);
+      return { ...data, recentPhotos };
+    },
+    { fallbackData: initialStats }
+  );
 
   if (!user) {
     router.push(`/${language}/login`);
@@ -30,6 +58,8 @@ export function JournalClient() {
   const handleLogDeleted = async () => {
     await mutate();
   };
+
+  const isLoading = isLoadingLogs || isLoadingStats;
 
   return (
     <div className="container mx-auto pb-20">

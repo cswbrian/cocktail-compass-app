@@ -20,7 +20,7 @@ export function BottomNav() {
 
   const navItems = [
     {
-      href: `/${language}/journal`,
+      href: `/${language}/journal/feeds`,
       icon: BookHeart,
       label: t.bottomNavJournal,
     },

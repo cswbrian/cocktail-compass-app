@@ -421,6 +421,7 @@ export class CocktailLogService {
 
   async getEnhancedUserStats() {
     const { data: user } = await supabase.auth.getUser();
+    console.log('user', user);
     if (!user.user) return null;
 
     // Get all logs for the user with cocktail names

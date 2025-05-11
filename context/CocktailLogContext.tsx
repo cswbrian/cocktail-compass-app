@@ -2,11 +2,9 @@
 
 import { createContext, useContext, ReactNode, useState } from 'react';
 import { CocktailLog } from '@/types/cocktail-log';
-import { cocktailLogService } from '@/services/cocktail-log-service';
-import { cocktailLogsMediaService } from '@/services/media-service';
 import useSWR from 'swr';
 
-interface EnhancedStats {
+export interface EnhancedStats {
   basicStats: {
     totalCocktailsDrunk: number;
     uniqueCocktails: number;
@@ -18,17 +16,14 @@ interface EnhancedStats {
 }
 
 interface CocktailLogContextType {
-  logs: CocktailLog[];
-  stats: EnhancedStats;
-  isLoading: boolean;
-  error: any;
-  mutate: () => Promise<any>;
   // Form state management
   isFormOpen: boolean;
   openForm: () => void;
   closeForm: () => void;
   selectedLog: CocktailLog | null;
   setSelectedLog: (log: CocktailLog | null) => void;
+  // Mutations
+  mutate: () => Promise<any>;
 }
 
 const CocktailLogContext = createContext<CocktailLogContextType | null>(null);
@@ -41,7 +36,7 @@ export function useCocktailData(): CocktailLogContextType {
   return context;
 }
 
-export function CocktailDataProvider({
+export function CocktailLogDataProvider({
   children,
 }: {
   children: ReactNode;
@@ -50,57 +45,11 @@ export function CocktailDataProvider({
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedLog, setSelectedLog] = useState<CocktailLog | null>(null);
 
-  // Fetch logs using SWR
-  const { data: logs = [], error: logsError, isLoading: isLoadingLogs, mutate: mutateLogs } = useSWR(
-    'cocktail-logs',
-    () => cocktailLogService.getLogsByUserId()
-  );
+  // SWR for mutations
+  const { mutate: mutateLogs } = useSWR('cocktail-logs');
+  const { mutate: mutateStats } = useSWR('cocktail-stats');
 
-  // Fetch stats using SWR
-  const { data: stats, error: statsError, isLoading: isLoadingStats, mutate: mutateStats } = useSWR(
-    'cocktail-stats',
-    async () => {
-      const data = await cocktailLogService.getEnhancedUserStats();
-      if (!data) {
-        return {
-          basicStats: {
-            totalCocktailsDrunk: 0,
-            uniqueCocktails: 0,
-            uniqueBars: 0
-          },
-          drinksByMonth: {},
-          topBarsWithMostDrinks: [],
-          recentPhotos: []
-        };
-      }
-
-      // Convert recent photos to signed URLs
-      const recentPhotos = await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.recentPhotos);
-      return {
-        ...data,
-        recentPhotos
-      };
-    }
-  );
-
-  // Combine the states
   const value = {
-    logs,
-    stats: stats || {
-      basicStats: {
-        totalCocktailsDrunk: 0,
-        uniqueCocktails: 0,
-        uniqueBars: 0
-      },
-      drinksByMonth: {},
-      topBarsWithMostDrinks: [],
-      recentPhotos: []
-    },
-    isLoading: isLoadingLogs || isLoadingStats,
-    error: logsError || statsError,
-    mutate: async () => {
-      await Promise.all([mutateLogs(), mutateStats()]);
-    },
     // Form state management
     isFormOpen,
     openForm: () => setIsFormOpen(true),
@@ -109,7 +58,11 @@ export function CocktailDataProvider({
       setSelectedLog(null);
     },
     selectedLog,
-    setSelectedLog
+    setSelectedLog,
+    // Mutations
+    mutate: async () => {
+      await Promise.all([mutateLogs(), mutateStats()]);
+    }
   };
 
   return (
