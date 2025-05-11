@@ -15,7 +15,7 @@ export function JournalNav() {
     <div className="grid w-full grid-cols-2 mb-6">
       <Link
         href={`/${language}/journal/feeds`}
-        className={`flex items-center justify-center gap-2 p-4 border-b-2 ${
+        className={`flex items-center justify-center gap-2 py-2 border-b-2 ${
           pathname.includes("/feeds")
             ? "border-primary text-primary"
             : "border-transparent"
@@ -26,7 +26,7 @@ export function JournalNav() {
       </Link>
       <Link
         href={`/${language}/journal/highlights`}
-        className={`flex items-center justify-center gap-2 p-4 border-b-2 ${
+        className={`flex items-center justify-center gap-2 py-2 border-b-2 ${
           pathname.includes("/highlights")
             ? "border-primary text-primary"
             : "border-transparent"

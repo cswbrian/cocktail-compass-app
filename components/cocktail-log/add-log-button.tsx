@@ -9,10 +9,10 @@ export function AddLogButton() {
 
   return (
     <Button
-      className="h-12 w-12 rounded-full shadow-lg"
+      className="h-10 w-10 rounded-full shadow-lg"
       onClick={openForm}
     >
-      <NotebookPenIcon className="h-6 w-6" />
+      <NotebookPenIcon className="h-5 w-5" />
     </Button>
   );
 } 
