@@ -23,18 +23,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { customCocktailService } from "@/services/custom-cocktail-service";
 import { CustomCocktailModal } from "./custom-cocktail-modal";
 import { useRouter } from "next/navigation";
+import { LocationSelector } from "./location-selector";
 
-interface CocktailLogFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-  cocktailSlug: string;
-  cocktailName: string;
-  onLogSaved?: (log: CocktailLog) => void;
-  existingLog?: CocktailLog | null;
-  isFromCocktailPage?: boolean;
-  onLogDeleted?: (logId: string) => void;
-  onLogsChange?: (logs: CocktailLog[]) => void;
-  onSuccess: () => void;
+interface LocationData {
+  name: string;
+  place_id: string;
+  lat: number;
+  lng: number;
+  main_text: string;
+  secondary_text: string;
 }
 
 interface SearchItem {
@@ -47,6 +44,19 @@ interface SearchItem {
 interface CustomCocktailValues {
   nameEn: string;
   nameZh: string;
+}
+
+interface CocktailLogFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  cocktailSlug: string;
+  cocktailName: string;
+  onLogSaved?: (log: CocktailLog) => void;
+  existingLog?: CocktailLog | null;
+  isFromCocktailPage?: boolean;
+  onLogDeleted?: (logId: string) => void;
+  onLogsChange?: (logs: CocktailLog[]) => void;
+  onSuccess: () => void;
 }
 
 export function CocktailLogForm({ 
@@ -69,7 +79,7 @@ export function CocktailLogForm({
   const [selectedCocktail, setSelectedCocktail] = useState<SearchItem | null>(null);
   const [specialIngredients, setSpecialIngredients] = useState("");
   const [comments, setComments] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState<LocationData | null>(null);
   const [bartender, setBartender] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
@@ -98,7 +108,25 @@ export function CocktailLogForm({
       });
       setSpecialIngredients(existingLog.specialIngredients || "");
       setComments(existingLog.comments || "");
-      setLocation(existingLog.location || "");
+      if (existingLog.location) {
+        try {
+          const locationData = JSON.parse(existingLog.location);
+          setLocation(locationData);
+        } catch (error) {
+            console.log(error)
+          // If parsing fails, set as simple string with main_text
+          setLocation({
+            name: existingLog.location,
+            place_id: '',
+            lat: 0,
+            lng: 0,
+            main_text: existingLog.location,
+            secondary_text: ''
+          });
+        }
+      } else {
+        setLocation(null);
+      }
       setBartender(existingLog.bartender || "");
       setTags(existingLog.tags);
       setDrinkDate(existingLog.drinkDate ? new Date(existingLog.drinkDate) : undefined);
@@ -115,7 +143,7 @@ export function CocktailLogForm({
       });
       setSpecialIngredients("");
       setComments("");
-      setLocation("");
+      setLocation(null);
       setBartender("");
       setTags([]);
       setDrinkDate(undefined);
@@ -183,7 +211,7 @@ export function CocktailLogForm({
             rating || null,
             specialIngredients || null,
             comments || null,
-            location || null,
+            location ? JSON.stringify(location) : null,
             bartender || null,
             tags.length > 0 ? tags : null,
             drinkDate || null,
@@ -196,7 +224,7 @@ export function CocktailLogForm({
             rating || null,
             specialIngredients || null,
             comments || null,
-            location || null,
+            location ? JSON.stringify(location) : null,
             bartender || null,
             tags.length > 0 ? tags : null,
             drinkDate || null,
@@ -216,7 +244,7 @@ export function CocktailLogForm({
           rating: rating || null,
           specialIngredients: specialIngredients || null,
           comments: comments || null,
-          location: location || null,
+          location: location ? JSON.stringify(location) : null,
           bartender: bartender || null,
           tags: tags.length > 0 ? tags : null,
           drinkDate: drinkDate || null,
@@ -567,16 +595,11 @@ export function CocktailLogForm({
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="location">{t.location}</Label>
-                    <Input
-                      id="location"
-                      value={location}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)}
-                      placeholder={t.location}
-                      className="w-full"
-                    />
-                  </div>
+                  <LocationSelector
+                    value={location}
+                    onChange={setLocation}
+                    label={t.location}
+                  />
 
                   <div className="space-y-2">
                     <Label htmlFor="bartender">{t.bartender}</Label>

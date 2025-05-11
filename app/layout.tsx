@@ -98,6 +98,11 @@ export default function RootLayout({
                   as="style"
                 />
                 <script
+                  src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+                  async
+                  defer
+                />
+                <script
                   dangerouslySetInnerHTML={{
                     __html: `
                       if ('serviceWorker' in navigator) {

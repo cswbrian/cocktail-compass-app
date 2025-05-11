@@ -269,6 +269,10 @@ export const translations = {
     cocktailNameZh: "Cocktail Name (Chinese)",
     creating: "Creating...",
     create: "Create",
+    selectLocation: "Select Location",
+    searchLocation: "Search location...",
+    noLocationsFound: "No locations found",
+    useCurrentLocation: "Use Current Location",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -535,5 +539,9 @@ export const translations = {
     cocktailNameZh: "雞尾酒名稱（中文）",
     creating: "創建中...",
     create: "創建",
+    selectLocation: "選擇地點",
+    searchLocation: "搜尋地點...",
+    noLocationsFound: "找不到地點",
+    useCurrentLocation: "使用目前位置",
   },
 };
