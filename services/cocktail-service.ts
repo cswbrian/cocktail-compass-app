@@ -48,7 +48,7 @@ class CocktailService {
 
     // Build flavor descriptors set
     this.cocktails.forEach(cocktail => {
-      cocktail.flavor_descriptors.forEach(flavor => {
+      cocktail.flavor_descriptors?.forEach(flavor => {
         this.allFlavors.add(slugify(flavor.en));
       });
     });
@@ -56,9 +56,9 @@ class CocktailService {
     // Build ingredients set
     this.cocktails.forEach(cocktail => {
       [
-        ...cocktail.base_spirits,
-        ...cocktail.liqueurs,
-        ...cocktail.ingredients,
+        ...(cocktail.base_spirits ?? []),
+        ...(cocktail.liqueurs ?? []),
+        ...(cocktail.ingredients ?? []),
       ].forEach(ingredient => {
         this.allIngredients.add(slugify(ingredient.name.en));
       });
@@ -107,13 +107,14 @@ class CocktailService {
 
   private updateCaches(): void {
     // Update slug to cocktail map with all cocktails
+    console.log('cocktails', this.cocktails)
     this.cocktails.forEach(cocktail => {
-      this.slugToCocktail.set(slugify(cocktail.name.en), cocktail);
+      this.slugToCocktail.set(cocktail.slug, cocktail);
     });
 
     // Update flavor descriptors set
     this.cocktails.forEach(cocktail => {
-      cocktail.flavor_descriptors.forEach(flavor => {
+      cocktail.flavor_descriptors?.forEach(flavor => {
         this.allFlavors.add(slugify(flavor.en));
       });
     });
@@ -121,9 +122,9 @@ class CocktailService {
     // Update ingredients set
     this.cocktails.forEach(cocktail => {
       [
-        ...cocktail.base_spirits,
-        ...cocktail.liqueurs,
-        ...cocktail.ingredients,
+        ...(cocktail.base_spirits ?? []),
+        ...(cocktail.liqueurs ?? []),
+        ...(cocktail.ingredients ?? []),
       ].forEach(ingredient => {
         this.allIngredients.add(slugify(ingredient.name.en));
       });
@@ -173,9 +174,9 @@ class CocktailService {
     // If not in cache, compute and cache
     const matchingCocktails = this.cocktails.filter(cocktail => {
       const allIngredients = [
-        ...cocktail.base_spirits,
-        ...cocktail.liqueurs,
-        ...cocktail.ingredients,
+        ...(cocktail.base_spirits ?? []),
+        ...(cocktail.liqueurs ?? []),
+        ...(cocktail.ingredients ?? []),
       ];
       return allIngredients.some(
         ingredient => slugify(ingredient.name.en) === ingredientSlug

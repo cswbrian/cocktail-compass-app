@@ -4,8 +4,10 @@ import { cocktailService } from "@/services/cocktail-service";
 import { cocktailLogsMediaService } from "@/services/media-service";
 
 interface CocktailWithNames {
-  name_en: string;
-  name_zh: string;
+  name: {
+    en: string;
+    zh: string;
+  };
 }
 
 interface CocktailWithSpirits {
@@ -303,8 +305,7 @@ export class CocktailLogService {
       .select(`
         cocktail_id,
         cocktails (
-          name_en,
-          name_zh
+          name
         )
       `)
       .eq("user_id", user.user.id)
@@ -313,7 +314,7 @@ export class CocktailLogService {
     // Count cocktails
     const cocktailCounts = (logs as LogWithCocktail[] | null)?.reduce((acc, curr) => {
       if (curr.cocktails) {
-        const name = curr.cocktails.name_en;
+        const name = curr.cocktails.name.en;
         acc[name] = (acc[name] || 0) + 1;
       }
       return acc;
@@ -364,8 +365,7 @@ export class CocktailLogService {
       .select(`
         *,
         cocktails (
-          name_en,
-          name_zh
+          name
         )
       `)
       .eq("user_id", user.user.id)
@@ -428,7 +428,7 @@ export class CocktailLogService {
     // Get the cocktail from Supabase
     const { data: cocktail, error } = await supabase
       .from("cocktails")
-      .select("name_en, name_zh")
+      .select("name")
       .eq("id", data.cocktail_id)
       .single();
     
@@ -442,7 +442,7 @@ export class CocktailLogService {
     return {
       id: data.id,
       cocktailId: data.cocktail_id,
-      cocktailName: cocktail ? `${cocktail.name_en} / ${cocktail.name_zh}` : "",
+      cocktailName: cocktail ? `${cocktail.name.en} / ${cocktail.name.zh}` : "",
       userId: data.user_id,
       rating: data.rating,
       location: data.location,
