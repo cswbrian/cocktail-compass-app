@@ -16,7 +16,6 @@ import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn, normalizeText } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { ScrollArea } from "@/components/ui/scroll-area";
