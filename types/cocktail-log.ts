@@ -3,17 +3,23 @@ export interface CocktailLog {
   cocktailId: string;
   cocktailName: string;
   userId: string;
-  rating: number;
-  location?: string;
-  bartender?: string;
-  comments?: string;
-  tags: string[];
+  rating: number | null;
+  specialIngredients: string | null;
+  comments: string | null;
+  location: string | null; // JSON string of LocationData
+  bartender: string | null;
+  tags: string[] | null;
   createdAt: string;
   updatedAt: string;
   drinkDate: string | null;
-  specialIngredients?: string;
-  media?: {
-    url: string;
-    type: 'image' | 'video';
-  }[];
+  media: { url: string; type: 'image' | 'video' }[] | null;
+}
+
+export interface LocationData {
+  name: string;
+  place_id: string;
+  lat: number;
+  lng: number;
+  main_text: string;
+  secondary_text: string;
 } 

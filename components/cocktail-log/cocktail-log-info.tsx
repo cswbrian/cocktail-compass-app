@@ -1,14 +1,25 @@
-import { Star, MapPin, User, Calendar } from "lucide-react";
+import { Star, MapPin, User, Calendar, Tag } from "lucide-react";
+import { format } from "date-fns";
+import { useLanguage } from "@/context/LanguageContext";
+import { translations } from "@/translations";
+
+interface LocationData {
+  name: string;
+  place_id: string;
+  lat: number;
+  lng: number;
+  main_text: string;
+  secondary_text: string;
+}
 
 interface CocktailLogInfoProps {
-  rating: number;
-  location?: string | null;
-  bartender?: string | null;
-  comments?: string | null;
-  tags: string[];
-  drinkDate?: Date | null;
+  rating: number | null;
+  location: string | null;
+  bartender: string | null;
+  comments: string | null;
+  tags: string[] | null;
+  drinkDate: Date | null;
   showHeadings?: boolean;
-  className?: string;
 }
 
 export function CocktailLogInfo({
@@ -19,91 +30,98 @@ export function CocktailLogInfo({
   tags,
   drinkDate,
   showHeadings = false,
-  className = ''
 }: CocktailLogInfoProps) {
+  const { language } = useLanguage();
+  const t = translations[language as keyof typeof translations];
+
+  let locationData: LocationData | null = null;
+  if (location) {
+    try {
+      locationData = JSON.parse(location);
+    } catch (error) {
+      console.error("Error parsing location data:", error);
+    }
+  }
+
   return (
-    <div className={`space-y-2 ${className}`}>
-      {/* Date */}
+    <div className="space-y-2">
+      {locationData && (
+        <div className="flex items-center gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.location}:</span>
+          )}
+          <MapPin className="size-4 text-muted-foreground" />
+          {locationData.main_text}
+        </div>
+      )}
+
       {drinkDate && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4" />
-          <span>
-            {new Date(drinkDate).toLocaleString('en-US', {
-              month: 'long',
-              day: 'numeric',
-              year: 'numeric'
-            })}
-          </span>
-        </div>
-      )}
-
-
-      {/* Location */}
-      {location && (
-        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-          {location && (
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              <span>{location}</span>
-            </div>
+        <div className="flex items-center gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.drinkDate}:</span>
           )}
+          <Calendar className="h-4 w-4 text-muted-foreground" />
+          <span>{format(drinkDate, "PPP")}</span>
         </div>
       )}
 
-      {/* Rating */}
-      <div className="flex items-center gap-2">
-        <div className="flex">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star
-              key={star}
-              className={`h-5 w-5 ${
-                star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
-              }`}
-            />
-          ))}
+      {rating && (
+        <div className="flex items-center gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.rating}:</span>
+          )}
+          <div className="flex items-center">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`h-4 w-4 ${
+                  star <= rating
+                    ? "text-yellow-400 fill-current"
+                    : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
         </div>
-        <span className="text-sm text-muted-foreground">
-          {rating}/5
-        </span>
-      </div>
+      )}
 
-
-      {/* Bartender */}
       {bartender && (
-        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-          {bartender && (
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              <span>{bartender}</span>
-            </div>
+        <div className="flex items-center gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.bartender}:</span>
           )}
+          <User className="h-4 w-4 text-muted-foreground" />
+          <span>{bartender}</span>
         </div>
       )}
 
-      {/* Comments */}
-      {comments && (
-        <div className="space-y-2">
-          {showHeadings && <h3 className="font-semibold">Notes</h3>}
-          <p className="text-sm whitespace-pre-wrap">{comments}</p>
-        </div>
-      )}
-
-      {/* Tags */}
-      {tags.length > 0 && (
-        <div className="space-y-2">
-          {showHeadings && <h3 className="font-semibold">Tags</h3>}
-          <div className="flex flex-wrap gap-2">
+      {tags && tags.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.tags}:</span>
+          )}
+          <Tag className="h-4 w-4 text-muted-foreground" />
+          <div className="flex flex-wrap gap-1">
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-1 text-xs bg-secondary rounded-full text-secondary-foreground"
+                className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
               >
-                #{tag}
+                {tag}
               </span>
             ))}
           </div>
         </div>
       )}
+
+      {comments && (
+        <div className="flex flex-col gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.notes}:</span>
+          )}
+          <p className="text-sm whitespace-pre-wrap">{comments}</p>
+        </div>
+      )}
     </div>
   );
-} 
+}

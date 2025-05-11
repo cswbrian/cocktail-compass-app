@@ -113,16 +113,8 @@ export function CocktailLogForm({
           const locationData = JSON.parse(existingLog.location);
           setLocation(locationData);
         } catch (error) {
-            console.log(error)
-          // If parsing fails, set as simple string with main_text
-          setLocation({
-            name: existingLog.location,
-            place_id: '',
-            lat: 0,
-            lng: 0,
-            main_text: existingLog.location,
-            secondary_text: ''
-          });
+          console.error("Error parsing location data:", error);
+          setLocation(null);
         }
       } else {
         setLocation(null);
@@ -211,7 +203,7 @@ export function CocktailLogForm({
             rating || null,
             specialIngredients || null,
             comments || null,
-            location ? JSON.stringify(location) : null,
+            location,
             bartender || null,
             tags.length > 0 ? tags : null,
             drinkDate || null,
@@ -224,7 +216,7 @@ export function CocktailLogForm({
             rating || null,
             specialIngredients || null,
             comments || null,
-            location ? JSON.stringify(location) : null,
+            location,
             bartender || null,
             tags.length > 0 ? tags : null,
             drinkDate || null,

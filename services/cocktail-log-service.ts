@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { CocktailLog } from "@/types/cocktail-log";
 import { cocktailService } from "@/services/cocktail-service";
 import { cocktailLogsMediaService } from "@/services/media-service";
+import { placeService } from "@/services/place-service";
 
 interface CocktailWithNames {
   name: {
@@ -39,6 +40,15 @@ interface LogWithCocktailDetails extends LogWithCocktail {
   media: { url: string; type: 'image' | 'video' }[] | null;
 }
 
+interface LocationData {
+  name: string;
+  place_id: string;
+  lat: number;
+  lng: number;
+  main_text: string;
+  secondary_text: string;
+}
+
 export class CocktailLogService {
   async createLog(
     cocktailId: string,
@@ -46,7 +56,7 @@ export class CocktailLogService {
     rating?: number | null,
     specialIngredients?: string | null,
     comments?: string | null,
-    location?: string | null,
+    location?: LocationData | null,
     bartender?: string | null,
     tags?: string[] | null,
     drinkDate?: Date | null,
@@ -59,6 +69,19 @@ export class CocktailLogService {
       }
     }
 
+    let placeId = null;
+    if (location) {
+      const place = await placeService.getOrCreatePlace({
+        place_id: location.place_id,
+        name: location.name,
+        main_text: location.main_text,
+        secondary_text: location.secondary_text,
+        lat: location.lat,
+        lng: location.lng
+      });
+      placeId = place.id;
+    }
+
     // First create the log to get the ID
     const { data: logData, error: createError } = await supabase
       .from("cocktail_logs")
@@ -68,7 +91,7 @@ export class CocktailLogService {
         rating: rating || null,
         special_ingredients: specialIngredients,
         comments,
-        location,
+        place_id: placeId,
         bartender,
         tags,
         drink_date: drinkDate,
@@ -125,7 +148,7 @@ export class CocktailLogService {
     rating?: number | null,
     specialIngredients?: string | null,
     comments?: string | null,
-    location?: string | null,
+    location?: LocationData | null,
     bartender?: string | null,
     tags?: string[] | null,
     drinkDate?: Date | null,
@@ -136,6 +159,19 @@ export class CocktailLogService {
       if (rating < 1 || rating > 5 || !Number.isInteger(rating)) {
         throw new Error("Rating must be an integer between 1 and 5");
       }
+    }
+
+    let placeId = null;
+    if (location) {
+      const place = await placeService.getOrCreatePlace({
+        place_id: location.place_id,
+        name: location.name,
+        main_text: location.main_text,
+        secondary_text: location.secondary_text,
+        lat: location.lat,
+        lng: location.lng
+      });
+      placeId = place.id;
     }
 
     // Get the existing log to compare media
@@ -185,7 +221,7 @@ export class CocktailLogService {
             rating: rating || null,
             special_ingredients: specialIngredients,
             comments,
-            location,
+            place_id: placeId,
             bartender,
             tags,
             drink_date: drinkDate,
@@ -210,7 +246,7 @@ export class CocktailLogService {
           rating: rating || null,
           special_ingredients: specialIngredients,
           comments,
-          location,
+          place_id: placeId,
           bartender,
           tags,
           drink_date: drinkDate,
@@ -256,7 +292,18 @@ export class CocktailLogService {
 
     const { data, error } = await supabase
       .from("cocktail_logs")
-      .select("*")
+      .select(`
+        *,
+        places (
+          id,
+          place_id,
+          name,
+          main_text,
+          secondary_text,
+          lat,
+          lng
+        )
+      `)
       .eq("cocktail_id", cocktailId)
       .eq("user_id", user.user.id)
       .order("drink_date", { ascending: false });
@@ -271,7 +318,18 @@ export class CocktailLogService {
 
     const { data, error } = await supabase
       .from("cocktail_logs")
-      .select("*")
+      .select(`
+        *,
+        places (
+          id,
+          place_id,
+          name,
+          main_text,
+          secondary_text,
+          lat,
+          lng
+        )
+      `)
       .eq("user_id", userId || user.user.id)
       .order("drink_date", { ascending: false });
 
@@ -435,6 +493,19 @@ export class CocktailLogService {
     if (error) {
       console.error("Error fetching cocktail:", error);
     }
+
+    // Convert place data to JSON string if it exists
+    let locationData = null;
+    if (data.places) {
+      locationData = JSON.stringify({
+        name: data.places.name,
+        place_id: data.places.place_id,
+        lat: data.places.lat,
+        lng: data.places.lng,
+        main_text: data.places.main_text,
+        secondary_text: data.places.secondary_text
+      });
+    }
     
     // Convert media URLs to signed URLs
     const media = data.media ? await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.media) : [];
@@ -445,7 +516,8 @@ export class CocktailLogService {
       cocktailName: cocktail ? `${cocktail.name.en} / ${cocktail.name.zh}` : "",
       userId: data.user_id,
       rating: data.rating,
-      location: data.location,
+      specialIngredients: data.special_ingredients,
+      location: locationData,
       bartender: data.bartender,
       comments: data.comments,
       tags: data.tags || [],

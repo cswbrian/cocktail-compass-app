@@ -25,23 +25,24 @@ export function CocktailLogCard({
         className="bg-background border-b rounded-none px-6 py-4 cursor-pointer hover:shadow-md transition-shadow"
         onClick={() => setIsDetailOpen(true)}
       >
-        <div className="space-y-4">
+        <div>
           <h3 className="text-lg font-semibold">{log.cocktailName}</h3>
-          
-          <CocktailLogInfo
-            rating={log.rating}
-            location={log.location}
-            bartender={log.bartender}
-            comments={log.comments}
-            tags={log.tags}
-            drinkDate={log.drinkDate ? new Date(log.drinkDate) : null}
-          />
+          <div className="space-y-2">
+            <CocktailLogInfo
+              rating={log.rating}
+              location={log.location}
+              bartender={log.bartender}
+              comments={log.comments}
+              tags={log.tags}
+              drinkDate={log.drinkDate ? new Date(log.drinkDate) : null}
+            />
 
-          {log.media && log.media.length > 0 && (
-            <div onClick={(e) => e.stopPropagation()}>
-              <CocktailLogMedia media={log.media} size="sm" />
-            </div>
-          )}
+            {log.media && log.media.length > 0 && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <CocktailLogMedia media={log.media} size="sm" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -56,4 +57,4 @@ export function CocktailLogCard({
       />
     </>
   );
-} 
+}
