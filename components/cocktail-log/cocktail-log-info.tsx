@@ -1,7 +1,8 @@
-import { Star, MapPin, User, Calendar, Tag } from "lucide-react";
+import { MapPin, User, Calendar, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
+import { cn } from "@/lib/utils";
 
 interface LocationData {
   name: string;
@@ -20,6 +21,8 @@ interface CocktailLogInfoProps {
   tags: string[] | null;
   drinkDate: Date | null;
   showHeadings?: boolean;
+  className?: string;
+  commentClassName?: string;
 }
 
 export function CocktailLogInfo({
@@ -30,6 +33,8 @@ export function CocktailLogInfo({
   tags,
   drinkDate,
   showHeadings = false,
+  className,
+  commentClassName,
 }: CocktailLogInfoProps) {
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
@@ -44,21 +49,31 @@ export function CocktailLogInfo({
   }
 
   return (
-    <div className="space-y-1">
+    <div className={cn("space-y-1", className)}>
       {locationData && (
         <div className="flex items-center gap-2">
           {showHeadings && (
-            <span className="text-muted-foreground">{t.location}:</span>
+            <span className="text-muted-foreground">{t.location}</span>
           )}
           <MapPin className="size-4 text-muted-foreground" />
           {locationData.main_text}
         </div>
       )}
 
+      {bartender && (
+        <div className="flex items-center gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.bartender}</span>
+          )}
+          <User className="h-4 w-4 text-muted-foreground" />
+          <span>{bartender}</span>
+        </div>
+      )}
+
       {drinkDate && (
         <div className="flex items-center gap-2">
           {showHeadings && (
-            <span className="text-muted-foreground">{t.drinkDate}:</span>
+            <span className="text-muted-foreground">{t.drinkDate}</span>
           )}
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <span>{format(drinkDate, "PPP")}</span>
@@ -68,46 +83,31 @@ export function CocktailLogInfo({
       {rating && (
         <div className="flex items-center gap-2">
           {showHeadings && (
-            <span className="text-muted-foreground">{t.rating}:</span>
+            <span className="text-muted-foreground">{t.rating}</span>
           )}
-          <div className="flex items-center">
+          <div className="flex items-center text-muted-foreground">
             {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className={`h-4 w-4 ${
-                  star <= rating
-                    ? "text-yellow-400 fill-current"
-                    : "text-gray-300"
-                }`}
-              />
+              <span key={star} className="text-sm">
+                {star <= rating ? "★" : "☆"}
+              </span>
             ))}
           </div>
-        </div>
-      )}
-
-      {bartender && (
-        <div className="flex items-center gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.bartender}:</span>
-          )}
-          <User className="h-4 w-4 text-muted-foreground" />
-          <span>{bartender}</span>
         </div>
       )}
 
       {comments && (
         <div className="flex flex-col gap-2">
           {showHeadings && (
-            <span className="text-muted-foreground">{t.notes}:</span>
+            <span className="text-muted-foreground">{t.notes}</span>
           )}
-          <p className="text-sm whitespace-pre-wrap">{comments}</p>
+          <p className={cn("whitespace-pre-wrap", commentClassName)}>{comments}</p>
         </div>
       )}
 
       {tags && tags.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
           {showHeadings && (
-            <span className="text-muted-foreground">{t.tags}:</span>
+            <span className="text-muted-foreground">{t.tags}</span>
           )}
           <Tag className="h-4 w-4 text-muted-foreground" />
           <div className="flex flex-wrap gap-1">
