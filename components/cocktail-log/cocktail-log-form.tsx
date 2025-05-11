@@ -414,14 +414,14 @@ export function CocktailLogForm({
               <div className="flex-1 overflow-y-auto">
                 <div className="px-4 py-4 space-y-4">
                   <div className="space-y-2">
-                    <Label>{t.drinkDate}</Label>
+                    <Label>{t.drinkDate} <span className="text-destructive">*</span></Label>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
                           className={cn(
                             "w-full justify-start text-left font-normal",
-                            !drinkDate && "text-muted-foreground"
+                            !drinkDate && "text-muted-foreground border-destructive"
                           )}
                         >
                           <Calendar className="mr-2 h-4 w-4" />
@@ -437,6 +437,9 @@ export function CocktailLogForm({
                         />
                       </PopoverContent>
                     </Popover>
+                    {!drinkDate && (
+                      <span className="text-xs text-destructive">{t.required}</span>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -452,7 +455,10 @@ export function CocktailLogForm({
                           }}
                           onClick={() => setOpen(true)}
                           onFocus={() => setOpen(true)}
-                          className="pl-9 pr-9"
+                          className={cn(
+                            "pl-9 pr-9",
+                            !cocktailNameInput && "border-destructive"
+                          )}
                           disabled={isFromCocktailPage}
                         />
                         {cocktailNameInput && (
@@ -467,6 +473,9 @@ export function CocktailLogForm({
                           </button>
                         )}
                       </div>
+                      {!cocktailNameInput && (
+                        <span className="text-xs text-destructive mt-1">{t.required}</span>
+                      )}
                       {open && (
                         <div className="absolute z-50 w-full mt-1 bg-popover rounded-md shadow-md">
                           <ScrollArea className="h-[200px]">
@@ -663,7 +672,7 @@ export function CocktailLogForm({
                 <div className="flex w-full gap-2">
                   <Button 
                     onClick={handleSave} 
-                    disabled={isLoading}
+                    disabled={isLoading || !drinkDate || !cocktailNameInput}
                     className="flex-1"
                   >
                     {isLoading ? t.saving : (existingLog ? t.updateLog : t.saveLog)}
