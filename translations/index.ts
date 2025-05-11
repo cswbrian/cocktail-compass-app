@@ -274,6 +274,7 @@ export const translations = {
     noLocationsFound: "No locations found",
     useCurrentLocation: "Use Current Location",
     required: "Required",
+    errorRemovingMedia: "Error removing media",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -545,5 +546,6 @@ export const translations = {
     noLocationsFound: "找不到地點",
     useCurrentLocation: "使用目前位置",
     required: "必填",
+    errorRemovingMedia: "移除媒體時出錯",
   },
 };

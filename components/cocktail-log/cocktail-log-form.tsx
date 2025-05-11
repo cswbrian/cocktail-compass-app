@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { LocationSelector } from "./location-selector";
 import { AuthService } from "@/services/auth-service";
 import { Loading } from "@/components/ui/loading";
+import { cocktailLogsMediaService } from "@/services/media-service";
 
 interface LocationData {
   name: string;
@@ -195,6 +196,22 @@ export function CocktailLogForm({
         }
       }
 
+      // If this is an existing log, handle media deletion
+      if (existingLog) {
+        // Find media items that were removed (items in existingLog.media but not in new media)
+        const removedMedia = existingLog.media
+          ?.filter((existing: { url: string; type: 'image' | 'video' }) => 
+            !media.some(newItem => newItem.url === existing.url)
+          ) || [];
+
+        // Soft delete removed media files
+        if (removedMedia.length > 0) {
+          await cocktailLogsMediaService.softDeleteMultipleMedia(
+            removedMedia.map(item => item.url)
+          );
+        }
+      }
+
       // Create or update the log
       try {
         if (existingLog) {
@@ -362,7 +379,8 @@ export function CocktailLogForm({
   };
 
   const handleRemoveMedia = (index: number) => {
-    setMedia(media.filter((_, i) => i !== index));
+    const updatedMedia = media.filter((_, i) => i !== index);
+    setMedia(updatedMedia);
   };
 
   const handleMediaClick = () => {
