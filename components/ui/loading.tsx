@@ -1,5 +1,3 @@
-import { WandSparkles } from 'lucide-react';
-
 interface LoadingProps {
   className?: string;
   fullScreen?: boolean;
@@ -15,12 +13,6 @@ export function Loading({ className = "", fullScreen = false, size = 'md' }: Loa
 
   const content = (
     <div className={`flex flex-col items-center gap-3 text-primary ${className}`}>
-      <div className="relative">
-        <WandSparkles className={`${sizeClasses[size]} animate-[spin_3s_linear_infinite]`} />
-        <div className="absolute inset-0 animate-[pulse_2s_ease-in-out_infinite]">
-          <WandSparkles className={`${sizeClasses[size]} opacity-50`} />
-        </div>
-      </div>
       <span className={`${sizeClasses[size]} animate-[fadeInOut_2s_ease-in-out_infinite] translate-x-[-50%]`}>
         Loading...
       </span>

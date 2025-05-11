@@ -3,10 +3,14 @@ import { supabase } from '@/lib/supabase';
 
 export class AuthService {
   static async signInWithProvider(provider: 'google' | 'github') {
+    // Store the current URL before redirecting
+    const currentUrl = window.location.pathname + window.location.search;
+    localStorage.setItem('returnUrl', currentUrl);
+
     const { error } = await supabase.auth.signInWithOAuth({ 
       provider,
       options: {
-        redirectTo: window.location.origin
+        redirectTo: `${window.location.origin}/auth/callback`
       }
     });
     if (error) throw error;

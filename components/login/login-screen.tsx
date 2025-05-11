@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { Button } from "@/components/ui/button";
@@ -10,34 +8,15 @@ import Image from "next/image";
 import { AuthService } from "@/services/auth-service";
 import { toast } from "sonner";
 
-export function LoginPage() {
-  const router = useRouter();
-  const { user } = useAuth();
+export function LoginScreen() {
   const { language } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const t = translations[language];
-
-  useEffect(() => {
-    // If user is already logged in, redirect back
-    if (user) {
-      const returnUrl = localStorage.getItem('returnUrl') || `/${language}`;
-      localStorage.removeItem('returnUrl'); // Clean up
-      
-      // Show welcome back toast
-      toast.success(t.welcomeBack, {
-        description: user.user_metadata?.name ? `${t.welcomeBackMessage} ${user.user_metadata.name}!` : t.welcomeBackMessage,
-        duration: 3000,
-      });
-      
-      router.push(returnUrl);
-    }
-  }, [user, router, language, t]);
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
       await AuthService.signInWithProvider('google');
-      // Supabase will handle the redirect, and useEffect will catch the user
     } catch (error) {
       console.error("Error signing in with Google:", error);
       toast.error(t.errorSigningIn, {
