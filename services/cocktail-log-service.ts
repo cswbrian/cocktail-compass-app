@@ -422,7 +422,6 @@ export class CocktailLogService {
 
   async getEnhancedUserStats() {
     const user = await AuthService.getCurrentUser();
-    console.log('user', user);
     if (!user) return null;
 
     // Get all logs for the user with cocktail names
