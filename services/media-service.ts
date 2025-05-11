@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import imageCompression from 'browser-image-compression';
 
 export enum StorageBucket {
   COCKTAIL_LOGS = 'cocktail-logs',
@@ -7,16 +8,53 @@ export enum StorageBucket {
   // Add more buckets as needed
 }
 
+interface CompressionOptions {
+  maxSizeMB?: number;
+  maxWidthOrHeight?: number;
+  useWebWorker?: boolean;
+}
+
 export class MediaService {
+  private readonly defaultCompressionOptions: CompressionOptions = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true
+  };
+
   constructor(private readonly bucket: StorageBucket) {}
 
-  async uploadMedia(file: File, userId: string, entityId: string): Promise<string> {
-    const fileExt = file.name.split('.').pop();
+  private async compressImage(file: File, options: CompressionOptions = {}): Promise<File> {
+    if (!file.type.startsWith('image/')) {
+      return file; // Return original file if not an image
+    }
+
+    const compressionOptions = {
+      ...this.defaultCompressionOptions,
+      ...options
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, compressionOptions);
+      return new File([compressedFile], file.name, {
+        type: file.type,
+        lastModified: file.lastModified,
+      });
+    } catch (error) {
+      console.error('Error compressing image:', error);
+      return file; // Return original file if compression fails
+    }
+  }
+
+  async uploadMedia(file: File, userId: string, entityId: string, compressionOptions?: CompressionOptions): Promise<string> {
+    // Compress image if it's an image file
+    const processedFile = await this.compressImage(file, compressionOptions);
+    
+    const fileExt = processedFile.name.split('.').pop();
     const fileName = `${userId}/${entityId}/${Date.now()}.${fileExt}`;
 
     const { error: uploadError } = await supabase.storage
       .from(this.bucket)
-      .upload(fileName, file);
+      .upload(fileName, processedFile);
 
     if (uploadError) {
       throw uploadError;
@@ -54,8 +92,8 @@ export class MediaService {
     }
   }
 
-  async uploadMultipleMedia(files: File[], userId: string, entityId: string): Promise<string[]> {
-    const uploadPromises = files.map(file => this.uploadMedia(file, userId, entityId));
+  async uploadMultipleMedia(files: File[], userId: string, entityId: string, compressionOptions?: CompressionOptions): Promise<string[]> {
+    const uploadPromises = files.map(file => this.uploadMedia(file, userId, entityId, compressionOptions));
     return Promise.all(uploadPromises);
   }
 
