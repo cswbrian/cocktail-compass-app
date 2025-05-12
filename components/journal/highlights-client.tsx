@@ -5,9 +5,8 @@ import { TopPlaces } from "./top-places";
 import { DrinksBarChart } from "./drinks-bar-chart";
 import { PhotoSnapshot } from "./photo-snapshot";
 import useSWR from 'swr';
-import { userStatsService } from '@/services/user-stats-service';
-import { cocktailLogsMediaService } from '@/services/media-service';
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
+import { CACHE_KEYS, fetchers, swrConfig, defaultData } from '@/lib/swr-config';
 
 interface PlaceStats {
   name: string;
@@ -18,25 +17,11 @@ interface PlaceStats {
 export function HighlightsClient() {
   // Use SWR for client-side updates
   const { data: stats, isLoading: isLoadingStats } = useSWR(
-    'user-stats',
-    async () => {
-      const data = await userStatsService.getUserStats();
-      if (!data) return null;
-      const recentPhotos = await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.recentPhotos);
-      return { ...data, recentPhotos };
-    },
+    CACHE_KEYS.USER_STATS,
+    fetchers.getUserStats,
     {
-      fallbackData: {
-        basicStats: {
-          totalCocktailsDrunk: 0,
-          uniqueCocktails: 0,
-          uniquePlaces: 0
-        },
-        drinksByMonth: {},
-        topPlaces: [] as PlaceStats[],
-        recentPhotos: [],
-        mostLoggedCocktails: []
-      }
+      ...swrConfig,
+      fallbackData: defaultData[CACHE_KEYS.USER_STATS]
     }
   );
 

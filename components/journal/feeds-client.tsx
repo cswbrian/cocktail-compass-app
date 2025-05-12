@@ -3,9 +3,6 @@
 import { useCocktailData } from "@/context/CocktailLogContext";
 import { Feeds } from "./feeds";
 import { BasicStats } from "./basic-stats";
-import useSWR from 'swr';
-import { cocktailLogService } from '@/services/cocktail-log-service';
-import { userStatsService } from '@/services/user-stats-service';
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -49,42 +46,7 @@ function CocktailLogSkeleton() {
 }
 
 export function FeedsClient() {
-  const { mutate } = useCocktailData();
-
-  // Use SWR for client-side updates
-  const { data: logs, isLoading: isLoadingLogs } = useSWR(
-    'cocktail-logs',
-    () => cocktailLogService.getLogsByUserId(),
-    { fallbackData: [] }
-  );
-
-  const { data: stats, isLoading: isLoadingStats } = useSWR(
-    'user-stats',
-    () => userStatsService.getUserStats(),
-    { 
-      fallbackData: {
-        basicStats: {
-          totalCocktailsDrunk: 0,
-          uniqueCocktails: 0,
-          uniquePlaces: 0
-        },
-        drinksByMonth: {},
-        topPlaces: [],
-        recentPhotos: [],
-        mostLoggedCocktails: []
-      }
-    }
-  );
-
-  const handleLogSaved = async () => {
-    await mutate();
-  };
-
-  const handleLogDeleted = async () => {
-    await mutate();
-  };
-
-  const isLoading = isLoadingLogs || isLoadingStats;
+  const { logs, stats, isLoading, mutate } = useCocktailData();
 
   return (
     <AuthWrapper customLoading={<CocktailLogSkeleton />}>
@@ -97,10 +59,10 @@ export function FeedsClient() {
           }} />
         </div>
         <Feeds
-          logs={logs}
+          logs={logs ?? []}
           isLoading={isLoading}
-          onLogSaved={handleLogSaved}
-          onLogDeleted={handleLogDeleted}
+          onLogSaved={mutate}
+          onLogDeleted={mutate}
           onLogsChange={() => {}}
         />
       </div>

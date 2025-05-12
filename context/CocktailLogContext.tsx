@@ -2,7 +2,8 @@
 
 import { createContext, useContext, ReactNode, useState } from 'react';
 import { CocktailLog } from '@/types/cocktail-log';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
+import { CACHE_KEYS, fetchers, swrConfig, defaultData } from '@/lib/swr-config';
 
 interface CocktailLogContextType {
   // Form state management
@@ -13,6 +14,10 @@ interface CocktailLogContextType {
   setSelectedLog: (log: CocktailLog | null) => void;
   // Mutations
   mutate: () => Promise<any>;
+  // Data
+  logs: CocktailLog[] | undefined;
+  stats: any | undefined;
+  isLoading: boolean;
 }
 
 const CocktailLogContext = createContext<CocktailLogContextType | null>(null);
@@ -34,9 +39,24 @@ export function CocktailLogDataProvider({
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedLog, setSelectedLog] = useState<CocktailLog | null>(null);
 
-  // SWR for mutations
-  const { mutate: mutateLogs } = useSWR('cocktail-logs');
-  const { mutate: mutateStats } = useSWR('cocktail-stats');
+  // SWR for data fetching
+  const { data: logs, isLoading: isLoadingLogs } = useSWR<CocktailLog[]>(
+    CACHE_KEYS.COCKTAIL_LOGS,
+    fetchers.getCocktailLogs,
+    {
+      ...swrConfig,
+      fallbackData: defaultData[CACHE_KEYS.COCKTAIL_LOGS]
+    }
+  );
+
+  const { data: stats, isLoading: isLoadingStats } = useSWR(
+    CACHE_KEYS.USER_STATS,
+    fetchers.getUserStats,
+    {
+      ...swrConfig,
+      fallbackData: defaultData[CACHE_KEYS.USER_STATS]
+    }
+  );
 
   const value = {
     // Form state management
@@ -50,8 +70,16 @@ export function CocktailLogDataProvider({
     setSelectedLog,
     // Mutations
     mutate: async () => {
-      await Promise.all([mutateLogs(), mutateStats()]);
-    }
+      // Optimistically update the cache
+      await Promise.all([
+        mutate(CACHE_KEYS.COCKTAIL_LOGS),
+        mutate(CACHE_KEYS.USER_STATS)
+      ]);
+    },
+    // Data
+    logs,
+    stats,
+    isLoading: isLoadingLogs || isLoadingStats
   };
 
   return (
