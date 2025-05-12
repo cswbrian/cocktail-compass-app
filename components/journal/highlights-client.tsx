@@ -1,13 +1,19 @@
 "use client";
 
 import { BasicStats } from "./basic-stats";
-import { TopBars } from "./top-bars";
+import { TopPlaces } from "./top-places";
 import { DrinksBarChart } from "./drinks-bar-chart";
 import { PhotoSnapshot } from "./photo-snapshot";
 import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { cocktailLogsMediaService } from '@/services/media-service';
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
+
+interface PlaceStats {
+  name: string;
+  count: number;
+  place_id: string;
+}
 
 export function HighlightsClient() {
 
@@ -28,7 +34,7 @@ export function HighlightsClient() {
           uniqueBars: 0
         },
         drinksByMonth: {},
-        topBarsWithMostDrinks: [],
+        topBarsWithMostDrinks: [] as PlaceStats[],
         recentPhotos: []
       }
     }
@@ -60,8 +66,8 @@ export function HighlightsClient() {
         {/* Drinks Over Time */}
         <DrinksBarChart drinksByMonth={stats?.drinksByMonth ?? {}} />
 
-        {/* Top Bars */}
-        <TopBars bars={stats?.topBarsWithMostDrinks ?? []} />
+        {/* Top Places */}
+        <TopPlaces places={stats?.topBarsWithMostDrinks ?? []} />
 
         {/* Photo Snapshot */}
         <PhotoSnapshot photos={stats?.recentPhotos ?? []} />

@@ -41,6 +41,7 @@ interface LogWithCocktailDetails extends LogWithCocktail {
   media: { url: string; type: 'image' | 'video' }[] | null;
   places?: {
     id: string;
+    place_id: string;
     name: string;
     main_text: string;
     secondary_text: string;
@@ -466,6 +467,7 @@ export class CocktailLogService {
         ),
         places (
           id,
+          place_id,
           name,
           main_text,
           secondary_text
@@ -500,13 +502,21 @@ export class CocktailLogService {
     const barDrinkCounts = typedLogs.reduce((acc, log) => {
       if (log.places) {
         const placeName = log.places.main_text;
-        acc[placeName] = (acc[placeName] || 0) + 1;
+        const placeId = log.places.place_id;
+        acc[placeName] = {
+          count: (acc[placeName]?.count || 0) + 1,
+          place_id: placeId
+        };
       }
       return acc;
-    }, {} as Record<string, number>);
+    }, {} as Record<string, { count: number; place_id: string }>);
 
     const topBarsWithMostDrinks = Object.entries(barDrinkCounts)
-      .map(([name, count]) => ({ name, count: Number(count) }))
+      .map(([name, data]) => ({ 
+        name, 
+        count: Number(data.count),
+        place_id: data.place_id
+      }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
 
