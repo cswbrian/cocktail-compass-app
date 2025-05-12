@@ -23,4 +23,14 @@ export function getLocalizedText(field: string | Record<string, string>, languag
   return field?.[language] || field?.en || '';
 }
 
+export function formatCocktailName(name: { en: string; zh: string | null }, language: string): string {
+  if (language === 'en') {
+    return name.en;
+  }
+  if (!name.zh || name.en === name.zh) {
+    return name.en;
+  }
+  return `${name.en} / ${name.zh}`;
+}
+
 export const validLanguages = ['en', 'zh'];

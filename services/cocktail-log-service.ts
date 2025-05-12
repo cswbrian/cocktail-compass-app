@@ -1,9 +1,9 @@
 import { supabase } from "@/lib/supabase";
 import { CocktailLog } from "@/types/cocktail-log";
-import { cocktailService } from "@/services/cocktail-service";
 import { cocktailLogsMediaService } from "@/services/media-service";
 import { placeService } from "@/services/place-service";
 import { AuthService } from "@/services/auth-service";
+import { formatCocktailName } from "@/lib/utils";
 
 interface CocktailWithNames {
   name: {
@@ -402,7 +402,7 @@ export class CocktailLogService {
     return {
       id: data.id,
       cocktailId: data.cocktail_id,
-      cocktailName: data.cocktails ? `${data.cocktails.name.en} / ${data.cocktails.name.zh}` : "",
+      cocktailName: data.cocktails ? formatCocktailName(data.cocktails.name, 'zh') : "",
       userId: data.user_id,
       rating: data.rating,
       specialIngredients: data.special_ingredients,

@@ -15,7 +15,7 @@ import { Star, Calendar, Check, X, Search, ImagePlus } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn, normalizeText } from "@/lib/utils";
+import { cn, normalizeText, formatCocktailName } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -100,7 +100,7 @@ export function CocktailLogForm({
     if (existingLog) {
       setRating(existingLog.rating || 0);
       const cocktail = cocktailService.getCocktailById(existingLog.cocktailId);
-      const displayName = cocktail ? `${cocktail.name.en} / ${cocktail.name.zh}` : cocktailName;
+      const displayName = cocktail ? formatCocktailName(cocktail.name, language) : cocktailName;
       setCocktailNameInput(displayName);
       setSelectedCocktail({ 
         value: existingLog.cocktailId, 
@@ -143,24 +143,24 @@ export function CocktailLogForm({
       setDrinkDate(new Date());
       setMedia([]);
     }
-  }, [existingLog, cocktailName, cocktailSlug]);
+  }, [existingLog, cocktailName, cocktailSlug, language]);
 
   useEffect(() => {
     const cocktails = cocktailService.getAllCocktails() || [];
     const filtered = cocktails
       .filter(cocktail => {
         const normalizedSearch = normalizeText(cocktailNameInput);
-        const normalizedName = normalizeText(`${cocktail.name.en} / ${cocktail.name.zh}`);
+        const normalizedName = normalizeText(formatCocktailName(cocktail.name, language));
         return normalizedName.includes(normalizedSearch);
       })
       .map(cocktail => ({
-        name: `${cocktail.name.en} / ${cocktail.name.zh}`,
+        name: formatCocktailName(cocktail.name, language),
         value: cocktail.id,
         slug: cocktail.slug,
-        label: `${cocktail.name.en} / ${cocktail.name.zh}`
+        label: formatCocktailName(cocktail.name, language)
       }));
     setFilteredCocktails(filtered);
-  }, [cocktailNameInput]);
+  }, [cocktailNameInput, language]);
 
   const handleSave = async () => {
     if (!selectedCocktail) return;

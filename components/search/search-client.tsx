@@ -5,7 +5,7 @@ import { CocktailPreview } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { useRouter } from "next/navigation";
-import { slugify, normalizeText } from "@/lib/utils";
+import { slugify, normalizeText, formatCocktailName } from "@/lib/utils";
 import summary from "@/data/summary.json";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -100,28 +100,28 @@ export function SearchClient({ cocktails }: SearchClientProps) {
 
   const searchItems: SearchItem[] = [
     ...cocktails.map(cocktail => ({
-      name: `${cocktail.name.en} / ${cocktail.name.zh}`,
+      name: formatCocktailName(cocktail.name, language),
       value: `cocktail:${cocktail.name.en}`,
       type: 'cocktail' as const,
       category: 'cocktail',
       slug: slugify(cocktail.name.en)
     })),
     ...summary.base_spirits.map(spirit => ({
-      name: `${spirit.name.en} / ${spirit.name.zh}`,
+      name: formatCocktailName(spirit.name, language),
       value: `ingredient:${spirit.name.en}`,
       type: 'ingredient' as const,
       category: 'baseSpirit',
       slug: slugify(spirit.name.en)
     })),
     ...summary.liqueurs.map(liqueur => ({
-      name: `${liqueur.name.en} / ${liqueur.name.zh}`,
+      name: formatCocktailName(liqueur.name, language),
       value: `ingredient:${liqueur.name.en}`,
       type: 'ingredient' as const,
       category: 'liqueur',
       slug: slugify(liqueur.name.en)
     })),
     ...summary.ingredients.map(ingredient => ({
-      name: `${ingredient.name.en} / ${ingredient.name.zh}`,
+      name: formatCocktailName(ingredient.name, language),
       value: `ingredient:${ingredient.name.en}`,
       type: 'ingredient' as const,
       category: 'ingredient',
