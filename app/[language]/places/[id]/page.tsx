@@ -62,7 +62,7 @@ export default async function PlacePage({ params }: Props) {
         </div>
       </div>
 
-      <PlaceLogs placeId={place.id} language={language} />
+      <PlaceLogs placeId={place.id} />
     </div>
   );
 }

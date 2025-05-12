@@ -24,7 +24,7 @@ export function TopPlaces({ places }: TopPlacesProps) {
               {place.name}
             </Link>
             <span className="text-muted-foreground">
-              {place.count} {t.times}
+              {place.count} {t.drinks}
             </span>
           </div>
         ))}

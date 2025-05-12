@@ -85,7 +85,8 @@ export class CocktailLogService {
         main_text: location.main_text,
         secondary_text: location.secondary_text,
         lat: location.lat,
-        lng: location.lng
+        lng: location.lng,
+        is_verified: false
       });
       placeId = place.id;
     }
@@ -177,7 +178,8 @@ export class CocktailLogService {
         main_text: location.main_text,
         secondary_text: location.secondary_text,
         lat: location.lat,
-        lng: location.lng
+        lng: location.lng,
+        is_verified: false
       });
       placeId = place.id;
     }
