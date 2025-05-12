@@ -4,17 +4,24 @@ import { useCocktailData } from "@/context/CocktailLogContext";
 import { CocktailLogForm } from "./cocktail-log-form";
 
 export function GlobalCocktailLogForm() {
-  const { isFormOpen, closeForm, selectedLog, mutate } = useCocktailData();
+  const { formState, closeForm, mutate } = useCocktailData();
+  const { isOpen, mode, selectedLog } = formState;
 
   return (
     <CocktailLogForm
-      isOpen={isFormOpen}
+      isOpen={isOpen}
       onClose={closeForm}
       cocktailSlug={selectedLog?.cocktailId || ""}
       cocktailName={selectedLog?.cocktailName || ""}
-      existingLog={selectedLog}
-      onLogSaved={mutate}
-      onLogDeleted={mutate}
+      existingLog={mode === 'edit' ? selectedLog : null}
+      onLogSaved={(log) => {
+        mutate();
+        closeForm();
+      }}
+      onLogDeleted={(logId) => {
+        mutate();
+        closeForm();
+      }}
       onLogsChange={() => {}}
       onSuccess={closeForm}
     />

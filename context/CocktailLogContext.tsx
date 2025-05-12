@@ -1,17 +1,22 @@
 'use client';
 
-import { createContext, useContext, ReactNode, useState } from 'react';
+import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
 import { CocktailLog } from '@/types/cocktail-log';
 import useSWR, { mutate } from 'swr';
 import { CACHE_KEYS, fetchers, swrConfig, defaultData } from '@/lib/swr-config';
 
+interface FormState {
+  isOpen: boolean;
+  mode: 'create' | 'edit';
+  selectedLog: CocktailLog | null;
+}
+
 interface CocktailLogContextType {
   // Form state management
-  isFormOpen: boolean;
-  openForm: () => void;
+  formState: FormState;
+  openCreateForm: () => void;
+  openEditForm: (log: CocktailLog) => void;
   closeForm: () => void;
-  selectedLog: CocktailLog | null;
-  setSelectedLog: (log: CocktailLog | null) => void;
   // Mutations
   mutate: () => Promise<any>;
   // Data
@@ -36,8 +41,11 @@ export function CocktailLogDataProvider({
   children: ReactNode;
 }) {
   // Form state
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedLog, setSelectedLog] = useState<CocktailLog | null>(null);
+  const [formState, setFormState] = useState<FormState>({
+    isOpen: false,
+    mode: 'create',
+    selectedLog: null,
+  });
 
   // SWR for data fetching
   const { data: logs, isLoading: isLoadingLogs } = useSWR<CocktailLog[]>(
@@ -58,19 +66,38 @@ export function CocktailLogDataProvider({
     }
   );
 
+  const openCreateForm = useCallback(() => {
+    setFormState({
+      isOpen: true,
+      mode: 'create',
+      selectedLog: null,
+    });
+  }, []);
+
+  const openEditForm = useCallback((log: CocktailLog) => {
+    setFormState({
+      isOpen: true,
+      mode: 'edit',
+      selectedLog: log,
+    });
+  }, []);
+
+  const closeForm = useCallback(() => {
+    setFormState({
+      isOpen: false,
+      mode: 'create',
+      selectedLog: null,
+    });
+  }, []);
+
   const value = {
     // Form state management
-    isFormOpen,
-    openForm: () => setIsFormOpen(true),
-    closeForm: () => {
-      setIsFormOpen(false);
-      setSelectedLog(null);
-    },
-    selectedLog,
-    setSelectedLog,
+    formState,
+    openCreateForm,
+    openEditForm,
+    closeForm,
     // Mutations
     mutate: async () => {
-      // Optimistically update the cache
       await Promise.all([
         mutate(CACHE_KEYS.COCKTAIL_LOGS),
         mutate(CACHE_KEYS.USER_STATS)

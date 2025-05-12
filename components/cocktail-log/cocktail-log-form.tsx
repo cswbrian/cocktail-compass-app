@@ -96,6 +96,30 @@ export function CocktailLogForm({
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const [customCocktailValues, setCustomCocktailValues] = useState<CustomCocktailValues | null>(null);
 
+  // Reset all form states
+  const resetForm = () => {
+    setRating(0);
+    setCocktailNameInput("");
+    setOpen(false);
+    setFilteredCocktails([]);
+    setSelectedCocktail(null);
+    setSpecialIngredients("");
+    setComments("");
+    setLocation(null);
+    setBartender("");
+    setTags([]);
+    setNewTag("");
+    setDrinkDate(new Date());
+    setMedia([]);
+    setCustomCocktailValues(null);
+  };
+
+  // Handle form close
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
   useEffect(() => {
     if (existingLog) {
       setRating(existingLog.rating || 0);
@@ -126,22 +150,7 @@ export function CocktailLogForm({
       setDrinkDate(existingLog.drinkDate ? new Date(existingLog.drinkDate) : undefined);
       setMedia(existingLog.media || []);
     } else {
-      setRating(0);
-      setCocktailNameInput(cocktailName);
-      const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
-      setSelectedCocktail({ 
-        value: cocktail?.id || cocktailSlug, 
-        label: cocktailName, 
-        name: cocktailName, 
-        slug: cocktailSlug 
-      });
-      setSpecialIngredients("");
-      setComments("");
-      setLocation(null);
-      setBartender("");
-      setTags([]);
-      setDrinkDate(new Date());
-      setMedia([]);
+      resetForm();
     }
   }, [existingLog, cocktailName, cocktailSlug, language]);
 
@@ -404,7 +413,7 @@ export function CocktailLogForm({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/80 z-50"
-            onClick={onClose}
+            onClick={handleClose}
           />
           <motion.div
             initial={{ y: "100%" }}
@@ -425,7 +434,7 @@ export function CocktailLogForm({
                     variant="ghost"
                     size="icon"
                     className="absolute left-0"
-                    onClick={onClose}
+                    onClick={handleClose}
                   >
                     <X className="h-5 w-5" />
                   </Button>

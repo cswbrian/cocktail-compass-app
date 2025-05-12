@@ -5,12 +5,12 @@ import { NotebookPenIcon } from "lucide-react";
 import { useCocktailData } from "@/context/CocktailLogContext";
 
 export function AddLogButton() {
-  const { openForm } = useCocktailData();
+  const { openCreateForm } = useCocktailData();
 
   return (
     <Button
       className="h-10 w-10 rounded-full shadow-lg"
-      onClick={openForm}
+      onClick={openCreateForm}
     >
       <NotebookPenIcon className="h-5 w-5" />
     </Button>
