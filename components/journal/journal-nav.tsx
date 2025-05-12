@@ -22,7 +22,7 @@ export function JournalNav() {
         }`}
       >
         <ListIcon className="w-4 h-4" />
-        {t.yourLogs}
+        {t.logs}
       </Link>
       <Link
         href={`/${language}/journal/highlights`}

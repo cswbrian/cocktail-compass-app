@@ -8,6 +8,8 @@ import { CocktailLogForm } from "./cocktail-log-form";
 import { useState } from "react";
 import { CocktailLogMedia } from "./cocktail-log-media";
 import { CocktailLogInfo } from "./cocktail-log-info";
+import { translations } from "@/translations";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface CocktailLogDetailProps {
   log: CocktailLog;
@@ -29,6 +31,8 @@ export function CocktailLogDetail({
   onLogsChange
 }: CocktailLogDetailProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   if (!isOpen) return null;
 
@@ -62,7 +66,7 @@ export function CocktailLogDetail({
                     <X className="h-5 w-5" />
                   </Button>
                   <h2 className="flex-1 text-center text-lg font-semibold">
-                    {cocktailName}
+                    {t.logs}
                   </h2>
                   <Button
                     variant="ghost"
@@ -77,6 +81,7 @@ export function CocktailLogDetail({
 
               <div className="flex-1 overflow-y-auto">
                 <div className="p-4 space-y-4 max-w-3xl mx-auto">
+                  <h3 className="text-xl font-semibold mb-4">{cocktailName}</h3>
                   <CocktailLogInfo
                     rating={log.rating}
                     location={log.location}
