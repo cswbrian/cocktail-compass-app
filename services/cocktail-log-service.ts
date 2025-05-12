@@ -287,10 +287,10 @@ export class CocktailLogService {
       await cocktailLogsMediaService.softDeleteMultipleMedia(mediaUrls);
     }
 
-    // Delete the log
+    // Soft delete the log by setting deleted_at
     const { error } = await supabase
       .from("cocktail_logs")
-      .delete()
+      .update({ deleted_at: new Date().toISOString() })
       .eq("id", id);
 
     if (error) throw error;
@@ -316,6 +316,7 @@ export class CocktailLogService {
       `)
       .eq("cocktail_id", cocktailId)
       .eq("user_id", user.id)
+      .is("deleted_at", null)
       .order("drink_date", { ascending: false });
 
     if (error) throw error;
@@ -344,6 +345,7 @@ export class CocktailLogService {
         )
       `)
       .eq("user_id", userId || user.id)
+      .is("deleted_at", null)
       .order("drink_date", { ascending: false });
 
     if (error) throw error;
@@ -373,6 +375,7 @@ export class CocktailLogService {
       `)
       .eq("place_id", placeId)
       .eq("user_id", user.id)
+      .is("deleted_at", null)
       .order("drink_date", { ascending: false });
 
     if (error) throw error;
@@ -410,7 +413,8 @@ export class CocktailLogService {
       createdAt: data.created_at,
       updatedAt: data.updated_at,
       drinkDate: data.drink_date,
-      media
+      media,
+      deletedAt: data.deleted_at
     };
   }
 }

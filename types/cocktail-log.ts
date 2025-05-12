@@ -13,6 +13,7 @@ export interface CocktailLog {
   updatedAt: string;
   drinkDate: string | null;
   media: { url: string; type: 'image' | 'video' }[] | null;
+  deletedAt: string | null;
 }
 
 export interface LocationData {
