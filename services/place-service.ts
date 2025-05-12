@@ -1,16 +1,5 @@
 import { supabase } from "@/lib/supabase";
-
-interface Place {
-  id: string;
-  place_id: string;
-  name: string;
-  main_text: string;
-  secondary_text: string | null;
-  lat: number;
-  lng: number;
-  created_at: string;
-  updated_at: string;
-}
+import { Place } from "@/types/place";
 
 export class PlaceService {
   async getOrCreatePlace(placeData: Omit<Place, 'id' | 'created_at' | 'updated_at'>): Promise<Place> {
@@ -75,6 +64,19 @@ export class PlaceService {
     }
 
     return data;
+  }
+
+  async getAllPlaces() {
+    const { data, error } = await supabase
+      .from('places')
+      .select('*')
+      .order('name');
+
+    if (error) {
+      throw error;
+    }
+
+    return { data };
   }
 
   async getCocktailLogsByPlaceId(placeId: string) {

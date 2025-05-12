@@ -1,7 +1,7 @@
 import { Redirect } from "@/components/redirect";
 
 export default function Home() {
-  return <Redirect to="/journal/feeds" />;
+  return <Redirect to="/explorer" />;
 }
 
 export async function generateStaticParams() {

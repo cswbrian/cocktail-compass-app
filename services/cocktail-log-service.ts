@@ -347,6 +347,35 @@ export class CocktailLogService {
     return Promise.all(data.map(log => this.mapLog(log)));
   }
 
+  async getLogsByPlaceId(placeId: string): Promise<CocktailLog[]> {
+    const user = await AuthService.getCurrentSession();
+    if (!user) return [];
+
+    const { data, error } = await supabase
+      .from("cocktail_logs")
+      .select(`
+        *,
+        places (
+          id,
+          place_id,
+          name,
+          main_text,
+          secondary_text,
+          lat,
+          lng
+        ),
+        cocktails (
+          name
+        )
+      `)
+      .eq("place_id", placeId)
+      .eq("user_id", user.id)
+      .order("drink_date", { ascending: false });
+
+    if (error) throw error;
+    return Promise.all(data.map(log => this.mapLog(log)));
+  }
+
   async getUserStats() {
     const user = await AuthService.getCurrentSession();
     if (!user) return null;

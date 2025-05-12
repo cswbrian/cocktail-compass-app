@@ -3,8 +3,10 @@ import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface LocationData {
+  id: string;
   name: string;
   place_id: string;
   lat: number;
@@ -56,7 +58,13 @@ export function CocktailLogInfo({
             <span className="text-muted-foreground">{t.location}</span>
           )}
           <MapPin className="size-4 text-muted-foreground" />
-          {locationData.main_text}
+          <Link 
+            href={`/${language}/places/${locationData.place_id}`}
+            className="hover:text-primary transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {locationData.main_text}
+          </Link>
         </div>
       )}
 

@@ -275,6 +275,11 @@ export const translations = {
     useCurrentLocation: "Use Current Location",
     required: "Required",
     errorRemovingMedia: "Error removing media",
+    viewOnGoogleMaps: "View on Google Maps",
+    placeVerified: "Verified Place",
+    placeUnverified: "Unverified Place",
+    placeVerifiedDescription: "This place has been verified by our team. The information and menu are accurate and up-to-date.",
+    placeUnverifiedDescription: "This page shows information and drink menus based on user submissions and system aggregation. Bar or restaurant owners can contact us to get verified and access additional services.",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -547,5 +552,10 @@ export const translations = {
     useCurrentLocation: "使用目前位置",
     required: "必填",
     errorRemovingMedia: "移除媒體時出錯",
+    viewOnGoogleMaps: "在 Google 地圖查看",
+    placeVerified: "已驗證場所",
+    placeUnverified: "未驗證場所",
+    placeVerifiedDescription: "此場所已經酒吧驗證，資訊和菜單都是準確且最新的。",
+    placeUnverifiedDescription: "此頁面顯示的資訊和飲品菜單是根據用戶提交的內容和系統整理而成，酒吧或餐廳負責人可聯絡我們驗證。",
   },
 };
