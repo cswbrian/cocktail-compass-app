@@ -5,7 +5,7 @@ import { TopPlaces } from "./top-places";
 import { DrinksBarChart } from "./drinks-bar-chart";
 import { PhotoSnapshot } from "./photo-snapshot";
 import useSWR from 'swr';
-import { cocktailLogService } from '@/services/cocktail-log-service';
+import { userStatsService } from '@/services/user-stats-service';
 import { cocktailLogsMediaService } from '@/services/media-service';
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 
@@ -16,12 +16,11 @@ interface PlaceStats {
 }
 
 export function HighlightsClient() {
-
   // Use SWR for client-side updates
   const { data: stats, isLoading: isLoadingStats } = useSWR(
-    'cocktail-stats',
+    'user-stats',
     async () => {
-      const data = await cocktailLogService.getEnhancedUserStats();
+      const data = await userStatsService.getUserStats();
       if (!data) return null;
       const recentPhotos = await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.recentPhotos);
       return { ...data, recentPhotos };
@@ -31,11 +30,12 @@ export function HighlightsClient() {
         basicStats: {
           totalCocktailsDrunk: 0,
           uniqueCocktails: 0,
-          uniqueBars: 0
+          uniquePlaces: 0
         },
         drinksByMonth: {},
-        topBarsWithMostDrinks: [] as PlaceStats[],
-        recentPhotos: []
+        topPlaces: [] as PlaceStats[],
+        recentPhotos: [],
+        mostLoggedCocktails: []
       }
     }
   );
@@ -57,20 +57,24 @@ export function HighlightsClient() {
     <AuthWrapper>
       <div className="px-6 space-y-8">
         {/* Basic Stats */}
-        <BasicStats stats={stats?.basicStats ?? {
-          totalCocktailsDrunk: 0,
-          uniqueCocktails: 0,
-          uniqueBars: 0
-        }} />
+        {stats?.basicStats && (
+          <BasicStats stats={stats.basicStats} />
+        )}
 
         {/* Drinks Over Time */}
-        <DrinksBarChart drinksByMonth={stats?.drinksByMonth ?? {}} />
+        {stats?.drinksByMonth && Object.keys(stats.drinksByMonth).length > 0 && (
+          <DrinksBarChart drinksByMonth={stats.drinksByMonth} />
+        )}
 
         {/* Top Places */}
-        <TopPlaces places={stats?.topBarsWithMostDrinks ?? []} />
+        {stats?.topPlaces && stats.topPlaces.length > 0 && (
+          <TopPlaces places={stats.topPlaces} />
+        )}
 
         {/* Photo Snapshot */}
-        <PhotoSnapshot photos={stats?.recentPhotos ?? []} />
+        {stats?.recentPhotos && stats.recentPhotos.length > 0 && (
+          <PhotoSnapshot photos={stats.recentPhotos} />
+        )}
       </div>
     </AuthWrapper>
   );

@@ -5,6 +5,7 @@ import { Feeds } from "./feeds";
 import { BasicStats } from "./basic-stats";
 import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
+import { userStatsService } from '@/services/user-stats-service';
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -58,18 +59,19 @@ export function FeedsClient() {
   );
 
   const { data: stats, isLoading: isLoadingStats } = useSWR(
-    'cocktail-stats',
-    () => cocktailLogService.getEnhancedUserStats(),
+    'user-stats',
+    () => userStatsService.getUserStats(),
     { 
       fallbackData: {
         basicStats: {
           totalCocktailsDrunk: 0,
           uniqueCocktails: 0,
-          uniqueBars: 0
+          uniquePlaces: 0
         },
         drinksByMonth: {},
-        topBarsWithMostDrinks: [],
-        recentPhotos: []
+        topPlaces: [],
+        recentPhotos: [],
+        mostLoggedCocktails: []
       }
     }
   );
@@ -91,7 +93,7 @@ export function FeedsClient() {
           <BasicStats stats={stats?.basicStats ?? {
             totalCocktailsDrunk: 0,
             uniqueCocktails: 0,
-            uniqueBars: 0
+            uniquePlaces: 0
           }} />
         </div>
         <Feeds

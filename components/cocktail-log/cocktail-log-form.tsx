@@ -266,7 +266,7 @@ export function CocktailLogForm({
 
         // Redirect to journal page after successful creation
         if (!existingLog) {
-          router.push(`/${language}/journal`);
+          router.push(`/${language}/journal/feeds`);
         }
       } catch (error) {
         console.error("Error saving log:", error);

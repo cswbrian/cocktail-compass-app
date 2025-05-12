@@ -19,7 +19,7 @@ interface BasicStatsProps {
   stats: {
     totalCocktailsDrunk: number;
     uniqueCocktails: number;
-    uniqueBars: number;
+    uniquePlaces: number;
   };
 }
 
@@ -30,7 +30,7 @@ export function BasicStats({ stats }: BasicStatsProps) {
   return (
     <div className="flex gap-6">
       <StatCard title={t.totalCocktailsDrunk} value={stats.totalCocktailsDrunk} />
-      <StatCard title={t.totalBarsVisited} value={stats.uniqueBars} />
+      <StatCard title={t.totalPlacesVisited} value={stats.uniquePlaces} />
       <StatCard title={t.uniqueCocktails} value={stats.uniqueCocktails} />
     </div>
   );

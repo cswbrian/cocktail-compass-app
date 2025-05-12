@@ -4,17 +4,6 @@ import { createContext, useContext, ReactNode, useState } from 'react';
 import { CocktailLog } from '@/types/cocktail-log';
 import useSWR from 'swr';
 
-export interface EnhancedStats {
-  basicStats: {
-    totalCocktailsDrunk: number;
-    uniqueCocktails: number;
-    uniqueBars: number;
-  };
-  drinksByMonth: Record<string, number>;
-  topBarsWithMostDrinks: { name: string; count: number }[];
-  recentPhotos: { url: string; type: 'image' | 'video' }[];
-}
-
 interface CocktailLogContextType {
   // Form state management
   isFormOpen: boolean;
