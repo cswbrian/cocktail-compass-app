@@ -14,11 +14,11 @@ export function GlobalCocktailLogForm() {
       cocktailSlug={selectedLog?.cocktailId || ""}
       cocktailName={selectedLog?.cocktailName || ""}
       existingLog={mode === 'edit' ? selectedLog : null}
-      onLogSaved={(log) => {
+      onLogSaved={() => {
         mutate();
         closeForm();
       }}
-      onLogDeleted={(logId) => {
+      onLogDeleted={() => {
         mutate();
         closeForm();
       }}
