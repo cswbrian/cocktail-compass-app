@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let mounted = true;
     setLoading(true);
     
-    AuthService.getCurrentUser().then((user) => {
+    AuthService.getCurrentSession().then((user) => {
       if (!mounted) return;
       setUser(user);
       setLoading(false);

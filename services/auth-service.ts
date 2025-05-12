@@ -21,10 +21,10 @@ export class AuthService {
     if (error) throw error;
   }
 
-  static async getCurrentUser(): Promise<User | null> {
-    const { data, error } = await supabase.auth.getUser();
+  static async getCurrentSession(): Promise<User | null> {
+    const { data, error } = await supabase.auth.getSession();
     if (error) throw error;
-    return data.user;
+    return data.session?.user ?? null;
   }
 
   static onAuthStateChange(callback: (user: User | null) => void) {

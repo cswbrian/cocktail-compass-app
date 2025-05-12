@@ -169,7 +169,7 @@ export function CocktailLogForm({
       setIsLoading(true);
 
       // Get user ID first
-      const user = await AuthService.getCurrentUser();
+      const user = await AuthService.getCurrentSession();
       if (!user) throw new Error("User not authenticated");
 
       let cocktailId = selectedCocktail.value;

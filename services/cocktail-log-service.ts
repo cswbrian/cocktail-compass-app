@@ -294,7 +294,7 @@ export class CocktailLogService {
   }
 
   async getLogsByCocktailId(cocktailId: string): Promise<CocktailLog[]> {
-    const user = await AuthService.getCurrentUser();
+    const user = await AuthService.getCurrentSession();
     if (!user) return [];
 
     const { data, error } = await supabase
@@ -320,7 +320,7 @@ export class CocktailLogService {
   }
 
   async getLogsByUserId(userId?: string): Promise<CocktailLog[]> {
-    const user = await AuthService.getCurrentUser();
+    const user = await AuthService.getCurrentSession();
     if (!user) return [];
 
     const { data, error } = await supabase
@@ -348,7 +348,7 @@ export class CocktailLogService {
   }
 
   async getUserStats() {
-    const user = await AuthService.getCurrentUser();
+    const user = await AuthService.getCurrentSession();
     if (!user) return null;
 
     // Get total logs
@@ -424,7 +424,7 @@ export class CocktailLogService {
   }
 
   async getEnhancedUserStats() {
-    const user = await AuthService.getCurrentUser();
+    const user = await AuthService.getCurrentSession();
     if (!user) return null;
 
     // Get all logs for the user with cocktail names

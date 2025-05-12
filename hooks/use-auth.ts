@@ -11,7 +11,7 @@ export function useAuth() {
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    AuthService.getCurrentUser().then((user) => {
+    AuthService.getCurrentSession().then((user) => {
       if (!mounted) return;
       setUser(user);
       setLoading(false);

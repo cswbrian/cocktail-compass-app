@@ -14,7 +14,7 @@ export class BookmarkService {
   private async getUserId(): Promise<string | null> {
     if (this.cachedUserId) return this.cachedUserId;
     
-    const user = await AuthService.getCurrentUser();
+    const user = await AuthService.getCurrentSession();
     if (!user) return null;
     
     this.cachedUserId = user.id;
@@ -137,7 +137,7 @@ export class BookmarkService {
   }
 
   async getUserBookmarks(): Promise<BookmarkList[]> {
-    const user = await AuthService.getCurrentUser();
+    const user = await AuthService.getCurrentSession();
     if (!user) return [];
 
     const { data, error } = await supabase
