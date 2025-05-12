@@ -335,6 +335,9 @@ export class CocktailLogService {
           secondary_text,
           lat,
           lng
+        ),
+        cocktails (
+          name
         )
       `)
       .eq("user_id", userId || user.id)
@@ -497,17 +500,6 @@ export class CocktailLogService {
   }
 
   private async mapLog(data: any): Promise<CocktailLog> {
-    // Get the cocktail from Supabase
-    const { data: cocktail, error } = await supabase
-      .from("cocktails")
-      .select("name")
-      .eq("id", data.cocktail_id)
-      .single();
-    
-    if (error) {
-      console.error("Error fetching cocktail:", error);
-    }
-
     // Convert place data to JSON string if it exists
     let locationData = null;
     if (data.places) {
@@ -527,7 +519,7 @@ export class CocktailLogService {
     return {
       id: data.id,
       cocktailId: data.cocktail_id,
-      cocktailName: cocktail ? `${cocktail.name.en} / ${cocktail.name.zh}` : "",
+      cocktailName: data.cocktails ? `${data.cocktails.name.en} / ${data.cocktails.name.zh}` : "",
       userId: data.user_id,
       rating: data.rating,
       specialIngredients: data.special_ingredients,
