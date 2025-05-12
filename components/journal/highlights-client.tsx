@@ -8,12 +8,6 @@ import useSWR from 'swr';
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 import { CACHE_KEYS, fetchers, swrConfig, defaultData } from '@/lib/swr-config';
 
-interface PlaceStats {
-  name: string;
-  count: number;
-  place_id: string;
-}
-
 export function HighlightsClient() {
   // Use SWR for client-side updates
   const { data: stats, isLoading: isLoadingStats } = useSWR(
