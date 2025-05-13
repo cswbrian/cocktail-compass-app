@@ -27,7 +27,7 @@ interface LocationSelectorProps {
 
 export function LocationSelector({ value, onChange }: LocationSelectorProps) {
   const [isLocationDrawerOpen, setIsLocationDrawerOpen] = useState(false);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [userLocation] = useState<{ lat: number; lng: number } | null>(null);
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 

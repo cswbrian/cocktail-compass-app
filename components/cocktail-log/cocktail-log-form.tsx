@@ -45,7 +45,7 @@ interface SearchItem {
 
 interface CustomCocktailValues {
   nameEn: string;
-  nameZh: string;
+  nameZh?: string;
 }
 
 interface CocktailLogFormProps {
