@@ -5,6 +5,7 @@ import Image from "next/image";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface MediaItem {
   url: string;
@@ -20,6 +21,7 @@ interface MediaGalleryProps {
 export function MediaGallery({ media, title, className = "" }: MediaGalleryProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   if (media.length === 0) return null;
 
@@ -30,6 +32,13 @@ export function MediaGallery({ media, title, className = "" }: MediaGalleryProps
       type: "image" as const,
     }));
 
+  const handleImageLoad = (url: string) => {
+    setLoadedImages(prev => ({
+      ...prev,
+      [url]: true
+    }));
+  };
+
   return (
     <Card className={`p-6 ${className}`}>
       {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
@@ -39,18 +48,27 @@ export function MediaGallery({ media, title, className = "" }: MediaGalleryProps
             key={index}
             className="relative aspect-square cursor-pointer"
             onClick={() => {
-              setCurrentIndex(index);
-              setLightboxOpen(true);
+              if (item.type === "image" && loadedImages[item.url]) {
+                setCurrentIndex(index);
+                setLightboxOpen(true);
+              }
             }}
           >
             {item.type === "image" ? (
               <div className="relative w-full h-full">
+                {!loadedImages[item.url] && (
+                  <Skeleton className="absolute inset-0 rounded-lg" />
+                )}
                 <Image
                   src={item.url}
                   alt={`Media ${index + 1}`}
                   fill
-                  className="object-cover rounded-lg hover:opacity-90 transition-opacity"
+                  className={`object-cover rounded-lg transition-opacity ${
+                    loadedImages[item.url] ? 'opacity-100' : 'opacity-0'
+                  } hover:opacity-90`}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  onLoadingComplete={() => handleImageLoad(item.url)}
+                  priority={index < 3} // Prioritize loading first 3 images
                 />
               </div>
             ) : (

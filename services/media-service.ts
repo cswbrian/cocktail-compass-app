@@ -12,21 +12,55 @@ interface CompressionOptions {
   maxSizeMB?: number;
   maxWidthOrHeight?: number;
   useWebWorker?: boolean;
+  quality?: number;
+  convertToWebP?: boolean;
 }
+
+interface MediaItem {
+  url: string;
+  type: 'image' | 'video';
+}
+
+type AllowedMimeTypes = {
+  [key: string]: boolean;
+};
 
 export class MediaService {
   private readonly defaultCompressionOptions: CompressionOptions = {
     maxSizeMB: 1,
     maxWidthOrHeight: 1920,
-    useWebWorker: true
+    useWebWorker: true,
+    quality: 0.8,
+    convertToWebP: true
   };
+
+  private readonly allowedMimeTypes: AllowedMimeTypes = {
+    'image/jpeg': true,
+    'image/png': true,
+    'image/webp': true,
+    'image/gif': true
+  };
+
+  private readonly maxFileSize = 5 * 1024 * 1024; // 5MB
 
   constructor(private readonly bucket: StorageBucket) {}
 
+  private async validateFile(file: File): Promise<void> {
+    if (file.size > this.maxFileSize) {
+      throw new Error(`File size exceeds maximum limit of ${this.maxFileSize / 1024 / 1024}MB`);
+    }
+
+    if (file.type.startsWith('image/') && !this.allowedMimeTypes[file.type]) {
+      throw new Error('Unsupported image format');
+    }
+  }
+
   private async compressImage(file: File, options: CompressionOptions = {}): Promise<File> {
     if (!file.type.startsWith('image/')) {
-      return file; // Return original file if not an image
+      return file;
     }
+
+    await this.validateFile(file);
 
     const compressionOptions = {
       ...this.defaultCompressionOptions,
@@ -34,19 +68,53 @@ export class MediaService {
     };
 
     try {
-      const compressedFile = await imageCompression(file, compressionOptions);
+      const compressedFile = await imageCompression(file, {
+        ...compressionOptions,
+        initialQuality: compressionOptions.quality
+      });
+
+      if (compressionOptions.convertToWebP && file.type !== 'image/webp') {
+        const webpBlob = await this.convertToWebP(compressedFile);
+        return new File([webpBlob], file.name.replace(/\.[^/.]+$/, '.webp'), {
+          type: 'image/webp',
+          lastModified: file.lastModified,
+        });
+      }
+
       return new File([compressedFile], file.name, {
         type: file.type,
         lastModified: file.lastModified,
       });
     } catch (error) {
       console.error('Error compressing image:', error);
-      return file; // Return original file if compression fails
+      return file;
     }
   }
 
+  private async convertToWebP(file: File): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Failed to get canvas context'));
+          return;
+        }
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error('Failed to convert to WebP'));
+        }, 'image/webp', 0.8);
+      };
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
   async uploadMedia(file: File, userId: string, entityId: string, compressionOptions?: CompressionOptions): Promise<string> {
-    // Compress image if it's an image file
     const processedFile = await this.compressImage(file, compressionOptions);
     
     const fileExt = processedFile.name.split('.').pop();
@@ -54,7 +122,10 @@ export class MediaService {
 
     const { error: uploadError } = await supabase.storage
       .from(this.bucket)
-      .upload(fileName, processedFile);
+      .upload(fileName, processedFile, {
+        cacheControl: '3600',
+        upsert: false
+      });
 
     if (uploadError) {
       throw uploadError;
@@ -62,7 +133,13 @@ export class MediaService {
 
     const { data: { publicUrl } } = supabase.storage
       .from(this.bucket)
-      .getPublicUrl(fileName);
+      .getPublicUrl(fileName, {
+        transform: {
+          width: 800,
+          height: 800,
+          quality: 80
+        }
+      });
 
     return publicUrl;
   }
@@ -73,6 +150,7 @@ export class MediaService {
       .createSignedUrl(fileName, 3600); // URL valid for 1 hour
 
     if (error) throw error;
+    if (!data?.signedUrl) throw new Error('Failed to get signed URL');
     return data.signedUrl;
   }
 
@@ -149,7 +227,7 @@ export class MediaService {
     }
   }
 
-  async getSignedUrlForMediaItem(mediaItem: { url: string; type: 'image' | 'video' }): Promise<{ url: string; type: 'image' | 'video' }> {
+  async getSignedUrlForMediaItem(mediaItem: MediaItem): Promise<MediaItem> {
     // Extract the file path from the URL
     const urlParts = mediaItem.url.split('/');
     const fileName = urlParts.slice(urlParts.indexOf(this.bucket) + 1).join('/');
@@ -157,7 +235,7 @@ export class MediaService {
     return { ...mediaItem, url: signedUrl };
   }
 
-  async getSignedUrlsForMediaItems(mediaItems: { url: string; type: 'image' | 'video' }[]): Promise<{ url: string; type: 'image' | 'video' }[]> {
+  async getSignedUrlsForMediaItems(mediaItems: MediaItem[]): Promise<MediaItem[]> {
     return Promise.all(mediaItems.map(item => this.getSignedUrlForMediaItem(item)));
   }
 }
