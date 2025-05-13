@@ -382,6 +382,43 @@ export class CocktailLogService {
     return Promise.all(data.map(log => this.mapLog(log)));
   }
 
+  async getLogById(logId: string): Promise<CocktailLog | null> {
+    const user = await AuthService.getCurrentSession();
+    if (!user) return null;
+
+    const { data, error } = await supabase
+      .from("cocktail_logs")
+      .select(`
+        *,
+        places (
+          id,
+          place_id,
+          name,
+          main_text,
+          secondary_text,
+          lat,
+          lng
+        ),
+        cocktails (
+          name
+        )
+      `)
+      .eq("id", logId)
+      .eq("user_id", user.id)
+      .is("deleted_at", null)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        // Record not found
+        return null;
+      }
+      throw error;
+    }
+
+    return this.mapLog(data);
+  }
+
   private async mapLog(data: any): Promise<CocktailLog> {
     // Convert place data to JSON string if it exists
     let locationData = null;

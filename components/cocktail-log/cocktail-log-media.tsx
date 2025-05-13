@@ -36,38 +36,42 @@ export function CocktailLogMedia({ media, size = 'sm', className = '' }: Cocktai
     }));
 
   return (
-    <div className={`overflow-x-auto -mx-6 ${sizeClasses[size].container} ${className}`}>
-      <div className={`grid grid-flow-col ${sizeClasses[size].grid} gap-2 px-6`}>
-        {media.map((item, index) => (
-          <div
-            key={index}
-            className="relative aspect-square cursor-pointer"
-            onClick={() => {
-              if (item.type === 'image') {
-                setCurrentIndex(index);
-                setLightboxOpen(true);
-              }
-            }}
-          >
-            {item.type === 'image' ? (
-              <div className="relative w-full h-full">
-                <Image
+    <div className={`-mx-6 ${sizeClasses[size].container} ${className}`}>
+      <div className="px-6">
+        <div className={`${media.length === 1 ? 'flex justify-start' : `grid grid-flow-col ${sizeClasses[size].grid} gap-2 overflow-x-auto`}`}>
+          {media.map((item, index) => (
+            <div
+              key={index}
+              className={`relative aspect-square cursor-pointer ${media.length === 1 ? 'w-[200px]' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (item.type === 'image') {
+                  setCurrentIndex(index);
+                  setLightboxOpen(true);
+                }
+              }}
+            >
+              {item.type === 'image' ? (
+                <div className="relative w-full h-full">
+                  <Image
+                    src={item.url}
+                    alt={`Media ${index + 1}`}
+                    fill
+                    className="object-cover rounded-lg hover:opacity-90 transition-opacity"
+                    sizes={sizeClasses[size].image}
+                  />
+                </div>
+              ) : (
+                <video
                   src={item.url}
-                  alt={`Media ${index + 1}`}
-                  fill
-                  className="object-cover rounded-lg hover:opacity-90 transition-opacity"
-                  sizes={sizeClasses[size].image}
+                  className="w-full h-full object-cover rounded-lg"
+                  controls
+                  onClick={(e) => e.stopPropagation()}
                 />
-              </div>
-            ) : (
-              <video
-                src={item.url}
-                className="w-full h-full object-cover rounded-lg"
-                controls
-              />
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <Lightbox

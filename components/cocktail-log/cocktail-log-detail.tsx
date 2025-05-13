@@ -5,7 +5,7 @@ import { Edit, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { CocktailLogForm } from "./cocktail-log-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CocktailLogMedia } from "./cocktail-log-media";
 import { CocktailLogInfo } from "./cocktail-log-info";
 import { translations } from "@/translations";
@@ -33,6 +33,25 @@ export function CocktailLogDetail({
   const [isEditing, setIsEditing] = useState(false);
   const { language } = useLanguage();
   const t = translations[language];
+
+  useEffect(() => {
+    if (isOpen) {
+      // Push a new history state when detail opens
+      window.history.pushState({ detail: true }, '');
+    }
+
+    const handlePopState = () => {
+      if (isOpen) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
