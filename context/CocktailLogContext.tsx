@@ -98,10 +98,20 @@ export function CocktailLogDataProvider({
     closeForm,
     // Mutations
     mutate: async () => {
-      await Promise.all([
-        mutate(CACHE_KEYS.COCKTAIL_LOGS),
-        mutate(CACHE_KEYS.USER_STATS)
-      ]);
+      // First mutate the logs
+      await mutate(CACHE_KEYS.COCKTAIL_LOGS, async (currentLogs: CocktailLog[] | undefined) => {
+        if (!currentLogs) return currentLogs;
+        
+        // Fetch fresh logs to get updated media URLs
+        const freshLogs = await fetchers.getCocktailLogs();
+        return freshLogs;
+      }, {
+        revalidate: true,
+        rollbackOnError: true
+      });
+
+      // Then mutate stats
+      await mutate(CACHE_KEYS.USER_STATS);
     },
     // Data
     logs,
