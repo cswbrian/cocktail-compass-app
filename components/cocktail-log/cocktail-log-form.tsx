@@ -51,8 +51,6 @@ interface CustomCocktailValues {
 interface CocktailLogFormProps {
   isOpen: boolean;
   onClose: () => void;
-  cocktailSlug: string;
-  cocktailName: string;
   onLogSaved?: (log: CocktailLog) => void;
   existingLog?: CocktailLog | null;
   isFromCocktailPage?: boolean;
@@ -63,9 +61,7 @@ interface CocktailLogFormProps {
 
 export function CocktailLogForm({ 
   isOpen, 
-  onClose, 
-  cocktailSlug, 
-  cocktailName,
+  onClose,
   onLogSaved,
   existingLog,
   isFromCocktailPage = false,
@@ -123,14 +119,13 @@ export function CocktailLogForm({
   useEffect(() => {
     if (existingLog) {
       setRating(existingLog.rating || 0);
-      const cocktail = cocktailService.getCocktailById(existingLog.cocktailId);
-      const displayName = cocktail ? formatCocktailName(cocktail.name, language) : cocktailName;
+      const displayName = formatCocktailName(existingLog.cocktail.name, language);
       setCocktailNameInput(displayName);
       setSelectedCocktail({ 
-        value: existingLog.cocktailId, 
+        value: existingLog.cocktail.id, 
         label: displayName, 
         name: displayName, 
-        slug: cocktail?.slug || cocktailSlug 
+        slug: existingLog.cocktail.slug 
       });
       setSpecialIngredients(existingLog.specialIngredients || "");
       setComments(existingLog.comments || "");
@@ -152,7 +147,7 @@ export function CocktailLogForm({
     } else {
       resetForm();
     }
-  }, [existingLog, cocktailName, cocktailSlug, language]);
+  }, [existingLog, language]);
 
   useEffect(() => {
     const cocktails = cocktailService.getAllCocktails() || [];
@@ -259,7 +254,11 @@ export function CocktailLogForm({
         onClose();
         onLogSaved?.({
           id: existingLog?.id || '',
-          cocktailId,
+          cocktail: {
+            id: cocktailId,
+            name: existingLog?.cocktail.name || '',
+            slug: existingLog?.cocktail.slug || ''
+          },
           rating: rating || null,
           specialIngredients: specialIngredients || null,
           comments: comments || null,

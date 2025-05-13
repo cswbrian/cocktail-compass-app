@@ -192,7 +192,7 @@ export async function generateStaticParams() {
   const params = [];
 
   for (const cocktail of cocktails) {
-    const slug = slugify(cocktail.name.en);
+    const slug = cocktail.slug;
     params.push({ language: "en", slug }, { language: "zh", slug });
   }
 

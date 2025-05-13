@@ -43,7 +43,7 @@ class CocktailService {
   private initializeCaches(): void {
     // Build slug to cocktail map
     this.cocktails.forEach(cocktail => {
-      this.slugToCocktail.set(slugify(cocktail.name.en), cocktail);
+      this.slugToCocktail.set(cocktail.slug, cocktail);
     });
 
     // Build flavor descriptors set

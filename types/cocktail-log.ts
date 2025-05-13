@@ -1,7 +1,14 @@
 export interface CocktailLog {
   id: string;
-  cocktailId: string;
-  cocktailName: string;
+  cocktail: {
+    id: string;
+    slug: string;
+    is_custom: boolean;
+    name: {
+      en: string;
+      zh: string;
+    };
+  };
   userId: string;
   rating: number | null;
   specialIngredients: string | null;

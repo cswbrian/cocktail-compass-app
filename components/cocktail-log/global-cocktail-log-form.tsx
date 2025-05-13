@@ -11,8 +11,6 @@ export function GlobalCocktailLogForm() {
     <CocktailLogForm
       isOpen={isOpen}
       onClose={closeForm}
-      cocktailSlug={selectedLog?.cocktailId || ""}
-      cocktailName={selectedLog?.cocktailName || ""}
       existingLog={mode === 'edit' ? selectedLog : null}
       onLogSaved={() => {
         mutate();

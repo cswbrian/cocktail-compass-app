@@ -10,10 +10,11 @@ import { CocktailLogMedia } from "./cocktail-log-media";
 import { CocktailLogInfo } from "./cocktail-log-info";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
+import Link from "next/link";
+import { formatCocktailName } from "@/lib/utils";
 
 interface CocktailLogDetailProps {
   log: CocktailLog;
-  cocktailName: string;
   isOpen: boolean;
   onClose: () => void;
   onLogSaved?: (log: CocktailLog) => void;
@@ -23,7 +24,6 @@ interface CocktailLogDetailProps {
 
 export function CocktailLogDetail({
   log,
-  cocktailName,
   isOpen,
   onClose,
   onLogSaved,
@@ -100,7 +100,18 @@ export function CocktailLogDetail({
 
               <div className="flex-1 overflow-y-auto">
                 <div className="p-4 space-y-4 max-w-3xl mx-auto">
-                  <h3 className="text-xl font-semibold mb-4">{cocktailName}</h3>
+                  {
+                    log.cocktail.is_custom ? (
+                      <h3 className="text-xl font-semibold mb-4">{formatCocktailName(log.cocktail.name, language)}</h3>
+                    ) : (
+                      <Link 
+                        href={`/${language}/cocktails/${log.cocktail.slug}`}
+                        className="hover:text-primary transition-colors"
+                      >
+                        <h3 className="text-xl font-semibold mb-4">{formatCocktailName(log.cocktail.name, language)}</h3>
+                      </Link>
+                    )
+                  }
                   <CocktailLogInfo
                     rating={log.rating}
                     location={log.location}
@@ -125,8 +136,6 @@ export function CocktailLogDetail({
           <CocktailLogForm
             isOpen={isEditing}
             onClose={() => setIsEditing(false)}
-            cocktailSlug={log.cocktailId}
-            cocktailName={cocktailName}
             existingLog={log}
             onLogSaved={(updatedLog) => {
               setIsEditing(false);

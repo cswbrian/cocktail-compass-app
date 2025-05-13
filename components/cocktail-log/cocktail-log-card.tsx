@@ -4,6 +4,8 @@ import { CocktailLogDetail } from "./cocktail-log-detail";
 import { CocktailLogMedia } from "./cocktail-log-media";
 import { CocktailLogInfo } from "./cocktail-log-info";
 import { format } from "date-fns";
+import { useLanguage } from "@/context/LanguageContext";
+import { formatCocktailName } from "@/lib/utils";
 
 interface CocktailLogCardProps {
   log: CocktailLog;
@@ -19,6 +21,7 @@ export function CocktailLogCard({
   onLogsChange,
 }: CocktailLogCardProps) {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const { language } = useLanguage();
 
   return (
     <>
@@ -32,7 +35,7 @@ export function CocktailLogCard({
               {format(new Date(log.drinkDate), "PPP")}
             </div>
           )}
-          <h3 className="text-lg font-semibold">{log.cocktailName}</h3>
+          <h3 className="text-lg font-semibold">{formatCocktailName(log.cocktail.name, language)}</h3>
           <div className="space-y-2">
             <CocktailLogInfo
               rating={log.rating}
@@ -56,7 +59,6 @@ export function CocktailLogCard({
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
         log={log}
-        cocktailName={log.cocktailName}
         onLogSaved={onLogSaved}
         onLogDeleted={onLogDeleted}
         onLogsChange={onLogsChange}

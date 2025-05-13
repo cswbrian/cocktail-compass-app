@@ -312,6 +312,10 @@ export class CocktailLogService {
           secondary_text,
           lat,
           lng
+        ),
+        cocktails (
+          name,
+          slug
         )
       `)
       .eq("cocktail_id", cocktailId)
@@ -341,7 +345,8 @@ export class CocktailLogService {
           lng
         ),
         cocktails (
-          name
+          name,
+          slug
         )
       `)
       .eq("user_id", userId || user.id)
@@ -370,7 +375,8 @@ export class CocktailLogService {
           lng
         ),
         cocktails (
-          name
+          name,
+          slug
         )
       `)
       .eq("place_id", placeId)
@@ -400,7 +406,9 @@ export class CocktailLogService {
           lng
         ),
         cocktails (
-          name
+          name,
+          slug
+          is_custom
         )
       `)
       .eq("id", logId)
@@ -438,8 +446,7 @@ export class CocktailLogService {
     
     return {
       id: data.id,
-      cocktailId: data.cocktail_id,
-      cocktailName: data.cocktails ? formatCocktailName(data.cocktails.name, 'zh') : "",
+      cocktail: data.cocktails,
       userId: data.user_id,
       rating: data.rating,
       specialIngredients: data.special_ingredients,
