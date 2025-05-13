@@ -12,7 +12,7 @@ interface CustomCocktailModalProps {
   onClose: () => void;
   onCustomCocktailValues: (values: { 
     nameEn: string;
-    nameZh: string;
+    nameZh?: string;
   }) => void;
 }
 
@@ -28,7 +28,7 @@ export function CustomCocktailModal({
   const t = translations[language as keyof typeof translations];
 
   const handleSubmit = () => {
-    if (!customCocktailName || !customCocktailNameZh) {
+    if (!customCocktailName) {
       toast({
         title: t.error,
         description: t.errorCreatingCocktail,
@@ -39,7 +39,7 @@ export function CustomCocktailModal({
 
     onCustomCocktailValues({
       nameEn: customCocktailName,
-      nameZh: customCocktailNameZh
+      nameZh: customCocktailNameZh || undefined
     });
     
     // Reset form
@@ -95,7 +95,7 @@ export function CustomCocktailModal({
                   </Button>
                   <Button
                     onClick={handleSubmit}
-                    disabled={!customCocktailName || !customCocktailNameZh}
+                    disabled={!customCocktailName}
                   >
                     {t.create}
                   </Button>

@@ -4,7 +4,7 @@ import { slugify } from "@/lib/utils";
 
 export class CustomCocktailService {
   async createCustomCocktail(
-    name: { en: string; zh: string },
+    name: { en: string; zh?: string },
     userId: string
   ): Promise<Cocktail> {
     const slug = slugify(name.en);
@@ -13,7 +13,10 @@ export class CustomCocktailService {
       .from("cocktails")
       .insert([{
         data: {
-          name,
+          name: {
+            en: name.en,
+            zh: name.zh || name.en // Fallback to English name if Chinese name is not provided
+          },
           slug,
           flavor_profile: {
             body: 0,
@@ -32,7 +35,10 @@ export class CustomCocktailService {
         slug,
         is_custom: true,
         created_by: userId,
-        name
+        name: {
+          en: name.en,
+          zh: name.zh || name.en // Fallback to English name if Chinese name is not provided
+        }
       }])
       .select()
       .single();
