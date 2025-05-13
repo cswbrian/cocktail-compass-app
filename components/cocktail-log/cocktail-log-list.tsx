@@ -67,7 +67,7 @@ export function CocktailLogList({
   }
 
   return (
-    <div className="space-y-4">
+    <div>
       {logs.map((log) => (
         <CocktailLogCard 
           key={log.id} 

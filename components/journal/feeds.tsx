@@ -1,7 +1,7 @@
 import { CocktailLog } from "@/types/cocktail-log";
-import { CocktailLogCard } from "@/components/cocktail-log/cocktail-log-card";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
+import { CocktailLogList } from "@/components/cocktail-log/cocktail-log-list";
 
 interface FeedsProps {
   logs: CocktailLog[];
@@ -11,7 +11,7 @@ interface FeedsProps {
   onLogsChange: (logs: CocktailLog[]) => void;
 }
 
-export function Feeds({ logs, isLoading, onLogSaved, onLogDeleted, onLogsChange }: FeedsProps) {
+export function Feeds({ logs, isLoading, onLogSaved, onLogDeleted }: FeedsProps) {
   const { language } = useLanguage();
   const t = translations[language];
 
@@ -19,21 +19,12 @@ export function Feeds({ logs, isLoading, onLogSaved, onLogDeleted, onLogsChange 
     return null; // Loading state is now handled by AuthWrapper
   }
 
-  if (!logs || logs.length === 0) {
-    return <div className="text-center py-8">{t.noLogs}</div>;
-  }
-
   return (
-    <div>
-      {logs.map((log) => (
-        <CocktailLogCard
-          key={log.id}
-          log={log}
-          onLogSaved={onLogSaved}
-          onLogDeleted={onLogDeleted}
-          onLogsChange={onLogsChange}
-        />
-      ))}
-    </div>
+    <CocktailLogList
+      logs={logs}
+      isLoading={isLoading}
+      onLogSaved={onLogSaved}
+      onLogDeleted={onLogDeleted}
+    />
   );
 } 

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, MapPin, X, Navigation } from "lucide-react";
+import { Search, MapPin, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -128,39 +128,6 @@ export function LocationSelector({ value, onChange }: LocationSelectorProps) {
     debounce: 300,
   });
 
-  console.log(data)
-  const getUserLocation = useCallback(async () => {
-    try {
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0
-        });
-      });
-
-      const { latitude: lat, longitude: lng } = position.coords;
-      setUserLocation({ lat, lng });
-      
-      // Get address from coordinates
-      const results = await getGeocode({ location: { lat, lng } });
-      if (results[0]) {
-        const locationData: LocationData = {
-          name: results[0].formatted_address,
-          place_id: results[0].place_id,
-          lat,
-          lng,
-          main_text: results[0].formatted_address,
-          secondary_text: ""
-        };
-        onChange(locationData);
-        setIsLocationDrawerOpen(false);
-      }
-    } catch (error) {
-      console.error("Error getting user location:", error);
-    }
-  }, [onChange]);
-
   const handleLocationSearch = (searchTerm: string) => {
     setValue(searchTerm);
   };
@@ -227,14 +194,6 @@ export function LocationSelector({ value, onChange }: LocationSelectorProps) {
                   disabled={!ready}
                 />
               </div>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={getUserLocation}
-              >
-                <Navigation className="mr-2 h-4 w-4" />
-                {t.useCurrentLocation}
-              </Button>
               <ScrollArea className="flex-1">
                 {status === "OK" ? (
                   <div className="space-y-2">
