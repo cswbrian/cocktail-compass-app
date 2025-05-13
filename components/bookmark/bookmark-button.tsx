@@ -70,7 +70,6 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
   const loadBookmarks = async () => {
     try {
       setIsLoading(true);
-      await bookmarkService.initializeDefaultLists();
       const lists = await bookmarkService.getBookmarks();
       setBookmarks(lists);
 
