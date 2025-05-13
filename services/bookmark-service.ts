@@ -3,12 +3,6 @@ import { AuthService } from '@/services/auth-service';
 import { BookmarkList, BookmarkedItem } from "@/types/bookmark";
 
 export class BookmarkService {
-  private readonly DEFAULT_LISTS = [
-    { id: "want-to-try", nameKey: "wantToTry" },
-    { id: "favorites", nameKey: "favorites" },
-    { id: "explore", nameKey: "explore" }
-  ];
-
   private cachedUserId: string | null = null;
 
   private async getUserId(): Promise<string | null> {
@@ -19,35 +13,6 @@ export class BookmarkService {
     
     this.cachedUserId = user.id;
     return user.id;
-  }
-
-  async initializeDefaultLists(): Promise<void> {
-    const userId = await this.getUserId();
-    if (!userId) throw new Error('User not authenticated');
-
-    // Check if user already has default lists
-    const { data: existingLists } = await supabase
-      .from('bookmark_lists')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('is_default', true);
-
-    if (existingLists && existingLists.length > 0) {
-      return; // User already has default lists
-    }
-
-    // Create default lists
-    const { error } = await supabase
-      .from('bookmark_lists')
-      .insert(
-        this.DEFAULT_LISTS.map(list => ({
-          id: list.id,
-          name: list.nameKey,
-          user_id: userId
-        }))
-      );
-
-    if (error) throw error;
   }
 
   async getBookmarks(): Promise<BookmarkList[]> {
