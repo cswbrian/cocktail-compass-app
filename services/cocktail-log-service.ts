@@ -3,50 +3,6 @@ import { CocktailLog } from "@/types/cocktail-log";
 import { cocktailLogsMediaService } from "@/services/media-service";
 import { placeService } from "@/services/place-service";
 import { AuthService } from "@/services/auth-service";
-import { formatCocktailName } from "@/lib/utils";
-
-interface CocktailWithNames {
-  name: {
-    en: string;
-    zh: string;
-  };
-}
-
-interface CocktailWithSpirits {
-  id: string;
-  data: {
-    base_spirits: Array<{
-      name: {
-        en: string;
-      };
-    }>;
-  };
-}
-
-interface LogWithCocktail {
-  cocktail_id: string;
-  cocktails: CocktailWithNames;
-}
-
-interface LogWithCocktailDetails extends LogWithCocktail {
-  id: string;
-  rating: number;
-  place_id: string | null;
-  bartender: string | null;
-  comments: string | null;
-  tags: string[];
-  created_at: string;
-  updated_at: string;
-  drink_date: string | null;
-  media: { url: string; type: 'image' | 'video' }[] | null;
-  places?: {
-    id: string;
-    place_id: string;
-    name: string;
-    main_text: string;
-    secondary_text: string;
-  } | null;
-}
 
 interface LocationData {
   name: string;
@@ -58,6 +14,102 @@ interface LocationData {
 }
 
 export class CocktailLogService {
+  private async handleMediaUpload(
+    media: { url: string; type: 'image' | 'video' }[],
+    userId: string,
+    entityId: string,
+    entityType: string = 'cocktail_log'
+  ): Promise<void> {
+    if (!media || media.length === 0) return;
+
+    await Promise.all(
+      media.map(async (item: { url: string; type: 'image' | 'video' }) => {
+        if (item.url.startsWith('blob:')) {
+          // This is a new file that needs to be uploaded
+          const response = await fetch(item.url);
+          const blob = await response.blob();
+          const file = new File([blob], `media-${Date.now()}.${item.type === 'video' ? 'mp4' : 'jpg'}`, {
+            type: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
+          });
+          
+          // Upload to R2 and get the file path
+          const filePath = await cocktailLogsMediaService.uploadMedia(
+            file,
+            userId,
+            entityId,
+            {
+              originalName: file.name,
+              contentType: file.type,
+              fileSize: file.size,
+              entityType,
+              entityId
+            }
+          );
+          
+          // Create media_item record
+          const { error: mediaError } = await supabase
+            .from('media_items')
+            .insert({
+              url: filePath,
+              user_id: userId,
+              entity_id: entityId,
+              entity_type: entityType,
+              bucket: 'cocktail-logs',
+              content_type: file.type,
+              file_size: file.size,
+              original_name: file.name,
+              status: 'active'
+            });
+
+          if (mediaError) throw mediaError;
+        }
+      })
+    );
+  }
+
+  private async handleLocationData(location?: LocationData | null): Promise<string | null> {
+    if (!location) return null;
+
+    const place = await placeService.getOrCreatePlace({
+      place_id: location.place_id,
+      name: location.name,
+      main_text: location.main_text,
+      secondary_text: location.secondary_text,
+      lat: location.lat,
+      lng: location.lng,
+      is_verified: false
+    });
+    return place.id;
+  }
+
+  private validateRating(rating?: number | null): void {
+    if (rating !== undefined && rating !== null) {
+      if (rating < 1 || rating > 5 || !Number.isInteger(rating)) {
+        throw new Error("Rating must be an integer between 1 and 5");
+      }
+    }
+  }
+
+  private async handleMediaDeletion(
+    mediaItems: { url: string; type: 'image' | 'video' }[],
+    existingMedia: { url: string; type: 'image' | 'video' }[],
+    entityId: string
+  ): Promise<void> {
+    // Find media items that were removed (exist in existingMedia but not in mediaItems)
+    const removedMedia = existingMedia.filter(
+      existing => !mediaItems.some(current => current.url === existing.url)
+    );
+
+    if (removedMedia.length === 0) return;
+
+    // Use the media service to handle the soft deletion
+    await Promise.all(
+      removedMedia.map(item => 
+        cocktailLogsMediaService.softDeleteMedia(item.url)
+      )
+    );
+  }
+
   async createLog(
     cocktailId: string,
     userId: string,
@@ -70,26 +122,8 @@ export class CocktailLogService {
     drinkDate?: Date | null,
     media?: { url: string; type: 'image' | 'video' }[] | null
   ): Promise<CocktailLog> {
-    // Validate rating if provided
-    if (rating !== undefined && rating !== null) {
-      if (rating < 1 || rating > 5 || !Number.isInteger(rating)) {
-        throw new Error("Rating must be an integer between 1 and 5");
-      }
-    }
-
-    let placeId = null;
-    if (location) {
-      const place = await placeService.getOrCreatePlace({
-        place_id: location.place_id,
-        name: location.name,
-        main_text: location.main_text,
-        secondary_text: location.secondary_text,
-        lat: location.lat,
-        lng: location.lng,
-        is_verified: false
-      });
-      placeId = place.id;
-    }
+    this.validateRating(rating);
+    const placeId = await this.handleLocationData(location);
 
     // First create the log
     const { data: logData, error: createError } = await supabase
@@ -110,67 +144,22 @@ export class CocktailLogService {
 
     if (createError) throw createError;
 
-    // If there are media files to upload, handle them
-    if (media && media.length > 0) {
-      try {
-        // Upload each media file and create media_items records
-        await Promise.all(
-          media.map(async (item: { url: string; type: 'image' | 'video' }) => {
-            if (item.url.startsWith('blob:')) {
-              // This is a new file that needs to be uploaded
-              const response = await fetch(item.url);
-              const blob = await response.blob();
-              const file = new File([blob], `media-${Date.now()}.${item.type === 'video' ? 'mp4' : 'jpg'}`, {
-                type: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
-              });
-              
-              // Upload to R2 and get the file path
-              const filePath = await cocktailLogsMediaService.uploadMedia(
-                file,
-                userId,
-                logData.id,
-                {
-                  originalName: file.name,
-                  contentType: file.type,
-                  fileSize: file.size,
-                  entityType: 'cocktail_log',
-                  entityId: logData.id
-                }
-              );
-              
-              // Create media_item record
-              const { error: mediaError } = await supabase
-                .from('media_items')
-                .insert({
-                  url: filePath,
-                  user_id: userId,
-                  entity_id: logData.id,
-                  entity_type: 'cocktail_log',
-                  bucket: 'cocktail-logs',
-                  content_type: file.type,
-                  file_size: file.size,
-                  original_name: file.name,
-                  status: 'active'
-                });
-
-              if (mediaError) throw mediaError;
-            }
-          })
-        );
-
-        const updatedLog = await this.getLogById(logData.id);
-        if (!updatedLog) {
-          throw new Error('Failed to retrieve created log');
-        }
-        return updatedLog;
-      } catch (error) {
-        // If media upload fails, delete the log and throw the error
-        await this.deleteLog(logData.id);
-        throw error;
+    try {
+      // Handle media uploads if any
+      if (media && media.length > 0) {
+        await this.handleMediaUpload(media, userId, logData.id);
       }
-    }
 
-    return logData;
+      const updatedLog = await this.getLogById(logData.id);
+      if (!updatedLog) {
+        throw new Error('Failed to retrieve created log');
+      }
+      return updatedLog;
+    } catch (error) {
+      // If media upload fails, delete the log and throw the error
+      await this.deleteLog(logData.id);
+      throw error;
+    }
   }
 
   async updateLog(
@@ -185,101 +174,36 @@ export class CocktailLogService {
     drinkDate?: Date | null,
     media?: { url: string; type: 'image' | 'video' }[] | null
   ): Promise<CocktailLog> {
-    // Validate rating if provided
-    if (rating !== undefined && rating !== null) {
-      if (rating < 1 || rating > 5 || !Number.isInteger(rating)) {
-        throw new Error("Rating must be an integer between 1 and 5");
-      }
-    }
-
-    let placeId = null;
-    if (location) {
-      const place = await placeService.getOrCreatePlace({
-        place_id: location.place_id,
-        name: location.name,
-        main_text: location.main_text,
-        secondary_text: location.secondary_text,
-        lat: location.lat,
-        lng: location.lng,
-        is_verified: false
-      });
-      placeId = place.id;
-    }
+    this.validateRating(rating);
+    const placeId = await this.handleLocationData(location);
 
     // Get the existing log
-    const { data: existingLog, error: fetchError } = await supabase
-      .from("cocktail_logs")
-      .select(`
-        *,
-        media_items (
-          id,
-          url,
-          content_type,
-          file_size,
-          original_name,
-          status
-        )
-      `)
-      .eq("id", id)
-      .single();
+    const existingLog = await this.getLogById(id);
+    if (!existingLog) {
+      throw new Error('Log not found');
+    }
 
-    if (fetchError) throw fetchError;
-
-    // Handle new media uploads only
+    // Handle media changes
     if (media) {
       try {
-        // Upload only new media files (those starting with blob:)
-        await Promise.all(
-          media.map(async (item: { url: string; type: 'image' | 'video' }) => {
-            if (item.url.startsWith('blob:')) {
-              // This is a new file that needs to be uploaded
-              const response = await fetch(item.url);
-              const blob = await response.blob();
-              const file = new File([blob], `media-${Date.now()}.${item.type === 'video' ? 'mp4' : 'jpg'}`, {
-                type: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
-              });
-              
-              // Upload to R2 and get the file path
-              const filePath = await cocktailLogsMediaService.uploadMedia(
-                file,
-                existingLog.user_id,
-                id,
-                {
-                  originalName: file.name,
-                  contentType: file.type,
-                  fileSize: file.size,
-                  entityType: 'cocktail_log',
-                  entityId: id
-                }
-              );
-              
-              // Create media_item record
-              const { error: mediaError } = await supabase
-                .from('media_items')
-                .insert({
-                  url: filePath,
-                  user_id: existingLog.user_id,
-                  entity_id: id,
-                  entity_type: 'cocktail_log',
-                  bucket: 'cocktail-logs',
-                  content_type: file.type,
-                  file_size: file.size,
-                  original_name: file.name,
-                  status: 'active'
-                });
+        // Handle media deletions
+        if (existingLog.media) {
+          await this.handleMediaDeletion(media, existingLog.media, id);
+        }
 
-              if (mediaError) throw mediaError;
-            }
-          })
-        );
+        // Handle new media uploads
+        const newMedia = media.filter(item => item.url.startsWith('blob:'));
+        if (newMedia.length > 0) {
+          await this.handleMediaUpload(newMedia, existingLog.userId, id);
+        }
       } catch (error) {
-        console.error('Error handling media uploads:', error);
+        console.error('Error handling media changes:', error);
         throw error;
       }
     }
 
-    // Update the log with other changes
-    const { data, error } = await supabase
+    // Update the log
+    const { error } = await supabase
       .from("cocktail_logs")
       .update({
         cocktail_id: cocktailId,
@@ -292,11 +216,10 @@ export class CocktailLogService {
         drink_date: drinkDate,
         updated_at: new Date()
       })
-      .eq("id", id)
-      .select()
-      .single();
+      .eq("id", id);
 
     if (error) throw error;
+
     const updatedLog = await this.getLogById(id);
     if (!updatedLog) {
       throw new Error('Failed to retrieve updated log');
@@ -310,7 +233,7 @@ export class CocktailLogService {
       .from("cocktail_logs")
       .select(`
         media_items (
-          url,
+          id,
           status
         )
       `)
@@ -321,16 +244,8 @@ export class CocktailLogService {
 
     // Soft delete associated media files
     if (log.media_items && log.media_items.length > 0) {
-      const mediaUrls = log.media_items.map((item: any) => item.url);
-      await cocktailLogsMediaService.softDeleteMultipleMedia(mediaUrls);
-      
-      // Update media_items status to deleted
-      const { error: updateError } = await supabase
-        .from('media_items')
-        .update({ status: 'deleted' })
-        .in('url', mediaUrls);
-
-      if (updateError) throw updateError;
+      const mediaIds = log.media_items.map((item: any) => item.id);
+      await cocktailLogsMediaService.softDeleteMultipleMedia(mediaIds);
     }
 
     // Soft delete the log by setting deleted_at
@@ -342,46 +257,7 @@ export class CocktailLogService {
     if (error) throw error;
   }
 
-  async getLogsByCocktailId(cocktailId: string): Promise<CocktailLog[]> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return [];
-
-    const { data, error } = await supabase
-      .from("cocktail_logs")
-      .select(`
-        *,
-        places (
-          id,
-          place_id,
-          name,
-          main_text,
-          secondary_text,
-          lat,
-          lng
-        ),
-        cocktails (
-          name,
-          slug
-        ),
-        media_items (
-          id,
-          url,
-          content_type,
-          file_size,
-          original_name,
-          created_at
-        )
-      `)
-      .eq("cocktail_id", cocktailId)
-      .eq("user_id", user.id)
-      .is("deleted_at", null)
-      .order("drink_date", { ascending: false });
-
-    if (error) throw error;
-    return Promise.all(data.map(log => this.mapLog(log)));
-  }
-
-  async getLogsByUserId(userId?: string): Promise<CocktailLog[]> {
+  private async getLogsByQuery(query: { [key: string]: any }): Promise<CocktailLog[]> {
     const user = await AuthService.getCurrentSession();
     if (!user) return [];
 
@@ -413,54 +289,29 @@ export class CocktailLogService {
           status
         )
       `)
-      .eq("user_id", userId || user.id)
+      .match({ ...query, user_id: user.id })
       .is("deleted_at", null)
       .order("drink_date", { ascending: false });
 
     if (error) throw error;
     return Promise.all(data.map(log => this.mapLog(log)));
+  }
+
+  async getLogsByCocktailId(cocktailId: string): Promise<CocktailLog[]> {
+    return this.getLogsByQuery({ cocktail_id: cocktailId });
+  }
+
+  async getLogsByUserId(userId?: string): Promise<CocktailLog[]> {
+    const user = await AuthService.getCurrentSession();
+    if (!user) return [];
+    return this.getLogsByQuery({ user_id: userId || user.id });
   }
 
   async getLogsByPlaceId(placeId: string): Promise<CocktailLog[]> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return [];
-
-    const { data, error } = await supabase
-      .from("cocktail_logs")
-      .select(`
-        *,
-        places (
-          id,
-          place_id,
-          name,
-          main_text,
-          secondary_text,
-          lat,
-          lng
-        ),
-        cocktails (
-          name,
-          slug
-        ),
-        media_items (
-          id,
-          url,
-          content_type,
-          file_size,
-          original_name,
-          created_at
-        )
-      `)
-      .eq("place_id", placeId)
-      .eq("user_id", user.id)
-      .is("deleted_at", null)
-      .order("drink_date", { ascending: false });
-
-    if (error) throw error;
-    return Promise.all(data.map(log => this.mapLog(log)));
+    return this.getLogsByQuery({ place_id: placeId });
   }
 
-  async getLogById(logId: string): Promise<CocktailLog | null> {
+  private async getLogByQuery(query: { [key: string]: any }): Promise<CocktailLog | null> {
     const user = await AuthService.getCurrentSession();
     if (!user) return null;
 
@@ -488,11 +339,11 @@ export class CocktailLogService {
           content_type,
           file_size,
           original_name,
-          created_at
+          created_at,
+          status
         )
       `)
-      .eq("id", logId)
-      .eq("user_id", user.id)
+      .match({ ...query, user_id: user.id })
       .is("deleted_at", null)
       .single();
 
@@ -505,6 +356,10 @@ export class CocktailLogService {
     }
 
     return this.mapLog(data);
+  }
+
+  async getLogById(logId: string): Promise<CocktailLog | null> {
+    return this.getLogByQuery({ id: logId });
   }
 
   private async mapLog(data: any): Promise<CocktailLog> {

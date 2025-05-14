@@ -1,5 +1,6 @@
 import imageCompression from 'browser-image-compression';
 import { AuthService } from './auth-service';
+import { supabase } from '@/lib/supabase';
 
 export enum StorageBucket {
   COCKTAIL_LOGS = 'cocktail-logs',
@@ -243,24 +244,27 @@ export class MediaService {
   }
 
   async softDeleteMedia(url: string): Promise<void> {
-    const authToken = await this.getAuthToken();
-    const response = await fetch(`${this.workerUrl}/api/upload/delete`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ url }),
-    });
+    const { error } = await supabase
+      .from('media_items')
+      .update({ 
+        status: 'deleted',
+        deleted_at: new Date().toISOString()
+      })
+      .eq('url', url);
 
-    if (!response.ok) {
-      throw new Error('Failed to delete media');
-    }
+    if (error) throw error;
   }
 
-  async softDeleteMultipleMedia(urls: string[]): Promise<void> {
-    const deletePromises = urls.map(url => this.softDeleteMedia(url));
-    await Promise.all(deletePromises);
+  async softDeleteMultipleMedia(ids: string[]): Promise<void> {
+    const { error } = await supabase
+      .from('media_items')
+      .update({ 
+        status: 'deleted',
+        deleted_at: new Date().toISOString()
+      })
+      .in('id', ids);
+
+    if (error) throw error;
   }
 }
 

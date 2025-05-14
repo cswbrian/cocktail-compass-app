@@ -25,7 +25,6 @@ import { useRouter } from "next/navigation";
 import { LocationSelector } from "./location-selector";
 import { AuthService } from "@/services/auth-service";
 import { Loading } from "@/components/ui/loading";
-import { cocktailLogsMediaService } from "@/services/media-service";
 
 interface LocationData {
   name: string;
@@ -208,11 +207,9 @@ export function CocktailLogForm({
             !media.some(newItem => newItem.url === existing.url)
           ) || [];
 
-        // Soft delete removed media files
+        // Media deletion is now handled in the service layer
         if (removedMedia.length > 0) {
-          await cocktailLogsMediaService.softDeleteMultipleMedia(
-            removedMedia.map(item => item.url)
-          );
+          console.log('Media items to be removed:', removedMedia);
         }
       }
 
