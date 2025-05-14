@@ -1,6 +1,5 @@
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { userStatsService } from '@/services/user-stats-service';
-import { cocktailLogsMediaService } from '@/services/media-service';
 import { CocktailLog } from '@/types/cocktail-log';
 import { bookmarkService } from '@/services/bookmark-service';
 import { cocktailService } from '@/services/cocktail-service';
@@ -44,9 +43,7 @@ export const fetchers = {
   
   getUserStats: async () => {
     const data = await userStatsService.getUserStats();
-    if (!data) return null;
-    const recentPhotos = await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.recentPhotos);
-    return { ...data, recentPhotos };
+    return data;
   },
   
   getPlaceLogs: async (placeId: string) => {

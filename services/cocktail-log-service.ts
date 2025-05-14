@@ -91,7 +91,7 @@ export class CocktailLogService {
       placeId = place.id;
     }
 
-    // First create the log to get the ID
+    // First create the log
     const { data: logData, error: createError } = await supabase
       .from("cocktail_logs")
       .insert([{
@@ -103,8 +103,7 @@ export class CocktailLogService {
         place_id: placeId,
         bartender,
         tags,
-        drink_date: drinkDate,
-        media: [] // Initialize with empty media array
+        drink_date: drinkDate
       }])
       .select()
       .single();
@@ -114,8 +113,8 @@ export class CocktailLogService {
     // If there are media files to upload, handle them
     if (media && media.length > 0) {
       try {
-        // Upload each media file and get the URLs
-        const mediaUrls = await Promise.all(
+        // Upload each media file and create media_items records
+        await Promise.all(
           media.map(async (item: { url: string; type: 'image' | 'video' }) => {
             if (item.url.startsWith('blob:')) {
               // This is a new file that needs to be uploaded
@@ -124,22 +123,45 @@ export class CocktailLogService {
               const file = new File([blob], `media-${Date.now()}.${item.type === 'video' ? 'mp4' : 'jpg'}`, {
                 type: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
               });
-              const url = await cocktailLogsMediaService.uploadMedia(file, userId, logData.id);
-              return { url, type: item.type };
+              
+              // Upload to R2 and get the file path
+              const filePath = await cocktailLogsMediaService.uploadMedia(
+                file,
+                userId,
+                logData.id,
+                {
+                  originalName: file.name,
+                  contentType: file.type,
+                  fileSize: file.size,
+                  entityType: 'cocktail_log',
+                  entityId: logData.id
+                }
+              );
+              
+              // Create media_item record
+              const { error: mediaError } = await supabase
+                .from('media_items')
+                .insert({
+                  url: filePath,
+                  user_id: userId,
+                  entity_id: logData.id,
+                  entity_type: 'cocktail_log',
+                  bucket: 'cocktail-logs',
+                  content_type: file.type,
+                  file_size: file.size,
+                  original_name: file.name,
+                  status: 'active'
+                });
+
+              if (mediaError) throw mediaError;
             }
-            return item; // Keep existing media items
           })
         );
 
-        // Update the log with the new media URLs
-        const { data: updatedLog, error: updateError } = await supabase
-          .from("cocktail_logs")
-          .update({ media: mediaUrls })
-          .eq("id", logData.id)
-          .select()
-          .single();
-
-        if (updateError) throw updateError;
+        const updatedLog = await this.getLogById(logData.id);
+        if (!updatedLog) {
+          throw new Error('Failed to retrieve created log');
+        }
         return updatedLog;
       } catch (error) {
         // If media upload fails, delete the log and throw the error
@@ -184,30 +206,30 @@ export class CocktailLogService {
       placeId = place.id;
     }
 
-    // Get the existing log to compare media
+    // Get the existing log
     const { data: existingLog, error: fetchError } = await supabase
       .from("cocktail_logs")
-      .select("*")
+      .select(`
+        *,
+        media_items (
+          id,
+          url,
+          content_type,
+          file_size,
+          original_name,
+          status
+        )
+      `)
       .eq("id", id)
       .single();
 
     if (fetchError) throw fetchError;
 
-    // Handle media updates
+    // Handle new media uploads only
     if (media) {
       try {
-        // Find media items to soft delete (items in existingLog.media but not in new media)
-        const mediaToDelete = existingLog.media
-          ?.filter((existing: { url: string; type: 'image' | 'video' }) => !media.some(newItem => newItem.url === existing.url))
-          .map((item: { url: string; type: 'image' | 'video' }) => item.url) || [];
-
-        // Soft delete removed media files
-        if (mediaToDelete.length > 0) {
-          await cocktailLogsMediaService.softDeleteMultipleMedia(mediaToDelete);
-        }
-
-        // Upload new media files
-        const updatedMedia = await Promise.all(
+        // Upload only new media files (those starting with blob:)
+        await Promise.all(
           media.map(async (item: { url: string; type: 'image' | 'video' }) => {
             if (item.url.startsWith('blob:')) {
               // This is a new file that needs to be uploaded
@@ -216,75 +238,99 @@ export class CocktailLogService {
               const file = new File([blob], `media-${Date.now()}.${item.type === 'video' ? 'mp4' : 'jpg'}`, {
                 type: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
               });
-              const url = await cocktailLogsMediaService.uploadMedia(file, existingLog.user_id, id);
-              return { url, type: item.type };
+              
+              // Upload to R2 and get the file path
+              const filePath = await cocktailLogsMediaService.uploadMedia(
+                file,
+                existingLog.user_id,
+                id,
+                {
+                  originalName: file.name,
+                  contentType: file.type,
+                  fileSize: file.size,
+                  entityType: 'cocktail_log',
+                  entityId: id
+                }
+              );
+              
+              // Create media_item record
+              const { error: mediaError } = await supabase
+                .from('media_items')
+                .insert({
+                  url: filePath,
+                  user_id: existingLog.user_id,
+                  entity_id: id,
+                  entity_type: 'cocktail_log',
+                  bucket: 'cocktail-logs',
+                  content_type: file.type,
+                  file_size: file.size,
+                  original_name: file.name,
+                  status: 'active'
+                });
+
+              if (mediaError) throw mediaError;
             }
-            return item; // Keep existing media items
           })
         );
-
-        // Update the log with all changes
-        const { data, error } = await supabase
-          .from("cocktail_logs")
-          .update({
-            cocktail_id: cocktailId,
-            rating: rating || null,
-            special_ingredients: specialIngredients,
-            comments,
-            place_id: placeId,
-            bartender,
-            tags,
-            drink_date: drinkDate,
-            media: updatedMedia,
-            updated_at: new Date()
-          })
-          .eq("id", id)
-          .select()
-          .single();
-
-        if (error) throw error;
-        return data;
       } catch (error) {
+        console.error('Error handling media uploads:', error);
         throw error;
       }
-    } else {
-      // If no media changes, just update the other fields
-      const { data, error } = await supabase
-        .from("cocktail_logs")
-        .update({
-          cocktail_id: cocktailId,
-          rating: rating || null,
-          special_ingredients: specialIngredients,
-          comments,
-          place_id: placeId,
-          bartender,
-          tags,
-          drink_date: drinkDate,
-          updated_at: new Date()
-        })
-        .eq("id", id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
     }
+
+    // Update the log with other changes
+    const { data, error } = await supabase
+      .from("cocktail_logs")
+      .update({
+        cocktail_id: cocktailId,
+        rating: rating || null,
+        special_ingredients: specialIngredients,
+        comments,
+        place_id: placeId,
+        bartender,
+        tags,
+        drink_date: drinkDate,
+        updated_at: new Date()
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    const updatedLog = await this.getLogById(id);
+    if (!updatedLog) {
+      throw new Error('Failed to retrieve updated log');
+    }
+    return updatedLog;
   }
 
   async deleteLog(id: string): Promise<void> {
     // Get the log to find media files to soft delete
     const { data: log, error: fetchError } = await supabase
       .from("cocktail_logs")
-      .select("media")
+      .select(`
+        media_items (
+          url,
+          status
+        )
+      `)
       .eq("id", id)
       .single();
 
     if (fetchError) throw fetchError;
 
     // Soft delete associated media files
-    if (log.media && log.media.length > 0) {
-      const mediaUrls = log.media.map((item: { url: string; type: 'image' | 'video' }) => item.url);
+    if (log.media_items && log.media_items.length > 0) {
+      const mediaUrls = log.media_items.map((item: any) => item.url);
       await cocktailLogsMediaService.softDeleteMultipleMedia(mediaUrls);
+      
+      // Update media_items status to deleted
+      const { error: updateError } = await supabase
+        .from('media_items')
+        .update({ status: 'deleted' })
+        .in('url', mediaUrls);
+
+      if (updateError) throw updateError;
     }
 
     // Soft delete the log by setting deleted_at
@@ -316,6 +362,14 @@ export class CocktailLogService {
         cocktails (
           name,
           slug
+        ),
+        media_items (
+          id,
+          url,
+          content_type,
+          file_size,
+          original_name,
+          created_at
         )
       `)
       .eq("cocktail_id", cocktailId)
@@ -346,7 +400,17 @@ export class CocktailLogService {
         ),
         cocktails (
           name,
-          slug
+          slug,
+          is_custom
+        ),
+        media_items (
+          id,
+          url,
+          content_type,
+          file_size,
+          original_name,
+          created_at,
+          status
         )
       `)
       .eq("user_id", userId || user.id)
@@ -377,6 +441,14 @@ export class CocktailLogService {
         cocktails (
           name,
           slug
+        ),
+        media_items (
+          id,
+          url,
+          content_type,
+          file_size,
+          original_name,
+          created_at
         )
       `)
       .eq("place_id", placeId)
@@ -407,8 +479,16 @@ export class CocktailLogService {
         ),
         cocktails (
           name,
-          slug
+          slug,
           is_custom
+        ),
+        media_items (
+          id,
+          url,
+          content_type,
+          file_size,
+          original_name,
+          created_at
         )
       `)
       .eq("id", logId)
@@ -441,8 +521,26 @@ export class CocktailLogService {
       });
     }
     
-    // Convert media URLs to signed URLs
-    const media = data.media ? await cocktailLogsMediaService.getSignedUrlsForMediaItems(data.media) : [];
+    // Convert media_items to the expected format
+    const media = data.media_items ? data.media_items
+      .filter((item: any) => item.status === 'active')
+      .map((item: any) => {
+        // Ensure the URL is properly formatted with the R2 bucket URL
+        const url = item.url.startsWith('http') 
+          ? item.url 
+          : `${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${item.url}`;
+
+        return {
+          id: item.id,
+          url,
+          type: item.content_type.startsWith('video/') ? 'video' : 'image',
+          contentType: item.content_type,
+          fileSize: item.file_size,
+          originalName: item.original_name,
+          createdAt: item.created_at,
+          status: item.status
+        };
+      }) : [];
     
     return {
       id: data.id,
@@ -463,4 +561,4 @@ export class CocktailLogService {
   }
 }
 
-export const cocktailLogService = new CocktailLogService(); 
+export const cocktailLogService = new CocktailLogService();

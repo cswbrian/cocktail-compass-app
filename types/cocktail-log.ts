@@ -19,8 +19,19 @@ export interface CocktailLog {
   createdAt: string;
   updatedAt: string;
   drinkDate: string | null;
-  media: { url: string; type: 'image' | 'video' }[] | null;
+  media: MediaItem[] | null;
   deletedAt: string | null;
+}
+
+export interface MediaItem {
+  id: string;
+  url: string;
+  type: 'image' | 'video';
+  contentType: string;
+  fileSize: number;
+  originalName: string;
+  createdAt: string;
+  status: 'active' | 'deleted';
 }
 
 export interface LocationData {

@@ -1,11 +1,10 @@
-import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
+import { AuthService } from './auth-service';
 
 export enum StorageBucket {
   COCKTAIL_LOGS = 'cocktail-logs',
   USER_AVATARS = 'user-avatars',
   COCKTAIL_IMAGES = 'cocktail-images',
-  // Add more buckets as needed
 }
 
 interface CompressionOptions {
@@ -19,6 +18,7 @@ interface CompressionOptions {
 interface MediaItem {
   url: string;
   type: 'image' | 'video';
+  metadata?: Record<string, any>;
 }
 
 type AllowedMimeTypes = {
@@ -42,8 +42,34 @@ export class MediaService {
   };
 
   private readonly maxFileSize = 5 * 1024 * 1024; // 5MB
+  private readonly workerUrl: string;
+  private readonly r2BucketUrl: string;
 
-  constructor(private readonly bucket: StorageBucket) {}
+  constructor(
+    private readonly bucket: StorageBucket,
+    workerUrl: string = process.env.NEXT_PUBLIC_UPLOAD_WORKER_URL || '',
+    r2BucketUrl: string = process.env.NEXT_PUBLIC_R2_BUCKET_URL || ''
+  ) {
+    this.workerUrl = workerUrl;
+    this.r2BucketUrl = r2BucketUrl;
+
+    // Validate R2 bucket URL
+    if (!this.r2BucketUrl) {
+      console.warn('R2 bucket URL is not configured. Media URLs may not work correctly.');
+    }
+  }
+
+  // Helper method to ensure proper URL formatting
+  private getFullUrl(filePath: string): string {
+    if (filePath.startsWith('http')) {
+      return filePath;
+    }
+    if (!this.r2BucketUrl) {
+      console.warn('R2 bucket URL is not configured. Using relative path:', filePath);
+      return filePath;
+    }
+    return `${this.r2BucketUrl}/${filePath}`;
+  }
 
   private async validateFile(file: File): Promise<void> {
     if (file.size > this.maxFileSize) {
@@ -114,129 +140,127 @@ export class MediaService {
     });
   }
 
-  async uploadMedia(file: File, userId: string, entityId: string, compressionOptions?: CompressionOptions): Promise<string> {
-    const processedFile = await this.compressImage(file, compressionOptions);
-    
-    const fileExt = processedFile.name.split('.').pop();
-    const fileName = `${userId}/${entityId}/${Date.now()}.${fileExt}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from(this.bucket)
-      .upload(fileName, processedFile, {
-        cacheControl: '3600',
-        upsert: false
-      });
-
-    if (uploadError) {
-      throw uploadError;
+  private async getAuthToken(): Promise<string> {
+    const session = await AuthService.handleAuthCallback();
+    if (!session?.access_token) {
+      throw new Error('Not authenticated');
     }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from(this.bucket)
-      .getPublicUrl(fileName, {
-        transform: {
-          width: 800,
-          height: 800,
-          quality: 80
-        }
-      });
-
-    return publicUrl;
+    return session.access_token;
   }
 
-  async getSignedUrl(fileName: string): Promise<string> {
-    const { data, error } = await supabase.storage
-      .from(this.bucket)
-      .createSignedUrl(fileName, 3600); // URL valid for 1 hour
+  async uploadMedia(
+    file: File,
+    userId: string,
+    entityId: string,
+    metadata: Record<string, any> = {},
+    compressionOptions?: CompressionOptions
+  ): Promise<string> {
+    // Process the file (compress and convert to WebP if needed)
+    const processedFile = await this.compressImage(file, {
+      ...compressionOptions,
+      // If the file is already WebP, don't convert it again
+      convertToWebP: file.type !== 'image/webp' && (compressionOptions?.convertToWebP ?? this.defaultCompressionOptions.convertToWebP)
+    });
 
-    if (error) throw error;
-    if (!data?.signedUrl) throw new Error('Failed to get signed URL');
-    return data.signedUrl;
+    const authToken = await this.getAuthToken();
+    
+    // Get upload URL from worker
+    const presignResponse = await fetch(`${this.workerUrl}/api/upload/presign`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        fileName: processedFile.name,
+        contentType: processedFile.type,
+        userId,
+        entityId,
+        entityType: metadata.entityType || 'cocktail_log'
+      }),
+    });
+
+    if (!presignResponse.ok) {
+      throw new Error('Failed to get upload URL');
+    }
+
+    const { filePath, uploadUrl } = await presignResponse.json();
+
+    // Upload through worker
+    const uploadResponse = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': processedFile.type,
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: processedFile,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error('Failed to upload file');
+    }
+
+    // Notify worker of successful upload
+    const completeResponse = await fetch(`${this.workerUrl}/api/upload/complete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        filePath,
+        userId,
+        entityId,
+        metadata: {
+          ...metadata,
+          contentType: processedFile.type,
+          fileSize: processedFile.size,
+          originalName: processedFile.name,
+          entityType: metadata.entityType || 'cocktail_log'
+        },
+      }),
+    });
+
+    if (!completeResponse.ok) {
+      throw new Error('Failed to complete upload');
+    }
+
+    // Return the full R2 bucket URL for the file
+    return this.getFullUrl(filePath);
+  }
+
+  async uploadMultipleMedia(
+    files: File[],
+    userId: string,
+    entityId: string,
+    metadata: Record<string, any> = {},
+    compressionOptions?: CompressionOptions
+  ): Promise<string[]> {
+    const uploadPromises = files.map(file => 
+      this.uploadMedia(file, userId, entityId, metadata, compressionOptions)
+    );
+    return Promise.all(uploadPromises);
   }
 
   async softDeleteMedia(url: string): Promise<void> {
-    // Instead of deleting the file, we'll just mark it as deleted in the database
-    // The actual file will remain in storage but won't be accessible through the app
-    const { error } = await supabase
-      .from('media_items')
-      .update({
-        status: 'deleted',
-        deleted_at: new Date().toISOString()
-      })
-      .eq('url', url);
+    const authToken = await this.getAuthToken();
+    const response = await fetch(`${this.workerUrl}/api/upload/delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ url }),
+    });
 
-    if (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error('Failed to delete media');
     }
-  }
-
-  async uploadMultipleMedia(files: File[], userId: string, entityId: string, compressionOptions?: CompressionOptions): Promise<string[]> {
-    const uploadPromises = files.map(file => this.uploadMedia(file, userId, entityId, compressionOptions));
-    return Promise.all(uploadPromises);
   }
 
   async softDeleteMultipleMedia(urls: string[]): Promise<void> {
     const deletePromises = urls.map(url => this.softDeleteMedia(url));
     await Promise.all(deletePromises);
-  }
-
-  // This method should be used by an admin or cleanup job
-  async hardDeleteMedia(url: string): Promise<void> {
-    // Extract the file path from the URL
-    const urlObj = new URL(url);
-    const pathParts = urlObj.pathname.split('/');
-    const fileName = pathParts[pathParts.length - 2] + '/' + pathParts[pathParts.length - 1];
-
-    const { error } = await supabase.storage
-      .from(this.bucket)
-      .remove([fileName]);
-
-    if (error) {
-      throw error;
-    }
-
-    // Also remove the database record
-    const { error: dbError } = await supabase
-      .from('media_items')
-      .delete()
-      .eq('url', url);
-
-    if (dbError) {
-      throw dbError;
-    }
-  }
-
-  // This method should be used by an admin or cleanup job
-  async hardDeleteMultipleMedia(urls: string[]): Promise<void> {
-    const deletePromises = urls.map(url => this.hardDeleteMedia(url));
-    await Promise.all(deletePromises);
-  }
-
-  // Method to restore soft-deleted media
-  async restoreMedia(url: string): Promise<void> {
-    const { error } = await supabase
-      .from('media_items')
-      .update({
-        status: 'active',
-        deleted_at: null
-      })
-      .eq('url', url);
-
-    if (error) {
-      throw error;
-    }
-  }
-
-  async getSignedUrlForMediaItem(mediaItem: MediaItem): Promise<MediaItem> {
-    // Extract the file path from the URL
-    const urlParts = mediaItem.url.split('/');
-    const fileName = urlParts.slice(urlParts.indexOf(this.bucket) + 1).join('/');
-    const signedUrl = await this.getSignedUrl(fileName);
-    return { ...mediaItem, url: signedUrl };
-  }
-
-  async getSignedUrlsForMediaItems(mediaItems: MediaItem[]): Promise<MediaItem[]> {
-    return Promise.all(mediaItems.map(item => this.getSignedUrlForMediaItem(item)));
   }
 }
 
