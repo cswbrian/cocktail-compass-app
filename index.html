@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>溝酒神燈 | 新手調酒推介 | Cocktail Cult | Cocktail Finder for Beginners</title>
     <meta name="description" content="新手調酒推介！按照甜度、酸度、口感等條件，為你推介最適合的雞尾酒。" />
-    <link rel="manifest" href="/manifest.json" />
+    <script>
+      // Determine which manifest to use based on environment
+      const isDev = window.location.hostname === 'localhost' || 
+                    window.location.hostname === '127.0.0.1' ||
+                    window.location.hostname === 'develop.cocktail-cult.pages.dev';
+      const manifestLink = document.createElement('link');
+      manifestLink.rel = 'manifest';
+      manifestLink.href = isDev ? '/manifest.dev.json' : '/manifest.prod.json';
+      document.head.appendChild(manifestLink);
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
