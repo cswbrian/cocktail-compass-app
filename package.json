@@ -5,7 +5,7 @@
   "scripts": {
     "fetch:cocktails": "tsx scripts/fetch-cocktails.ts",
     "generate:summary": "tsx scripts/generate-summary.ts",
-    "dev": "pnpm fetch:cocktails && pnpm generate:summary && pnpm build:compress && next dev --turbopack",
+    "dev": "pnpm fetch:cocktails && pnpm generate:summary && pnpm build:compress && pnpm vite:dev",
     "build:compress": "tsx scripts/compress-cocktails.ts",
     "build": "pnpm vite:build",
     "vite:dev": "vite",
