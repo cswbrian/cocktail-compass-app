@@ -7,7 +7,7 @@
     "generate:summary": "tsx scripts/generate-summary.ts",
     "dev": "pnpm fetch:cocktails && pnpm generate:summary && pnpm build:compress && next dev --turbopack",
     "build:compress": "tsx scripts/compress-cocktails.ts",
-    "build": "pnpm fetch:cocktails && pnpm generate:summary && pnpm build:compress && next build",
+    "build": "pnpm vite:build",
     "vite:dev": "vite",
     "vite:build": "vite build",
     "vite:preview": "vite preview",
