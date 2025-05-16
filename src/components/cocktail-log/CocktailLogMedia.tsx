@@ -36,8 +36,8 @@ export function CocktailLogMedia({ media, size = 'sm', className = '' }: Cocktai
 
   return (
     <div className={`-mx-6 ${className}`}>
-      <div className="px-6">
-        <div className={`${media.length === 1 ? 'flex justify-start' : `grid grid-flow-col ${sizeClasses[size].grid} gap-2 overflow-x-auto`}`}>
+      <div className="overflow-x-auto">
+        <div className={`${media.length === 1 ? 'flex justify-start pl-6' : `grid grid-flow-col ${sizeClasses[size].grid} gap-2 pl-6`}`}>
           {media.map((item, index) => (
             <div
               key={index}

@@ -68,7 +68,9 @@ export function CocktailLogCard({
             />
 
             {log.media && log.media.length > 0 && (
-              <CocktailLogMedia media={log.media} size="sm" />
+              <div className="mt-2">
+                <CocktailLogMedia media={log.media} size="sm" />
+              </div>
             )}
           </div>
         </div>
