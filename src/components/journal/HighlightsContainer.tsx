@@ -1,14 +1,14 @@
 "use client";
 
-import { BasicStats } from "./basic-stats";
-import { TopPlaces } from "./top-places";
-import { DrinksBarChart } from "./drinks-bar-chart";
-import { PhotoSnapshot } from "./photo-snapshot";
+import { BasicStats } from "@/components/stats/BasicStats";
+import { TopPlaces } from "@/components/stats/TopPlaces";
+import { DrinksBarChart } from "@/components/stats/DrinksBarChart";
+import { PhotoSnapshot } from "@/components/journal/photo-snapshot";
 import useSWR from 'swr';
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 import { CACHE_KEYS, fetchers, swrConfig, defaultData } from '@/lib/swr-config';
 
-export function HighlightsClient() {
+export function HighlightsContainer() {
   // Use SWR for client-side updates
   const { data: stats, isLoading: isLoadingStats } = useSWR(
     CACHE_KEYS.USER_STATS,

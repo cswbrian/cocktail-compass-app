@@ -1,7 +1,7 @@
 "use client";
 
 import { useCocktailData } from "@/context/CocktailLogContext";
-import { BasicStats } from "@/components/journal/basic-stats";
+import { BasicStats } from "@/components/stats/BasicStats";
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 
