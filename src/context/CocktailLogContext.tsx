@@ -4,6 +4,7 @@ import { createContext, useContext, ReactNode, useState, useCallback, useEffect 
 import { CocktailLog } from '@/types/cocktail-log';
 import useSWR, { mutate } from 'swr';
 import { CACHE_KEYS, fetchers, swrConfig, defaultData } from '@/lib/swr-config';
+import { useNavigate } from 'react-router-dom';
 
 interface FormState {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export function CocktailLogDataProvider({
 }: {
   children: ReactNode;
 }) {
+  const navigate = useNavigate();
   // Form state
   const [formState, setFormState] = useState<FormState>({
     isOpen: false,
@@ -96,7 +98,8 @@ export function CocktailLogDataProvider({
       mode: 'create',
       selectedLog: null,
     });
-  }, []);
+    navigate('/logs/new');
+  }, [navigate]);
 
   const openEditForm = useCallback((log: CocktailLog) => {
     setFormState({

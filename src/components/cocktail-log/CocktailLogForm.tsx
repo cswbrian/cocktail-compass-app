@@ -19,9 +19,9 @@ import { cn, normalizeText, formatCocktailName } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { customCocktailService } from "@/services/custom-cocktail-service";
-import { CustomCocktailModal } from "./custom-cocktail-modal";
+import { CustomCocktailModal } from "./CustomCocktailModal";
 import { useNavigate } from "react-router-dom";
-import { LocationSelector } from "./location-selector";
+import { LocationSelector } from "./LocationSelector";
 import { AuthService } from "@/services/auth-service";
 import { Loading } from "@/components/ui/loading";
 

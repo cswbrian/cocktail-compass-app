@@ -5,7 +5,7 @@ import { translations } from "@/translations";
 import { Link, useLocation } from "react-router-dom";
 import { Compass, Search, Bookmark, Home } from "lucide-react";
 import { useBottomNav } from "@/context/BottomNavContext";
-import { AddLogButton } from "@/components/cocktail-log/add-log-button";
+import { AddLogButton } from "@/components/cocktail-log/AddLogButton";
 
 export function BottomNav() {
   const { language } = useLanguage();

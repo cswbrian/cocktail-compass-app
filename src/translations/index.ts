@@ -1,6 +1,7 @@
 export const translations = {
   en: {
     appName: "Cocktail Cult 🍸🔮",
+    back: "Back",
     chooseYourPreference: "Mix and Mingle!",
     sweetness: "Sweetness",
     sourness: "Sourness",
@@ -284,6 +285,7 @@ export const translations = {
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
+    back: "返回",
     chooseYourPreference: "今晚想溝咩？",
     sweetness: "甜度",
     sourness: "酸度",

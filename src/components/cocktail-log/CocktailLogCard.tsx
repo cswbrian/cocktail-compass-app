@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { CocktailLog } from "@/types/cocktail-log";
 import { CocktailLogDetail } from "./CocktailLogDetail";
-import { CocktailLogMedia } from "./cocktail-log-media";
-import { CocktailLogInfo } from "./cocktail-log-info";
+import { CocktailLogMedia } from "./CocktailLogMedia";
+import { CocktailLogInfo } from "./CocktailLogInfo";
 import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { formatCocktailName } from "@/lib/utils";
