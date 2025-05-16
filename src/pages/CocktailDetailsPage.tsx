@@ -1,10 +1,9 @@
 import { slugify, getLocalizedText, validLanguages } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import FlavorRadar from "@/components/flavor-radar";
 import { translations } from "@/translations";
 import ReactMarkdown from "react-markdown";
 import { FlavorDescriptor } from "@/components/flavor-descriptor";
-import { Metadata } from "next";
 import { ShareButton } from "@/components/share-button";
 import { BookmarkButton } from "@/components/bookmark/bookmark-button";
 import { ExternalLink } from "@/components/external-link";
@@ -14,22 +13,11 @@ import { TwistButton } from "@/components/twist-button";
 import { cocktailService } from "@/services/cocktail-service";
 import { CocktailLogList } from "@/components/cocktail-log/cocktail-log-list";
 
-type Props = {
-  params: Promise<{ language: string; slug: string }>;
-};
+export default function CocktailDetails() {
+  const { language, slug } = useParams();
 
-export default async function CocktailPage({ params }: Props) {
-  const { language, slug } = await params;
-
-  if (!validLanguages.includes(language)) {
-    return <div>Invalid language</div>;
-  }
-
-  const cocktail = cocktailService.getCocktailBySlug(slug);
-
-  if (!cocktail) {
-    return <div>Cocktail not found</div>;
-  }
+  const cocktail = cocktailService.getCocktailBySlug(slug || '');
+  if (!cocktail) return null;
 
   const t = translations[language as keyof typeof translations];
 
@@ -57,11 +45,7 @@ export default async function CocktailPage({ params }: Props) {
                 cocktailName={cocktail.name.en}
               />
               <ShareButton
-                url={
-                  typeof window !== "undefined"
-                    ? `${window.location.origin}/${language}/cocktails/${slug}`
-                    : `/${language}/cocktails/${slug}`
-                }
+                url={`${window.location.origin}/${language}/cocktails/${slug}`}
               />
             </div>
             <TwistButton
@@ -181,72 +165,4 @@ export default async function CocktailPage({ params }: Props) {
       </div>
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  const cocktails = cocktailService.getAllCocktails();
-  const params = [];
-
-  for (const cocktail of cocktails) {
-    const slug = cocktail.slug;
-    params.push({ language: "en", slug }, { language: "zh", slug });
-  }
-
-  return params;
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { language, slug } = await params;
-  const cocktail = cocktailService.getCocktailBySlug(slug);
-
-  if (!cocktail) {
-    return {
-      title: translations[language as keyof typeof translations].appName,
-    };
-  }
-
-  const description = cocktail.description
-    ? getLocalizedText(cocktail.description, language)
-    : "";
-
-  return {
-    title: `${cocktail.name.en} | ${
-      translations[language as keyof typeof translations].appName
-    }`,
-    description: `${translations[
-      language as keyof typeof translations
-    ].cocktailsWithFlavor.replace(
-      "{flavor}",
-      cocktail.flavor_descriptors?.[0]?.[
-        language as keyof (typeof cocktail.flavor_descriptors)[0]
-      ] || ""
-    )} | ${description}`,
-    openGraph: {
-      title: `${cocktail.name.en} | ${
-        translations[language as keyof typeof translations].appName
-      }`,
-      description: `${translations[
-        language as keyof typeof translations
-      ].cocktailsWithFlavor.replace(
-        "{flavor}",
-        cocktail.flavor_descriptors?.[0]?.[
-          language as keyof (typeof cocktail.flavor_descriptors)[0]
-        ] || ""
-      )} | ${description}`,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${cocktail.name[language as keyof typeof cocktail.name]} - ${
-        translations[language as keyof typeof translations].appName
-      }`,
-      description: `${translations[
-        language as keyof typeof translations
-      ].cocktailsWithFlavor.replace(
-        "{flavor}",
-        cocktail.flavor_descriptors?.[0]?.[
-          language as keyof (typeof cocktail.flavor_descriptors)[0]
-        ] || ""
-      )} | ${description}`,
-    },
-  };
-}
+} 

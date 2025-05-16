@@ -1,5 +1,5 @@
-import { Redirect } from "@/components/redirect";
+// import { Redirect } from "@/components/redirect";
 
-export default function Home() {
-  return <Redirect to="/journal/feeds" />;
-}
+// export default function Home() {
+//   return <Redirect to="/journal/feeds" />;
+// }
