@@ -3,7 +3,7 @@
 import { useCocktailData } from "@/context/CocktailLogContext";
 import { BasicStats } from "@/components/journal/basic-stats";
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
-import { CocktailLogList } from "@/components/cocktail-log/cocktail-log-list";
+import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 
 export function FeedsContainer() {
   const { logs, stats, isLoading, mutate } = useCocktailData();

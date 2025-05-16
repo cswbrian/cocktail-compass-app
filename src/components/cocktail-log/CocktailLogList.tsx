@@ -1,6 +1,6 @@
 'use client';
 
-import { CocktailLogCard } from "@/components/cocktail-log/cocktail-log-card";
+import { CocktailLogCard } from "@/components/cocktail-log/CocktailLogCard";
 import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { Skeleton } from "@/components/ui/skeleton";

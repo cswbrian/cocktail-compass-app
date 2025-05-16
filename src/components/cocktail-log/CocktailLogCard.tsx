@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CocktailLog } from "@/types/cocktail-log";
-import { CocktailLogDetail } from "./cocktail-log-detail";
+import { CocktailLogDetail } from "./CocktailLogDetail";
 import { CocktailLogMedia } from "./cocktail-log-media";
 import { CocktailLogInfo } from "./cocktail-log-info";
 import { format } from "date-fns";
@@ -23,11 +23,30 @@ export function CocktailLogCard({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const { language } = useLanguage();
 
+  const handleClick = () => {
+    setIsDetailOpen(true);
+    // Update URL without navigation
+    window.history.pushState({ logId: log.id }, '', `/${language}/logs/${log.id}`);
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (isDetailOpen) {
+        setIsDetailOpen(false);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isDetailOpen]);
+
   return (
     <>
       <div
         className="bg-background border-b rounded-none px-6 py-4 cursor-pointer hover:shadow-md transition-shadow"
-        onClick={() => setIsDetailOpen(true)}
+        onClick={handleClick}
       >
         <div>
           {log.drinkDate && (
@@ -57,7 +76,11 @@ export function CocktailLogCard({
 
       <CocktailLogDetail
         isOpen={isDetailOpen}
-        onClose={() => setIsDetailOpen(false)}
+        onClose={() => {
+          setIsDetailOpen(false);
+          // Go back in history when closing manually
+          window.history.back();
+        }}
         log={log}
         onLogSaved={onLogSaved}
         onLogDeleted={onLogDeleted}

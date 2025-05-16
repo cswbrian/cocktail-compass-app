@@ -1,6 +1,6 @@
 'use client';
 
-import { CocktailLogList } from "@/components/cocktail-log/cocktail-log-list";
+import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 
 interface PlaceLogsProps {
   placeId: string;

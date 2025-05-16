@@ -11,7 +11,7 @@ import { Search } from "lucide-react";
 import { flavorColorMap } from "@/constants";
 import { TwistButton } from "@/components/twist-button";
 import { cocktailService } from "@/services/cocktail-service";
-import { CocktailLogList } from "@/components/cocktail-log/cocktail-log-list";
+import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 
 export default function CocktailDetails() {
   const { language, slug } = useParams();

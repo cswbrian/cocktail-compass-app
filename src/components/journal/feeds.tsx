@@ -1,5 +1,5 @@
 import { CocktailLog } from "@/types/cocktail-log";
-import { CocktailLogList } from "@/components/cocktail-log/cocktail-log-list";
+import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 
 interface FeedsProps {
   logs: CocktailLog[];

@@ -9,6 +9,7 @@ import CocktailDetails from './pages/CocktailDetailsPage'
 import BookmarksPage from './pages/BookmarksPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsAndConditionsPage from './pages/TermsAndConditionsPage'
+import LogDetailPage from './pages/LogDetailPage'
 
 export default function AppRoutes() {
   return (
@@ -23,6 +24,8 @@ export default function AppRoutes() {
         <Route path="search" element={<SearchPage />} />
         <Route path="bookmarks" element={<BookmarksPage />} />
         <Route path="cocktails/:slug" element={<CocktailDetails />} />
+        <Route path="logs/:logId" element={<LogDetailPage />} />
+        <Route path="logs/:logId/edit" element={<LogDetailPage />} />
         <Route path="journal" element={<JournalPage />}>
           <Route index element={<Navigate to="feeds" replace />} />
           <Route path="feeds" element={<FeedsPage />} />
