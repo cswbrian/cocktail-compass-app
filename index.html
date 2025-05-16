@@ -13,11 +13,17 @@
       rel="preload"
       as="style"
     />
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"
-      async
-      defer
-    ></script>
+    <script>
+      // Load Google Maps API with environment variable
+      const loadGoogleMapsScript = () => {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=%VITE_GOOGLE_MAPS_API_KEY%&libraries=places`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      };
+      loadGoogleMapsScript();
+    </script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
