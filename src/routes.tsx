@@ -11,10 +11,14 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsAndConditionsPage from './pages/TermsAndConditionsPage'
 import LogDetailPage from './pages/LogDetailPage'
 import PlaceDetailPage from './pages/PlaceDetailPage'
+import AuthCallbackPage from './pages/AuthCallbackPage'
 
 export default function AppRoutes() {
   return (
     <Routes>
+      {/* Auth callback route */}
+      <Route path="/auth/callback" element={<AuthCallbackPage />} />
+      
       {/* Redirect root to default language (zh) */}
       {/* <Route path="/" element={<Navigate to="/zh/journal/feeds" replace />} /> */}
       
