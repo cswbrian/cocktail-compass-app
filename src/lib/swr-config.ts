@@ -37,12 +37,12 @@ export const CACHE_KEYS = {
 
 // Fetcher functions
 export const fetchers = {
-  getCocktailLogs: async () => {
-    console.log('SWR Config - Fetching cocktail logs');
+  getCocktailLogs: async (page: number = 1, pageSize: number = 10) => {
+    console.log('SWR Config - Fetching cocktail logs, page:', page, 'pageSize:', pageSize);
     try {
-      const logs = await cocktailLogService.getLogsByUserId();
-      console.log('SWR Config - Cocktail logs fetched:', logs);
-      return logs;
+      const result = await cocktailLogService.getLogsByUserId(undefined, page, pageSize);
+      console.log('SWR Config - Cocktail logs fetched:', result);
+      return result;
     } catch (error) {
       console.error('SWR Config - Error fetching cocktail logs:', error);
       throw error;
@@ -61,24 +61,24 @@ export const fetchers = {
     }
   },
   
-  getPlaceLogs: async (placeId: string) => {
-    console.log('SWR Config - Fetching place logs for:', placeId);
+  getPlaceLogs: async (placeId: string, page: number = 1, pageSize: number = 10) => {
+    console.log('SWR Config - Fetching place logs for:', placeId, 'page:', page, 'pageSize:', pageSize);
     try {
-      const logs = await cocktailLogService.getLogsByPlaceId(placeId);
-      console.log('SWR Config - Place logs fetched:', logs);
-      return logs;
+      const result = await cocktailLogService.getLogsByPlaceId(placeId, page, pageSize);
+      console.log('SWR Config - Place logs fetched:', result);
+      return result;
     } catch (error) {
       console.error('SWR Config - Error fetching place logs:', error);
       throw error;
     }
   },
   
-  getCocktailLogsById: async (cocktailId: string) => {
-    console.log('SWR Config - Fetching cocktail logs for ID:', cocktailId);
+  getCocktailLogsById: async (cocktailId: string, page: number = 1, pageSize: number = 10) => {
+    console.log('SWR Config - Fetching cocktail logs for ID:', cocktailId, 'page:', page, 'pageSize:', pageSize);
     try {
-      const logs = await cocktailLogService.getLogsByCocktailId(cocktailId);
-      console.log('SWR Config - Cocktail logs by ID fetched:', logs);
-      return logs;
+      const result = await cocktailLogService.getLogsByCocktailId(cocktailId, page, pageSize);
+      console.log('SWR Config - Cocktail logs by ID fetched:', result);
+      return result;
     } catch (error) {
       console.error('SWR Config - Error fetching cocktail logs by ID:', error);
       throw error;

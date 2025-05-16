@@ -12,14 +12,45 @@ import { flavorColorMap } from "@/constants";
 import { TwistButton } from "@/components/twist-button";
 import { cocktailService } from "@/services/cocktail-service";
 import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
+import { useState, useCallback } from 'react';
+import useSWR from 'swr';
+import { cocktailLogService } from '@/services/cocktail-log-service';
+import { CocktailLog } from '@/types/cocktail-log';
 
 export default function CocktailDetails() {
   const { language, slug } = useParams();
+  const [page, setPage] = useState(1);
+  const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
+  const PAGE_SIZE = 10;
 
   const cocktail = cocktailService.getCocktailBySlug(slug || '');
   if (!cocktail) return null;
 
-  const t = translations[language as keyof typeof translations];
+  const { data: logsData, isLoading: isLoadingLogs } = useSWR(
+    ['cocktail-logs', cocktail.id, page],
+    async () => {
+      const result = await cocktailLogService.getLogsByCocktailId(cocktail.id, page, PAGE_SIZE);
+      return result;
+    },
+    { 
+      fallbackData: { logs: [], hasMore: false },
+      onSuccess: (data) => {
+        if (page === 1) {
+          setAccumulatedLogs(data.logs);
+        } else {
+          setAccumulatedLogs(prev => [...prev, ...data.logs]);
+        }
+      }
+    }
+  );
+
+  const loadMore = useCallback(() => {
+    if (logsData?.hasMore && !isLoadingLogs) {
+      setPage(prev => prev + 1);
+    }
+  }, [logsData?.hasMore, isLoadingLogs]);
+
+  const t = translations[language as keyof typeof translations] || translations.en;
 
   // Get the first flavor descriptor's color
   const color =
@@ -45,11 +76,11 @@ export default function CocktailDetails() {
                 cocktailName={cocktail.name.en}
               />
               <ShareButton
-                url={`${window.location.origin}/${language}/cocktails/${slug}`}
+                url={`${window.location.origin}/${language || 'en'}/cocktails/${slug}`}
               />
             </div>
             <TwistButton
-              href={`/${language}/twist?cocktail=${cocktail.slug}`}
+              href={`/${language || 'en'}/twist?cocktail=${cocktail.slug}`}
               cocktailName={cocktail.name.en}
             >
               {t.findTwists}
@@ -65,7 +96,7 @@ export default function CocktailDetails() {
                 <FlavorDescriptor
                   key={i}
                   descriptor={descriptor}
-                  language={language}
+                  language={language || 'en'}
                 />
               ))}
             </div>
@@ -87,43 +118,43 @@ export default function CocktailDetails() {
               {cocktail.base_spirits.map((spirit, i) => (
                 <li key={i} className="flex justify-between">
                   <Link
-                    to={`/${language}/ingredients/${slugify(spirit.name.en)}`}
+                    to={`/${language || 'en'}/ingredients/${slugify(spirit.name.en)}`}
                     className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                   >
-                    {getLocalizedText(spirit.name, language)}
+                    {getLocalizedText(spirit.name, language || 'en')}
                     <Search className="w-4 h-4 text-muted-foreground" />
                   </Link>
                   <span className="text-gray-400">
-                    {spirit.amount} {getLocalizedText(spirit.unit, language)}
+                    {spirit.amount} {getLocalizedText(spirit.unit, language || 'en')}
                   </span>
                 </li>
               ))}
               {cocktail.liqueurs.map((liqueur, i) => (
                 <li key={i} className="flex justify-between">
                   <Link
-                    to={`/${language}/ingredients/${slugify(liqueur.name.en)}`}
+                    to={`/${language || 'en'}/ingredients/${slugify(liqueur.name.en)}`}
                     className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                   >
-                    {getLocalizedText(liqueur.name, language)}
+                    {getLocalizedText(liqueur.name, language || 'en')}
                     <Search className="w-4 h-4 text-muted-foreground" />
                   </Link>
                   <span className="text-gray-400">
-                    {liqueur.amount} {getLocalizedText(liqueur.unit, language)}
+                    {liqueur.amount} {getLocalizedText(liqueur.unit, language || 'en')}
                   </span>
                 </li>
               ))}
               {cocktail.ingredients.map((ingredient, i) => (
                 <li key={i} className="flex justify-between">
                   <Link
-                    to={`/${language}/ingredients/${slugify(ingredient.name.en)}`}
+                    to={`/${language || 'en'}/ingredients/${slugify(ingredient.name.en)}`}
                     className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                   >
-                    {getLocalizedText(ingredient.name, language)}
+                    {getLocalizedText(ingredient.name, language || 'en')}
                     <Search className="w-4 h-4 text-muted-foreground" />
                   </Link>
                   <span className="text-gray-400">
                     {ingredient.amount}{" "}
-                    {getLocalizedText(ingredient.unit, language)}
+                    {getLocalizedText(ingredient.unit, language || 'en')}
                   </span>
                 </li>
               ))}
@@ -134,7 +165,7 @@ export default function CocktailDetails() {
             <div>
               <h4 className="text-gray-400">{t.garnish}</h4>
               <p className="text-gray-300">
-                {getLocalizedText(cocktail.garnish, language)}
+                {getLocalizedText(cocktail.garnish, language || 'en')}
               </p>
             </div>
           )}
@@ -145,7 +176,7 @@ export default function CocktailDetails() {
             <h2 className="font-bold mb-4">{t.instructions}</h2>
             <p className="text-gray-300">
               {cocktail.technique
-                ? getLocalizedText(cocktail.technique, language)
+                ? getLocalizedText(cocktail.technique, language || 'en')
                 : ""}
             </p>
           </div>
@@ -154,14 +185,21 @@ export default function CocktailDetails() {
         {cocktail.description && (
           <div className="mt-8 text-gray-300 prose prose-invert">
             <ReactMarkdown>
-              {getLocalizedText(cocktail.description, language)}
+              {getLocalizedText(cocktail.description, language || 'en')}
             </ReactMarkdown>
           </div>
         )}
       </div>
 
       <div className="mt-8">
-        <CocktailLogList type="cocktail" id={cocktail.id} />
+        <CocktailLogList 
+          type="cocktail" 
+          id={cocktail.id}
+          logs={accumulatedLogs}
+          isLoading={isLoadingLogs}
+          hasMore={logsData?.hasMore}
+          onLoadMore={loadMore}
+        />
       </div>
     </div>
   );

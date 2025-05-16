@@ -263,10 +263,23 @@ export class CocktailLogService {
     if (error) throw error;
   }
 
-  private async getLogsByQuery(query: { [key: string]: any }): Promise<CocktailLog[]> {
+  private async getLogsByQuery(query: { [key: string]: any }, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
     const user = await AuthService.getCurrentSession();
-    if (!user) return [];
+    if (!user) return { logs: [], hasMore: false };
 
+    // Calculate offset
+    const offset = (page - 1) * pageSize;
+
+    // First get total count
+    const { count, error: countError } = await supabase
+      .from("cocktail_logs")
+      .select('*', { count: 'exact', head: true })
+      .match({ ...query, user_id: user.id })
+      .is("deleted_at", null);
+
+    if (countError) throw countError;
+
+    // Then get paginated data
     const { data, error } = await supabase
       .from("cocktail_logs")
       .select(`
@@ -297,24 +310,29 @@ export class CocktailLogService {
       `)
       .match({ ...query, user_id: user.id })
       .is("deleted_at", null)
-      .order("drink_date", { ascending: false });
+      .order("drink_date", { ascending: false })
+      .range(offset, offset + pageSize - 1);
 
     if (error) throw error;
-    return Promise.all(data.map(log => this.mapLog(log)));
+
+    const logs = await Promise.all(data.map(log => this.mapLog(log)));
+    const hasMore = (offset + pageSize) < (count || 0);
+
+    return { logs, hasMore };
   }
 
-  async getLogsByCocktailId(cocktailId: string): Promise<CocktailLog[]> {
-    return this.getLogsByQuery({ cocktail_id: cocktailId });
+  async getLogsByCocktailId(cocktailId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
+    return this.getLogsByQuery({ cocktail_id: cocktailId }, page, pageSize);
   }
 
-  async getLogsByUserId(userId?: string): Promise<CocktailLog[]> {
+  async getLogsByUserId(userId?: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
     const user = await AuthService.getCurrentSession();
-    if (!user) return [];
-    return this.getLogsByQuery({ user_id: userId || user.id });
+    if (!user) return { logs: [], hasMore: false };
+    return this.getLogsByQuery({ user_id: userId || user.id }, page, pageSize);
   }
 
-  async getLogsByPlaceId(placeId: string): Promise<CocktailLog[]> {
-    return this.getLogsByQuery({ place_id: placeId });
+  async getLogsByPlaceId(placeId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
+    return this.getLogsByQuery({ place_id: placeId }, page, pageSize);
   }
 
   private async getLogByQuery(query: { [key: string]: any }): Promise<CocktailLog | null> {

@@ -1,10 +1,10 @@
-'use client';
-
 import { CocktailLogCard } from "@/components/cocktail-log/CocktailLogCard";
 import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { Skeleton } from "@/components/ui/skeleton";
 import { CocktailLog } from "@/types/cocktail-log";
+import { useEffect, useRef, useCallback, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 interface CocktailLogListProps {
   type?: 'place' | 'cocktail';
@@ -13,6 +13,8 @@ interface CocktailLogListProps {
   isLoading?: boolean;
   onLogSaved?: () => void;
   onLogDeleted?: () => void;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
 }
 
 function CocktailLogSkeleton() {
@@ -45,20 +47,57 @@ export function CocktailLogList({
   logs: providedLogs, 
   isLoading: providedIsLoading,
   onLogSaved,
-  onLogDeleted 
+  onLogDeleted,
+  hasMore: providedHasMore,
+  onLoadMore: providedOnLoadMore
 }: CocktailLogListProps) {
-  const { data: fetchedLogs, isLoading: isFetching } = useSWR(
-    type && id ? [`${type}-logs`, id] : null,
-    () => type === 'place' 
-      ? cocktailLogService.getLogsByPlaceId(id!)
-      : cocktailLogService.getLogsByCocktailId(id!),
-    { fallbackData: [] }
+  const [page, setPage] = useState(1);
+  const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
+  const PAGE_SIZE = 10;
+
+  const { data: fetchedData, isLoading: isFetching } = useSWR(
+    type && id ? [`${type}-logs`, id, page] : null,
+    async () => {
+      if (type === 'place') {
+        return cocktailLogService.getLogsByPlaceId(id!, page, PAGE_SIZE);
+      } else {
+        return cocktailLogService.getLogsByCocktailId(id!, page, PAGE_SIZE);
+      }
+    },
+    { 
+      fallbackData: { logs: [], hasMore: false },
+      onSuccess: (data) => {
+        if (page === 1) {
+          setAccumulatedLogs(data.logs);
+        } else {
+          setAccumulatedLogs(prev => [...prev, ...data.logs]);
+        }
+      }
+    }
   );
 
-  const logs = providedLogs ?? fetchedLogs;
+  const logs = providedLogs ?? accumulatedLogs;
   const isLoading = providedIsLoading ?? isFetching;
+  const hasMore = providedHasMore ?? fetchedData?.hasMore;
 
-  if (isLoading) {
+  // Set up intersection observer for infinite scrolling
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: '100px',
+  });
+
+  // Load more when the last item comes into view
+  useEffect(() => {
+    if (inView && hasMore && !isLoading) {
+      if (providedOnLoadMore) {
+        providedOnLoadMore();
+      } else {
+        setPage(prev => prev + 1);
+      }
+    }
+  }, [inView, hasMore, isLoading, providedOnLoadMore]);
+
+  if (isLoading && (!logs || logs.length === 0)) {
     return <CocktailLogSkeleton />;
   }
 
@@ -67,15 +106,24 @@ export function CocktailLogList({
   }
 
   return (
-    <div>
-      {logs.map((log) => (
-        <CocktailLogCard 
-          key={log.id} 
-          log={log} 
-          onLogSaved={onLogSaved}
-          onLogDeleted={onLogDeleted}
-        />
+    <div className="space-y-4">
+      {logs.map((log, index) => (
+        <div 
+          key={log.id}
+          ref={index === logs.length - 1 ? ref : undefined}
+        >
+          <CocktailLogCard 
+            log={log} 
+            onLogSaved={onLogSaved}
+            onLogDeleted={onLogDeleted}
+          />
+        </div>
       ))}
+      {isLoading && logs.length > 0 && (
+        <div className="mt-4">
+          <CocktailLogSkeleton />
+        </div>
+      )}
     </div>
   );
 } 

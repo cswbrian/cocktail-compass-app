@@ -6,7 +6,7 @@ import { AuthWrapper } from "@/components/auth/auth-wrapper";
 import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 
 export function FeedsContainer() {
-  const { logs, stats, isLoading, mutate } = useCocktailData();
+  const { logs, stats, isLoading, hasMore, loadMore, mutate } = useCocktailData();
 
   console.log('FeedsContainer - logs:', logs);
   console.log('FeedsContainer - isLoading:', isLoading);
@@ -27,6 +27,8 @@ export function FeedsContainer() {
           isLoading={isLoading}
           onLogSaved={mutate}
           onLogDeleted={mutate}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
         />
       </div>
     </AuthWrapper>

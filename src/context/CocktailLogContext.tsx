@@ -24,6 +24,10 @@ interface CocktailLogContextType {
   logs: CocktailLog[] | undefined;
   stats: any | undefined;
   isLoading: boolean;
+  // Pagination
+  hasMore: boolean;
+  loadMore: () => Promise<void>;
+  page: number;
 }
 
 const CocktailLogContext = createContext<CocktailLogContextType | null>(null);
@@ -42,6 +46,11 @@ export function CocktailLogDataProvider({
   children: ReactNode;
 }) {
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
+  const PAGE_SIZE = 10;
+
   // Form state
   const [formState, setFormState] = useState<FormState>({
     isOpen: false,
@@ -50,14 +59,23 @@ export function CocktailLogDataProvider({
   });
 
   // SWR for data fetching
-  const { data: logs, isLoading: isLoadingLogs, error: logsError } = useSWR<CocktailLog[]>(
-    CACHE_KEYS.COCKTAIL_LOGS,
-    fetchers.getCocktailLogs,
+  const { data: logsData, isLoading: isLoadingLogs, error: logsError, mutate: mutateLogs } = useSWR<{ logs: CocktailLog[], hasMore: boolean }>(
+    [CACHE_KEYS.COCKTAIL_LOGS, page],
+    async () => {
+      const result = await fetchers.getCocktailLogs(page, PAGE_SIZE);
+      return result;
+    },
     {
       ...swrConfig,
-      fallbackData: defaultData[CACHE_KEYS.COCKTAIL_LOGS],
+      fallbackData: { logs: [], hasMore: true },
       onSuccess: (data) => {
         console.log('CocktailLogContext - Logs fetched successfully:', data);
+        setHasMore(data.hasMore);
+        if (page === 1) {
+          setAccumulatedLogs(data.logs);
+        } else {
+          setAccumulatedLogs(prev => [...prev, ...data.logs]);
+        }
       },
       onError: (err) => {
         console.error('CocktailLogContext - Error fetching logs:', err);
@@ -83,14 +101,16 @@ export function CocktailLogDataProvider({
   // Debug effect to track state changes
   useEffect(() => {
     console.log('CocktailLogContext - State update:', {
-      logs,
+      accumulatedLogs,
       isLoadingLogs,
       logsError,
       stats,
       isLoadingStats,
-      statsError
+      statsError,
+      page,
+      hasMore
     });
-  }, [logs, isLoadingLogs, logsError, stats, isLoadingStats, statsError]);
+  }, [accumulatedLogs, isLoadingLogs, logsError, stats, isLoadingStats, statsError, page, hasMore]);
 
   const openCreateForm = useCallback(() => {
     setFormState({
@@ -117,6 +137,11 @@ export function CocktailLogDataProvider({
     });
   }, []);
 
+  const loadMore = useCallback(async () => {
+    if (!hasMore || isLoadingLogs) return;
+    setPage(prev => prev + 1);
+  }, [hasMore, isLoadingLogs]);
+
   const value = {
     // Form state management
     formState,
@@ -126,28 +151,20 @@ export function CocktailLogDataProvider({
     // Mutations
     mutate: async () => {
       console.log('CocktailLogContext - Starting mutation');
-      // First mutate the logs
-      await mutate(CACHE_KEYS.COCKTAIL_LOGS, async (currentLogs: CocktailLog[] | undefined) => {
-        console.log('CocktailLogContext - Mutating logs, current:', currentLogs);
-        if (!currentLogs) return currentLogs;
-        
-        // Fetch fresh logs to get updated media URLs
-        const freshLogs = await fetchers.getCocktailLogs();
-        console.log('CocktailLogContext - Fresh logs fetched:', freshLogs);
-        return freshLogs;
-      }, {
-        revalidate: true,
-        rollbackOnError: true
-      });
-
-      // Then mutate stats
+      setPage(1); // Reset to first page on mutation
+      setAccumulatedLogs([]); // Clear accumulated logs
+      await mutateLogs();
       await mutate(CACHE_KEYS.USER_STATS);
       console.log('CocktailLogContext - Mutation completed');
     },
     // Data
-    logs,
+    logs: accumulatedLogs,
     stats,
-    isLoading: isLoadingLogs || isLoadingStats
+    isLoading: isLoadingLogs || isLoadingStats,
+    // Pagination
+    hasMore,
+    loadMore,
+    page
   };
 
   return (
