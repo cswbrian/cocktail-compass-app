@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,6 +9,7 @@ import { X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ingredientService, Ingredient, IngredientType } from "@/services/ingredient-service";
 import { AuthService } from "@/services/auth-service";
+import { toast } from "sonner";
 
 interface CustomIngredientModalProps {
   isOpen: boolean;
@@ -28,17 +28,12 @@ export function CustomIngredientModal({
   const [nameZh, setNameZh] = useState(initialName);
   const [type, setType] = useState<IngredientType>("base_spirit");
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 
   const handleCreate = async () => {
     if (!nameEn) {
-      toast({
-        title: t.error,
-        description: t.errorCreatingIngredient,
-        variant: "destructive",
-      });
+      toast.error(t.errorCreatingIngredient);
       return;
     }
 
@@ -46,11 +41,7 @@ export function CustomIngredientModal({
       setIsLoading(true);
       const user = await AuthService.getCurrentSession();
       if (!user) {
-        toast({
-          title: t.error,
-          description: t.notAuthenticated,
-          variant: "destructive",
-        });
+        toast.error(t.notAuthenticated);
         return;
       }
 
@@ -67,13 +58,12 @@ export function CustomIngredientModal({
       setNameZh("");
       setType("base_spirit");
       onClose();
+      toast.success(t.success, {
+        description: t.createNewIngredient
+      });
     } catch (error) {
       console.error("Error creating ingredient:", error);
-      toast({
-        title: t.error,
-        description: t.errorCreatingIngredient,
-        variant: "destructive",
-      });
+      toast.error(t.errorCreatingIngredient);
     } finally {
       setIsLoading(false);
     }

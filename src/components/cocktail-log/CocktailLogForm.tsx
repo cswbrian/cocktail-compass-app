@@ -189,29 +189,8 @@ export function CocktailLogForm({
         return;
       }
 
-      let cocktailId = selectedCocktail.value;
-
-      // Check if we need to create a custom cocktail
-      if (customCocktailValues) {
-        try {
-          const cocktail = await customCocktailService.createCustomCocktail(
-            {
-              en: customCocktailValues.nameEn,
-              zh: customCocktailValues.nameZh
-            },
-            user.id
-          );
-          cocktailId = cocktail.id;
-        } catch (error) {
-          console.error("Error creating custom cocktail:", error);
-          toast({
-            title: t.error,
-            description: t.errorCreatingCocktail,
-            variant: "destructive",
-          });
-          return;
-        }
-      }
+      // Use the existing cocktail ID, whether it's a custom cocktail or not
+      const cocktailId = selectedCocktail.value;
 
       // If this is an existing log, handle media deletion
       if (existingLog) {

@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CustomIngredientModal } from "./CustomIngredientModal";
 import { customCocktailService } from "@/services/custom-cocktail-service";
 import { AuthService } from "@/services/auth-service";
+import { toast } from "sonner";
 
 interface CustomCocktailModalProps {
   isOpen: boolean;
@@ -44,7 +45,6 @@ export function CustomCocktailModal({
   const [searchResults, setSearchResults] = useState<Ingredient[]>([]);
   const [showNewIngredientForm, setShowNewIngredientForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 
@@ -59,11 +59,7 @@ export function CustomCocktailModal({
       setSearchResults(results);
     } catch (error) {
       console.error("Error searching ingredients:", error);
-      toast({
-        title: t.error,
-        description: t.errorSearchingIngredients,
-        variant: "destructive",
-      });
+      toast.error(t.errorSearchingIngredients);
     }
   };
 
@@ -86,11 +82,7 @@ export function CustomCocktailModal({
 
   const handleSubmit = async () => {
     if (!customCocktailName) {
-      toast({
-        title: t.error,
-        description: t.errorCreatingCocktail,
-        variant: "destructive",
-      });
+      toast.error(t.errorCreatingCocktail);
       return;
     }
 
@@ -98,11 +90,7 @@ export function CustomCocktailModal({
       setIsLoading(true);
       const user = await AuthService.getCurrentSession();
       if (!user) {
-        toast({
-          title: t.error,
-          description: t.notAuthenticated,
-          variant: "destructive",
-        });
+        toast.error(t.notAuthenticated);
         return;
       }
 
@@ -126,13 +114,12 @@ export function CustomCocktailModal({
       setCustomCocktailNameZh("");
       setIngredients([]);
       onClose();
+      toast.success(t.success, {
+        description: t.createCustomCocktail
+      });
     } catch (error) {
       console.error("Error creating custom cocktail:", error);
-      toast({
-        title: t.error,
-        description: t.errorCreatingCocktail,
-        variant: "destructive",
-      });
+      toast.error(t.errorCreatingCocktail);
     } finally {
       setIsLoading(false);
     }
@@ -180,11 +167,7 @@ export function CustomCocktailModal({
                     <Input
                       id="customCocktailName"
                       value={customCocktailName}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setCustomCocktailName(value);
-                        setCustomCocktailNameZh(value);
-                      }}
+                      onChange={(e) => setCustomCocktailName(e.target.value)}
                       placeholder={t.cocktailNameEn}
                     />
                   </div>
