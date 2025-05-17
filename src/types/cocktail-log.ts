@@ -11,7 +11,6 @@ export interface CocktailLog {
   };
   userId: string;
   rating: number | null;
-  specialIngredients: string | null;
   comments: string | null;
   location: string | null; // JSON string of LocationData
   bartender: string | null;

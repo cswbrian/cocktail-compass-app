@@ -74,7 +74,6 @@ export function CocktailLogForm({
   const [open, setOpen] = useState(false);
   const [filteredCocktails, setFilteredCocktails] = useState<SearchItem[]>([]);
   const [selectedCocktail, setSelectedCocktail] = useState<SearchItem | null>(null);
-  const [specialIngredients, setSpecialIngredients] = useState("");
   const [comments, setComments] = useState("");
   const [location, setLocation] = useState<LocationData | null>(null);
   const [bartender, setBartender] = useState("");
@@ -98,7 +97,6 @@ export function CocktailLogForm({
     setOpen(false);
     setFilteredCocktails([]);
     setSelectedCocktail(null);
-    setSpecialIngredients("");
     setComments("");
     setLocation(null);
     setBartender("");
@@ -126,7 +124,6 @@ export function CocktailLogForm({
         name: displayName, 
         slug: existingLog.cocktail.slug 
       });
-      setSpecialIngredients(existingLog.specialIngredients || "");
       setComments(existingLog.comments || "");
       if (existingLog.location) {
         try {
@@ -213,7 +210,6 @@ export function CocktailLogForm({
             existingLog.id,
             cocktailId,
             rating || null,
-            specialIngredients || null,
             comments || null,
             location,
             bartender || null,
@@ -226,7 +222,6 @@ export function CocktailLogForm({
             cocktailId,
             user.id,
             rating || null,
-            specialIngredients || null,
             comments || null,
             location,
             bartender || null,
@@ -250,7 +245,6 @@ export function CocktailLogForm({
             slug: existingLog?.cocktail.slug || ''
           },
           rating: rating || null,
-          specialIngredients: specialIngredients || null,
           comments: comments || null,
           location: location ? JSON.stringify(location) : null,
           bartender: bartender || null,
@@ -650,15 +644,6 @@ export function CocktailLogForm({
                       value={bartender}
                       onChange={(e: ChangeEvent<HTMLInputElement>) => setBartender(e.target.value)}
                       placeholder={t.bartender}
-                      className="w-full"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Input
-                      value={specialIngredients}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => setSpecialIngredients(e.target.value)}
-                      placeholder={t.specialIngredients}
                       className="w-full"
                     />
                   </div>
