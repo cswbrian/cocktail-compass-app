@@ -104,7 +104,7 @@ export default function PlaceDetailPage() {
               {place.secondary_text && (
                 <span className="ml-1">
                   <a
-                    href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
+                    href={`https://maps.google.com/?q=place_id:${place.place_id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary inline-block"
