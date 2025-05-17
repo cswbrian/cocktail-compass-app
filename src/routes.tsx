@@ -45,7 +45,7 @@ export default function AppRoutes() {
       </Route>
       
       {/* Catch all route - redirect to default language */}
-      {/* <Route path="*" element={<Navigate to="/zh" replace />} /> */}
+      <Route path="*" element={<Navigate to="/zh" replace />} />
     </Routes>
   )
 } 
