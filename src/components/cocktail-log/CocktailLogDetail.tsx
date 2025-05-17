@@ -11,7 +11,7 @@ import { CocktailLogInfo } from "./CocktailLogInfo";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import { Link, useLocation } from "react-router-dom";
-import { formatCocktailName } from "@/lib/utils";
+import { formatBilingualText } from "@/lib/utils";
 
 interface CocktailLogDetailProps {
   log: CocktailLog;
@@ -101,13 +101,13 @@ export function CocktailLogDetail({
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4 max-w-3xl mx-auto">
           {log.cocktail.is_custom ? (
-            <h3 className="text-xl font-semibold mb-4">{formatCocktailName(log.cocktail.name, language)}</h3>
+            <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
           ) : (
             <Link 
               to={`/${language}/cocktails/${log.cocktail.slug}`}
               className="hover:text-primary transition-colors"
             >
-              <h3 className="text-xl font-semibold mb-4">{formatCocktailName(log.cocktail.name, language)}</h3>
+              <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
             </Link>
           )}
           <CocktailLogInfo

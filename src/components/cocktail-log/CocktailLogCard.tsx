@@ -5,7 +5,7 @@ import { CocktailLogMedia } from "./CocktailLogMedia";
 import { CocktailLogInfo } from "./CocktailLogInfo";
 import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
-import { formatCocktailName } from "@/lib/utils";
+import { formatBilingualText } from "@/lib/utils";
 
 interface CocktailLogCardProps {
   log: CocktailLog;
@@ -54,7 +54,7 @@ export function CocktailLogCard({
               {format(new Date(log.drinkDate), "PPP")}
             </div>
           )}
-          <h3 className="text-lg font-semibold">{formatCocktailName(log.cocktail.name, language)}</h3>
+          <h3 className="text-lg font-semibold">{formatBilingualText(log.cocktail.name, language)}</h3>
           <div className="space-y-2">
             <CocktailLogInfo
               rating={log.rating}

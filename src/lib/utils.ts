@@ -23,7 +23,7 @@ export function getLocalizedText(field: string | Record<string, string>, languag
   return field?.[language] || field?.en || '';
 }
 
-export function formatCocktailName(name: { en: string; zh: string | null }, language: string): string {
+export function formatBilingualText(name: { en: string; zh: string | null }, language: string): string {
   if (language === 'en') {
     return name.en;
   }

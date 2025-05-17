@@ -15,7 +15,7 @@ import { Star, Calendar, Check, X, Search, ImagePlus } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn, normalizeText, formatCocktailName } from "@/lib/utils";
+import { cn, normalizeText, formatBilingualText } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { customCocktailService } from "@/services/custom-cocktail-service";
@@ -42,6 +42,7 @@ interface SearchItem {
 }
 
 interface CustomCocktailValues {
+  id: string;
   nameEn: string;
   nameZh?: string;
 }
@@ -117,7 +118,7 @@ export function CocktailLogForm({
   useEffect(() => {
     if (existingLog) {
       setRating(existingLog.rating || 0);
-      const displayName = formatCocktailName(existingLog.cocktail.name, language);
+      const displayName = formatBilingualText(existingLog.cocktail.name, language);
       setCocktailNameInput(displayName);
       setSelectedCocktail({ 
         value: existingLog.cocktail.id, 
@@ -152,17 +153,24 @@ export function CocktailLogForm({
     const filtered = cocktails
       .filter(cocktail => {
         const normalizedSearch = normalizeText(cocktailNameInput);
-        const normalizedName = normalizeText(formatCocktailName(cocktail.name, language));
+        const normalizedName = normalizeText(formatBilingualText(cocktail.name, language));
         return normalizedName.includes(normalizedSearch);
       })
       .map(cocktail => ({
-        name: formatCocktailName(cocktail.name, language),
+        name: formatBilingualText(cocktail.name, language),
         value: cocktail.id,
         slug: cocktail.slug,
-        label: formatCocktailName(cocktail.name, language)
+        label: formatBilingualText(cocktail.name, language)
       }));
     setFilteredCocktails(filtered);
   }, [cocktailNameInput, language]);
+
+  // Reset form when opened for a new log
+  useEffect(() => {
+    if (isOpen && !existingLog) {
+      resetForm();
+    }
+  }, [isOpen, existingLog]);
 
   const handleSave = async () => {
     if (!selectedCocktail) return;
@@ -402,6 +410,13 @@ export function CocktailLogForm({
     setCustomCocktailValues(values);
     // Update the cocktail name input with the custom cocktail names
     setCocktailNameInput(`${values.nameEn} / ${values.nameZh}`);
+    // Set the selected cocktail with the ID from the created custom cocktail
+    setSelectedCocktail({ 
+      value: values.id,
+      label: `${values.nameEn} / ${values.nameZh}`,
+      name: `${values.nameEn} / ${values.nameZh}`,
+      slug: values.id // Using ID as slug for custom cocktails
+    });
     setIsCreatingCustom(false);
     setOpen(false); // Close the dropdown
   };
@@ -514,46 +529,43 @@ export function CocktailLogForm({
                       {open && (
                         <div className="absolute z-50 w-full mt-1 bg-popover rounded-md shadow-md">
                           <ScrollArea className="h-[200px]">
-                            {filteredCocktails.length === 0 ? (
-                              <div className="p-4 space-y-2">
-                                <div className="text-center text-muted-foreground">
-                                  {t.noCocktailsFound}
-                                </div>
-                                <Button
-                                  variant="outline"
-                                  className="w-full"
-                                  onClick={() => setIsCreatingCustom(true)}
-                                >
-                                  {t.createCustomCocktail}
-                                </Button>
-                              </div>
-                            ) : (
-                              <div className="p-2">
-                                {filteredCocktails.map((cocktail) => (
-                                  <button
-                                    key={cocktail.value}
-                                    onClick={() => {
-                                      setSelectedCocktail(cocktail);
-                                      setCocktailNameInput(cocktail.name);
-                                      setOpen(false);
-                                    }}
-                                    className={cn(
-                                      "w-full text-left p-2 rounded-md hover:bg-accent transition-colors",
-                                      "flex items-center gap-2",
-                                      selectedCocktail?.value === cocktail.slug && "bg-accent"
-                                    )}
-                                  >
-                                    <Check
+                            <div className="p-2">
+                              {filteredCocktails.length > 0 && (
+                                <>
+                                  {filteredCocktails.map((cocktail) => (
+                                    <button
+                                      key={cocktail.value}
+                                      onClick={() => {
+                                        setSelectedCocktail(cocktail);
+                                        setCocktailNameInput(cocktail.name);
+                                        setOpen(false);
+                                      }}
                                       className={cn(
-                                        "h-4 w-4",
-                                        selectedCocktail?.value === cocktail.slug ? "opacity-100" : "opacity-0"
+                                        "w-full text-left p-2 rounded-md hover:bg-accent transition-colors",
+                                        "flex items-center gap-2",
+                                        selectedCocktail?.value === cocktail.slug && "bg-accent"
                                       )}
-                                    />
-                                    {cocktail.name}
-                                  </button>
-                                ))}
-                              </div>
-                            )}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "h-4 w-4",
+                                          selectedCocktail?.value === cocktail.slug ? "opacity-100" : "opacity-0"
+                                        )}
+                                      />
+                                      {cocktail.name}
+                                    </button>
+                                  ))}
+                                  <div className="pt-2 border-t" />
+                                </>
+                              )}
+                              <Button
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => setIsCreatingCustom(true)}
+                              >
+                                {t.createCustomCocktail}
+                              </Button>
+                            </div>
                           </ScrollArea>
                         </div>
                       )}
@@ -731,6 +743,7 @@ export function CocktailLogForm({
                 isOpen={isCreatingCustom}
                 onClose={() => setIsCreatingCustom(false)}
                 onCustomCocktailValues={handleCustomCocktailValues}
+                initialName={cocktailNameInput}
               />
             </>
           )}

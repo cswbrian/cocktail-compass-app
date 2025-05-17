@@ -5,7 +5,7 @@ import { CocktailPreview } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { useNavigate } from "react-router-dom";
-import { slugify, normalizeText, formatCocktailName } from "@/lib/utils";
+import { slugify, normalizeText, formatBilingualText } from "@/lib/utils";
 import summary from "@/data/summary.json";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -100,28 +100,28 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
 
   const searchItems: SearchItem[] = [
     ...cocktails.map(cocktail => ({
-      name: formatCocktailName(cocktail.name, language),
+      name: formatBilingualText(cocktail.name, language),
       value: `cocktail:${cocktail.name.en}`,
       type: 'cocktail' as const,
       category: 'cocktail',
       slug: slugify(cocktail.name.en)
     })),
     ...summary.base_spirits.map(spirit => ({
-      name: formatCocktailName(spirit.name, language),
+      name: formatBilingualText(spirit.name, language),
       value: `ingredient:${spirit.name.en}`,
       type: 'ingredient' as const,
       category: 'baseSpirit',
       slug: slugify(spirit.name.en)
     })),
     ...summary.liqueurs.map(liqueur => ({
-      name: formatCocktailName(liqueur.name, language),
+      name: formatBilingualText(liqueur.name, language),
       value: `ingredient:${liqueur.name.en}`,
       type: 'ingredient' as const,
       category: 'liqueur',
       slug: slugify(liqueur.name.en)
     })),
     ...summary.ingredients.map(ingredient => ({
-      name: formatCocktailName(ingredient.name, language),
+      name: formatBilingualText(ingredient.name, language),
       value: `ingredient:${ingredient.name.en}`,
       type: 'ingredient' as const,
       category: 'ingredient',
