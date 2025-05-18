@@ -27,7 +27,8 @@ interface UserStats {
 
 // Cache keys
 export const CACHE_KEYS = {
-  COCKTAIL_LOGS: 'cocktail-logs',
+  COCKTAIL_LOGS: (visibility?: 'public' | 'private' | 'friends') => 
+    visibility ? ['cocktail-logs', visibility] : 'cocktail-logs',
   USER_STATS: 'user-stats',
   PLACE_LOGS: (placeId: string) => ['place-logs', placeId],
   COCKTAIL_LOGS_BY_ID: (cocktailId: string) => ['cocktail-logs-by-id', cocktailId],
@@ -37,10 +38,17 @@ export const CACHE_KEYS = {
 
 // Fetcher functions
 export const fetchers = {
-  getCocktailLogs: async (page: number = 1, pageSize: number = 10) => {
-    console.log('SWR Config - Fetching cocktail logs, page:', page, 'pageSize:', pageSize);
+  getCocktailLogs: async (page: number = 1, pageSize: number = 10, visibility?: 'public' | 'private' | 'friends') => {
+    console.log('SWR Config - Fetching cocktail logs, page:', page, 'pageSize:', pageSize, 'visibility:', visibility);
     try {
-      const result = await cocktailLogService.getLogsByUserId(undefined, page, pageSize);
+      let result;
+      if (visibility === 'public') {
+        result = await cocktailLogService.getLogsByQuery({ visibility: 'public' }, page, pageSize);
+      } else if (visibility === 'private') {
+        result = await cocktailLogService.getLogsByUserId(undefined, page, pageSize);
+      } else {
+        result = await cocktailLogService.getLogsByUserId(undefined, page, pageSize);
+      }
       console.log('SWR Config - Cocktail logs fetched:', result);
       return result;
     } catch (error) {
@@ -49,17 +57,7 @@ export const fetchers = {
     }
   },
   
-  getUserStats: async () => {
-    console.log('SWR Config - Fetching user stats');
-    try {
-      const data = await userStatsService.getUserStats();
-      console.log('SWR Config - User stats fetched:', data);
-      return data;
-    } catch (error) {
-      console.error('SWR Config - Error fetching user stats:', error);
-      throw error;
-    }
-  },
+  getUserStats: () => userStatsService.getUserStats(),
   
   getPlaceLogs: async (placeId: string, page: number = 1, pageSize: number = 10) => {
     console.log('SWR Config - Fetching place logs for:', placeId, 'page:', page, 'pageSize:', pageSize);
@@ -112,8 +110,8 @@ export const fetchers = {
 
 // Default fallback data
 const defaultFallbackData = {
-  [CACHE_KEYS.COCKTAIL_LOGS]: [] as CocktailLog[],
-  [CACHE_KEYS.USER_STATS]: {
+  'cocktail-logs': [] as CocktailLog[],
+  'user-stats': {
     basicStats: {
       totalCocktailsDrunk: 0,
       uniqueCocktails: 0,
@@ -124,22 +122,22 @@ const defaultFallbackData = {
     recentPhotos: [],
     mostLoggedCocktails: []
   } as UserStats,
-  [CACHE_KEYS.BOOKMARKS]: [] as BookmarkList[],
-  [CACHE_KEYS.COCKTAILS]: [] as Cocktail[],
+  'bookmarks': [] as BookmarkList[],
+  'cocktails': [] as Cocktail[],
 };
 
 // SWR configuration
 export const swrConfig = {
-  revalidateOnFocus: false, // Disable revalidation on window focus
-  revalidateIfStale: true, // Revalidate if data is stale
-  revalidateOnReconnect: true, // Revalidate when reconnecting
-  dedupingInterval: 2000, // Dedupe requests within 2 seconds
-  errorRetryCount: 3, // Retry failed requests 3 times
-  errorRetryInterval: 5000, // Wait 5 seconds between retries
-  refreshInterval: 0, // Disable automatic refresh
-  shouldRetryOnError: true, // Retry on error
-  focusThrottleInterval: 5000, // Throttle focus events
-  loadingTimeout: 3000, // Timeout for loading state
+  revalidateOnFocus: false,
+  revalidateIfStale: true,
+  revalidateOnReconnect: true,
+  dedupingInterval: 5000,
+  errorRetryCount: 3,
+  errorRetryInterval: 5000,
+  refreshInterval: 0,
+  shouldRetryOnError: true,
+  focusThrottleInterval: 5000,
+  loadingTimeout: 3000,
 } as const;
 
 // Export default fallback data separately

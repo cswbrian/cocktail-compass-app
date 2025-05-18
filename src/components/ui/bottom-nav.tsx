@@ -3,7 +3,7 @@
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { Link, useLocation } from "react-router-dom";
-import { Compass, Search, Bookmark, Home } from "lucide-react";
+import { Compass, Search, Home, User } from "lucide-react";
 import { useBottomNav } from "@/context/BottomNavContext";
 import { AddLogButton } from "@/components/cocktail-log/AddLogButton";
 
@@ -20,25 +20,21 @@ export function BottomNav() {
 
   const navItems = [
     {
-      href: `/${language}/journal/feeds`,
+      href: `/${language}/feeds`,
       icon: Home,
-      label: t.bottomNavJournal,
     },
     {
       href: `/${language}/explorer`,
       icon: Compass,
-      label: t.bottomNavExplorer,
     },
     null, // Middle position for AddLogButton
     {
       href: `/${language}/search`,
       icon: Search,
-      label: t.bottomNavSearch,
     },
     {
-      href: `/${language}/bookmarks`,
-      icon: Bookmark,
-      label: t.bottomNavBookmarks,
+      href: `/${language}/profile`,
+      icon: User,
     },
   ];
 

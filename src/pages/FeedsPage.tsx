@@ -1,11 +1,11 @@
-import { Suspense } from 'react';
-import { Loading } from "@/components/ui/loading";
-import { FeedsContainer } from "@/components/feeds/FeedsContainer";
+import { FeedsNav } from "@/components/feeds/FeedsNav";
+import { Outlet } from "react-router-dom";
 
-export default function FeedsPage() {
+export default function JournalPage() {
   return (
-    <Suspense fallback={<Loading fullScreen size="lg" />}>
-      <FeedsContainer />
-    </Suspense>
+    <div className="container mx-auto pb-20">
+      <FeedsNav />
+      <Outlet />
+    </div>
   );
 } 

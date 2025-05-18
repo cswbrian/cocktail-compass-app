@@ -117,6 +117,7 @@ export function CocktailLogDetail({
             comments={log.comments}
             tags={log.tags}
             drinkDate={log.drinkDate ? new Date(log.drinkDate) : null}
+            visibility={log.visibility as 'public' | 'private' | undefined}
             showHeadings
           />
 

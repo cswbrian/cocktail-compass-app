@@ -3,5 +3,5 @@ import { useLanguage } from "../context/LanguageContext";
 
 export default function Home() {
   const { language } = useLanguage();
-  return <Navigate to={`/${language}/journal/feeds`} replace />;
+  return <Navigate to={`/${language}/feeds`} replace />;
 }

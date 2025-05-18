@@ -1,25 +1,40 @@
 export interface CocktailLog {
   id: string;
   cocktail: {
-    id: string;
-    slug: string;
-    is_custom: boolean;
     name: {
       en: string;
-      zh: string;
+      zh: string | null;
     };
+    slug: string;
+    is_custom: boolean;
   };
   userId: string;
   rating: number | null;
-  comments: string | null;
-  location: string | null; // JSON string of LocationData
+  location: string | null;
   bartender: string | null;
+  comments: string | null;
   tags: string[] | null;
-  createdAt: string;
-  updatedAt: string;
-  drinkDate: string | null;
-  media: MediaItem[] | null;
-  deletedAt: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  drinkDate: Date | null;
+  media: {
+    id: string;
+    url: string;
+    type: 'image' | 'video';
+    contentType: string;
+    fileSize: number;
+    originalName: string;
+    createdAt: Date;
+    status: string;
+  }[] | null;
+  deletedAt: Date | null;
+  visibility: 'public' | 'private' | 'friends';
+  user?: {
+    id: string;
+    username: string;
+    avatarUrl: string | null;
+  } | null;
+  reactions?: { [key: string]: number };
 }
 
 export interface MediaItem {

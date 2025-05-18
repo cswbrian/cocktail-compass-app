@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CocktailLog } from "@/types/cocktail-log";
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { Loader2 } from "lucide-react";
 
 interface CocktailLogListProps {
   type?: 'place' | 'cocktail';
@@ -13,8 +14,10 @@ interface CocktailLogListProps {
   isLoading?: boolean;
   onLogSaved?: () => void;
   onLogDeleted?: () => void;
+  onLogsChange?: (logs: CocktailLog[]) => void;
   hasMore?: boolean;
   onLoadMore?: () => void;
+  variant?: 'public' | 'private';
 }
 
 function CocktailLogSkeleton() {
@@ -48,8 +51,10 @@ export function CocktailLogList({
   isLoading: providedIsLoading,
   onLogSaved,
   onLogDeleted,
+  onLogsChange,
   hasMore: providedHasMore,
-  onLoadMore: providedOnLoadMore
+  onLoadMore: providedOnLoadMore,
+  variant = 'private'
 }: CocktailLogListProps) {
   const [page, setPage] = useState(1);
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
@@ -98,7 +103,11 @@ export function CocktailLogList({
   }, [inView, hasMore, isLoading, providedOnLoadMore]);
 
   if (isLoading && (!logs || logs.length === 0)) {
-    return <CocktailLogSkeleton />;
+    return (
+      <div className="flex justify-center items-center py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
 
   if (!logs || logs.length === 0) {
@@ -116,6 +125,8 @@ export function CocktailLogList({
             log={log} 
             onLogSaved={onLogSaved}
             onLogDeleted={onLogDeleted}
+            onLogsChange={onLogsChange}
+            variant={variant}
           />
         </div>
       ))}
@@ -124,6 +135,16 @@ export function CocktailLogList({
           <CocktailLogSkeleton />
         </div>
       )}
+      {/* {hasMore && onLoadMore && (
+        <div className="flex justify-center py-4">
+          <button
+            onClick={onLoadMore}
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            Load more
+          </button>
+        </div>
+      )} */}
     </div>
   );
 } 

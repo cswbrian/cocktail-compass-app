@@ -42,7 +42,7 @@ export default function PlaceDetailPage() {
   }, [placeId]);
 
   const handleClose = () => {
-    navigate(`/${language}/journal/feeds`);
+    navigate(`/${language}/feeds`);
   };
 
   if (isLoading) {

@@ -1,4 +1,4 @@
-import { MapPin, User, Calendar, Tag } from "lucide-react";
+import { MapPin, User, Calendar, Tag, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -22,6 +22,7 @@ interface CocktailLogInfoProps {
   comments: string | null;
   tags: string[] | null;
   drinkDate: Date | null;
+  visibility?: "public" | "private";
   showHeadings?: boolean;
   className?: string;
   commentClassName?: string;
@@ -34,6 +35,7 @@ export function CocktailLogInfo({
   comments,
   tags,
   drinkDate,
+  visibility,
   showHeadings = false,
   className,
   commentClassName,
@@ -58,7 +60,7 @@ export function CocktailLogInfo({
             <span className="text-muted-foreground">{t.location}</span>
           )}
           <MapPin className="size-4 text-muted-foreground" />
-          <Link 
+          <Link
             to={`/${language}/places/${locationData.place_id}`}
             className="hover:text-primary transition-colors"
             onClick={(e) => e.stopPropagation()}
@@ -106,9 +108,11 @@ export function CocktailLogInfo({
       {comments && (
         <div className="flex flex-col gap-2">
           {showHeadings && (
-            <span className="text-muted-foreground">{t.notes}</span>
+            <span className="text-muted-foreground">{t.notePlaceholder}</span>
           )}
-          <p className={cn("whitespace-pre-wrap", commentClassName)}>{comments}</p>
+          <p className={cn("whitespace-pre-wrap", commentClassName)}>
+            {comments}
+          </p>
         </div>
       )}
 
@@ -128,6 +132,18 @@ export function CocktailLogInfo({
               </span>
             ))}
           </div>
+        </div>
+      )}
+
+      {visibility && (
+        <div className="flex items-center gap-2">
+          {showHeadings && (
+            <span className="text-muted-foreground">{t.visibility}</span>
+          )}
+          <Eye className="h-4 w-4 text-muted-foreground" />
+          <span>
+            {visibility === "public" ? t.visibilityPublic : t.visibilityPrivate}
+          </span>
         </div>
       )}
     </div>

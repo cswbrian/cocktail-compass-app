@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { LocationSelector } from "./LocationSelector";
 import { AuthService } from "@/services/auth-service";
 import { Loading } from "@/components/ui/loading";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface LocationData {
   name: string;
@@ -89,6 +90,9 @@ export function CocktailLogForm({
   const t = translations[language as keyof typeof translations];
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const [customCocktailValues, setCustomCocktailValues] = useState<CustomCocktailValues | null>(null);
+  const [visibility, setVisibility] = useState<'public' | 'private'>(
+    (existingLog?.visibility === 'private' ? 'private' : 'public')
+  );
 
   // Reset all form states
   const resetForm = () => {
@@ -105,6 +109,7 @@ export function CocktailLogForm({
     setDrinkDate(new Date());
     setMedia([]);
     setCustomCocktailValues(null);
+    setVisibility('public');
   };
 
   // Handle form close
@@ -140,6 +145,7 @@ export function CocktailLogForm({
       setTags(existingLog.tags || []);
       setDrinkDate(existingLog.drinkDate ? new Date(existingLog.drinkDate) : undefined);
       setMedia(existingLog.media || []);
+      setVisibility(existingLog.visibility === 'private' ? 'private' : 'public');
     } else {
       resetForm();
     }
@@ -215,7 +221,8 @@ export function CocktailLogForm({
             bartender || null,
             tags.length > 0 ? tags : null,
             drinkDate || null,
-            media.length > 0 ? media : null
+            media.length > 0 ? media : null,
+            visibility
           );
         } else {
           await cocktailLogService.createLog(
@@ -227,7 +234,8 @@ export function CocktailLogForm({
             bartender || null,
             tags.length > 0 ? tags : null,
             drinkDate || null,
-            media.length > 0 ? media : null
+            media.length > 0 ? media : null,
+            visibility
           );
         }
 
@@ -258,7 +266,7 @@ export function CocktailLogForm({
 
         // Redirect to journal page after successful creation
         if (!existingLog) {
-          navigate(`/${language}/journal/feeds`);
+          navigate(`/${language}/feeds`);
         }
       } catch (error) {
         console.error("Error saving log:", error);
@@ -678,7 +686,19 @@ export function CocktailLogForm({
               </div>
 
               <div className="p-4 border-t mt-auto">
-                <div className="flex w-full gap-2">
+                <div className="flex w-full gap-2 items-center">
+                  <Select
+                    value={visibility}
+                    onValueChange={(value: 'public' | 'private') => setVisibility(value)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder={t.visibility} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="public">{t.visibilityPublic}</SelectItem>
+                      <SelectItem value="private">{t.visibilityPrivate}</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <Button 
                     onClick={handleSave} 
                     disabled={isLoading || !drinkDate || !cocktailNameInput}
