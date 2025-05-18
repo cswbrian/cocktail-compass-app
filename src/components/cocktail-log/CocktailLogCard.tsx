@@ -124,7 +124,10 @@ export function CocktailLogCard({
   }, [isDetailOpen]);
 
   const renderPublicCard = () => (
-    <div className="bg-background border-b rounded-none px-6 py-4">
+    <div 
+      className="bg-background border-b rounded-none px-6 py-4 cursor-pointer hover:shadow-md transition-shadow"
+      onClick={handleClick}
+    >
       <div className="flex items-start space-x-4">
         <div className="flex-1">
           <div className="flex items-center space-x-2">

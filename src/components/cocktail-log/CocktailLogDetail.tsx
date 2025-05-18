@@ -12,6 +12,7 @@ import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import { Link, useLocation } from "react-router-dom";
 import { formatBilingualText } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 
 interface CocktailLogDetailProps {
   log: CocktailLog;
@@ -34,6 +35,9 @@ export function CocktailLogDetail({
   const { language } = useLanguage();
   const t = translations[language];
   const location = useLocation();
+  const { user } = useAuth();
+
+  const isOwnLog = user?.id === log.user?.id;
 
   // Check if we're in edit mode based on the URL
   useEffect(() => {
@@ -87,14 +91,16 @@ export function CocktailLogDetail({
           <h2 className="flex-1 text-center text-lg font-semibold">
             {t.logs}
           </h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-0"
-            onClick={handleEditClick}
-          >
-            <Edit className="h-5 w-5" />
-          </Button>
+          {isOwnLog && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-0"
+              onClick={handleEditClick}
+            >
+              <Edit className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </div>
 

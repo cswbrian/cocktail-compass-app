@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { Skeleton } from "@/components/ui/skeleton";
 import { CocktailLog } from "@/types/cocktail-log";
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Loader2 } from "lucide-react";
 
@@ -135,16 +135,6 @@ export function CocktailLogList({
           <CocktailLogSkeleton />
         </div>
       )}
-      {/* {hasMore && onLoadMore && (
-        <div className="flex justify-center py-4">
-          <button
-            onClick={onLoadMore}
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
-            Load more
-          </button>
-        </div>
-      )} */}
     </div>
   );
 } 
