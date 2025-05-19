@@ -4,7 +4,7 @@ import { placeService } from "@/services/place-service";
 import { Button } from "@/components/ui/button";
 import { Place } from "@/types/place";
 import { useLanguage } from "@/context/LanguageContext";
-import { PlaceLogs } from "@/components/place/place-logs";
+import { PlaceCocktailLogs } from "@/components/place/PlaceCocktailLogs";
 import { MapPin, X, BadgeCheck, AlertCircle, ArrowLeft } from "lucide-react";
 import { translations } from "@/translations";
 
@@ -116,7 +116,7 @@ export default function PlaceDetailPage() {
             </div>
           </div>
 
-          <PlaceLogs placeId={place.place_id} />
+          <PlaceCocktailLogs placeId={place.place_id} />
         </div>
   );
 } 

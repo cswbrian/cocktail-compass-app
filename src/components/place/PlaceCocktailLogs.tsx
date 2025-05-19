@@ -6,11 +6,11 @@ import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { CocktailLog } from '@/types/cocktail-log';
 
-interface PlaceLogsProps {
+interface PlaceCocktailLogsProps {
   placeId: string;
 }
 
-export function PlaceLogs({ placeId }: PlaceLogsProps) {
+export function PlaceCocktailLogs({ placeId }: PlaceCocktailLogsProps) {
   const [page, setPage] = useState(1);
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
   const PAGE_SIZE = 10;
