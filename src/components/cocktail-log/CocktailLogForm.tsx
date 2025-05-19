@@ -539,6 +539,9 @@ export function CocktailLogForm({
                                   <div className="pt-2 border-t" />
                                 </>
                               )}
+                              <div className="text-center text-sm text-muted-foreground mb-2">
+                                {t.cannotFindCocktail}
+                              </div>
                               <Button
                                 variant="outline"
                                 className="w-full"

@@ -6,7 +6,7 @@ import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ingredientService, Ingredient, IngredientType } from "@/services/ingredient-service";
 import { AuthService } from "@/services/auth-service";
 import { toast } from "sonner";
@@ -128,18 +128,26 @@ export function CustomIngredientModal({
                       placeholder={t.ingredientNameZh}
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="type">{t.ingredientType}</Label>
-                    <Select value={type} onValueChange={(value) => setType(value as IngredientType)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="base_spirit">{t.baseSpirit}</SelectItem>
-                        <SelectItem value="liqueur">{t.liqueur}</SelectItem>
-                        <SelectItem value="ingredient">{t.ingredient}</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="space-y-2">
+                    <Label>{t.ingredientType}</Label>
+                    <RadioGroup
+                      value={type}
+                      onValueChange={(value) => setType(value as IngredientType)}
+                      className="mt-4 flex flex-col space-y-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="base_spirit" id="base_spirit" />
+                        <Label htmlFor="base_spirit" className="cursor-pointer">{t.baseSpirit}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="liqueur" id="liqueur" />
+                        <Label htmlFor="liqueur" className="cursor-pointer">{t.liqueur}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="ingredient" id="ingredient" />
+                        <Label htmlFor="ingredient" className="cursor-pointer">{t.ingredient}</Label>
+                      </div>
+                    </RadioGroup>
                   </div>
                 </div>
               </div>
