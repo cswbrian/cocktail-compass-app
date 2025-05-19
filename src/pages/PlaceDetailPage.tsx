@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Place } from "@/types/place";
 import { useLanguage } from "@/context/LanguageContext";
 import { PlaceCocktailLogs } from "@/components/place/PlaceCocktailLogs";
-import { MapPin, X, BadgeCheck, AlertCircle, ArrowLeft } from "lucide-react";
+import { MapPin, BadgeCheck, AlertCircle, ArrowLeft } from "lucide-react";
 import { translations } from "@/translations";
 
 export default function PlaceDetailPage() {
@@ -104,7 +104,7 @@ export default function PlaceDetailPage() {
               {place.secondary_text && (
                 <span className="ml-1">
                   <a
-                    href={`https://www.google.com/maps/place/?q=place_id:${place.place_id}`}
+                    href={`https://www.google.com/maps/search/?api=1&query=${place.secondary_text}&query_place_id=${place.place_id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary inline-block"
