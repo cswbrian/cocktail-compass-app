@@ -40,7 +40,7 @@ export default function LogDetailPage() {
   }, [logId]);
 
   const handleClose = () => {
-    navigate(`/${language}/feeds`);
+    navigate(`/${language}/journal/feeds`);
   };
 
   if (isLoading) {

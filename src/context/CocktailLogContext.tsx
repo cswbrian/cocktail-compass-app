@@ -116,13 +116,34 @@ export function CocktailLogDataProvider({
     });
   }, [accumulatedLogs, isLoadingLogs, logsError, stats, isLoadingStats, statsError, page, hasMore]);
 
+  const closeForm = useCallback(() => {
+    setFormState({
+      isOpen: false,
+      mode: 'create',
+      selectedLog: null,
+    });
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (formState.isOpen) {
+        closeForm();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [formState.isOpen, closeForm]);
+
   const openCreateForm = useCallback(() => {
     setFormState({
       isOpen: true,
       mode: 'create',
       selectedLog: null,
     });
-    navigate('/logs/new');
   }, [navigate]);
 
   const openEditForm = useCallback((log: CocktailLog) => {
@@ -130,14 +151,6 @@ export function CocktailLogDataProvider({
       isOpen: true,
       mode: 'edit',
       selectedLog: log,
-    });
-  }, []);
-
-  const closeForm = useCallback(() => {
-    setFormState({
-      isOpen: false,
-      mode: 'create',
-      selectedLog: null,
     });
   }, []);
 

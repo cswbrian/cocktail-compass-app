@@ -13,6 +13,7 @@ import LogDetailPage from "./pages/LogDetailPage";
 import PlaceDetailPage from "./pages/PlaceDetailPage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
 import ProfilePage from "./pages/ProfilePage";
+import NewLogPage from "./pages/NewLogPage";
 
 export default function AppRoutes() {
   return (
@@ -32,7 +33,7 @@ export default function AppRoutes() {
         <Route path="cocktails/:slug" element={<CocktailDetails />} />
         <Route path="places/:placeId" element={<PlaceDetailPage />} />
         <Route path="logs">
-          <Route path="new" element={<FeedsPage />} />
+          <Route path="new" element={<NewLogPage />} />
           <Route path=":logId" element={<LogDetailPage />} />
           <Route path=":logId/edit" element={<LogDetailPage />} />
         </Route>
