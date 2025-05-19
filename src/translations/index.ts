@@ -245,6 +245,9 @@ export const translations = {
     visibilityPrivate: "See by you only",
     userNotFound: "User not found",
     userNotFoundDescription: "The user you're looking for doesn't exist or has been removed.",
+    instagramUrlUpdated: "Instagram name updated successfully",
+    instagramUrlUpdateFailed: "Failed to update Instagram URL",
+    updateInstagramUrl: "Update name",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -486,5 +489,8 @@ export const translations = {
     visibilityPrivate: "只有自己",
     userNotFound: "找不到用戶",
     userNotFoundDescription: "你要找的用戶不存在或已被移除。",
+    instagramUrlUpdated: "更新 Instagram 名稱成功",
+    instagramUrlUpdateFailed: "更新 Instagram 連結失敗",
+    updateInstagramUrl: "更新名稱",
   },
 };
