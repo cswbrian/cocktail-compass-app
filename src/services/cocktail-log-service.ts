@@ -300,7 +300,7 @@ export class CocktailLogService {
     const baseQuery = supabase
       .from("cocktail_logs")
       .select('*', { count: 'exact', head: true })
-      .match({ ...query, user_id: user.id })
+      .match(query)
       .is("deleted_at", null);
 
     // Apply visibility filter
@@ -338,7 +338,7 @@ export class CocktailLogService {
           status
         )
       `)
-      .match({ ...query, user_id: user.id })
+      .match(query)
       .is("deleted_at", null)
       .or(`visibility.eq.public,user_id.eq.${user.id},and(visibility.eq.friends,user_id.eq.${user.id})`)
       .order("drink_date", { ascending: false })

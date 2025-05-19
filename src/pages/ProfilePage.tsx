@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { translations } from "@/translations";
-import { userSettingsService } from "@/services/user-settings-service";
+import { userSettingsService, UsernameValidationError } from "@/services/user-settings-service";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
@@ -44,9 +44,13 @@ const UserProfile: React.FC = () => {
       await userSettingsService.updateUsername(username);
       toast.success(t.usernameUpdated);
       setIsModalOpen(false);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error updating username:", error);
-      toast.error(t.usernameUpdateFailed);
+      if (error instanceof UsernameValidationError) {
+        toast.error(error.message);
+      } else {
+        toast.error(t.usernameUpdateFailed);
+      }
     }
   };
 
@@ -59,7 +63,7 @@ const UserProfile: React.FC = () => {
         <span className="mr-2">{username}</span>
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogTrigger asChild>
-            <Button variant="link" className="p-0 text-sm">{t.edit}</Button>
+            <Button variant="link" className="p-0 text-sm">{t.updateUsername}</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

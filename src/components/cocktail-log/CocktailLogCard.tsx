@@ -8,6 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { formatBilingualText } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 import { cocktailLogService } from "@/services/cocktail-log-service";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/use-toast";
@@ -17,7 +18,7 @@ interface CocktailLogCardProps {
   onLogSaved?: () => void;
   onLogDeleted?: () => void;
   onLogsChange?: (logs: CocktailLog[]) => void;
-  variant?: 'public' | 'private';
+  variant?: "public" | "private";
 }
 
 export function CocktailLogCard({
@@ -25,26 +26,28 @@ export function CocktailLogCard({
   onLogSaved,
   onLogDeleted,
   onLogsChange,
-  variant = 'private'
+  variant = "private",
 }: CocktailLogCardProps) {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const { language } = useLanguage();
   const { user } = useAuth();
   const [isCheered, setIsCheered] = useState(false);
-  const [cheerCount, setCheerCount] = useState(log.reactions?.['cheers'] || 0);
-  const [cheerReactionTypeId, setCheerReactionTypeId] = useState<string | null>(null);
+  const [cheerCount, setCheerCount] = useState(log.reactions?.["cheers"] || 0);
+  const [cheerReactionTypeId, setCheerReactionTypeId] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     // Get the cheer reaction type ID
     const getCheerReactionType = async () => {
       try {
         const reactionTypes = await cocktailLogService.getReactionTypes();
-        const cheerType = reactionTypes.find(type => type.name === 'cheers');
+        const cheerType = reactionTypes.find((type) => type.name === "cheers");
         if (cheerType) {
           setCheerReactionTypeId(cheerType.id);
         }
       } catch (error) {
-        console.error('Error getting reaction types:', error);
+        console.error("Error getting reaction types:", error);
       }
     };
     getCheerReactionType();
@@ -56,12 +59,13 @@ export function CocktailLogCard({
       if (!user || !cheerReactionTypeId) return;
       try {
         const { reactions } = await cocktailLogService.getReactions(log.id);
-        const userReaction = reactions.find(r => 
-          r.userId === user.id && r.reactionTypeId === cheerReactionTypeId
+        const userReaction = reactions.find(
+          (r) =>
+            r.userId === user.id && r.reactionTypeId === cheerReactionTypeId
         );
         setIsCheered(!!userReaction);
       } catch (error) {
-        console.error('Error checking user reaction:', error);
+        console.error("Error checking user reaction:", error);
       }
     };
     checkUserReaction();
@@ -69,7 +73,11 @@ export function CocktailLogCard({
 
   const handleClick = () => {
     setIsDetailOpen(true);
-    window.history.pushState({ logId: log.id }, '', `/${language}/logs/${log.id}`);
+    window.history.pushState(
+      { logId: log.id },
+      "",
+      `/${language}/logs/${log.id}`
+    );
   };
 
   const handleCheer = async () => {
@@ -93,15 +101,23 @@ export function CocktailLogCard({
 
     try {
       if (isCheered) {
-        await cocktailLogService.removeReaction(log.id, user.id, cheerReactionTypeId);
-        setCheerCount(prev => Math.max(0, prev - 1));
+        await cocktailLogService.removeReaction(
+          log.id,
+          user.id,
+          cheerReactionTypeId
+        );
+        setCheerCount((prev) => Math.max(0, prev - 1));
       } else {
-        await cocktailLogService.addReaction(log.id, user.id, cheerReactionTypeId);
-        setCheerCount(prev => prev + 1);
+        await cocktailLogService.addReaction(
+          log.id,
+          user.id,
+          cheerReactionTypeId
+        );
+        setCheerCount((prev) => prev + 1);
       }
       setIsCheered(!isCheered);
     } catch (error) {
-      console.error('Error toggling cheer:', error);
+      console.error("Error toggling cheer:", error);
       toast({
         title: "Error",
         description: "Failed to update cheer status",
@@ -117,28 +133,36 @@ export function CocktailLogCard({
       }
     };
 
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener("popstate", handlePopState);
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener("popstate", handlePopState);
     };
   }, [isDetailOpen]);
 
   const renderPublicCard = () => (
-    <div 
+    <div
       className="bg-background border-b rounded-none px-6 py-4 cursor-pointer hover:shadow-md transition-shadow"
       onClick={handleClick}
     >
       <div className="flex items-start space-x-4">
         <div className="flex-1">
           <div className="flex items-center space-x-2">
-            <span className="font-medium text-primary">{log.user?.username || '??'}</span>
+            <Link
+              to={`/${language}/drinkers/${log.user?.username}`}
+              className="font-medium text-primary"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span>{log.user?.username || "??"}</span>
+            </Link>
             {log.drinkDate && (
               <span className="text-base text-muted-foreground">
                 {format(new Date(log.drinkDate), "PPP")}
               </span>
             )}
           </div>
-          <h3 className="text-lg font-semibold mt-1">{formatBilingualText(log.cocktail.name, language)}</h3>
+          <h3 className="text-lg font-semibold mt-1">
+            {formatBilingualText(log.cocktail.name, language)}
+          </h3>
           <div className="space-y-2">
             <CocktailLogInfo
               rating={log.rating ?? null}
@@ -158,16 +182,18 @@ export function CocktailLogCard({
             )}
 
             <div className="flex items-center space-x-4 mt-2">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="p-0 hover:bg-transparent cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleCheer();
                 }}
               >
-                <Heart className={`h-4 w-4 ${isCheered ? 'fill-current' : ''}`} />
+                <Heart
+                  className={`h-4 w-4 ${isCheered ? "fill-current" : ""}`}
+                />
                 <span>{cheerCount}</span>
               </Button>
             </div>
@@ -188,7 +214,9 @@ export function CocktailLogCard({
             {format(new Date(log.drinkDate), "PPP")}
           </div>
         )}
-        <h3 className="text-lg font-semibold">{formatBilingualText(log.cocktail.name, language)}</h3>
+        <h3 className="text-lg font-semibold">
+          {formatBilingualText(log.cocktail.name, language)}
+        </h3>
         <div className="space-y-2">
           <CocktailLogInfo
             rating={log.rating ?? null}
@@ -213,7 +241,7 @@ export function CocktailLogCard({
 
   return (
     <>
-      {variant === 'public' ? renderPublicCard() : renderPrivateCard()}
+      {variant === "public" ? renderPublicCard() : renderPrivateCard()}
 
       <CocktailLogDetail
         isOpen={isDetailOpen}

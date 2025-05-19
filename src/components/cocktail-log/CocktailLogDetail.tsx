@@ -106,6 +106,17 @@ export function CocktailLogDetail({
 
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4 max-w-3xl mx-auto">
+          {log.visibility === 'public' && (
+            <div className="flex items-center space-x-2">
+              <Link
+                to={`/${language}/drinkers/${log.user?.username}`}
+                className="font-medium text-primary"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span>{log.user?.username || "??"}</span>
+              </Link>
+            </div>
+          )}
           {log.cocktail.is_custom ? (
             <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
           ) : (
