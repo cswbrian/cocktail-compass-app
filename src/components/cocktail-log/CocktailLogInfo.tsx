@@ -52,6 +52,29 @@ export function CocktailLogInfo({
     }
   }
 
+  const formatCommentWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.split(urlRegex).map((part, index) => {
+      if (part.match(urlRegex)) {
+        const cleanUrl = part.replace(/^https?:\/\//, '');
+        const displayUrl = cleanUrl.length > 15 ? cleanUrl.substring(0, 12) + '...' : cleanUrl;
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline break-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {displayUrl}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   return (
     <div className={cn("space-y-1", className)}>
       {locationData && (
@@ -110,8 +133,8 @@ export function CocktailLogInfo({
           {showHeadings && (
             <span className="text-muted-foreground">{t.notePlaceholder}</span>
           )}
-          <p className={cn("whitespace-pre-wrap", commentClassName)}>
-            {comments}
+          <p className={cn("whitespace-pre-wrap break-words max-w-full", commentClassName)}>
+            {formatCommentWithLinks(comments)}
           </p>
         </div>
       )}
