@@ -723,6 +723,22 @@ export class CocktailLogService {
 
     return { logs, hasMore };
   }
+
+  async getCocktailPreviews(): Promise<{ id: string; name: { en: string; zh: string | null }; slug: string; is_custom: boolean }[]> {
+    const { data, error } = await supabase
+      .from("cocktails")
+      .select("id, name, slug, is_custom")
+      .order("name->en");
+
+    if (error) throw error;
+
+    return data.map(cocktail => ({
+      id: cocktail.id,
+      name: cocktail.name,
+      slug: cocktail.slug,
+      is_custom: cocktail.is_custom
+    }));
+  }
 }
 
 export const cocktailLogService = new CocktailLogService();

@@ -81,6 +81,7 @@ export function CocktailLogForm({
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCocktails, setIsLoadingCocktails] = useState(false);
   const [drinkDate, setDrinkDate] = useState<Date | undefined>(new Date());
   const [media, setMedia] = useState<{ url: string; type: 'image' | 'video' }[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -152,21 +153,51 @@ export function CocktailLogForm({
   }, [existingLog, language]);
 
   useEffect(() => {
-    const cocktails = cocktailService.getAllCocktails() || [];
-    const filtered = cocktails
-      .filter(cocktail => {
-        const normalizedSearch = normalizeText(cocktailNameInput);
-        const normalizedName = normalizeText(formatBilingualText(cocktail.name, language));
-        return normalizedName.includes(normalizedSearch);
-      })
-      .map(cocktail => ({
-        name: formatBilingualText(cocktail.name, language),
-        value: cocktail.id,
-        slug: cocktail.slug,
-        label: formatBilingualText(cocktail.name, language)
-      }));
-    setFilteredCocktails(filtered);
-  }, [cocktailNameInput, language]);
+    const loadCocktails = async () => {
+      try {
+        setIsLoadingCocktails(true);
+        const cocktails = await cocktailLogService.getCocktailPreviews();
+        const filtered = cocktails
+          .filter(cocktail => {
+            const normalizedSearch = normalizeText(cocktailNameInput);
+            const normalizedName = normalizeText(formatBilingualText({
+              en: cocktail.name.en,
+              zh: cocktail.name.zh || null
+            }, language));
+            return normalizedName.includes(normalizedSearch);
+          })
+          .map(cocktail => ({
+            name: formatBilingualText({
+              en: cocktail.name.en,
+              zh: cocktail.name.zh || null
+            }, language),
+            value: cocktail.id,
+            slug: cocktail.slug,
+            label: formatBilingualText({
+              en: cocktail.name.en,
+              zh: cocktail.name.zh || null
+            }, language)
+          }));
+        setFilteredCocktails(filtered);
+      } catch (error) {
+        console.error("Error loading cocktails:", error);
+        toast({
+          title: t.error,
+          description: t.errorLoadingCocktail,
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingCocktails(false);
+      }
+    };
+
+    // Add a small delay to prevent too many API calls while typing
+    const timeoutId = setTimeout(() => {
+      loadCocktails();
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [cocktailNameInput, language, t]);
 
   // Reset form when opened for a new log
   useEffect(() => {
@@ -249,8 +280,9 @@ export function CocktailLogForm({
           id: existingLog?.id || '',
           cocktail: {
             id: cocktailId,
-            name: existingLog?.cocktail.name || '',
-            slug: existingLog?.cocktail.slug || ''
+            name: existingLog?.cocktail.name || { en: '', zh: null },
+            slug: existingLog?.cocktail.slug || '',
+            is_custom: existingLog?.cocktail.is_custom || false
           },
           rating: rating || null,
           comments: comments || null,
@@ -259,6 +291,11 @@ export function CocktailLogForm({
           tags: tags.length > 0 ? tags : null,
           drinkDate: drinkDate || null,
           media: media.length > 0 ? media : null,
+          userId: user.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          visibility
         } as CocktailLog);
         
         await handleLogSaved();
@@ -316,8 +353,8 @@ export function CocktailLogForm({
   const handleLogSaved = async () => {
     try {
       if (!selectedCocktail?.value) return;
-      const updatedLogs = await cocktailLogService.getLogsByCocktailId(selectedCocktail.value);
-      onLogsChange?.(updatedLogs);
+      const { logs } = await cocktailLogService.getLogsByCocktailId(selectedCocktail.value);
+      onLogsChange?.(logs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
       toast({
@@ -331,8 +368,8 @@ export function CocktailLogForm({
   const handleLogDeleted = async () => {
     try {
       if (!selectedCocktail?.value) return;
-      const updatedLogs = await cocktailLogService.getLogsByCocktailId(selectedCocktail.value);
-      onLogsChange?.(updatedLogs);
+      const { logs } = await cocktailLogService.getLogsByCocktailId(selectedCocktail.value);
+      onLogsChange?.(logs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
       toast({
@@ -511,7 +548,11 @@ export function CocktailLogForm({
                         <div className="absolute z-50 w-full mt-1 bg-popover rounded-md shadow-md">
                           <ScrollArea className="h-[200px]">
                             <div className="p-2">
-                              {filteredCocktails.length > 0 && (
+                              {isLoadingCocktails ? (
+                                <div className="flex items-center justify-center py-4">
+                                  <Loading size="sm" />
+                                </div>
+                              ) : filteredCocktails.length > 0 ? (
                                 <>
                                   {filteredCocktails.map((cocktail) => (
                                     <button
@@ -538,10 +579,11 @@ export function CocktailLogForm({
                                   ))}
                                   <div className="pt-2 border-t" />
                                 </>
+                              ) : (
+                                <div className="text-center text-sm text-muted-foreground py-4">
+                                  {t.noCocktailsFound}
+                                </div>
                               )}
-                              <div className="text-center text-sm text-muted-foreground mb-2">
-                                {t.cannotFindCocktail}
-                              </div>
                               <Button
                                 variant="outline"
                                 className="w-full"
