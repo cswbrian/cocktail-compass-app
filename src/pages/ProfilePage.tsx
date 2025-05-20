@@ -10,6 +10,7 @@ import { HighlightsContainer } from "@/components/journal/HighlightsContainer";
 import { BookmarksClient } from "@/components/bookmark/bookmarks-client";
 import { useLanguage } from "@/context/LanguageContext";
 import { StarIcon, BarChart3Icon, Instagram } from "lucide-react";
+import { UpdateUsernameDialog } from "@/components/profile/UpdateUsernameDialog";
 import {
   Dialog,
   DialogContent,
@@ -42,27 +43,8 @@ const UserProfile: React.FC = () => {
     fetchUserSettings();
   }, []);
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
-  };
-
   const handleInstagramUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInstagramUsername(e.target.value);
-  };
-
-  const handleUsernameUpdate = async () => {
-    try {
-      await userSettingsService.updateUsername(username);
-      toast.success(t.usernameUpdated);
-      setIsUsernameModalOpen(false);
-    } catch (error: unknown) {
-      console.error("Error updating username:", error);
-      if (error instanceof UsernameValidationError) {
-        toast.error(error.message);
-      } else {
-        toast.error(t.usernameUpdateFailed);
-      }
-    }
   };
 
   const handleInstagramUsernameUpdate = async () => {
@@ -87,24 +69,12 @@ const UserProfile: React.FC = () => {
       </h2>
       <div className="flex items-center">
         <span className="mr-2">{username}</span>
-        <Dialog open={isUsernameModalOpen} onOpenChange={setIsUsernameModalOpen}>
-          <DialogTrigger asChild>
-            <Button variant="link" className="p-0 text-sm text-muted-foreground">{t.updateUsername}</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{t.updateUsername}</DialogTitle>
-            </DialogHeader>
-            <Input
-              type="text"
-              value={username}
-              onChange={handleUsernameChange}
-              className="mb-2"
-              placeholder={t.enterNewUsername}
-            />
-            <Button onClick={handleUsernameUpdate}>{t.update}</Button>
-          </DialogContent>
-        </Dialog>
+        <UpdateUsernameDialog
+          username={username}
+          onUsernameChange={setUsername}
+          isOpen={isUsernameModalOpen}
+          onOpenChange={setIsUsernameModalOpen}
+        />
       </div>
       <div className="flex items-center mb-4">
         <Instagram className="w-4 h-4 mr-2" />

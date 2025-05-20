@@ -61,10 +61,10 @@ export class UserSettingsService {
       throw new UsernameValidationError('Username cannot exceed 30 characters');
     }
 
-    // Check for valid characters (letters, numbers, and periods only)
-    const validUsernameRegex = /^[a-zA-Z0-9.]+$/;
+    // Check for valid characters (lowercase letters, numbers, and periods only)
+    const validUsernameRegex = /^[a-z0-9.]+$/;
     if (!validUsernameRegex.test(username)) {
-      throw new UsernameValidationError('Username can only contain letters, numbers, and periods');
+      throw new UsernameValidationError('Username can only contain lowercase letters, numbers, and periods');
     }
 
     // Check for consecutive periods
@@ -103,7 +103,7 @@ export class UserSettingsService {
     const { data: existingUser, error: checkError } = await supabase
       .from('user_settings')
       .select('user_id')
-      .eq('username', username)
+      .ilike('username', username)
       .neq('user_id', user.id)
       .single();
 
