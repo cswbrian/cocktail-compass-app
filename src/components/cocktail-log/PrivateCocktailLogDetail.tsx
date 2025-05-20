@@ -5,7 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CocktailLogForm } from "./CocktailLogForm";
 import { useState, useEffect } from "react";
 import { CocktailLogMedia } from "./CocktailLogMedia";
-import { LocationInfo, DateInfo, CommentInfo, VisibilityInfo } from "./CocktailLogInfo";
+import {
+  LocationInfo,
+  DateInfo,
+  CommentInfo,
+  VisibilityInfo,
+} from "./CocktailLogInfo";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import { Link, useLocation } from "react-router-dom";
@@ -26,7 +31,7 @@ export function PrivateCocktailLogDetail({
   onClose,
   onLogSaved,
   onLogDeleted,
-  onLogsChange
+  onLogsChange,
 }: PrivateCocktailLogDetailProps) {
   const [isEditing, setIsEditing] = useState(false);
   const { language } = useLanguage();
@@ -34,7 +39,7 @@ export function PrivateCocktailLogDetail({
   const location = useLocation();
 
   useEffect(() => {
-    setIsEditing(location.pathname.endsWith('/edit'));
+    setIsEditing(location.pathname.endsWith("/edit"));
   }, [location]);
 
   useEffect(() => {
@@ -44,12 +49,12 @@ export function PrivateCocktailLogDetail({
       }
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, [isEditing]);
 
   const handleEditClick = () => {
-    window.history.pushState({}, '', `/${language}/logs/${log.id}/edit`);
+    window.history.pushState({}, "", `/${language}/logs/${log.id}/edit`);
     setIsEditing(true);
   };
 
@@ -78,9 +83,7 @@ export function PrivateCocktailLogDetail({
           >
             <X className="h-5 w-5" />
           </Button>
-          <h2 className="flex-1 text-center text-lg font-semibold">
-            {t.logs}
-          </h2>
+          <h2 className="flex-1 text-center text-lg font-semibold">{t.logs}</h2>
           <Button
             variant="ghost"
             size="icon"
@@ -95,25 +98,36 @@ export function PrivateCocktailLogDetail({
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4 max-w-3xl mx-auto">
           {log.cocktail.is_custom ? (
-            <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              {formatBilingualText(log.cocktail.name, language)}
+            </h3>
           ) : (
-            <Link 
+            <Link
               to={`/${language}/cocktails/${log.cocktail.slug}`}
               className="hover:text-primary transition-colors"
             >
-              <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
+              <h3 className="text-xl font-semibold mb-4">
+                {formatBilingualText(log.cocktail.name, language)}
+              </h3>
             </Link>
           )}
           <LocationInfo location={log.location} showHeadings />
-          <DateInfo date={log.drinkDate ? new Date(log.drinkDate) : null} showHeadings />
+          <DateInfo
+            date={log.drinkDate ? new Date(log.drinkDate) : null}
+            showHeadings
+          />
           <CommentInfo comments={log.comments} showHeadings />
-          <VisibilityInfo visibility={log.visibility as 'public' | 'private'} showHeadings />
 
           {log.media && log.media.length > 0 && (
             <div className="mt-4" onClick={(e) => e.stopPropagation()}>
               <CocktailLogMedia media={log.media} size="lg" />
             </div>
           )}
+
+          <VisibilityInfo
+            visibility={log.visibility as "public" | "private"}
+            showHeadings
+          />
         </div>
       </div>
     </div>
@@ -165,4 +179,4 @@ export function PrivateCocktailLogDetail({
       )}
     </AnimatePresence>
   );
-} 
+}

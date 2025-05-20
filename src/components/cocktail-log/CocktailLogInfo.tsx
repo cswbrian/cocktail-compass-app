@@ -114,9 +114,6 @@ export function CommentInfo({ comments, showHeadings = false, className, comment
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      {showHeadings && (
-        <span className="text-muted-foreground">{t.notePlaceholder}</span>
-      )}
       <p className={cn("whitespace-pre-wrap break-words max-w-full", commentClassName)}>
         {formatCommentWithLinks(comments)}
       </p>
@@ -176,9 +173,9 @@ export function CocktailLogInfo({
         showHeadings={showHeadings} 
         commentClassName={commentClassName} 
       />
-      {visibility && (
+      {/* {visibility && (
         <VisibilityInfo visibility={visibility} showHeadings={showHeadings} />
-      )}
+      )} */}
     </div>
   );
 }

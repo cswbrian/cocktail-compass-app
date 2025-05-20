@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CocktailLogForm } from "./CocktailLogForm";
 import { useState, useEffect } from "react";
 import { CocktailLogMedia } from "./CocktailLogMedia";
-import { LocationInfo, DateInfo, CommentInfo, VisibilityInfo } from "./CocktailLogInfo";
+import { LocationInfo, DateInfo, CommentInfo } from "./CocktailLogInfo";
 import { translations } from "@/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import { Link, useLocation } from "react-router-dom";
@@ -122,7 +122,6 @@ export function PublicCocktailLogDetail({
           <LocationInfo location={log.location} showHeadings />
           <DateInfo date={log.drinkDate ? new Date(log.drinkDate) : null} showHeadings />
           <CommentInfo comments={log.comments} showHeadings />
-          <VisibilityInfo visibility={log.visibility as 'public' | 'private'} showHeadings />
 
           {log.media && log.media.length > 0 && (
             <div className="mt-4" onClick={(e) => e.stopPropagation()}>

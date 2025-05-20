@@ -79,6 +79,7 @@ export default function LogDetailPage() {
         onLogSaved={(updatedLog) => setLog(updatedLog)}
         onLogDeleted={handleClose}
         onClose={handleClose}
+        variant={log.visibility === 'public' ? 'public' : 'private'}
       />
     </motion.div>
   );

@@ -67,6 +67,7 @@ export function PrivateCocktailLogCard({
         onLogSaved={onLogSaved}
         onLogDeleted={onLogDeleted}
         onLogsChange={onLogsChange}
+        variant={log.visibility === 'public' ? 'public' : 'private'}
       />
     </>
   );
