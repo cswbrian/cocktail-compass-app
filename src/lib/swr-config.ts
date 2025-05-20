@@ -30,6 +30,10 @@ interface UserStats {
 export const CACHE_KEYS = {
   COCKTAIL_LOGS: (visibility?: 'public' | 'private' | 'friends') => 
     visibility ? ['cocktail-logs', visibility] : 'cocktail-logs',
+  OWN_LOGS: (page?: number) => 
+    page ? ['own-logs', page] : 'own-logs',
+  PUBLIC_LOGS: (page?: number) => 
+    page ? ['public-logs', page] : 'public-logs',
   USER_STATS: 'user-stats',
   PLACE_LOGS: (placeId: string) => ['place-logs', placeId],
   COCKTAIL_LOGS_BY_ID: (cocktailId: string) => ['cocktail-logs-by-id', cocktailId],
@@ -39,18 +43,18 @@ export const CACHE_KEYS = {
 
 // Fetcher functions
 export const fetchers = {
-  getCocktailLogs: async (page: number = 1, pageSize: number = 10) => {
-    console.log('SWR Config - Fetching cocktail logs, page:', page, 'pageSize:', pageSize);
+  getOwnCocktailLogs: async (page: number = 1, pageSize: number = 10) => {
+    console.log('SWR Config - Fetching own cocktail logs, page:', page, 'pageSize:', pageSize);
     try {
       const user = await AuthService.getCurrentSession();
       if (!user) {
         return { logs: [], hasMore: false };
       }
       const result = await cocktailLogService.getOwnLogs(user.id, page, pageSize);
-      console.log('SWR Config - Cocktail logs fetched:', result);
+      console.log('SWR Config - Own cocktail logs fetched:', result);
       return result;
     } catch (error) {
-      console.error('SWR Config - Error fetching cocktail logs:', error);
+      console.error('SWR Config - Error fetching own cocktail logs:', error);
       throw error;
     }
   },
