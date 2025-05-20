@@ -6,6 +6,7 @@ import { cocktailService } from '@/services/cocktail-service';
 import { Cocktail } from '@/types/cocktail';
 import { BookmarkList } from '@/types/bookmark';
 import { AuthService } from '@/services/auth-service';
+import { mutate } from 'swr';
 
 interface UserStats {
   basicStats: {
@@ -40,6 +41,27 @@ export const CACHE_KEYS = {
   BOOKMARKS: 'bookmarks',
   COCKTAILS: 'cocktails',
 } as const;
+
+// Helper functions for cache invalidation
+export const invalidateCache = {
+  allLogs: async () => {
+    // Invalidate all pages of both public and own logs
+    await Promise.all([
+      mutate((key) => Array.isArray(key) && key[0] === 'public-logs'),
+      mutate((key) => Array.isArray(key) && key[0] === 'own-logs'),
+      mutate(CACHE_KEYS.USER_STATS)
+    ]);
+  },
+  publicLogs: async () => {
+    await mutate((key) => Array.isArray(key) && key[0] === 'public-logs');
+  },
+  ownLogs: async () => {
+    await mutate((key) => Array.isArray(key) && key[0] === 'own-logs');
+  },
+  userStats: async () => {
+    await mutate(CACHE_KEYS.USER_STATS);
+  }
+};
 
 // Fetcher functions
 export const fetchers = {

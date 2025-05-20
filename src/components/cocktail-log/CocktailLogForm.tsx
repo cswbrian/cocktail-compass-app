@@ -25,7 +25,7 @@ import { AuthService } from "@/services/auth-service";
 import { Loading } from "@/components/ui/loading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { mutate } from "swr";
-import { CACHE_KEYS } from "@/lib/swr-config";
+import { CACHE_KEYS, invalidateCache } from "@/lib/swr-config";
 
 interface LocationData {
   name: string;
@@ -251,15 +251,13 @@ export function CocktailLogForm({
           variant: "default",
         });
 
-        // Invalidate relevant cache keys
+        // Invalidate relevant cache keys using the new helper
         if (visibility === 'public') {
-          // Invalidate public logs cache
-          await mutate(CACHE_KEYS.PUBLIC_LOGS());
+          await invalidateCache.allLogs();
+        } else {
+          await invalidateCache.ownLogs();
+          await invalidateCache.userStats();
         }
-        // Always invalidate own logs cache
-        await mutate(CACHE_KEYS.OWN_LOGS());
-        // Invalidate user stats
-        await mutate(CACHE_KEYS.USER_STATS);
 
         onClose();
         onLogSaved?.(savedLog);

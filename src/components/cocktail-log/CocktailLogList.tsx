@@ -64,11 +64,12 @@ export function CocktailLogList({
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const PAGE_SIZE = 10;
-  const THROTTLE_DELAY = 300; // Reduced throttle delay for better responsiveness
+  const THROTTLE_DELAY = 300;
   const lastFetchTime = useRef<number>(0);
   const isLoadingRef = useRef(false);
+  const isInitialMount = useRef(true);
 
-  const { data: fetchedData, isLoading: isFetching } = useSWR(
+  const { data: fetchedData, isLoading: isFetching, mutate } = useSWR(
     type && id ? [`${type}-logs`, id, page] : null,
     async () => {
       if (type === 'place') {
@@ -89,7 +90,11 @@ export function CocktailLogList({
         }
         setIsLoadingMore(false);
         isLoadingRef.current = false;
-      }
+      },
+      revalidateOnFocus: false,
+      revalidateIfStale: true,
+      revalidateOnReconnect: true,
+      dedupingInterval: 5000,
     }
   );
 
@@ -100,7 +105,7 @@ export function CocktailLogList({
   // Set up intersection observer for infinite scrolling
   const { ref, inView } = useInView({
     threshold: 0,
-    rootMargin: '200px', // Increased root margin for earlier loading
+    rootMargin: '200px',
   });
 
   const loadMore = useCallback(async () => {
@@ -137,7 +142,35 @@ export function CocktailLogList({
     setAccumulatedLogs([]);
     setIsLoadingMore(false);
     isLoadingRef.current = false;
+    isInitialMount.current = true;
   }, [type, id]);
+
+  // Handle log updates
+  useEffect(() => {
+    if (onLogSaved || onLogDeleted) {
+      const handleLogUpdate = async () => {
+        // Reset to first page and fetch fresh data
+        setPage(1);
+        setAccumulatedLogs([]);
+        await mutate();
+      };
+
+      if (onLogSaved) {
+        handleLogUpdate();
+      }
+      if (onLogDeleted) {
+        handleLogUpdate();
+      }
+    }
+  }, [onLogSaved, onLogDeleted, mutate]);
+
+  // Handle initial data load
+  useEffect(() => {
+    if (isInitialMount.current && fetchedData?.logs) {
+      setAccumulatedLogs(fetchedData.logs);
+      isInitialMount.current = false;
+    }
+  }, [fetchedData?.logs]);
 
   if (isLoading && (!logs || logs.length === 0)) {
     return <CocktailLogListSkeleton />;

@@ -9,7 +9,7 @@ import {
 } from "react";
 import { CocktailLog } from "@/types/cocktail-log";
 import useSWR from "swr";
-import { CACHE_KEYS, fetchers, swrConfig } from "@/lib/swr-config";
+import { CACHE_KEYS, fetchers, swrConfig, invalidateCache } from "@/lib/swr-config";
 
 interface PublicCocktailLogContextType {
   // Data
@@ -93,7 +93,7 @@ export function PublicCocktailLogProvider({
     mutate: async () => {
       setPage(1); // Reset to first page on mutation
       setAccumulatedLogs([]); // Clear accumulated logs
-      await mutateLogs();
+      await invalidateCache.publicLogs();
     },
   };
 

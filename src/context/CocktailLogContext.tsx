@@ -10,7 +10,7 @@ import {
 } from "react";
 import { CocktailLog } from "@/types/cocktail-log";
 import useSWR, { mutate } from "swr";
-import { CACHE_KEYS, fetchers, swrConfig, defaultData } from "@/lib/swr-config";
+import { CACHE_KEYS, fetchers, swrConfig, defaultData, invalidateCache } from "@/lib/swr-config";
 import { useNavigate } from "react-router-dom";
 
 interface FormState {
@@ -164,8 +164,7 @@ export function CocktailLogDataProvider({
     mutate: async () => {
       setPage(1); // Reset to first page on mutation
       setAccumulatedLogs([]); // Clear accumulated logs
-      await mutateLogs();
-      await mutate(CACHE_KEYS.USER_STATS);
+      await invalidateCache.allLogs();
     },
     // Data
     logs: accumulatedLogs,
