@@ -67,17 +67,25 @@ export function CocktailLogList({
   const THROTTLE_DELAY = 300;
   const lastFetchTime = useRef<number>(0);
   const isLoadingRef = useRef(false);
-  const isInitialMount = useRef(true);
 
+  // Only fetch if we're not using provided logs
   const { data: fetchedData, isLoading: isFetching, mutate } = useSWR(
-    type && id ? [`${type}-logs`, id, page] : null,
+    type && id && !providedLogs ? [`${type}-logs`, id, page] : null,
     async () => {
-      if (type === 'place') {
-        return cocktailLogService.getLogsByPlaceId(id!, page, PAGE_SIZE);
-      } else if (type === 'user') {
-        return cocktailLogService.getPublicLogsByUserId(id!, page, PAGE_SIZE);
-      } else {
-        return cocktailLogService.getLogsByCocktailId(id!, page, PAGE_SIZE);
+      try {
+        let result;
+        if (type === 'place') {
+          result = await cocktailLogService.getLogsByPlaceId(id!, page, PAGE_SIZE);
+        } else if (type === 'user') {
+          result = await cocktailLogService.getPublicLogsByUserId(id!, page, PAGE_SIZE);
+        } else {
+          result = await cocktailLogService.getLogsByCocktailId(id!, page, PAGE_SIZE);
+        }
+        return result;
+      } catch (error) {
+        setIsLoadingMore(false);
+        isLoadingRef.current = false;
+        throw error;
       }
     },
     { 
@@ -91,16 +99,21 @@ export function CocktailLogList({
         setIsLoadingMore(false);
         isLoadingRef.current = false;
       },
+      onError: () => {
+        setIsLoadingMore(false);
+        isLoadingRef.current = false;
+      },
       revalidateOnFocus: false,
       revalidateIfStale: true,
       revalidateOnReconnect: true,
       dedupingInterval: 5000,
+      keepPreviousData: true
     }
   );
 
   const logs = providedLogs ?? accumulatedLogs;
   const isLoading = providedIsLoading ?? isFetching;
-  const hasMore = providedHasMore ?? fetchedData?.hasMore;
+  const hasMore = providedLogs ? providedHasMore : (fetchedData?.hasMore ?? false);
 
   // Set up intersection observer for infinite scrolling
   const { ref, inView } = useInView({
@@ -124,6 +137,8 @@ export function CocktailLogList({
 
     if (providedOnLoadMore) {
       await providedOnLoadMore();
+      setIsLoadingMore(false);
+      isLoadingRef.current = false;
     } else {
       setPage(prev => prev + 1);
     }
@@ -142,35 +157,23 @@ export function CocktailLogList({
     setAccumulatedLogs([]);
     setIsLoadingMore(false);
     isLoadingRef.current = false;
-    isInitialMount.current = true;
   }, [type, id]);
 
   // Handle log updates
   useEffect(() => {
     if (onLogSaved || onLogDeleted) {
       const handleLogUpdate = async () => {
-        // Reset to first page and fetch fresh data
         setPage(1);
         setAccumulatedLogs([]);
+        setIsLoadingMore(false);
+        isLoadingRef.current = false;
         await mutate();
       };
 
-      if (onLogSaved) {
-        handleLogUpdate();
-      }
-      if (onLogDeleted) {
-        handleLogUpdate();
-      }
+      if (onLogSaved) handleLogUpdate();
+      if (onLogDeleted) handleLogUpdate();
     }
   }, [onLogSaved, onLogDeleted, mutate]);
-
-  // Handle initial data load
-  useEffect(() => {
-    if (isInitialMount.current && fetchedData?.logs) {
-      setAccumulatedLogs(fetchedData.logs);
-      isInitialMount.current = false;
-    }
-  }, [fetchedData?.logs]);
 
   if (isLoading && (!logs || logs.length === 0)) {
     return <CocktailLogListSkeleton />;
