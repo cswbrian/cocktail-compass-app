@@ -33,6 +33,7 @@ export interface CocktailLog {
     avatarUrl: string | null;
   } | null;
   reactions?: { [key: string]: number };
+  has_cheered?: boolean;
 }
 
 export interface MediaItem {

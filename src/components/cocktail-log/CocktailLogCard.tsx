@@ -13,6 +13,9 @@ import { cocktailLogService } from "@/services/cocktail-log-service";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/use-toast";
 
+// Add constant for cheers reaction
+const CHEERS_REACTION = 'cheers';
+
 interface CocktailLogCardProps {
   log: CocktailLog;
   onLogSaved?: () => void;
@@ -31,45 +34,8 @@ export function CocktailLogCard({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const { language } = useLanguage();
   const { user } = useAuth();
-  const [isCheered, setIsCheered] = useState(false);
-  const [cheerCount, setCheerCount] = useState(log.reactions?.["cheers"] || 0);
-  const [cheerReactionTypeId, setCheerReactionTypeId] = useState<string | null>(
-    null
-  );
-
-  useEffect(() => {
-    // Get the cheer reaction type ID
-    const getCheerReactionType = async () => {
-      try {
-        const reactionTypes = await cocktailLogService.getReactionTypes();
-        const cheerType = reactionTypes.find((type) => type.name === "cheers");
-        if (cheerType) {
-          setCheerReactionTypeId(cheerType.id);
-        }
-      } catch (error) {
-        console.error("Error getting reaction types:", error);
-      }
-    };
-    getCheerReactionType();
-  }, []);
-
-  useEffect(() => {
-    // Check if the current user has cheered this log
-    const checkUserReaction = async () => {
-      if (!user || !cheerReactionTypeId) return;
-      try {
-        const { reactions } = await cocktailLogService.getReactions(log.id);
-        const userReaction = reactions.find(
-          (r) =>
-            r.userId === user.id && r.reactionTypeId === cheerReactionTypeId
-        );
-        setIsCheered(!!userReaction);
-      } catch (error) {
-        console.error("Error checking user reaction:", error);
-      }
-    };
-    checkUserReaction();
-  }, [log.id, user, cheerReactionTypeId]);
+  const [isCheered, setIsCheered] = useState(log.has_cheered || false);
+  const [cheerCount, setCheerCount] = useState(log.reactions?.[CHEERS_REACTION] || 0);
 
   const handleClick = () => {
     setIsDetailOpen(true);
@@ -90,29 +56,12 @@ export function CocktailLogCard({
       return;
     }
 
-    if (!cheerReactionTypeId) {
-      toast({
-        title: "Error",
-        description: "Unable to process cheer action",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
       if (isCheered) {
-        await cocktailLogService.removeReaction(
-          log.id,
-          user.id,
-          cheerReactionTypeId
-        );
+        await cocktailLogService.removeReaction(log.id, user.id);
         setCheerCount((prev) => Math.max(0, prev - 1));
       } else {
-        await cocktailLogService.addReaction(
-          log.id,
-          user.id,
-          cheerReactionTypeId
-        );
+        await cocktailLogService.addReaction(log.id, user.id);
         setCheerCount((prev) => prev + 1);
       }
       setIsCheered(!isCheered);

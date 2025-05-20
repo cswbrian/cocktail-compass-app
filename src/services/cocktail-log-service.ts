@@ -32,6 +32,28 @@ interface Reaction {
   createdAt: Date;
 }
 
+// Add constant for cheers reaction
+const CHEERS_REACTION = 'cheers';
+
+// Add this interface near the top of the file with other interfaces
+interface CocktailLogViewData {
+  log_id: string;
+  log_created_at: Date;
+  comments: string | null;
+  drink_date: Date | null;
+  visibility: 'public' | 'private' | 'friends';
+  user_id: string;
+  username: string | null;
+  place_id: string | null;
+  place_name: string | null;
+  cocktail_id?: string;
+  cocktail_slug?: string;
+  cocktail_name?: string;
+  media_urls: string[];
+  cheers_count: number;
+  has_cheered: boolean;
+}
+
 export class CocktailLogService {
   private async handleMediaUpload(
     media: { url: string; type: 'image' | 'video' }[],
@@ -362,7 +384,8 @@ export class CocktailLogService {
         cocktail_slug,
         cocktail_name,
         media_urls,
-        cheers_count
+        cheers_count,
+        has_cheered
       `)
       .eq('cocktail_id', cocktailId)
       .order("drink_date", { ascending: false })
@@ -370,12 +393,8 @@ export class CocktailLogService {
 
     if (error) throw error;
 
-    const logs = data.map(log => {
-      // Convert media_urls to the expected format
-      const media = (log.media_urls || []).map((url: string) => ({
-        url: url.startsWith('http') ? url : `${import.meta.env.VITE_R2_BUCKET_URL}/${url}`,
-        type: url.match(/\.(mp4|mov)$/i) ? 'video' : 'image'
-      }));
+    const logs = data.map((log: CocktailLogViewData) => {
+      const media = this.mapMediaFromUrls(log.media_urls || []);
 
       // Create reactions object with cheers count
       const reactions = {
@@ -413,6 +432,7 @@ export class CocktailLogService {
         deletedAt: null,
         visibility: log.visibility,
         reactions,
+        has_cheered: log.has_cheered || false,
         user: {
           id: log.user_id,
           username: log.username || null,
@@ -464,7 +484,8 @@ export class CocktailLogService {
         cocktail_slug,
         cocktail_name,
         media_urls,
-        cheers_count
+        cheers_count,
+        has_cheered
       `)
       .eq('place_id', placeId)
       .order("drink_date", { ascending: false })
@@ -472,12 +493,8 @@ export class CocktailLogService {
 
     if (error) throw error;
 
-    const logs = data.map(log => {
-      // Convert media_urls to the expected format
-      const media = (log.media_urls || []).map((url: string) => ({
-        url: url.startsWith('http') ? url : `${import.meta.env.VITE_R2_BUCKET_URL}/${url}`,
-        type: url.match(/\.(mp4|mov)$/i) ? 'video' : 'image'
-      }));
+    const logs = data.map((log: CocktailLogViewData) => {
+      const media = this.mapMediaFromUrls(log.media_urls || []);
 
       // Create reactions object with cheers count
       const reactions = {
@@ -515,6 +532,7 @@ export class CocktailLogService {
         deletedAt: null,
         visibility: log.visibility,
         reactions,
+        has_cheered: log.has_cheered || false,
         user: {
           id: log.user_id,
           username: log.username || null,
@@ -595,7 +613,8 @@ export class CocktailLogService {
         cocktail_slug,
         cocktail_name,
         media_urls,
-        cheers_count
+        cheers_count,
+        has_cheered
       `)
       .eq('log_id', logId)
       .single();
@@ -608,51 +627,49 @@ export class CocktailLogService {
       throw error;
     }
 
-    // Convert media_urls to the expected format
-    const media = (data.media_urls || []).map((url: string) => ({
-      url: url.startsWith('http') ? url : `${import.meta.env.VITE_R2_BUCKET_URL}/${url}`,
-      type: url.match(/\.(mp4|mov)$/i) ? 'video' : 'image'
-    }));
+    const log = data as CocktailLogViewData;
+    const media = this.mapMediaFromUrls(log.media_urls || []);
 
     // Create reactions object with cheers count
     const reactions = {
-      cheers: data.cheers_count || 0
+      cheers: log.cheers_count || 0
     };
 
     // Parse cocktail name from JSONB
-    const cocktailName = typeof data.cocktail_name === 'string' 
-      ? JSON.parse(data.cocktail_name)
-      : data.cocktail_name;
+    const cocktailName = typeof log.cocktail_name === 'string' 
+      ? JSON.parse(log.cocktail_name)
+      : log.cocktail_name;
 
     return {
-      id: data.log_id,
+      id: log.log_id,
       cocktail: {
-        id: data.cocktail_id,
+        id: log.cocktail_id,
         name: cocktailName,
-        slug: data.cocktail_slug,
+        slug: log.cocktail_slug,
         is_custom: false // This will need to be fetched separately if needed
       },
-      userId: data.user_id,
-      location: data.place_id ? JSON.stringify({
-        name: data.place_name,
-        place_id: data.place_id,
+      userId: log.user_id,
+      location: log.place_id ? JSON.stringify({
+        name: log.place_name,
+        place_id: log.place_id,
         // These fields will need to be fetched separately if needed
         lat: 0,
         lng: 0,
-        main_text: data.place_name,
+        main_text: log.place_name,
         secondary_text: ''
       }) : null,
-      comments: data.comments,
-      createdAt: data.log_created_at,
-      updatedAt: data.log_created_at, // Using created_at as updated_at since it's not in the view
-      drinkDate: data.drink_date,
+      comments: log.comments,
+      createdAt: log.log_created_at,
+      updatedAt: log.log_created_at, // Using created_at as updated_at since it's not in the view
+      drinkDate: log.drink_date,
       media,
       deletedAt: null,
-      visibility: data.visibility,
+      visibility: log.visibility,
       reactions,
+      has_cheered: log.has_cheered || false,
       user: {
-        id: data.user_id,
-        username: data.username || null,
+        id: log.user_id,
+        username: log.username || null,
         avatarUrl: null
       }
     } as CocktailLog;
@@ -715,33 +732,45 @@ export class CocktailLogService {
       media,
       deletedAt: data.deleted_at,
       visibility: data.visibility,
-      reactions: reactions || {}
+      reactions: reactions || {},
+      has_cheered: data.has_cheered || false
     };
   }
 
-  // New reaction methods
+  // Update getReactionTypes to use constant
   async getReactionTypes(): Promise<ReactionType[]> {
-    const { data, error } = await supabase
-      .from("reaction_types")
-      .select("*")
-      .eq("is_active", true)
-      .order("name");
-
-    if (error) throw error;
-    return data.map(this.mapReactionType);
+    return [{
+      id: '', // Not needed since we use name
+      name: CHEERS_REACTION,
+      icon: 'heart',
+      description: 'Cheers!',
+      isActive: true,
+      createdAt: new Date()
+    }];
   }
 
+  // Update addReaction to use name
   async addReaction(
     cocktailLogId: string, 
     userId: string, 
-    reactionTypeId: string
+    reactionName: string = CHEERS_REACTION
   ): Promise<Reaction> {
+    // First get the reaction type ID
+    const { data: reactionType, error: typeError } = await supabase
+      .from('reaction_types')
+      .select('id')
+      .eq('name', reactionName)
+      .single();
+
+    if (typeError) throw typeError;
+
+    // Then insert the reaction
     const { data, error } = await supabase
       .from("cocktail_log_reactions")
       .insert([{
         cocktail_log_id: cocktailLogId,
         user_id: userId,
-        reaction_type_id: reactionTypeId
+        reaction_type_id: reactionType.id
       }])
       .select()
       .single();
@@ -750,23 +779,35 @@ export class CocktailLogService {
     return this.mapReaction(data);
   }
 
+  // Update removeReaction to use name
   async removeReaction(
     cocktailLogId: string, 
     userId: string, 
-    reactionTypeId: string
+    reactionName: string = CHEERS_REACTION
   ): Promise<void> {
+    // First get the reaction type ID
+    const { data: reactionType, error: typeError } = await supabase
+      .from('reaction_types')
+      .select('id')
+      .eq('name', reactionName)
+      .single();
+
+    if (typeError) throw typeError;
+
+    // Then delete the reaction
     const { error } = await supabase
       .from("cocktail_log_reactions")
       .delete()
       .match({
         cocktail_log_id: cocktailLogId,
         user_id: userId,
-        reaction_type_id: reactionTypeId
+        reaction_type_id: reactionType.id
       });
 
     if (error) throw error;
   }
 
+  // Update getReactions to use name
   async getReactions(cocktailLogId: string): Promise<{
     reactions: Reaction[],
     counts: { [key: string]: number }
@@ -781,16 +822,15 @@ export class CocktailLogService {
           icon
         )
       `)
-      .eq("cocktail_log_id", cocktailLogId);
+      .eq("cocktail_log_id", cocktailLogId)
+      .eq("reaction_types.name", CHEERS_REACTION);
 
     if (error) throw error;
 
     // Calculate reaction counts
-    const counts = data.reduce((acc: { [key: string]: number }, curr: any) => {
-      const typeName = curr.reaction_types.name;
-      acc[typeName] = (acc[typeName] || 0) + 1;
-      return acc;
-    }, {});
+    const counts = {
+      [CHEERS_REACTION]: data.length
+    };
 
     return {
       reactions: data.map(this.mapReaction),
@@ -850,19 +890,16 @@ export class CocktailLogService {
         cocktail_slug,
         cocktail_name,
         media_urls,
-        cheers_count
+        cheers_count,
+        has_cheered
       `)
       .order("drink_date", { ascending: false })
       .range(offset, offset + pageSize - 1);
 
     if (error) throw error;
 
-    const logs = data.map(log => {
-      // Convert media_urls to the expected format
-      const media = (log.media_urls || []).map((url: string) => ({
-        url: url.startsWith('http') ? url : `${import.meta.env.VITE_R2_BUCKET_URL}/${url}`,
-        type: url.match(/\.(mp4|mov)$/i) ? 'video' : 'image'
-      }));
+    const logs = data.map((log: CocktailLogViewData) => {
+      const media = this.mapMediaFromUrls(log.media_urls || []);
 
       // Create reactions object with cheers count
       const reactions = {
@@ -880,13 +917,12 @@ export class CocktailLogService {
           id: log.cocktail_id,
           name: cocktailName,
           slug: log.cocktail_slug,
-          is_custom: false // This will need to be fetched separately if needed
+          is_custom: false
         },
         userId: log.user_id,
         location: log.place_id ? JSON.stringify({
           name: log.place_name,
           place_id: log.place_id,
-          // These fields will need to be fetched separately if needed
           lat: 0,
           lng: 0,
           main_text: log.place_name,
@@ -894,12 +930,13 @@ export class CocktailLogService {
         }) : null,
         comments: log.comments,
         createdAt: log.log_created_at,
-        updatedAt: log.log_created_at, // Using created_at as updated_at since it's not in the view
+        updatedAt: log.log_created_at,
         drinkDate: log.drink_date,
         media,
         deletedAt: null,
         visibility: log.visibility,
         reactions,
+        has_cheered: log.has_cheered || false,
         user: {
           id: log.user_id,
           username: log.username || null,
@@ -941,19 +978,16 @@ export class CocktailLogService {
         place_id,
         place_name,
         media_urls,
-        cheers_count
+        cheers_count,
+        has_cheered
       `)
       .order("drink_date", { ascending: false })
       .range(offset, offset + pageSize - 1);
 
     if (error) throw error;
 
-    const logs = data.map(log => {
-      // Convert media_urls to the expected format
-      const media = (log.media_urls || []).map((url: string) => ({
-        url: url.startsWith('http') ? url : `${import.meta.env.VITE_R2_BUCKET_URL}/${url}`,
-        type: url.match(/\.(mp4|mov)$/i) ? 'video' : 'image'
-      }));
+    const logs = data.map((log: CocktailLogViewData) => {
+      const media = this.mapMediaFromUrls(log.media_urls || []);
 
       // Create reactions object with cheers count
       const reactions = {
@@ -972,7 +1006,6 @@ export class CocktailLogService {
         location: log.place_id ? JSON.stringify({
           name: log.place_name,
           place_id: log.place_id,
-          // These fields will need to be fetched separately if needed
           lat: 0,
           lng: 0,
           main_text: log.place_name,
@@ -980,18 +1013,19 @@ export class CocktailLogService {
         }) : null,
         comments: log.comments,
         createdAt: log.log_created_at,
-        updatedAt: log.log_created_at, // Using created_at as updated_at since it's not in the view
+        updatedAt: log.log_created_at,
         drinkDate: log.drink_date,
         media,
         deletedAt: null,
         visibility: log.visibility,
         reactions,
+        has_cheered: log.has_cheered || false,
         user: {
           id: log.user_id,
           username: log.username || null,
           avatarUrl: null
         }
-      } as CocktailLog;
+      } as unknown as CocktailLog;
     });
 
     const hasMore = (offset + pageSize) < (count || 0);
@@ -1012,6 +1046,19 @@ export class CocktailLogService {
       name: cocktail.name,
       slug: cocktail.slug,
       is_custom: cocktail.is_custom
+    }));
+  }
+
+  private mapMediaFromUrls(urls: string[]): { id: string; url: string; type: 'image' | 'video'; contentType: string; fileSize: number; originalName: string; createdAt: Date; status: 'active' }[] {
+    return (urls || []).map((url: string) => ({
+      id: url, // Use URL as ID since we don't have the actual ID from the view
+      url: url.startsWith('http') ? url : `${import.meta.env.VITE_R2_BUCKET_URL}/${url}`,
+      type: url.match(/\.(mp4|mov)$/i) ? 'video' : 'image' as const,
+      contentType: url.match(/\.(mp4|mov)$/i) ? 'video/mp4' : 'image/jpeg',
+      fileSize: 0, // We don't have this info in the view
+      originalName: url.split('/').pop() || '',
+      createdAt: new Date(),
+      status: 'active'
     }));
   }
 }
