@@ -17,7 +17,6 @@ interface CocktailLogListProps {
   onLogsChange?: (logs: CocktailLog[]) => void;
   hasMore?: boolean;
   onLoadMore?: () => void;
-  variant?: 'public' | 'private';
 }
 
 function CocktailLogSkeleton() {
@@ -59,8 +58,7 @@ export function CocktailLogList({
   onLogDeleted,
   onLogsChange,
   hasMore: providedHasMore,
-  onLoadMore: providedOnLoadMore,
-  variant = 'private'
+  onLoadMore: providedOnLoadMore
 }: CocktailLogListProps) {
   const [page, setPage] = useState(1);
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
@@ -128,7 +126,7 @@ export function CocktailLogList({
             onLogSaved={onLogSaved}
             onLogDeleted={onLogDeleted}
             onLogsChange={onLogsChange}
-            variant={variant}
+            variant={log.visibility === 'public' ? 'public' : 'private'}
           />
         </div>
       ))}

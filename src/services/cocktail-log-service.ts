@@ -352,24 +352,22 @@ export class CocktailLogService {
     return { logs, hasMore };
   }
 
-  async getLogsByCocktailId(cocktailId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
+  private async queryLogsFeed(
+    viewName: string,
+    page: number,
+    pageSize: number,
+    additionalFilters?: { [key: string]: any },
+    single?: boolean
+  ): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
     const user = await AuthService.getCurrentSession();
     if (!user) return { logs: [], hasMore: false };
 
     // Calculate offset
     const offset = (page - 1) * pageSize;
 
-    // Get total count of logs for this cocktail
-    const { count, error: countError } = await supabase
-      .from("all_public_cocktail_logs_feed")
-      .select('*', { count: 'exact', head: true })
-      .eq('cocktail_id', cocktailId);
-
-    if (countError) throw countError;
-
-    // Get paginated logs for this cocktail
-    const { data, error } = await supabase
-      .from("all_public_cocktail_logs_feed")
+    // Build base query
+    let query = supabase
+      .from(viewName)
       .select(`
         log_id,
         log_created_at,
@@ -386,293 +384,72 @@ export class CocktailLogService {
         media_urls,
         cheers_count,
         has_cheered
-      `)
-      .eq('cocktail_id', cocktailId)
-      .order("drink_date", { ascending: false })
-      .range(offset, offset + pageSize - 1);
+      `, { count: single ? undefined : 'exact' });
 
-    if (error) throw error;
+    // Apply additional filters if provided
+    if (additionalFilters) {
+      Object.entries(additionalFilters).forEach(([key, value]) => {
+        query = query.eq(key, value);
+      });
+    }
 
-    const logs = data.map((log: CocktailLogViewData) => {
-      const media = this.mapMediaFromUrls(log.media_urls || []);
+    // Get total count if not single
+    if (!single) {
+      const { count, error: countError } = await query;
+      if (countError) throw countError;
 
-      // Create reactions object with cheers count
-      const reactions = {
-        cheers: log.cheers_count || 0
-      };
+      // Get paginated data
+      const { data, error } = await query
+        .order("drink_date", { ascending: false })
+        .range(offset, offset + pageSize - 1);
 
-      // Parse cocktail name from JSONB
-      const cocktailName = typeof log.cocktail_name === 'string' 
-        ? JSON.parse(log.cocktail_name)
-        : log.cocktail_name;
+      if (error) throw error;
 
-      return {
-        id: log.log_id,
-        cocktail: {
-          id: log.cocktail_id,
-          name: cocktailName,
-          slug: log.cocktail_slug,
-          is_custom: false // This will need to be fetched separately if needed
-        },
-        userId: log.user_id,
-        location: log.place_id ? JSON.stringify({
-          name: log.place_name,
-          place_id: log.place_id,
-          // These fields will need to be fetched separately if needed
-          lat: 0,
-          lng: 0,
-          main_text: log.place_name,
-          secondary_text: ''
-        }) : null,
-        comments: log.comments,
-        createdAt: log.log_created_at,
-        updatedAt: log.log_created_at, // Using created_at as updated_at since it's not in the view
-        drinkDate: log.drink_date,
-        media,
-        deletedAt: null,
-        visibility: log.visibility,
-        reactions,
-        has_cheered: log.has_cheered || false,
-        user: {
-          id: log.user_id,
-          username: log.username || null,
-          avatarUrl: null
+      const logs = data.map((log: CocktailLogViewData) => this.mapLogFromViewData(log));
+      const hasMore = (offset + pageSize) < (count || 0);
+
+      return { logs, hasMore };
+    } else {
+      // Get single record
+      const { data, error } = await query.single();
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Record not found
+          return { logs: [], hasMore: false };
         }
-      } as CocktailLog;
-    });
+        throw error;
+      }
 
-    const hasMore = (offset + pageSize) < (count || 0);
-
-    return { logs, hasMore };
+      const log = this.mapLogFromViewData(data as CocktailLogViewData);
+      return { logs: [log], hasMore: false };
+    }
   }
 
-  async getLogsByUserId(userId?: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return { logs: [], hasMore: false };
-    return this.getLogsByQuery({ user_id: userId || user.id }, page, pageSize);
+  async getPublicLogs(page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
+    return this.queryLogsFeed("all_cocktail_logs_feed", page, pageSize);
+  }
+
+  async getOwnLogs(userId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
+    return this.queryLogsFeed("my_cocktail_logs_feed", page, pageSize, { user_id: userId });
+  }
+
+  async getLogsByCocktailId(cocktailId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
+    return this.queryLogsFeed("all_cocktail_logs_feed", page, pageSize, { cocktail_id: cocktailId });
   }
 
   async getLogsByPlaceId(placeId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return { logs: [], hasMore: false };
-
-    // Calculate offset
-    const offset = (page - 1) * pageSize;
-
-    // Get total count of logs for this place
-    const { count, error: countError } = await supabase
-      .from("all_public_cocktail_logs_feed")
-      .select('*', { count: 'exact', head: true })
-      .eq('place_id', placeId);
-
-    if (countError) throw countError;
-
-    // Get paginated logs for this place
-    const { data, error } = await supabase
-      .from("all_public_cocktail_logs_feed")
-      .select(`
-        log_id,
-        log_created_at,
-        comments,
-        drink_date,
-        visibility,
-        user_id,
-        username,
-        place_id,
-        place_name,
-        cocktail_id,
-        cocktail_slug,
-        cocktail_name,
-        media_urls,
-        cheers_count,
-        has_cheered
-      `)
-      .eq('place_id', placeId)
-      .order("drink_date", { ascending: false })
-      .range(offset, offset + pageSize - 1);
-
-    if (error) throw error;
-
-    const logs = data.map((log: CocktailLogViewData) => {
-      const media = this.mapMediaFromUrls(log.media_urls || []);
-
-      // Create reactions object with cheers count
-      const reactions = {
-        cheers: log.cheers_count || 0
-      };
-
-      // Parse cocktail name from JSONB
-      const cocktailName = typeof log.cocktail_name === 'string' 
-        ? JSON.parse(log.cocktail_name)
-        : log.cocktail_name;
-
-      return {
-        id: log.log_id,
-        cocktail: {
-          id: log.cocktail_id,
-          name: cocktailName,
-          slug: log.cocktail_slug,
-          is_custom: false // This will need to be fetched separately if needed
-        },
-        userId: log.user_id,
-        location: log.place_id ? JSON.stringify({
-          name: log.place_name,
-          place_id: log.place_id,
-          // These fields will need to be fetched separately if needed
-          lat: 0,
-          lng: 0,
-          main_text: log.place_name,
-          secondary_text: ''
-        }) : null,
-        comments: log.comments,
-        createdAt: log.log_created_at,
-        updatedAt: log.log_created_at, // Using created_at as updated_at since it's not in the view
-        drinkDate: log.drink_date,
-        media,
-        deletedAt: null,
-        visibility: log.visibility,
-        reactions,
-        has_cheered: log.has_cheered || false,
-        user: {
-          id: log.user_id,
-          username: log.username || null,
-          avatarUrl: null
-        }
-      } as CocktailLog;
-    });
-
-    const hasMore = (offset + pageSize) < (count || 0);
-
-    return { logs, hasMore };
-  }
-
-  private async getLogByQuery(query: { [key: string]: any }): Promise<CocktailLog | null> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return null;
-
-    const { data, error } = await supabase
-      .from("cocktail_logs")
-      .select(`
-        *,
-        places (
-          id,
-          place_id,
-          name,
-          main_text,
-          secondary_text,
-          lat,
-          lng
-        ),
-        cocktails (
-          name,
-          slug,
-          is_custom
-        ),
-        media_items (
-          id,
-          url,
-          content_type,
-          file_size,
-          original_name,
-          created_at,
-          status
-        )
-      `)
-      .match({ ...query, user_id: user.id })
-      .is("deleted_at", null)
-      .single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // Record not found
-        return null;
-      }
-      throw error;
-    }
-
-    return this.mapLog(data);
+    return this.queryLogsFeed("all_cocktail_logs_feed", page, pageSize, { place_id: placeId });
   }
 
   async getLogById(logId: string): Promise<CocktailLog | null> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return null;
-
-    const { data, error } = await supabase
-      .from("all_public_cocktail_logs_feed")
-      .select(`
-        log_id,
-        log_created_at,
-        comments,
-        drink_date,
-        visibility,
-        user_id,
-        username,
-        place_id,
-        place_name,
-        cocktail_id,
-        cocktail_slug,
-        cocktail_name,
-        media_urls,
-        cheers_count,
-        has_cheered
-      `)
-      .eq('log_id', logId)
-      .single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // Record not found
-        return null;
-      }
-      throw error;
-    }
-
-    const log = data as CocktailLogViewData;
-    const media = this.mapMediaFromUrls(log.media_urls || []);
-
-    // Create reactions object with cheers count
-    const reactions = {
-      cheers: log.cheers_count || 0
-    };
-
-    // Parse cocktail name from JSONB
-    const cocktailName = typeof log.cocktail_name === 'string' 
-      ? JSON.parse(log.cocktail_name)
-      : log.cocktail_name;
-
-    return {
-      id: log.log_id,
-      cocktail: {
-        id: log.cocktail_id,
-        name: cocktailName,
-        slug: log.cocktail_slug,
-        is_custom: false // This will need to be fetched separately if needed
-      },
-      userId: log.user_id,
-      location: log.place_id ? JSON.stringify({
-        name: log.place_name,
-        place_id: log.place_id,
-        // These fields will need to be fetched separately if needed
-        lat: 0,
-        lng: 0,
-        main_text: log.place_name,
-        secondary_text: ''
-      }) : null,
-      comments: log.comments,
-      createdAt: log.log_created_at,
-      updatedAt: log.log_created_at, // Using created_at as updated_at since it's not in the view
-      drinkDate: log.drink_date,
-      media,
-      deletedAt: null,
-      visibility: log.visibility,
-      reactions,
-      has_cheered: log.has_cheered || false,
-      user: {
-        id: log.user_id,
-        username: log.username || null,
-        avatarUrl: null
-      }
-    } as CocktailLog;
+    const { logs } = await this.queryLogsFeed(
+      "all_cocktail_logs_feed",
+      1,
+      1,
+      { log_id: logId },
+      true
+    );
+    return logs[0] || null;
   }
 
   private mapLog(data: any, reactions?: { [key: string]: number }): CocktailLog {
@@ -859,194 +636,51 @@ export class CocktailLogService {
     };
   }
 
-  async getPublicLogs(page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return { logs: [], hasMore: false };
+  private mapLogFromViewData(log: CocktailLogViewData): CocktailLog {
+    const media = this.mapMediaFromUrls(log.media_urls || []);
 
-    // Calculate offset
-    const offset = (page - 1) * pageSize;
+    // Create reactions object with cheers count
+    const reactions = {
+      cheers: log.cheers_count || 0
+    };
 
-    // Get total count of public logs
-    const { count, error: countError } = await supabase
-      .from("all_public_cocktail_logs_feed")
-      .select('*', { count: 'exact', head: true });
+    // Parse cocktail name from JSONB
+    const cocktailName = typeof log.cocktail_name === 'string' 
+      ? JSON.parse(log.cocktail_name)
+      : log.cocktail_name;
 
-    if (countError) throw countError;
-
-    // Get paginated public logs with user info and reactions
-    const { data, error } = await supabase
-      .from("all_public_cocktail_logs_feed")
-      .select(`
-        log_id,
-        log_created_at,
-        comments,
-        drink_date,
-        visibility,
-        user_id,
-        username,
-        place_id,
-        place_name,
-        cocktail_id,
-        cocktail_slug,
-        cocktail_name,
-        media_urls,
-        cheers_count,
-        has_cheered
-      `)
-      .order("drink_date", { ascending: false })
-      .range(offset, offset + pageSize - 1);
-
-    if (error) throw error;
-
-    const logs = data.map((log: CocktailLogViewData) => {
-      const media = this.mapMediaFromUrls(log.media_urls || []);
-
-      // Create reactions object with cheers count
-      const reactions = {
-        cheers: log.cheers_count || 0
-      };
-
-      // Parse cocktail name from JSONB
-      const cocktailName = typeof log.cocktail_name === 'string' 
-        ? JSON.parse(log.cocktail_name)
-        : log.cocktail_name;
-
-      return {
-        id: log.log_id,
-        cocktail: {
-          id: log.cocktail_id,
-          name: cocktailName,
-          slug: log.cocktail_slug,
-          is_custom: false
-        },
-        userId: log.user_id,
-        location: log.place_id ? JSON.stringify({
-          name: log.place_name,
-          place_id: log.place_id,
-          lat: 0,
-          lng: 0,
-          main_text: log.place_name,
-          secondary_text: ''
-        }) : null,
-        comments: log.comments,
-        createdAt: log.log_created_at,
-        updatedAt: log.log_created_at,
-        drinkDate: log.drink_date,
-        media,
-        deletedAt: null,
-        visibility: log.visibility,
-        reactions,
-        has_cheered: log.has_cheered || false,
-        user: {
-          id: log.user_id,
-          username: log.username || null,
-          avatarUrl: null
-        }
-      } as CocktailLog;
-    });
-
-    const hasMore = (offset + pageSize) < (count || 0);
-
-    return { logs, hasMore };
-  }
-
-  async getOwnLogs(userId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return { logs: [], hasMore: false };
-
-    // Calculate offset
-    const offset = (page - 1) * pageSize;
-
-    // Get total count of user's logs
-    const { count, error: countError } = await supabase
-      .from("my_cocktail_logs_feed")
-      .select('*', { count: 'exact', head: true });
-
-    if (countError) throw countError;
-
-    // Get paginated user's logs
-    const { data, error } = await supabase
-      .from("my_cocktail_logs_feed")
-      .select(`
-        log_id,
-        log_created_at,
-        comments,
-        drink_date,
-        visibility,
-        user_id,
-        username,
-        place_id,
-        place_name,
-        media_urls,
-        cheers_count,
-        has_cheered
-      `)
-      .order("drink_date", { ascending: false })
-      .range(offset, offset + pageSize - 1);
-
-    if (error) throw error;
-
-    const logs = data.map((log: CocktailLogViewData) => {
-      const media = this.mapMediaFromUrls(log.media_urls || []);
-
-      // Create reactions object with cheers count
-      const reactions = {
-        cheers: log.cheers_count || 0
-      };
-
-      return {
-        id: log.log_id,
-        cocktail: {
-          id: '', // This will need to be fetched separately if needed
-          name: { en: '', zh: null }, // This will need to be fetched separately if needed
-          slug: '', // This will need to be fetched separately if needed
-          is_custom: false // This will need to be fetched separately if needed
-        },
-        userId: log.user_id,
-        location: log.place_id ? JSON.stringify({
-          name: log.place_name,
-          place_id: log.place_id,
-          lat: 0,
-          lng: 0,
-          main_text: log.place_name,
-          secondary_text: ''
-        }) : null,
-        comments: log.comments,
-        createdAt: log.log_created_at,
-        updatedAt: log.log_created_at,
-        drinkDate: log.drink_date,
-        media,
-        deletedAt: null,
-        visibility: log.visibility,
-        reactions,
-        has_cheered: log.has_cheered || false,
-        user: {
-          id: log.user_id,
-          username: log.username || null,
-          avatarUrl: null
-        }
-      } as unknown as CocktailLog;
-    });
-
-    const hasMore = (offset + pageSize) < (count || 0);
-
-    return { logs, hasMore };
-  }
-
-  async getCocktailPreviews(): Promise<{ id: string; name: { en: string; zh: string | null }; slug: string; is_custom: boolean }[]> {
-    const { data, error } = await supabase
-      .from("cocktails")
-      .select("id, name, slug, is_custom")
-      .order("name->en");
-
-    if (error) throw error;
-
-    return data.map(cocktail => ({
-      id: cocktail.id,
-      name: cocktail.name,
-      slug: cocktail.slug,
-      is_custom: cocktail.is_custom
-    }));
+    return {
+      id: log.log_id,
+      cocktail: {
+        id: log.cocktail_id,
+        name: cocktailName,
+        slug: log.cocktail_slug,
+        is_custom: false
+      },
+      userId: log.user_id,
+      location: log.place_id ? JSON.stringify({
+        name: log.place_name,
+        place_id: log.place_id,
+        lat: 0,
+        lng: 0,
+        main_text: log.place_name,
+        secondary_text: ''
+      }) : null,
+      comments: log.comments,
+      createdAt: log.log_created_at,
+      updatedAt: log.log_created_at,
+      drinkDate: log.drink_date,
+      media,
+      deletedAt: null,
+      visibility: log.visibility,
+      reactions,
+      has_cheered: log.has_cheered || false,
+      user: {
+        id: log.user_id,
+        username: log.username || null,
+        avatarUrl: null
+      }
+    } as CocktailLog;
   }
 
   private mapMediaFromUrls(urls: string[]): { id: string; url: string; type: 'image' | 'video'; contentType: string; fileSize: number; originalName: string; createdAt: Date; status: 'active' }[] {

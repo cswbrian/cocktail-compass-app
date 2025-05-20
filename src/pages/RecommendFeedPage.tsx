@@ -63,7 +63,6 @@ export default function RecommendFeedPage() {
           onLogDeleted={handleLogDeleted}
           hasMore={hasMore}
           onLoadMore={loadMore}
-          variant="public"
         />
       </div>
     </AuthWrapper>

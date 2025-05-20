@@ -15,25 +15,13 @@ interface LocationData {
   secondary_text: string;
 }
 
-interface CocktailLogInfoProps {
+interface LocationInfoProps {
   location: string | null;
-  comments: string | null;
-  drinkDate: Date | null;
-  visibility?: "public" | "private";
   showHeadings?: boolean;
   className?: string;
-  commentClassName?: string;
 }
 
-export function CocktailLogInfo({
-  location,
-  comments,
-  drinkDate,
-  visibility,
-  showHeadings = false,
-  className,
-  commentClassName,
-}: CocktailLogInfoProps) {
+export function LocationInfo({ location, showHeadings = false, className }: LocationInfoProps) {
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
 
@@ -45,6 +33,61 @@ export function CocktailLogInfo({
       console.error("Error parsing location data:", error);
     }
   }
+
+  if (!locationData) return null;
+
+  return (
+    <div className={cn("flex items-center gap-2", className)}>
+      {showHeadings && (
+        <span className="text-muted-foreground">{t.location}</span>
+      )}
+      <MapPin className="size-4 text-muted-foreground" />
+      <Link
+        to={`/${language}/places/${locationData.place_id}`}
+        className="hover:text-primary transition-colors"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {locationData.main_text}
+      </Link>
+    </div>
+  );
+}
+
+interface DateInfoProps {
+  date: Date | null;
+  showHeadings?: boolean;
+  className?: string;
+}
+
+export function DateInfo({ date, showHeadings = false, className }: DateInfoProps) {
+  const { language } = useLanguage();
+  const t = translations[language as keyof typeof translations];
+
+  if (!date) return null;
+
+  return (
+    <div className={cn("flex items-center gap-2", className)}>
+      {showHeadings && (
+        <span className="text-muted-foreground">{t.drinkDate}</span>
+      )}
+      <Calendar className="h-4 w-4 text-muted-foreground" />
+      <span>{format(date, "PPP")}</span>
+    </div>
+  );
+}
+
+interface CommentInfoProps {
+  comments: string | null;
+  showHeadings?: boolean;
+  className?: string;
+  commentClassName?: string;
+}
+
+export function CommentInfo({ comments, showHeadings = false, className, commentClassName }: CommentInfoProps) {
+  const { language } = useLanguage();
+  const t = translations[language as keyof typeof translations];
+
+  if (!comments) return null;
 
   const formatCommentWithLinks = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -70,54 +113,71 @@ export function CocktailLogInfo({
   };
 
   return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      {showHeadings && (
+        <span className="text-muted-foreground">{t.notePlaceholder}</span>
+      )}
+      <p className={cn("whitespace-pre-wrap break-words max-w-full", commentClassName)}>
+        {formatCommentWithLinks(comments)}
+      </p>
+    </div>
+  );
+}
+
+interface VisibilityInfoProps {
+  visibility: "public" | "private";
+  showHeadings?: boolean;
+  className?: string;
+}
+
+export function VisibilityInfo({ visibility, showHeadings = false, className }: VisibilityInfoProps) {
+  const { language } = useLanguage();
+  const t = translations[language as keyof typeof translations];
+
+  return (
+    <div className={cn("flex items-center gap-2", className)}>
+      {showHeadings && (
+        <span className="text-muted-foreground">{t.visibility}</span>
+      )}
+      <Eye className="h-4 w-4 text-muted-foreground" />
+      <span>
+        {visibility === "public" ? t.visibilityPublic : t.visibilityPrivate}
+      </span>
+    </div>
+  );
+}
+
+// Keep the original component for backward compatibility
+interface CocktailLogInfoProps {
+  location: string | null;
+  comments: string | null;
+  drinkDate: Date | null;
+  visibility?: "public" | "private";
+  showHeadings?: boolean;
+  className?: string;
+  commentClassName?: string;
+}
+
+export function CocktailLogInfo({
+  location,
+  comments,
+  drinkDate,
+  visibility,
+  showHeadings = false,
+  className,
+  commentClassName,
+}: CocktailLogInfoProps) {
+  return (
     <div className={cn("space-y-1", className)}>
-      {locationData && (
-        <div className="flex items-center gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.location}</span>
-          )}
-          <MapPin className="size-4 text-muted-foreground" />
-          <Link
-            to={`/${language}/places/${locationData.place_id}`}
-            className="hover:text-primary transition-colors"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {locationData.main_text}
-          </Link>
-        </div>
-      )}
-
-      {drinkDate && (
-        <div className="flex items-center gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.drinkDate}</span>
-          )}
-          <Calendar className="h-4 w-4 text-muted-foreground" />
-          <span>{format(drinkDate, "PPP")}</span>
-        </div>
-      )}
-
-      {comments && (
-        <div className="flex flex-col gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.notePlaceholder}</span>
-          )}
-          <p className={cn("whitespace-pre-wrap break-words max-w-full", commentClassName)}>
-            {formatCommentWithLinks(comments)}
-          </p>
-        </div>
-      )}
-
+      <LocationInfo location={location} showHeadings={showHeadings} />
+      <DateInfo date={drinkDate} showHeadings={showHeadings} />
+      <CommentInfo 
+        comments={comments} 
+        showHeadings={showHeadings} 
+        commentClassName={commentClassName} 
+      />
       {visibility && (
-        <div className="flex items-center gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.visibility}</span>
-          )}
-          <Eye className="h-4 w-4 text-muted-foreground" />
-          <span>
-            {visibility === "public" ? t.visibilityPublic : t.visibilityPrivate}
-          </span>
-        </div>
+        <VisibilityInfo visibility={visibility} showHeadings={showHeadings} />
       )}
     </div>
   );
