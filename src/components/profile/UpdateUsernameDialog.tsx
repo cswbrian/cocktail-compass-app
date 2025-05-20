@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { userSettingsService, UsernameValidationError } from "@/services/user-settings-service";
 import { toast } from "sonner";
+import { UsernameRequirements } from "./UsernameRequirements";
 
 interface UpdateUsernameDialogProps {
   username: string;
@@ -60,6 +61,7 @@ export const UpdateUsernameDialog: React.FC<UpdateUsernameDialogProps> = ({
           className="mb-2"
           placeholder={t.enterNewUsername}
         />
+        <UsernameRequirements />
         <Button onClick={handleUsernameUpdate}>{t.update}</Button>
       </DialogContent>
     </Dialog>

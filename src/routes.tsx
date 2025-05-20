@@ -15,6 +15,7 @@ import AuthCallbackPage from "./pages/AuthCallbackPage";
 import ProfilePage from "./pages/ProfilePage";
 import NewLogPage from "./pages/NewLogPage";
 import DrinkerProfilePage from "./pages/DrinkerProfilePage";
+import SetupProfilePage from "./pages/SetupProfilePage";
 
 export default function AppRoutes() {
   return (
@@ -22,8 +23,6 @@ export default function AppRoutes() {
       {/* Auth callback route */}
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
-      {/* Redirect root to default language (zh) */}
-      {/* <Route path="/" element={<Navigate to="/zh/feeds" replace />} /> */}
 
       {/* Language-specific routes */}
       <Route path="/:language">
@@ -49,7 +48,10 @@ export default function AppRoutes() {
           path="terms-and-conditions"
           element={<TermsAndConditionsPage />}
         />
-        <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile">
+          <Route path="" element={<ProfilePage />} />
+          <Route path="setup" element={<SetupProfilePage />} />
+        </Route>
       </Route>
 
       {/* Catch all route - redirect to default language */}
