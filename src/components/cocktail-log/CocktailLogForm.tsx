@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cocktailLogService } from "@/services/cocktail-log-service";
-import { cocktailService } from "@/services/cocktail-service";
 import { CocktailLog } from "@/types/cocktail-log";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
@@ -18,7 +17,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn, normalizeText, formatBilingualText } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { customCocktailService } from "@/services/custom-cocktail-service";
 import { CustomCocktailModal } from "./CustomCocktailModal";
 import { useNavigate } from "react-router-dom";
 import { LocationSelector } from "./LocationSelector";
@@ -94,6 +92,8 @@ export function CocktailLogForm({
   const [visibility, setVisibility] = useState<'public' | 'private'>(
     (existingLog?.visibility === 'private' ? 'private' : 'public')
   );
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+  const [mediaError, setMediaError] = useState<string | null>(null);
 
   // Reset all form states
   const resetForm = () => {
@@ -181,9 +181,7 @@ export function CocktailLogForm({
         setFilteredCocktails(filtered);
       } catch (error) {
         console.error("Error loading cocktails:", error);
-        toast({
-          title: t.error,
-          description: t.errorLoadingCocktail,
+        toast(t.errorLoadingCocktail, {
           variant: "destructive",
         });
       } finally {
@@ -215,9 +213,7 @@ export function CocktailLogForm({
       // Get user ID first
       const user = await AuthService.getCurrentSession();
       if (!user) {
-        toast({
-          title: t.error,
-          description: t.notAuthenticated,
+        toast(t.notAuthenticated, {
           variant: "destructive",
         });
         return;
@@ -270,9 +266,8 @@ export function CocktailLogForm({
           );
         }
 
-        toast({
-          title: t.success,
-          description: existingLog ? t.updateLog : t.saveLog,
+        toast(existingLog ? t.updateLog : t.saveLog, {
+          variant: "default",
         });
 
         onClose();
@@ -307,17 +302,13 @@ export function CocktailLogForm({
         }
       } catch (error) {
         console.error("Error saving log:", error);
-        toast({
-          title: t.error,
-          description: t.errorSavingLog,
+        toast(t.errorSavingLog, {
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Error in form submission:", error);
-      toast({
-        title: t.error,
-        description: t.errorSavingLog,
+      toast(t.errorSavingLog, {
         variant: "destructive",
       });
     } finally {
@@ -331,18 +322,15 @@ export function CocktailLogForm({
     try {
       setIsLoading(true);
       await cocktailLogService.deleteLog(existingLog.id);
-      toast({
-        title: t.success,
-        description: t.logDeleted,
+      toast(t.logDeleted, {
+        variant: "default",
       });
       onClose();
       onLogDeleted?.(existingLog.id);
       await handleLogDeleted();
     } catch (error) {
       console.error("Error deleting log:", error);
-      toast({
-        title: t.error,
-        description: t.errorDeletingLog,
+      toast(t.errorDeletingLog, {
         variant: "destructive",
       });
     } finally {
@@ -357,9 +345,7 @@ export function CocktailLogForm({
       onLogsChange?.(logs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
-      toast({
-        title: t.error,
-        description: t.errorRefreshingLogs,
+      toast(t.errorRefreshingLogs, {
         variant: "destructive",
       });
     }
@@ -372,9 +358,7 @@ export function CocktailLogForm({
       onLogsChange?.(logs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
-      toast({
-        title: t.error,
-        description: t.errorRefreshingLogs,
+      toast(t.errorRefreshingLogs, {
         variant: "destructive",
       });
     }
@@ -395,19 +379,23 @@ export function CocktailLogForm({
     const files = e.target.files;
     if (!files) return;
 
+    // Reset error message
+    setMediaError(null);
+
     // Check if adding new media would exceed the limit
     if (media.length + files.length > 5) {
-      toast({
-        title: t.error,
-        description: t.maxMediaExceeded,
-        variant: "destructive",
-      });
+      setMediaError(t.maxMediaExceeded);
       return;
     }
 
-    // TODO: Implement actual media upload logic
-    // For now, we'll just create placeholder URLs
-    console.log('Media upload status:', isUploading, setIsUploading); // Temporary fix for unused variable
+    // Check each file's size
+    const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE);
+    if (oversizedFiles.length > 0) {
+      setMediaError(t.maxFileSizeExceeded);
+      return;
+    }
+
+    // Create media items for valid files
     const newMedia = Array.from(files).map(file => ({
       url: URL.createObjectURL(file),
       type: file.type.startsWith('video/') ? 'video' as const : 'image' as const
@@ -663,6 +651,9 @@ export function CocktailLogForm({
                         )}
                       </div>
                     </div>
+                    {mediaError && (
+                      <p className="text-sm text-destructive mt-2">{mediaError}</p>
+                    )}
                     <input
                       ref={fileInputRef}
                       type="file"
