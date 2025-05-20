@@ -426,7 +426,7 @@ export class CocktailLogService {
   }
 
   async getPublicLogs(page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
-    return this.queryLogsFeed("all_cocktail_logs_feed", page, pageSize);
+    return this.queryLogsFeed("all_public_cocktail_logs_feed", page, pageSize);
   }
 
   async getOwnLogs(userId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {

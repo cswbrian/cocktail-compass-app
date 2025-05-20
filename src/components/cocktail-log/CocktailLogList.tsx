@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { Skeleton } from "@/components/ui/skeleton";
 import { CocktailLog } from "@/types/cocktail-log";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Loader2 } from "lucide-react";
 
@@ -62,7 +62,11 @@ export function CocktailLogList({
 }: CocktailLogListProps) {
   const [page, setPage] = useState(1);
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const PAGE_SIZE = 10;
+  const THROTTLE_DELAY = 500; // 500ms throttle
+  const lastFetchTime = useRef<number>(0);
+  const isLoadingRef = useRef(false);
 
   const { data: fetchedData, isLoading: isFetching } = useSWR(
     type && id ? [`${type}-logs`, id, page] : null,
@@ -81,6 +85,8 @@ export function CocktailLogList({
         } else {
           setAccumulatedLogs(prev => [...prev, ...data.logs]);
         }
+        setIsLoadingMore(false);
+        isLoadingRef.current = false;
       }
     }
   );
@@ -95,16 +101,33 @@ export function CocktailLogList({
     rootMargin: '100px',
   });
 
+  const loadMore = useCallback(async () => {
+    const now = Date.now();
+    if (now - lastFetchTime.current < THROTTLE_DELAY || isLoadingRef.current) {
+      return;
+    }
+
+    if (!hasMore) {
+      return;
+    }
+
+    lastFetchTime.current = now;
+    setIsLoadingMore(true);
+    isLoadingRef.current = true;
+
+    if (providedOnLoadMore) {
+      await providedOnLoadMore();
+    } else {
+      setPage(prev => prev + 1);
+    }
+  }, [hasMore, providedOnLoadMore]);
+
   // Load more when the last item comes into view
   useEffect(() => {
     if (inView && hasMore && !isLoading) {
-      if (providedOnLoadMore) {
-        providedOnLoadMore();
-      } else {
-        setPage(prev => prev + 1);
-      }
+      loadMore();
     }
-  }, [inView, hasMore, isLoading, providedOnLoadMore]);
+  }, [inView, hasMore, isLoading, loadMore]);
 
   if (isLoading && (!logs || logs.length === 0)) {
     return <CocktailLogListSkeleton />;
@@ -130,9 +153,9 @@ export function CocktailLogList({
           />
         </div>
       ))}
-      {isLoading && logs.length > 0 && (
-        <div className="mt-4">
-          <CocktailLogListSkeleton />
+      {isLoadingMore && (
+        <div className="mt-4 flex justify-center">
+          <Loader2 className="h-6 w-6 animate-spin" />
         </div>
       )}
     </div>

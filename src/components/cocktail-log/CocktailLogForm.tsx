@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cocktailLogService } from "@/services/cocktail-log-service";
+import { cocktailService } from "@/services/cocktail-service";
 import { CocktailLog } from "@/types/cocktail-log";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
@@ -145,32 +146,24 @@ export function CocktailLogForm({
     const loadCocktails = async () => {
       try {
         setIsLoadingCocktails(true);
-        const cocktails = await cocktailLogService.getCocktailPreviews();
+        const cocktails = cocktailService.getAllCocktails();
         const filtered = cocktails
           .filter(cocktail => {
             const normalizedSearch = normalizeText(cocktailNameInput);
-            const normalizedName = normalizeText(formatBilingualText({
-              en: cocktail.name.en,
-              zh: cocktail.name.zh || null
-            }, language));
+            const normalizedName = normalizeText(formatBilingualText(cocktail.name, language));
             return normalizedName.includes(normalizedSearch);
           })
           .map(cocktail => ({
-            name: formatBilingualText({
-              en: cocktail.name.en,
-              zh: cocktail.name.zh || null
-            }, language),
+            name: formatBilingualText(cocktail.name, language),
             value: cocktail.id,
             slug: cocktail.slug,
-            label: formatBilingualText({
-              en: cocktail.name.en,
-              zh: cocktail.name.zh || null
-            }, language)
+            label: formatBilingualText(cocktail.name, language)
           }));
         setFilteredCocktails(filtered);
       } catch (error) {
         console.error("Error loading cocktails:", error);
-        toast(t.errorLoadingCocktail, {
+        toast({
+          description: t.errorLoadingCocktail,
           variant: "destructive",
         });
       } finally {
@@ -202,7 +195,8 @@ export function CocktailLogForm({
       // Get user ID first
       const user = await AuthService.getCurrentSession();
       if (!user) {
-        toast(t.notAuthenticated, {
+        toast({
+          description: t.notAuthenticated,
           variant: "destructive",
         });
         return;
@@ -249,7 +243,8 @@ export function CocktailLogForm({
           );
         }
 
-        toast(existingLog ? t.updateLog : t.saveLog, {
+        toast({
+          description: existingLog ? t.updateLog : t.saveLog,
           variant: "default",
         });
 
@@ -282,13 +277,15 @@ export function CocktailLogForm({
         }
       } catch (error) {
         console.error("Error saving log:", error);
-        toast(t.errorSavingLog, {
+        toast({
+          description: t.errorSavingLog,
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Error in form submission:", error);
-      toast(t.errorSavingLog, {
+      toast({
+        description: t.errorSavingLog,
         variant: "destructive",
       });
     } finally {
@@ -302,7 +299,8 @@ export function CocktailLogForm({
     try {
       setIsLoading(true);
       await cocktailLogService.deleteLog(existingLog.id);
-      toast(t.logDeleted, {
+      toast({
+        description: t.logDeleted,
         variant: "default",
       });
       onClose();
@@ -310,7 +308,8 @@ export function CocktailLogForm({
       await handleLogDeleted();
     } catch (error) {
       console.error("Error deleting log:", error);
-      toast(t.errorDeletingLog, {
+      toast({
+        description: t.errorDeletingLog,
         variant: "destructive",
       });
     } finally {
@@ -325,7 +324,8 @@ export function CocktailLogForm({
       onLogsChange?.(logs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
-      toast(t.errorRefreshingLogs, {
+      toast({
+        description: t.errorRefreshingLogs,
         variant: "destructive",
       });
     }
@@ -338,7 +338,8 @@ export function CocktailLogForm({
       onLogsChange?.(logs);
     } catch (error) {
       console.error("Error refreshing logs:", error);
-      toast(t.errorRefreshingLogs, {
+      toast({
+        description: t.errorRefreshingLogs,
         variant: "destructive",
       });
     }

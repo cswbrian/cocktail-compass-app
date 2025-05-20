@@ -39,14 +39,11 @@ interface CocktailLogContextType {
 
 interface CocktailLogContextProps {
   children: ReactNode;
-  visibility?: "public" | "private" | "friends";
 }
 
 const CocktailLogContext = createContext<CocktailLogContextType | null>(null);
 
-export function useCocktailData(props?: {
-  visibility?: "public" | "private" | "friends";
-}): CocktailLogContextType {
+export function useCocktailData(): CocktailLogContextType {
   const context = useContext(CocktailLogContext);
   if (context === null) {
     throw new Error(
@@ -58,7 +55,6 @@ export function useCocktailData(props?: {
 
 export function CocktailLogDataProvider({
   children,
-  visibility,
 }: CocktailLogContextProps) {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -80,13 +76,9 @@ export function CocktailLogDataProvider({
     error: logsError,
     mutate: mutateLogs,
   } = useSWR<{ logs: CocktailLog[]; hasMore: boolean }>(
-    [CACHE_KEYS.COCKTAIL_LOGS, page, visibility],
+    [CACHE_KEYS.COCKTAIL_LOGS, page],
     async () => {
-      const result = await fetchers.getCocktailLogs(
-        page,
-        PAGE_SIZE,
-        visibility
-      );
+      const result = await fetchers.getCocktailLogs(page, PAGE_SIZE);
       return result;
     },
     {

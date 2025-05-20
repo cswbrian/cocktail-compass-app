@@ -17,7 +17,6 @@ export function CocktailLogCard({
   onLogsChange,
   variant = "private",
 }: CocktailLogCardProps) {
-  console.log("variant", variant, log.visibility, log);
   if (variant === "public") {
     return (
       <PublicCocktailLogCard
