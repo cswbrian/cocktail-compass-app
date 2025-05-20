@@ -24,6 +24,8 @@ import { LocationSelector } from "./LocationSelector";
 import { AuthService } from "@/services/auth-service";
 import { Loading } from "@/components/ui/loading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { mutate } from "swr";
+import { CACHE_KEYS } from "@/lib/swr-config";
 
 interface LocationData {
   name: string;
@@ -221,8 +223,9 @@ export function CocktailLogForm({
 
       // Create or update the log
       try {
+        let savedLog;
         if (existingLog) {
-          await cocktailLogService.updateLog(
+          savedLog = await cocktailLogService.updateLog(
             existingLog.id,
             cocktailId,
             comments || null,
@@ -232,7 +235,7 @@ export function CocktailLogForm({
             visibility
           );
         } else {
-          await cocktailLogService.createLog(
+          savedLog = await cocktailLogService.createLog(
             cocktailId,
             user.id,
             comments || null,
@@ -248,26 +251,18 @@ export function CocktailLogForm({
           variant: "default",
         });
 
+        // Invalidate relevant cache keys
+        if (visibility === 'public') {
+          // Invalidate public logs cache
+          await mutate(CACHE_KEYS.PUBLIC_LOGS());
+        }
+        // Always invalidate own logs cache
+        await mutate(CACHE_KEYS.OWN_LOGS());
+        // Invalidate user stats
+        await mutate(CACHE_KEYS.USER_STATS);
+
         onClose();
-        onLogSaved?.({
-          id: existingLog?.id || '',
-          cocktail: {
-            id: cocktailId,
-            name: existingLog?.cocktail.name || { en: '', zh: null },
-            slug: existingLog?.cocktail.slug || '',
-            is_custom: existingLog?.cocktail.is_custom || false
-          },
-          comments: comments || null,
-          location: location ? JSON.stringify(location) : null,
-          drinkDate: drinkDate || null,
-          media: media.length > 0 ? media : null,
-          userId: user.id,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-          visibility
-        } as CocktailLog);
-        
+        onLogSaved?.(savedLog);
         await handleLogSaved();
         onSuccess();
 
@@ -299,6 +294,17 @@ export function CocktailLogForm({
     try {
       setIsLoading(true);
       await cocktailLogService.deleteLog(existingLog.id);
+      
+      // Invalidate relevant cache keys
+      if (existingLog.visibility === 'public') {
+        // Invalidate public logs cache
+        await mutate(CACHE_KEYS.PUBLIC_LOGS());
+      }
+      // Always invalidate own logs cache
+      await mutate(CACHE_KEYS.OWN_LOGS());
+      // Invalidate user stats
+      await mutate(CACHE_KEYS.USER_STATS);
+
       toast({
         description: t.logDeleted,
         variant: "default",

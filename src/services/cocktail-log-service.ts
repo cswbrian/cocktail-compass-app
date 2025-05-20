@@ -438,7 +438,11 @@ export class CocktailLogService {
   }
 
   async getLogsByPlaceId(placeId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
-    return this.queryLogsFeed("all_cocktail_logs_feed", page, pageSize, { place_id: placeId });
+    return this.queryLogsFeed('place_logs_view', page, pageSize, { place_id: placeId });
+  }
+
+  async getPublicLogsByUserId(userId: string, page: number = 1, pageSize: number = 10): Promise<{ logs: CocktailLog[], hasMore: boolean }> {
+    return this.queryLogsFeed('all_public_cocktail_logs_feed', page, pageSize, { user_id: userId });
   }
 
   async getLogById(logId: string): Promise<CocktailLog | null> {

@@ -12,6 +12,7 @@ import { LanguageProvider } from "@/context/LanguageContext"
 import { AuthProvider } from "@/context/AuthContext"
 import { BottomNavProvider } from "@/context/BottomNavContext"
 import { CocktailLogDataProvider } from "@/context/CocktailLogContext"
+import { PublicCocktailLogProvider } from "@/context/PublicCocktailLogContext"
 
 // const inter = Inter({
 //   subsets: ['latin'],
@@ -28,21 +29,23 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <AuthProvider>
         <BottomNavProvider>
           <CocktailLogDataProvider>
-            <div className={`antialiased dark`}>
-              <div className="flex flex-col min-h-screen">
-                <Header />
-                <Menu />
-                <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
-                  <MainContent>
-                    {children}
-                  </MainContent>
-                </main>
-                <InstallPrompt />
-                <BottomNav />
-                <GlobalCocktailLogForm />
-                <Toaster />
+            <PublicCocktailLogProvider>
+              <div className={`antialiased dark`}>
+                <div className="flex flex-col min-h-screen">
+                  <Header />
+                  <Menu />
+                  <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
+                    <MainContent>
+                      {children}
+                    </MainContent>
+                  </main>
+                  <InstallPrompt />
+                  <BottomNav />
+                  <GlobalCocktailLogForm />
+                  <Toaster />
+                </div>
               </div>
-            </div>
+            </PublicCocktailLogProvider>
           </CocktailLogDataProvider>
         </BottomNavProvider>
       </AuthProvider>

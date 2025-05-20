@@ -8,7 +8,7 @@ import { useInView } from 'react-intersection-observer';
 import { Loader2 } from "lucide-react";
 
 interface CocktailLogListProps {
-  type?: 'place' | 'cocktail';
+  type?: 'place' | 'cocktail' | 'user';
   id?: string;
   logs?: CocktailLog[];
   isLoading?: boolean;
@@ -64,7 +64,7 @@ export function CocktailLogList({
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const PAGE_SIZE = 10;
-  const THROTTLE_DELAY = 500; // 500ms throttle
+  const THROTTLE_DELAY = 300; // Reduced throttle delay for better responsiveness
   const lastFetchTime = useRef<number>(0);
   const isLoadingRef = useRef(false);
 
@@ -73,6 +73,8 @@ export function CocktailLogList({
     async () => {
       if (type === 'place') {
         return cocktailLogService.getLogsByPlaceId(id!, page, PAGE_SIZE);
+      } else if (type === 'user') {
+        return cocktailLogService.getPublicLogsByUserId(id!, page, PAGE_SIZE);
       } else {
         return cocktailLogService.getLogsByCocktailId(id!, page, PAGE_SIZE);
       }
@@ -98,7 +100,7 @@ export function CocktailLogList({
   // Set up intersection observer for infinite scrolling
   const { ref, inView } = useInView({
     threshold: 0,
-    rootMargin: '100px',
+    rootMargin: '200px', // Increased root margin for earlier loading
   });
 
   const loadMore = useCallback(async () => {
@@ -107,7 +109,7 @@ export function CocktailLogList({
       return;
     }
 
-    if (!hasMore) {
+    if (!hasMore || isLoading) {
       return;
     }
 
@@ -120,14 +122,22 @@ export function CocktailLogList({
     } else {
       setPage(prev => prev + 1);
     }
-  }, [hasMore, providedOnLoadMore]);
+  }, [hasMore, isLoading, providedOnLoadMore]);
 
   // Load more when the last item comes into view
   useEffect(() => {
-    if (inView && hasMore && !isLoading) {
+    if (inView && hasMore && !isLoading && !isLoadingMore) {
       loadMore();
     }
-  }, [inView, hasMore, isLoading, loadMore]);
+  }, [inView, hasMore, isLoading, isLoadingMore, loadMore]);
+
+  // Reset state when type or id changes
+  useEffect(() => {
+    setPage(1);
+    setAccumulatedLogs([]);
+    setIsLoadingMore(false);
+    isLoadingRef.current = false;
+  }, [type, id]);
 
   if (isLoading && (!logs || logs.length === 0)) {
     return <CocktailLogListSkeleton />;

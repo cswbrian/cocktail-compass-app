@@ -149,6 +149,17 @@ export class UserSettingsService {
     return { data, error };
   }
 
+  async getUserSettingsByUserId(userId: string): Promise<UserSettings | null> {
+    const { data, error } = await supabase
+      .from('user_settings')
+      .select('username, instagram_url')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) throw error;
+    return data ? { username: data.username, instagram_url: data.instagram_url } : null;
+  }
+
   async getUserStatsByUsername(username: string): Promise<UserStats | null> {
     const { data: userData, error: userError } = await this.getUserByUsername(username);
     if (userError || !userData) return null;

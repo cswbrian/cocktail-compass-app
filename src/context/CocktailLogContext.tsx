@@ -29,17 +29,12 @@ interface CocktailLogContextType {
   mutate: () => Promise<any>;
   // Data
   logs: CocktailLog[] | undefined;
-  publicLogs: CocktailLog[] | undefined;
   stats: any | undefined;
   isLoading: boolean;
-  isLoadingPublic: boolean;
   // Pagination
   hasMore: boolean;
-  hasMorePublic: boolean;
   loadMore: () => Promise<void>;
-  loadMorePublic: () => Promise<void>;
   page: number;
-  publicPage: number;
 }
 
 interface CocktailLogContextProps {
@@ -63,11 +58,8 @@ export function CocktailLogDataProvider({
 }: CocktailLogContextProps) {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [publicPage, setPublicPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [hasMorePublic, setHasMorePublic] = useState(true);
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
-  const [accumulatedPublicLogs, setAccumulatedPublicLogs] = useState<CocktailLog[]>([]);
   const PAGE_SIZE = 10;
 
   // Form state
@@ -106,35 +98,6 @@ export function CocktailLogDataProvider({
     }
   );
 
-  // SWR for public logs
-  const {
-    data: publicLogsData,
-    isLoading: isLoadingPublicLogs,
-    error: publicLogsError,
-    mutate: mutatePublicLogs,
-  } = useSWR<{ logs: CocktailLog[]; hasMore: boolean }>(
-    [CACHE_KEYS.PUBLIC_LOGS, publicPage],
-    async () => {
-      const result = await fetchers.getPublicCocktailLogs(publicPage, PAGE_SIZE);
-      return result;
-    },
-    {
-      ...swrConfig,
-      fallbackData: { logs: [], hasMore: true },
-      onSuccess: (data) => {
-        setHasMorePublic(data.hasMore);
-        if (publicPage === 1) {
-          setAccumulatedPublicLogs(data.logs);
-        } else {
-          setAccumulatedPublicLogs((prev) => [...prev, ...data.logs]);
-        }
-      },
-      onError: (err) => {
-        console.error("CocktailLogContext - Error fetching public logs:", err);
-      },
-    }
-  );
-
   const {
     data: stats,
     isLoading: isLoadingStats,
@@ -147,18 +110,6 @@ export function CocktailLogDataProvider({
       console.error("CocktailLogContext - Error fetching stats:", err);
     },
   });
-
-  // Debug effect to track state changes
-  useEffect(() => {}, [
-    accumulatedLogs,
-    isLoadingLogs,
-    logsError,
-    stats,
-    isLoadingStats,
-    statsError,
-    page,
-    hasMore,
-  ]);
 
   const closeForm = useCallback(() => {
     setFormState({
@@ -203,11 +154,6 @@ export function CocktailLogDataProvider({
     setPage((prev) => prev + 1);
   }, [hasMore, isLoadingLogs]);
 
-  const loadMorePublic = useCallback(async () => {
-    if (!hasMorePublic || isLoadingPublicLogs) return;
-    setPublicPage((prev) => prev + 1);
-  }, [hasMorePublic, isLoadingPublicLogs]);
-
   const value = {
     // Form state management
     formState,
@@ -217,26 +163,18 @@ export function CocktailLogDataProvider({
     // Mutations
     mutate: async () => {
       setPage(1); // Reset to first page on mutation
-      setPublicPage(1); // Reset public page on mutation
       setAccumulatedLogs([]); // Clear accumulated logs
-      setAccumulatedPublicLogs([]); // Clear accumulated public logs
       await mutateLogs();
-      await mutatePublicLogs();
       await mutate(CACHE_KEYS.USER_STATS);
     },
     // Data
     logs: accumulatedLogs,
-    publicLogs: accumulatedPublicLogs,
     stats,
     isLoading: isLoadingLogs || isLoadingStats,
-    isLoadingPublic: isLoadingPublicLogs,
     // Pagination
     hasMore,
-    hasMorePublic,
     loadMore,
-    loadMorePublic,
     page,
-    publicPage,
   };
 
   return (

@@ -7,6 +7,8 @@ import { userStatsService } from "@/services/user-stats-service";
 import { BasicStats } from "@/components/stats/BasicStats";
 import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cocktailLogService } from "@/services/cocktail-log-service";
+import { Instagram } from "lucide-react";
 
 interface UserStats {
   totalCocktailsDrunk: number;
@@ -21,6 +23,7 @@ const DrinkerProfilePage: React.FC = () => {
   const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [instagramUsername, setInstagramUsername] = useState<string>("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -39,6 +42,13 @@ const DrinkerProfilePage: React.FC = () => {
             uniqueCocktails: stats.basicStats.uniqueCocktails,
             uniquePlaces: stats.basicStats.uniquePlaces
           });
+        }
+
+        // Get user settings for Instagram URL
+        const settings = await userSettingsService.getUserSettingsByUserId(userData.user_id);
+        if (settings?.instagram_url) {
+          const url = new URL(settings.instagram_url);
+          setInstagramUsername(url.pathname.replace('/', ''));
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -76,17 +86,37 @@ const DrinkerProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 p-6">
-      <h2 className="text-xl font-semibold">{username}</h2>
-      
-      <BasicStats stats={userStats} />
+    <div>
+      <div className="p-6">
+        <h2 className="text-xl font-semibold">{username}</h2>
+        
+        {instagramUsername && (
+          <div className="flex items-center mt-2">
+            <Instagram className="w-4 h-4 mr-2" />
+            <a 
+              href={`https://instagram.com/${instagramUsername}`}
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-primary hover:underline"
+            >
+              {instagramUsername}
+            </a>
+          </div>
+        )}
+        
+        <div className="mt-4">
+        <BasicStats stats={userStats} />
+        </div>
+      </div>
       
       <div>
-        <h3 className="text-lg font-medium mb-4">{t.logs}</h3>
         <CocktailLogList 
-          type="cocktail"
+          type="user"
           id={userId}
-          variant="public"
+          onLoadMore={async () => {
+            const result = await cocktailLogService.getPublicLogsByUserId(userId);
+            return result;
+          }}
         />
       </div>
     </div>
