@@ -9,10 +9,12 @@ import { toast } from "sonner";
 import { UsernameRequirements } from "@/components/profile/UsernameRequirements";
 import { Instagram } from "lucide-react";
 import { motion } from "framer-motion";
+import { useUserSettings } from "@/context/UserSettingsContext";
 
 export default function SetupProfilePage() {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { refreshUserSettings } = useUserSettings();
   const t = translations[language];
   const [username, setUsername] = useState("");
   const [instagramUsername, setInstagramUsername] = useState("");
@@ -31,6 +33,8 @@ export default function SetupProfilePage() {
       if (instagramUsername) {
         await userSettingsService.updateInstagramUrl(instagramUsername);
       }
+      // Refresh user settings to update the context
+      await refreshUserSettings();
       toast.success(t.usernameUpdated);
       navigate(`/${language}`); // Redirect to main app after successful setup
     } catch (error: unknown) {

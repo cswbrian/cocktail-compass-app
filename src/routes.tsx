@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
 import ExplorerPage from "./pages/ExplorerPage";
 import FeedsPage from "./pages/FeedsPage";
@@ -16,6 +16,8 @@ import ProfilePage from "./pages/ProfilePage";
 import NewLogPage from "./pages/NewLogPage";
 import DrinkerProfilePage from "./pages/DrinkerProfilePage";
 import SetupProfilePage from "./pages/SetupProfilePage";
+import { RequireUsername } from "@/components/RequireUsername";
+import { AuthWrapper } from "@/components/auth/auth-wrapper";
 
 export default function AppRoutes() {
   return (
@@ -23,9 +25,13 @@ export default function AppRoutes() {
       {/* Auth callback route */}
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
-
       {/* Language-specific routes */}
-      <Route path="/:language">
+      <Route path=":language/profile/setup" element={
+        <AuthWrapper>
+          <SetupProfilePage />
+        </AuthWrapper>
+      } />
+      <Route path=":language" element={<RequireUsername />}>
         <Route index element={<Home />} />
         <Route path="explorer" element={<ExplorerPage />} />
         <Route path="search" element={<SearchPage />} />
@@ -48,10 +54,7 @@ export default function AppRoutes() {
           path="terms-and-conditions"
           element={<TermsAndConditionsPage />}
         />
-        <Route path="profile">
-          <Route path="" element={<ProfilePage />} />
-          <Route path="setup" element={<SetupProfilePage />} />
-        </Route>
+        <Route path="profile" element={<ProfilePage />} />
       </Route>
 
       {/* Catch all route - redirect to default language */}
