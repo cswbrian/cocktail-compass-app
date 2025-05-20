@@ -22,23 +22,29 @@ interface CocktailLogListProps {
 
 function CocktailLogSkeleton() {
   return (
+    <div className="rounded-lg border p-4 space-y-3">
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[200px]" />
+          <Skeleton className="h-4 w-[150px]" />
+        </div>
+      </div>
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-3/4" />
+      <div className="flex space-x-2">
+        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-8 w-20" />
+      </div>
+    </div>
+  );
+}
+
+function CocktailLogListSkeleton() {
+  return (
     <div className="space-y-4">
       {[...Array(3)].map((_, index) => (
-        <div key={index} className="rounded-lg border p-4 space-y-3">
-          <div className="flex items-center space-x-4">
-            <Skeleton className="h-12 w-12 rounded-full" />
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-[200px]" />
-              <Skeleton className="h-4 w-[150px]" />
-            </div>
-          </div>
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-          <div className="flex space-x-2">
-            <Skeleton className="h-8 w-20" />
-            <Skeleton className="h-8 w-20" />
-          </div>
-        </div>
+        <CocktailLogSkeleton key={index} />
       ))}
     </div>
   );
@@ -103,11 +109,7 @@ export function CocktailLogList({
   }, [inView, hasMore, isLoading, providedOnLoadMore]);
 
   if (isLoading && (!logs || logs.length === 0)) {
-    return (
-      <div className="flex justify-center items-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <CocktailLogListSkeleton />;
   }
 
   if (!logs || logs.length === 0) {
@@ -132,7 +134,7 @@ export function CocktailLogList({
       ))}
       {isLoading && logs.length > 0 && (
         <div className="mt-4">
-          <CocktailLogSkeleton />
+          <CocktailLogListSkeleton />
         </div>
       )}
     </div>
