@@ -1,6 +1,7 @@
 export interface CocktailLog {
   id: string;
   cocktail: {
+    id: string;
     name: {
       en: string;
       zh: string | null;
@@ -9,11 +10,8 @@ export interface CocktailLog {
     is_custom: boolean;
   };
   userId: string;
-  rating: number | null;
   location: string | null;
-  bartender: string | null;
   comments: string | null;
-  tags: string[] | null;
   createdAt: Date;
   updatedAt: Date;
   drinkDate: Date | null;

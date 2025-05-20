@@ -1,4 +1,4 @@
-import { MapPin, User, Calendar, Tag, Eye } from "lucide-react";
+import { MapPin, Calendar, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -16,11 +16,8 @@ interface LocationData {
 }
 
 interface CocktailLogInfoProps {
-  rating: number | null;
   location: string | null;
-  bartender: string | null;
   comments: string | null;
-  tags: string[] | null;
   drinkDate: Date | null;
   visibility?: "public" | "private";
   showHeadings?: boolean;
@@ -29,11 +26,8 @@ interface CocktailLogInfoProps {
 }
 
 export function CocktailLogInfo({
-  rating,
   location,
-  bartender,
   comments,
-  tags,
   drinkDate,
   visibility,
   showHeadings = false,
@@ -93,16 +87,6 @@ export function CocktailLogInfo({
         </div>
       )}
 
-      {bartender && (
-        <div className="flex items-center gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.bartender}</span>
-          )}
-          <User className="h-4 w-4 text-muted-foreground" />
-          <span>{bartender}</span>
-        </div>
-      )}
-
       {drinkDate && (
         <div className="flex items-center gap-2">
           {showHeadings && (
@@ -110,21 +94,6 @@ export function CocktailLogInfo({
           )}
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <span>{format(drinkDate, "PPP")}</span>
-        </div>
-      )}
-
-      {rating && (
-        <div className="flex items-center gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.rating}</span>
-          )}
-          <div className="flex items-center text-muted-foreground">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <span key={star} className="text-sm">
-                {star <= rating ? "★" : "☆"}
-              </span>
-            ))}
-          </div>
         </div>
       )}
 
@@ -136,25 +105,6 @@ export function CocktailLogInfo({
           <p className={cn("whitespace-pre-wrap break-words max-w-full", commentClassName)}>
             {formatCommentWithLinks(comments)}
           </p>
-        </div>
-      )}
-
-      {tags && tags.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          {showHeadings && (
-            <span className="text-muted-foreground">{t.tags}</span>
-          )}
-          <Tag className="h-4 w-4 text-muted-foreground" />
-          <div className="flex flex-wrap gap-1">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
         </div>
       )}
 

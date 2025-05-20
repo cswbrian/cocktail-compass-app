@@ -165,11 +165,8 @@ export function CocktailLogCard({
           </h3>
           <div className="space-y-2">
             <CocktailLogInfo
-              rating={log.rating ?? null}
               location={log.location ?? null}
-              bartender={log.bartender ?? null}
               comments={log.comments ?? null}
-              tags={log.tags ?? null}
               drinkDate={null}
               className="text-sm text-muted-foreground"
               commentClassName="text-base text-foreground"
@@ -219,11 +216,8 @@ export function CocktailLogCard({
         </h3>
         <div className="space-y-2">
           <CocktailLogInfo
-            rating={log.rating ?? null}
             location={log.location ?? null}
-            bartender={log.bartender ?? null}
             comments={log.comments ?? null}
-            tags={log.tags ?? null}
             drinkDate={null}
             className="text-sm text-muted-foreground"
             commentClassName="text-base text-foreground"

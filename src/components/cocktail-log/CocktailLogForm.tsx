@@ -68,16 +68,12 @@ export function CocktailLogForm({
   onSuccess
 }: CocktailLogFormProps) {
   const navigate = useNavigate();
-  const [rating, setRating] = useState(0);
   const [cocktailNameInput, setCocktailNameInput] = useState("");
   const [open, setOpen] = useState(false);
   const [filteredCocktails, setFilteredCocktails] = useState<SearchItem[]>([]);
   const [selectedCocktail, setSelectedCocktail] = useState<SearchItem | null>(null);
   const [comments, setComments] = useState("");
   const [location, setLocation] = useState<LocationData | null>(null);
-  const [bartender, setBartender] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [newTag, setNewTag] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCocktails, setIsLoadingCocktails] = useState(false);
   const [drinkDate, setDrinkDate] = useState<Date | undefined>(new Date());
@@ -97,16 +93,12 @@ export function CocktailLogForm({
 
   // Reset all form states
   const resetForm = () => {
-    setRating(0);
     setCocktailNameInput("");
     setOpen(false);
     setFilteredCocktails([]);
     setSelectedCocktail(null);
     setComments("");
     setLocation(null);
-    setBartender("");
-    setTags([]);
-    setNewTag("");
     setDrinkDate(new Date());
     setMedia([]);
     setCustomCocktailValues(null);
@@ -121,7 +113,6 @@ export function CocktailLogForm({
 
   useEffect(() => {
     if (existingLog) {
-      setRating(existingLog.rating || 0);
       const displayName = formatBilingualText(existingLog.cocktail.name, language);
       setCocktailNameInput(displayName);
       setSelectedCocktail({ 
@@ -142,8 +133,6 @@ export function CocktailLogForm({
       } else {
         setLocation(null);
       }
-      setBartender(existingLog.bartender || "");
-      setTags(existingLog.tags || []);
       setDrinkDate(existingLog.drinkDate ? new Date(existingLog.drinkDate) : undefined);
       setMedia(existingLog.media || []);
       setVisibility(existingLog.visibility === 'private' ? 'private' : 'public');
@@ -242,11 +231,8 @@ export function CocktailLogForm({
           await cocktailLogService.updateLog(
             existingLog.id,
             cocktailId,
-            rating || null,
             comments || null,
             location,
-            bartender || null,
-            tags.length > 0 ? tags : null,
             drinkDate || null,
             media.length > 0 ? media : null,
             visibility
@@ -255,11 +241,8 @@ export function CocktailLogForm({
           await cocktailLogService.createLog(
             cocktailId,
             user.id,
-            rating || null,
             comments || null,
             location,
-            bartender || null,
-            tags.length > 0 ? tags : null,
             drinkDate || null,
             media.length > 0 ? media : null,
             visibility
@@ -279,11 +262,8 @@ export function CocktailLogForm({
             slug: existingLog?.cocktail.slug || '',
             is_custom: existingLog?.cocktail.is_custom || false
           },
-          rating: rating || null,
           comments: comments || null,
           location: location ? JSON.stringify(location) : null,
-          bartender: bartender || null,
-          tags: tags.length > 0 ? tags : null,
           drinkDate: drinkDate || null,
           media: media.length > 0 ? media : null,
           userId: user.id,
@@ -362,17 +342,6 @@ export function CocktailLogForm({
         variant: "destructive",
       });
     }
-  };
-
-  const handleAddTag = () => {
-    if (newTag.trim() && !tags.includes(newTag.trim())) {
-      setTags([...tags, newTag.trim()]);
-      setNewTag("");
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
   const handleMediaUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -662,61 +631,6 @@ export function CocktailLogForm({
                       onChange={handleMediaUpload}
                       className="hidden"
                     />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>{t.rating}</Label>
-                    <div className="flex items-center space-x-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => setRating(star)}
-                          className="focus:outline-hidden"
-                        >
-                          <Star
-                            className={`h-6 w-6 ${
-                              star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
-                            }`}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Input
-                      value={bartender}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => setBartender(e.target.value)}
-                      placeholder={t.bartender}
-                      className="w-full"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex space-x-2">
-                      <Input
-                        value={newTag}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setNewTag(e.target.value)}
-                        placeholder={t.addTag}
-                        className="flex-1"
-                        onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
-                      />
-                      <Button onClick={handleAddTag}>{t.add}</Button>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {tags.map((tag) => (
-                        <Button
-                          key={tag}
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => handleRemoveTag(tag)}
-                          className="flex items-center gap-1"
-                        >
-                          {tag}
-                          <span className="text-gray-500 hover:text-gray-700">×</span>
-                        </Button>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </div>

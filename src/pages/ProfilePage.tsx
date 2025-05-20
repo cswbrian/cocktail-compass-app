@@ -85,7 +85,7 @@ const UserProfile: React.FC = () => {
       <h2 className="text-xl font-semibold">
         {user?.user_metadata?.name || t.user}
       </h2>
-      <div className="flex items-center mb-2">
+      <div className="flex items-center">
         <span className="mr-2">{username}</span>
         <Dialog open={isUsernameModalOpen} onOpenChange={setIsUsernameModalOpen}>
           <DialogTrigger asChild>
