@@ -5,11 +5,14 @@ export function ScrollToTop() {
   const { pathname, search } = useLocation();
 
   useEffect(() => {
-    // Scroll to top on both pathname and search changes
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant' // Use instant to prevent smooth scrolling animation
-    });
+    // Find the main content container and scroll it to top
+    const mainContent = document.querySelector('.overflow-auto');
+    if (mainContent) {
+      mainContent.scrollTo({
+        top: 0,
+        behavior: 'instant'
+      });
+    }
   }, [pathname, search]);
 
   return null;
