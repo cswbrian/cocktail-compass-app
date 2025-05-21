@@ -6,7 +6,7 @@ A client-side only Progressive Web App (PWA) built with Next.js for exploring co
 
 - **Framework**: [Next.js 15](https://nextjs.org) with Static Site Generation (SSG)
 - **Package Manager**: [pnpm](https://pnpm.io) (v9.7.1)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com) with [tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com)
 - **UI Components**: [Radix UI](https://www.radix-ui.com/) primitives
 - **Data Visualization**: [D3.js](https://d3js.org/)
 - **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com)

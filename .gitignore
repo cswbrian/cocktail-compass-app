@@ -13,16 +13,18 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
+/dist
+/dist-ssr
 
 # misc
 .DS_Store
 *.pem
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # debug
 npm-debug.log*
@@ -32,13 +34,22 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.dev.vars
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 
 # compressed cocktails
 data/cocktails.compressed.ts
+
+# Vite
+*.local
+
+# Cloudflare Workers
+.wrangler
+.dev.vars
+dist/
+worker/
