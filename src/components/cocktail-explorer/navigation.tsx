@@ -40,7 +40,7 @@ export default function Navigation() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.8 }}
-      className="bg-background py-4 flex justify-between"
+      className="bg-background py-2 flex justify-between"
     >
       {/* Reset button - always visible */}
       <Button variant="outline" onClick={handleStartOver}>

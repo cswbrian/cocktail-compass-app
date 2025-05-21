@@ -263,6 +263,8 @@ export const translations = {
     usernameVisibilityNote: "Your username will be visible to other users and can be changed anytime",
     continue: "Continue",
     enterInstagramUsername: "Instagram username (optional)",
+    completingAuthentication: "Completing authentication...",
+    pleaseWaitWhileLoggingIn: "Please wait while we log you in.",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -522,5 +524,7 @@ export const translations = {
     usernameVisibilityNote: "其他用戶可以看到您的用戶名，您可以隨時更改",
     continue: "繼續",
     enterInstagramUsername: "Instagram 用戶名（可選填）",
+    completingAuthentication: "登入中...",
+    pleaseWaitWhileLoggingIn: "請稍候，我們正在為您登入。",
   },
 };

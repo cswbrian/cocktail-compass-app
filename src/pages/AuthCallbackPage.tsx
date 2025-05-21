@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { userSettingsService } from '@/services/user-settings-service';
 import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
 
 export default function AuthCallbackPage() {
   const navigate = useNavigate();
@@ -75,8 +76,8 @@ export default function AuthCallbackPage() {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">Completing authentication...</h2>
-        <p className="text-gray-600">Please wait while we log you in.</p>
+        <h2 className="text-xl font-semibold mb-2">{translations[language].completingAuthentication}</h2>
+        <p className="text-gray-600">{translations[language].pleaseWaitWhileLoggingIn}</p>
       </div>
     </div>
   );
