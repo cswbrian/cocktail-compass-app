@@ -53,10 +53,16 @@ export const invalidateCache = {
     ]);
   },
   publicLogs: async () => {
+    // Invalidate all pages of public logs
     await mutate((key) => Array.isArray(key) && key[0] === 'public-logs');
+    // Also invalidate the specific cache key
+    await mutate(CACHE_KEYS.PUBLIC_LOGS());
   },
   ownLogs: async () => {
+    // Invalidate all pages of own logs
     await mutate((key) => Array.isArray(key) && key[0] === 'own-logs');
+    // Also invalidate the specific cache key
+    await mutate(CACHE_KEYS.OWN_LOGS());
   },
   userStats: async () => {
     await mutate(CACHE_KEYS.USER_STATS);
@@ -103,6 +109,18 @@ export const fetchers = {
       return result;
     } catch (error) {
       console.error('SWR Config - Error fetching cocktail logs by ID:', error);
+      throw error;
+    }
+  },
+
+  getPublicLogsByUserId: async (userId: string, page: number = 1, pageSize: number = 10) => {
+    console.log('SWR Config - Fetching public logs for user:', userId, 'page:', page, 'pageSize:', pageSize);
+    try {
+      const result = await cocktailLogService.getPublicLogsByUserId(userId, page, pageSize);
+      console.log('SWR Config - Public logs by user ID fetched:', result);
+      return result;
+    } catch (error) {
+      console.error('SWR Config - Error fetching public logs by user ID:', error);
       throw error;
     }
   },

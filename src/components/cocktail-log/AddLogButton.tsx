@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { NotebookPenIcon } from "lucide-react";
-import { useCocktailData } from "@/context/CocktailLogContext";
+import { useCocktailLogs } from "@/context/CocktailLogContext";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function AddLogButton() {
-  const { openCreateForm } = useCocktailData();
+  const { openCreateForm } = useCocktailLogs();
   const { language } = useLanguage();
 
   const handleClick = () => {

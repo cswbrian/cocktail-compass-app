@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
@@ -7,7 +7,8 @@ import { userStatsService } from "@/services/user-stats-service";
 import { BasicStats } from "@/components/stats/BasicStats";
 import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cocktailLogService } from "@/services/cocktail-log-service";
+import useSWR from "swr";
+import { fetchers, CACHE_KEYS } from "@/lib/swr-config";
 import { Instagram } from "lucide-react";
 
 interface UserStats {
@@ -24,6 +25,8 @@ const DrinkerProfilePage: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [instagramUsername, setInstagramUsername] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -61,6 +64,25 @@ const DrinkerProfilePage: React.FC = () => {
       fetchUserData();
     }
   }, [username]);
+
+  // Fetch logs using SWR
+  const { data: logsData, isLoading: isLoadingLogs, mutate } = useSWR(
+    userId ? [CACHE_KEYS.PUBLIC_LOGS(page), userId] : null,
+    () => fetchers.getPublicLogsByUserId(userId!, page, PAGE_SIZE),
+    {
+      fallbackData: { logs: [], hasMore: false },
+      revalidateOnFocus: false,
+      revalidateIfStale: true,
+      revalidateOnReconnect: true,
+      dedupingInterval: 5000,
+    }
+  );
+
+  const loadMore = useCallback(() => {
+    if (logsData?.hasMore && !isLoadingLogs) {
+      setPage(prev => prev + 1);
+    }
+  }, [logsData?.hasMore, isLoadingLogs]);
 
   if (isLoading) {
     return (
@@ -105,18 +127,16 @@ const DrinkerProfilePage: React.FC = () => {
         )}
         
         <div className="mt-4">
-        <BasicStats stats={userStats} />
+          <BasicStats stats={userStats} />
         </div>
       </div>
       
       <div>
         <CocktailLogList 
-          type="user"
-          id={userId}
-          onLoadMore={async () => {
-            const result = await cocktailLogService.getPublicLogsByUserId(userId);
-            return result;
-          }}
+          logs={logsData?.logs || []}
+          isLoading={isLoadingLogs}
+          hasMore={logsData?.hasMore || false}
+          onLoadMore={loadMore}
         />
       </div>
     </div>

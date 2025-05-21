@@ -1,9 +1,9 @@
-import { useCocktailData } from "@/context/CocktailLogContext";
+import { useCocktailLogs } from "@/context/CocktailLogContext";
 import { CocktailLogForm } from "./CocktailLogForm";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export function GlobalCocktailLogForm() {
-  const { formState, closeForm, mutate } = useCocktailData();
+  const { formState, closeForm, mutate } = useCocktailLogs();
   const { isOpen, mode, selectedLog } = formState;
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,16 +21,10 @@ export function GlobalCocktailLogForm() {
       isOpen={isOpen}
       onClose={handleClose}
       existingLog={mode === 'edit' ? selectedLog : null}
-      onLogSaved={() => {
+      onSuccess={() => {
         mutate();
         handleClose();
       }}
-      onLogDeleted={() => {
-        mutate();
-        handleClose();
-      }}
-      onLogsChange={() => {}}
-      onSuccess={handleClose}
     />
   );
 } 

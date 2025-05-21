@@ -7,23 +7,22 @@ import { useLanguage } from "@/context/LanguageContext";
 import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
 import { MapPin, BadgeCheck, AlertCircle, ArrowLeft } from "lucide-react";
 import { translations } from "@/translations";
-import { cocktailLogService } from "@/services/cocktail-log-service";
-import { CocktailLog } from "@/types/cocktail-log";
+import useSWR from "swr";
+import { fetchers, CACHE_KEYS } from "@/lib/swr-config";
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [logs, setLogs] = useState<CocktailLog[]>([]);
-  const [isLoadingLogs, setIsLoadingLogs] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const { placeId } = useParams();
   const navigate = useNavigate();
   const { language } = useLanguage();
   const t = translations[language];
+  const PAGE_SIZE = 10;
 
+  // Fetch place details
   useEffect(() => {
     const fetchPlace = async () => {
       if (!placeId) return;
@@ -48,38 +47,24 @@ export default function PlaceDetailPage() {
     fetchPlace();
   }, [placeId]);
 
-  const loadLogs = async (pageNum: number = 1) => {
-    if (!placeId) return;
-    
-    try {
-      setIsLoadingLogs(true);
-      const { logs: newLogs, hasMore: more } = await cocktailLogService.getLogsByPlaceId(placeId, pageNum);
-      if (pageNum === 1) {
-        setLogs(newLogs);
-      } else {
-        setLogs(prev => [...prev, ...newLogs]);
-      }
-      setHasMore(more);
-    } catch (error) {
-      console.error('Error loading logs:', error);
-    } finally {
-      setIsLoadingLogs(false);
+  // Fetch logs using SWR
+  const { data: logsData, isLoading: isLoadingLogs, mutate } = useSWR(
+    placeId ? [CACHE_KEYS.PLACE_LOGS(placeId), page] : null,
+    () => fetchers.getPlaceLogs(placeId!, page, PAGE_SIZE),
+    {
+      fallbackData: { logs: [], hasMore: false },
+      revalidateOnFocus: false,
+      revalidateIfStale: true,
+      revalidateOnReconnect: true,
+      dedupingInterval: 5000,
     }
-  };
+  );
 
   const loadMore = () => {
-    if (!isLoadingLogs && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      loadLogs(nextPage);
+    if (logsData?.hasMore && !isLoadingLogs) {
+      setPage(prev => prev + 1);
     }
   };
-
-  useEffect(() => {
-    if (placeId) {
-      loadLogs();
-    }
-  }, [placeId]);
 
   const handleClose = () => {
     navigate(`/${language}/feeds`);
@@ -87,12 +72,12 @@ export default function PlaceDetailPage() {
 
   const handleLogSaved = () => {
     setPage(1);
-    loadLogs(1);
+    mutate();
   };
 
   const handleLogDeleted = () => {
     setPage(1);
-    loadLogs(1);
+    mutate();
   };
 
   if (isLoading) {
@@ -168,13 +153,10 @@ export default function PlaceDetailPage() {
         </div>
 
         <CocktailLogList
-          logs={logs}
+          logs={logsData?.logs || []}
           isLoading={isLoadingLogs}
-          onLogSaved={handleLogSaved}
-          onLogDeleted={handleLogDeleted}
-          hasMore={hasMore}
+          hasMore={logsData?.hasMore || false}
           onLoadMore={loadMore}
-          variant="public"
         />
       </div>
     </AuthWrapper>

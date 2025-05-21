@@ -70,8 +70,8 @@ export function PublicCocktailLogProvider({
           setAccumulatedLogs((prev) => [...prev, ...data.logs]);
         }
       },
-      onError: (err) => {
-        console.error("PublicCocktailLogContext - Error fetching public logs:", err);
+      onError: () => {
+        // Error handling without console log
       },
     }
   );
@@ -93,7 +93,10 @@ export function PublicCocktailLogProvider({
     mutate: async () => {
       setPage(1); // Reset to first page on mutation
       setAccumulatedLogs([]); // Clear accumulated logs
+      setHasMore(true); // Reset hasMore state
       await invalidateCache.publicLogs();
+      // Force a revalidation
+      await mutateLogs();
     },
   };
 

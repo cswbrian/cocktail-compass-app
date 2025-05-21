@@ -52,22 +52,16 @@ interface CustomCocktailValues {
 interface CocktailLogFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogSaved?: (log: CocktailLog) => void;
   existingLog?: CocktailLog | null;
   isFromCocktailPage?: boolean;
-  onLogDeleted?: (logId: string) => void;
-  onLogsChange?: (logs: CocktailLog[]) => void;
   onSuccess: () => void;
 }
 
 export function CocktailLogForm({ 
   isOpen, 
   onClose,
-  onLogSaved,
   existingLog,
   isFromCocktailPage = false,
-  onLogDeleted,
-  onLogsChange,
   onSuccess
 }: CocktailLogFormProps) {
   const navigate = useNavigate();
@@ -222,58 +216,50 @@ export function CocktailLogForm({
       }
 
       // Create or update the log
-      try {
-        let savedLog;
-        if (existingLog) {
-          savedLog = await cocktailLogService.updateLog(
-            existingLog.id,
-            cocktailId,
-            comments || null,
-            location,
-            drinkDate || null,
-            media.length > 0 ? media : null,
-            visibility
-          );
+      let savedLog;
+      if (existingLog) {
+        savedLog = await cocktailLogService.updateLog(
+          existingLog.id,
+          cocktailId,
+          comments || null,
+          location,
+          drinkDate || null,
+          media.length > 0 ? media : null,
+          visibility
+        );
+      } else {
+        savedLog = await cocktailLogService.createLog(
+          cocktailId,
+          user.id,
+          comments || null,
+          location,
+          drinkDate || null,
+          media.length > 0 ? media : null,
+          visibility
+        );
+      }
+
+      toast({
+        description: existingLog ? t.updateLog : t.saveLog,
+        variant: "default",
+      });
+
+      onClose();
+      onSuccess();
+
+      // Handle redirection based on visibility
+      if (!existingLog) {
+        // If from cocktail page, stay there
+        if (isFromCocktailPage) {
+          return;
+        }
+        
+        // Redirect based on visibility
+        if (visibility === 'private') {
+          navigate(`/${language}/feeds/me`);
         } else {
-          savedLog = await cocktailLogService.createLog(
-            cocktailId,
-            user.id,
-            comments || null,
-            location,
-            drinkDate || null,
-            media.length > 0 ? media : null,
-            visibility
-          );
+          navigate(`/${language}/feeds/recommend`);
         }
-
-        toast({
-          description: existingLog ? t.updateLog : t.saveLog,
-          variant: "default",
-        });
-
-        // Invalidate relevant cache keys using the new helper
-        if (visibility === 'public') {
-          await invalidateCache.allLogs();
-        } else {
-          await invalidateCache.ownLogs();
-          await invalidateCache.userStats();
-        }
-
-        onClose();
-        onLogSaved?.(savedLog);
-        await handleLogSaved();
-        onSuccess();
-
-        // Redirect to journal page after successful creation
-        if (!existingLog) {
-          navigate(`/${language}/feeds`);
-        }
-      } catch (error) {
-        console.error("Error saving log:", error);
-        toast({
-          description: t.errorSavingLog,
-          variant: "destructive",
-        });
       }
     } catch (error) {
       console.error("Error in form submission:", error);
@@ -283,69 +269,6 @@ export function CocktailLogForm({
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!existingLog) return;
-    
-    try {
-      setIsLoading(true);
-      await cocktailLogService.deleteLog(existingLog.id);
-      
-      // Invalidate relevant cache keys
-      if (existingLog.visibility === 'public') {
-        // Invalidate public logs cache
-        await mutate(CACHE_KEYS.PUBLIC_LOGS());
-      }
-      // Always invalidate own logs cache
-      await mutate(CACHE_KEYS.OWN_LOGS());
-      // Invalidate user stats
-      await mutate(CACHE_KEYS.USER_STATS);
-
-      toast({
-        description: t.logDeleted,
-        variant: "default",
-      });
-      onClose();
-      onLogDeleted?.(existingLog.id);
-      await handleLogDeleted();
-    } catch (error) {
-      console.error("Error deleting log:", error);
-      toast({
-        description: t.errorDeletingLog,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLogSaved = async () => {
-    try {
-      if (!selectedCocktail?.value) return;
-      const { logs } = await cocktailLogService.getLogsByCocktailId(selectedCocktail.value);
-      onLogsChange?.(logs);
-    } catch (error) {
-      console.error("Error refreshing logs:", error);
-      toast({
-        description: t.errorRefreshingLogs,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleLogDeleted = async () => {
-    try {
-      if (!selectedCocktail?.value) return;
-      const { logs } = await cocktailLogService.getLogsByCocktailId(selectedCocktail.value);
-      onLogsChange?.(logs);
-    } catch (error) {
-      console.error("Error refreshing logs:", error);
-      toast({
-        description: t.errorRefreshingLogs,
-        variant: "destructive",
-      });
     }
   };
 
@@ -661,16 +584,6 @@ export function CocktailLogForm({
                   >
                     {isLoading ? t.saving : (existingLog ? t.updateLog : t.saveLog)}
                   </Button>
-                  {existingLog && (
-                    <Button 
-                      variant="ghost" 
-                      onClick={handleDelete} 
-                      disabled={isLoading}
-                      className="w-auto"
-                    >
-                      {t.delete}
-                    </Button>
-                  )}
                 </div>
               </div>
             </div>
