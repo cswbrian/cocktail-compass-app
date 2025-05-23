@@ -39,12 +39,21 @@ export function FlavorDescriptor({ descriptor, language, onClick }: FlavorDescri
   const flavorClass = flavorClasses[descriptor.en as keyof typeof flavorClasses] || "bg-gray-700 text-gray-100";
   
   return (
-    <Link
-      to={`/${language}/flavours/${slugify(descriptor.en)}`}
+    <div
       className={`px-3 py-1 rounded-full text-sm hover:opacity-80 transition-colors ${flavorClass}`}
       onClick={onClick}
     >
       {descriptor[language as keyof typeof descriptor]}
-    </Link>
+    </div>
   );
+
+  // return (
+  //   <Link
+  //     to={`/${language}/flavours/${slugify(descriptor.en)}`}
+  //     className={`px-3 py-1 rounded-full text-sm hover:opacity-80 transition-colors ${flavorClass}`}
+  //     onClick={onClick}
+  //   >
+  //     {descriptor[language as keyof typeof descriptor]}
+  //   </Link>
+  // );
 } 
