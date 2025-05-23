@@ -165,7 +165,7 @@ export function CocktailProvider({
 
   const handleSubmit = useCallback(() => {
     const cocktails =
-      cocktailService.getAllCocktailsWithDetails();
+      cocktailService.getRecommendableCocktails();
     const rankedResults = rankCocktails(cocktails, {
       sweetness: state.sweetness,
       sourness: state.sourness,

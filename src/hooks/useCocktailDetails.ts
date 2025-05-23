@@ -1,6 +1,5 @@
 import useSWR from 'swr';
 import { CACHE_KEYS } from '@/lib/swr-config';
-import { CocktailPreview } from '@/types/cocktail';
 import { cocktailService } from '@/services/cocktail-service';
 
 export function useCocktailDetails() {

@@ -1,27 +1,15 @@
 import {
   Cocktail,
   RankedCocktail,
-  CocktailPreview,
 } from '@/types/cocktail';
 import { slugify } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
-import { staticCocktailService } from './static-cocktail-service';
-import { CACHE_KEYS } from '@/lib/swr-config';
-import useSWR from 'swr';
 
 class CocktailService {
   private static instance: CocktailService;
   private static isInitialized = false;
-  private customCocktails: Cocktail[] = [];
   private cocktails: Cocktail[] = [];
-  private cocktailPreviews: CocktailPreview[] = [];
 
-  // Cache for frequently accessed data
-  private slugToCocktail: Map<string, Cocktail>;
-  private flavorToCocktails: Map<string, Cocktail[]>;
-  private ingredientToCocktails: Map<string, Cocktail[]>;
-  private allFlavors: Set<string>;
-  private allIngredients: Set<string>;
 
   private constructor() {
     if (CocktailService.isInitialized) {
@@ -29,12 +17,6 @@ class CocktailService {
         'CocktailService is being instantiated multiple times!',
       );
     }
-
-    this.slugToCocktail = new Map();
-    this.flavorToCocktails = new Map();
-    this.ingredientToCocktails = new Map();
-    this.allFlavors = new Set();
-    this.allIngredients = new Set();
 
     CocktailService.isInitialized = true;
   }
@@ -49,86 +31,17 @@ class CocktailService {
     return CocktailService.instance;
   }
 
-  public async initialize(): Promise<void> {
-    await this.loadAllCocktails();
-  }
-
-  private async loadAllCocktails(): Promise<void> {
+  public async getAllCocktailsWithDetails(): Promise<Cocktail[]> {
     const { data, error } = await supabase
       .from('cocktail_details')
       .select('*');
 
     if (error) {
-      console.error('Error loading cocktails:', error);
-      return;
+      console.error('Error fetching cocktail details:', error);
+      return [];
     }
 
-    // Get static cocktails and custom cocktails
-    const staticCocktails =
-      staticCocktailService.getStaticCocktailsWithDetails();
-    this.customCocktails =
-      data?.filter(cocktail => cocktail.is_custom) || [];
-    this.cocktails = [
-      ...staticCocktails,
-      ...this.customCocktails,
-    ];
-
-    // Update caches with all cocktails
-    this.updateCaches();
-  }
-
-  private updateCaches(): void {
-    // Update slug to cocktail map with all cocktails
-    this.cocktails.forEach(cocktail => {
-      this.slugToCocktail.set(cocktail.slug, cocktail);
-    });
-
-    // Update flavor descriptors set
-    this.cocktails.forEach(cocktail => {
-      cocktail.flavor_descriptors?.forEach(flavor => {
-        this.allFlavors.add(slugify(flavor.en));
-      });
-    });
-
-    // Update ingredients set
-    this.cocktails.forEach(cocktail => {
-      [
-        ...(cocktail.base_spirits ?? []),
-        ...(cocktail.liqueurs ?? []),
-        ...(cocktail.ingredients ?? []),
-      ].forEach(ingredient => {
-        this.allIngredients.add(
-          slugify(ingredient.name.en),
-        );
-      });
-    });
-
-    // Update preview list
-    this.initializePreviewList();
-  }
-
-  private initializePreviewList() {
-    this.cocktailPreviews = this.cocktails.map(
-      cocktail => ({
-        id: cocktail.id,
-        slug: cocktail.slug,
-        name: cocktail.name,
-        categories: cocktail.categories,
-        flavor_descriptors: cocktail.flavor_descriptors,
-      }),
-    );
-  }
-
-  public getCocktailPreviews(): CocktailPreview[] {
-    return this.cocktailPreviews;
-  }
-
-  public getAllCocktails(): CocktailPreview[] {
-    return this.cocktailPreviews;
-  }
-
-  public getAllCocktailsWithDetails(): Cocktail[] {
-    return [...this.cocktails];
+    return data.map(this.mapSupabaseResponseToCocktail);
   }
 
   public async getCocktailBySlug(
@@ -155,6 +68,42 @@ class CocktailService {
     data: any,
   ): Cocktail {
     const cocktailData = data.data || {};
+    
+    // Initialize arrays for different ingredient types
+    const baseSpirits: any[] = [];
+    const liqueurs: any[] = [];
+    const ingredients: any[] = [];
+
+    // Map ingredients based on their type
+    if (data.ingredients && Array.isArray(data.ingredients)) {
+      data.ingredients.forEach((item: any) => {
+        const ingredient = {
+          id: item.ingredient.id,
+          slug: item.ingredient.slug,
+          name: {
+            en: item.ingredient.name_en,
+            zh: item.ingredient.name_zh
+          },
+          unit: {
+            en: item.unit.name_en,
+            zh: item.unit.name_zh
+          },
+          amount: item.amount,
+        };
+
+        switch (item.ingredient.type) {
+          case 'base_spirit':
+            baseSpirits.push(ingredient);
+            break;
+          case 'liqueur':
+            liqueurs.push(ingredient);
+            break;
+          default:
+            ingredients.push(ingredient);
+        }
+      });
+    }
+
     return {
       id: data.id,
       slug: data.slug,
@@ -167,11 +116,10 @@ class CocktailService {
         sourness: 0,
         sweetness: 0,
       },
-      base_spirits: cocktailData.base_spirits || [],
-      liqueurs: cocktailData.liqueurs || [],
-      ingredients: cocktailData.ingredients || [],
-      flavor_descriptors:
-        cocktailData.flavor_descriptors || [],
+      base_spirits: baseSpirits,
+      liqueurs: liqueurs,
+      ingredients: ingredients,
+      flavor_descriptors: cocktailData.flavor_descriptors || [],
       technique: cocktailData.technique,
       garnish: cocktailData.garnish,
       description: cocktailData.description,
@@ -198,29 +146,6 @@ class CocktailService {
     }
 
     return this.mapSupabaseResponseToCocktail(data);
-  }
-
-  public getCocktailsByFlavor(
-    flavorSlug: string,
-  ): Cocktail[] {
-    // Check cache first
-    const cached = this.flavorToCocktails.get(flavorSlug);
-    if (cached) return cached;
-
-    // If not in cache, compute and cache
-    const matchingCocktails = this.cocktails.filter(
-      cocktail =>
-        cocktail.flavor_descriptors.some(
-          descriptor =>
-            slugify(descriptor.en) === flavorSlug,
-        ),
-    );
-
-    this.flavorToCocktails.set(
-      flavorSlug,
-      matchingCocktails,
-    );
-    return matchingCocktails;
   }
 
   public async getCocktailsByIngredientId(
@@ -351,38 +276,31 @@ class CocktailService {
     return [];
   }
 
-  // Utility methods for static generation
-  public getAllFlavors(): string[] {
-    return Array.from(this.allFlavors);
-  }
+  public async getRecommendableCocktails(): Promise<Cocktail[]> {
+    const { data, error } = await supabase
+      .from('cocktail_details')
+      .select('*')
+      .eq('is_custom', false);
 
-  public getAllIngredients(): string[] {
-    return Array.from(this.allIngredients);
-  }
+    if (error) {
+      console.error('Error fetching recommendable cocktails:', error);
+      return [];
+    }
 
-  public getRecommendableCocktails(): Cocktail[] {
-    return this.cocktails.filter(cocktail => {
-      // Filter out custom cocktails
-      if (cocktail.is_custom) return false;
-
-      // Check flavor profile
-      const profile = cocktail.flavor_profile;
-      return (
-        profile &&
-        typeof profile.sweetness === 'number' &&
-        typeof profile.sourness === 'number' &&
-        typeof profile.body === 'number' &&
-        typeof profile.complexity === 'number' &&
-        typeof profile.booziness === 'number' &&
-        typeof profile.bubbles === 'boolean'
-      );
-    });
-  }
-
-  // Method to clear caches if needed (e.g., for testing)
-  public clearCaches(): void {
-    this.flavorToCocktails.clear();
-    this.ingredientToCocktails.clear();
+    return data
+      .map(this.mapSupabaseResponseToCocktail)
+      .filter(cocktail => {
+        const profile = cocktail.flavor_profile;
+        return (
+          profile &&
+          typeof profile.sweetness === 'number' &&
+          typeof profile.sourness === 'number' &&
+          typeof profile.body === 'number' &&
+          typeof profile.complexity === 'number' &&
+          typeof profile.booziness === 'number' &&
+          typeof profile.bubbles === 'boolean'
+        );
+      });
   }
 
   public async getCocktailDetails(): Promise<

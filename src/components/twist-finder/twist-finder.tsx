@@ -8,44 +8,29 @@ import { translations } from '@/translations';
 import { sendGAEvent } from '@/lib/ga';
 import { calculateDistance } from '@/lib/cocktail-twist';
 import { TwistResults } from '@/components/twist-finder/twist-results';
-import { slugify } from '@/lib/utils';
-import {
-  useSearchParams,
-  useNavigate,
-} from 'react-router-dom';
+import { cocktailService } from '@/services/cocktail-service';
 
 interface TwistFinderProps {
-  cocktails: Cocktail[];
+  baseCocktail: Cocktail;
 }
 
 export function TwistFinder({
-  cocktails,
+  baseCocktail,
 }: TwistFinderProps) {
   const { language } = useLanguage();
-  const searchParams = useSearchParams();
-  const navigate = useNavigate();
-  const t =
-    translations[language as keyof typeof translations];
-  const [selectedCocktail, setSelectedCocktail] =
-    useState<string>('');
-  const [twists, setTwists] = useState<
-    Array<{ cocktail: Cocktail; distance: number }>
-  >([]);
+  const t = translations[language as keyof typeof translations];
+  const [twists, setTwists] = useState<Array<{ cocktail: Cocktail; distance: number }>>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const findTwists = useCallback(
-    (cocktailName: string) => {
-      const baseCocktail = cocktails.find(
-        c => c.name.en === cocktailName,
-      );
-      if (!baseCocktail) return;
-
-      const cocktailScores = cocktails
-        .filter(c => c.name.en !== cocktailName)
+  const findTwists = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const allCocktails = await cocktailService.getRecommendableCocktails();
+      
+      const cocktailScores = allCocktails
+        .filter(c => c.id !== baseCocktail.id)
         .map(cocktail => {
-          const distance = calculateDistance(
-            baseCocktail,
-            cocktail,
-          );
+          const distance = calculateDistance(baseCocktail, cocktail);
           return { cocktail, distance };
         })
         .sort((a, b) => a.distance - b.distance)
@@ -56,44 +41,32 @@ export function TwistFinder({
       sendGAEvent(
         'twist_finder',
         'find_twists',
-        cocktailName,
+        baseCocktail.name.en,
       );
-    },
-    [cocktails],
-  );
+    } catch (error) {
+      console.error('Error finding twists:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [baseCocktail]);
 
   useEffect(() => {
-    if (!searchParams) return;
-    const cocktailParam = searchParams.get('cocktail');
-    if (!cocktailParam) {
-      navigate(`/${language}`);
-      return;
-    }
+    findTwists();
+  }, [findTwists]);
 
-    const cocktail = cocktails.find(
-      c => slugify(c.name.en) === cocktailParam,
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <div className="text-muted-foreground">Loading twists...</div>
+      </div>
     );
-    if (cocktail) {
-      setSelectedCocktail(cocktail.name.en);
-      findTwists(cocktail.name.en);
-    }
-  }, [
-    searchParams,
-    cocktails,
-    language,
-    navigate,
-    findTwists,
-  ]);
+  }
 
-  const selectedCocktailData = selectedCocktail
-    ? cocktails.find(c => c.name.en === selectedCocktail)
-    : null;
-
-  if (selectedCocktailData && twists.length > 0) {
+  if (twists.length > 0) {
     return (
       <TwistResults
         twists={twists}
-        baseCocktail={selectedCocktailData}
+        baseCocktail={baseCocktail}
       />
     );
   }

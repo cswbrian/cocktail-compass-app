@@ -102,10 +102,7 @@ export default function CocktailDetails() {
                 url={`${window.location.origin}/${language || 'en'}/cocktails/${cocktail.slug}`}
               />
             </div>
-            <TwistButton
-              href={`/${language || 'en'}/twist?cocktail=${cocktail.id}`}
-              cocktailName={cocktail.name.en}
-            >
+            <TwistButton cocktailSlug={cocktail.slug}>
               {t.findTwists}
             </TwistButton>
           </div>
@@ -150,7 +147,7 @@ export default function CocktailDetails() {
                   className="flex justify-between"
                 >
                   <Link
-                    to={`/${language || 'en'}/ingredients/${spirit.id}`}
+                    to={`/${language || 'en'}/ingredients/${spirit.slug}`}
                     className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                   >
                     {getLocalizedText(

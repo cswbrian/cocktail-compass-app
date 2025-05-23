@@ -11,7 +11,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cocktailLogService } from '@/services/cocktail-log-service';
-import { cocktailService } from '@/services/cocktail-service';
 import { useCocktailDetails } from '@/hooks/useCocktailDetails';
 import { CocktailLog } from '@/types/cocktail-log';
 import { useToast } from '@/components/ui/use-toast';
@@ -207,12 +206,8 @@ export function CocktailLogForm({
     const loadCocktails = async () => {
       try {
         setIsLoadingCocktails(true);
-        const staticCocktails =
-          cocktailService.getCocktailPreviews();
 
-        // Combine static and custom cocktails
         const allCocktails = [
-          ...staticCocktails,
           ...(cocktailDetails?.map(cocktail => ({
             id: cocktail.id,
             slug: cocktail.slug,

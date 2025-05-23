@@ -115,7 +115,7 @@ export function Header() {
   return (
     <header className="flex justify-between items-center px-6 py-4 sticky top-0 z-50">
       <div className="flex items-center gap-2">
-        <Link to="/" className="font-medium">
+        <Link to={`/${language}`} className="font-medium">
           {t.appName}
         </Link>
         {!isInstalled && (deferredPrompt || isIOS) && (
