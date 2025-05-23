@@ -17,6 +17,7 @@ import NewLogPage from "./pages/NewLogPage";
 import DrinkerProfilePage from "./pages/DrinkerProfilePage";
 import SetupProfilePage from "./pages/SetupProfilePage";
 import IngredientDetailPage from "./pages/IngredientDetailPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import { RequireUsername } from "@/components/RequireUsername";
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 
@@ -60,7 +61,7 @@ export default function AppRoutes() {
       </Route>
 
       {/* Catch all route - redirect to default language */}
-      <Route path="*" element={<Navigate to="/zh" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

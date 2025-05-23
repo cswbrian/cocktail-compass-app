@@ -274,6 +274,10 @@ export const translations = {
     recentSearches: "Recent Searches",
     clearRecentSearches: "Clear Recent Searches",
     searchPlaceholder: "Search for cocktails, spirits, or ingredients...",
+    pageNotFound: "Oops! We're probably drunk 🍸",
+    pageNotFoundDescription: "Let's get you back to mixing some cocktails!",
+    backToHome: "Back to Home",
+
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -544,5 +548,8 @@ export const translations = {
     recentSearches: "最近搜尋",
     clearRecentSearches: "清除最近搜尋",
     searchPlaceholder: "搜尋調酒、基酒或材料...",
-  },
-};
+    pageNotFound: "哎呀！我哋可能飲醉咗 🍸",
+    pageNotFoundDescription: "等我哋帶你返去溝返杯！",
+    backToHome: "返屋企",
+    }
+  };

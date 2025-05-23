@@ -1,6 +1,5 @@
 "use client";
 
-// import { Inter } from 'next/font/google'
 import { Header } from "@/components/ui/header"
 import { Menu } from "@/components/ui/menu"
 import { Toaster } from "@/components/ui/sonner"
@@ -12,14 +11,6 @@ import { LanguageProvider } from "@/context/LanguageContext"
 import { AuthProvider } from "@/context/AuthContext"
 import { BottomNavProvider } from "@/context/BottomNavContext"
 import { CocktailLogProvider } from "@/context/CocktailLogContext"
-
-// const inter = Inter({
-//   subsets: ['latin'],
-//   display: 'swap',
-//   variable: '--font-inter',
-//   preload: true,
-//   adjustFontFallback: true,
-// })
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 
