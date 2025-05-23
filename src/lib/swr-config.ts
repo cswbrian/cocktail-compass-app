@@ -95,12 +95,6 @@ export const fetchers = {
     page: number = 1,
     pageSize: number = 10,
   ) => {
-    console.log(
-      'SWR Config - Fetching own cocktail logs, page:',
-      page,
-      'pageSize:',
-      pageSize,
-    );
     try {
       const user = await AuthService.getCurrentSession();
       if (!user) {
@@ -111,16 +105,8 @@ export const fetchers = {
         page,
         pageSize,
       );
-      console.log(
-        'SWR Config - Own cocktail logs fetched:',
-        result,
-      );
       return result;
     } catch (error) {
-      console.error(
-        'SWR Config - Error fetching own cocktail logs:',
-        error,
-      );
       throw error;
     }
   },
@@ -132,14 +118,6 @@ export const fetchers = {
     page: number = 1,
     pageSize: number = 10,
   ) => {
-    console.log(
-      'SWR Config - Fetching place logs for:',
-      placeId,
-      'page:',
-      page,
-      'pageSize:',
-      pageSize,
-    );
     try {
       const result =
         await cocktailLogService.getLogsByPlaceId(
@@ -147,16 +125,8 @@ export const fetchers = {
           page,
           pageSize,
         );
-      console.log(
-        'SWR Config - Place logs fetched:',
-        result,
-      );
       return result;
     } catch (error) {
-      console.error(
-        'SWR Config - Error fetching place logs:',
-        error,
-      );
       throw error;
     }
   },
@@ -166,14 +136,6 @@ export const fetchers = {
     page: number = 1,
     pageSize: number = 10,
   ) => {
-    console.log(
-      'SWR Config - Fetching cocktail logs for ID:',
-      cocktailId,
-      'page:',
-      page,
-      'pageSize:',
-      pageSize,
-    );
     try {
       const result =
         await cocktailLogService.getLogsByCocktailId(
@@ -181,16 +143,8 @@ export const fetchers = {
           page,
           pageSize,
         );
-      console.log(
-        'SWR Config - Cocktail logs by ID fetched:',
-        result,
-      );
       return result;
     } catch (error) {
-      console.error(
-        'SWR Config - Error fetching cocktail logs by ID:',
-        error,
-      );
       throw error;
     }
   },
@@ -200,14 +154,6 @@ export const fetchers = {
     page: number = 1,
     pageSize: number = 10,
   ) => {
-    console.log(
-      'SWR Config - Fetching public logs for user:',
-      userId,
-      'page:',
-      page,
-      'pageSize:',
-      pageSize,
-    );
     try {
       const result =
         await cocktailLogService.getPublicLogsByUserId(
@@ -215,54 +161,28 @@ export const fetchers = {
           page,
           pageSize,
         );
-      console.log(
-        'SWR Config - Public logs by user ID fetched:',
-        result,
-      );
       return result;
     } catch (error) {
-      console.error(
-        'SWR Config - Error fetching public logs by user ID:',
-        error,
-      );
       throw error;
     }
   },
 
   getBookmarks: async () => {
-    console.log('SWR Config - Fetching bookmarks');
     try {
       const bookmarks =
         await bookmarkService.getBookmarks();
-      console.log(
-        'SWR Config - Bookmarks fetched:',
-        bookmarks,
-      );
       return bookmarks;
     } catch (error) {
-      console.error(
-        'SWR Config - Error fetching bookmarks:',
-        error,
-      );
       throw error;
     }
   },
 
   getCocktails: async () => {
-    console.log('SWR Config - Fetching all cocktails');
     try {
       const cocktails =
         await cocktailService.getAllCocktailsWithDetails();
-      console.log(
-        'SWR Config - All cocktails fetched:',
-        cocktails,
-      );
       return cocktails;
     } catch (error) {
-      console.error(
-        'SWR Config - Error fetching all cocktails:',
-        error,
-      );
       throw error;
     }
   },
@@ -271,27 +191,13 @@ export const fetchers = {
     page: number = 1,
     pageSize: number = 10,
   ) => {
-    console.log(
-      'SWR Config - Fetching public cocktail logs, page:',
-      page,
-      'pageSize:',
-      pageSize,
-    );
     try {
       const result = await cocktailLogService.getPublicLogs(
         page,
         pageSize,
       );
-      console.log(
-        'SWR Config - Public cocktail logs fetched:',
-        result,
-      );
       return result;
     } catch (error) {
-      console.error(
-        'SWR Config - Error fetching public cocktail logs:',
-        error,
-      );
       throw error;
     }
   },
