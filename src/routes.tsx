@@ -108,7 +108,7 @@ export default function AppRoutes() {
         <Route path="profile" element={<ProfilePage />} />
       </Route>
 
-      {/* Catch all route - redirect to default language */}
+      <Route path="/" element={<Navigate to="/zh" replace />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
