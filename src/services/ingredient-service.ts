@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabase';
-import { slugify } from '@/lib/utils';
 
 export type IngredientType =
   | 'base_spirit'
@@ -61,7 +60,6 @@ export class IngredientService {
     nameZh: string,
     type: IngredientType,
   ): Promise<Ingredient> {
-    const slug = slugify(nameEn);
     const { data, error } = await supabase
       .from('ingredients')
       .insert([
@@ -69,7 +67,6 @@ export class IngredientService {
           name_en: nameEn,
           name_zh: nameZh,
           type,
-          slug,
         },
       ])
       .select()

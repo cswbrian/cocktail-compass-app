@@ -1,13 +1,11 @@
 import { supabase } from '@/lib/supabase';
 import { Cocktail } from '@/types/cocktail';
-import { slugify } from '@/lib/utils';
 
 export class CustomCocktailService {
   async createCustomCocktail(
     name: { en: string; zh?: string },
     userId: string,
   ): Promise<Cocktail> {
-    const slug = slugify(name.en);
 
     const { data: cocktail, error } = await supabase
       .from('cocktails')
@@ -18,7 +16,6 @@ export class CustomCocktailService {
               en: name.en,
               zh: name.zh || name.en, // Fallback to English name if Chinese name is not provided
             },
-            slug,
             flavor_profile: {
               body: 0,
               booziness: 0,
@@ -33,7 +30,6 @@ export class CustomCocktailService {
             flavor_descriptors: [],
             categories: [],
           },
-          slug,
           is_custom: true,
           created_by: userId,
           name: {
