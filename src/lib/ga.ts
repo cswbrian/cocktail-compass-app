@@ -2,7 +2,12 @@ import ReactGA from 'react-ga4';
 
 // Initialize GA4 with your measurement ID
 export const initGA = () => {
-  ReactGA.initialize('G-XXXXXXXXXX'); // Replace with your actual GA4 measurement ID
+  const gaId = import.meta.env.VITE_GA_ID;
+  if (!gaId) {
+    console.warn('GA4 measurement ID not found in environment variables');
+    return;
+  }
+  ReactGA.initialize(gaId);
 };
 
 // Helper function to send events
