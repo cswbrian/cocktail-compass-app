@@ -1,11 +1,11 @@
-import { CocktailLogDetail } from "@/components/cocktail-log/CocktailLogDetail";
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { cocktailLogService } from "@/services/cocktail-log-service";
-import { Button } from "@/components/ui/button";
-import { CocktailLog } from "@/types/cocktail-log";
-import { useLanguage } from "@/context/LanguageContext";
+import { CocktailLogDetail } from '@/components/cocktail-log/CocktailLogDetail';
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { cocktailLogService } from '@/services/cocktail-log-service';
+import { Button } from '@/components/ui/button';
+import { CocktailLog } from '@/types/cocktail-log';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function LogDetailPage() {
   const [log, setLog] = useState<CocktailLog | null>(null);
@@ -18,11 +18,12 @@ export default function LogDetailPage() {
   useEffect(() => {
     const fetchLog = async () => {
       if (!logId) return;
-      
+
       try {
         setIsLoading(true);
         setError(null);
-        const fetchedLog = await cocktailLogService.getLogById(logId);
+        const fetchedLog =
+          await cocktailLogService.getLogById(logId);
         if (fetchedLog) {
           setLog(fetchedLog);
         } else {
@@ -40,7 +41,7 @@ export default function LogDetailPage() {
   }, [logId]);
 
   const handleClose = () => {
-    navigate(`/${language}/journal/feeds`);
+    navigate(`/${language}/feeds`);
   };
 
   if (isLoading) {
@@ -48,7 +49,9 @@ export default function LogDetailPage() {
       <div className="h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">
+            Loading...
+          </p>
         </div>
       </div>
     );
@@ -76,11 +79,13 @@ export default function LogDetailPage() {
     >
       <CocktailLogDetail
         log={log}
-        onLogSaved={(updatedLog) => setLog(updatedLog)}
+        onLogSaved={updatedLog => setLog(updatedLog)}
         onLogDeleted={handleClose}
         onClose={handleClose}
-        variant={log.visibility === 'public' ? 'public' : 'private'}
+        variant={
+          log.visibility === 'public' ? 'public' : 'private'
+        }
       />
     </motion.div>
   );
-} 
+}

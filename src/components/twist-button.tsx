@@ -1,27 +1,40 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Button } from '@/components/ui/button';
+import { Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { sendGAEvent } from '@/lib/ga';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface TwistButtonProps {
-  href: string;
-  cocktailName: string;
+  cocktailSlug: string;
   children: React.ReactNode;
 }
 
-export function TwistButton({ href, cocktailName, children }: TwistButtonProps) {
+export function TwistButton({
+  cocktailSlug,
+  children,
+}: TwistButtonProps) {
   const handleClick = () => {
-    sendGAEvent('cocktail_page', 'find_twists', cocktailName);
+    sendGAEvent(
+      'cocktail_page',
+      'find_twists',
+      cocktailSlug,
+    );
   };
 
+  const { language } = useLanguage();
+
   return (
-    <Button asChild variant="secondary" onClick={handleClick}>
-      <Link to={href}>
+    <Button
+      asChild
+      variant="secondary"
+      onClick={handleClick}
+    >
+      <Link to={`/${language}/cocktails/${cocktailSlug}/twist`}>
         <Sparkles className="w-4 h-4" />
         {children}
       </Link>
     </Button>
   );
-} 
+}

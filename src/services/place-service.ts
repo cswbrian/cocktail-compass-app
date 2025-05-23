@@ -1,16 +1,23 @@
-import { supabase } from "@/lib/supabase";
-import { Place } from "@/types/place";
+import { supabase } from '@/lib/supabase';
+import { Place } from '@/types/place';
 
 export class PlaceService {
-  async getOrCreatePlace(placeData: Omit<Place, 'id' | 'created_at' | 'updated_at'>): Promise<Place> {
+  async getOrCreatePlace(
+    placeData: Omit<
+      Place,
+      'id' | 'created_at' | 'updated_at'
+    >,
+  ): Promise<Place> {
     // First try to find existing place
-    const { data: existingPlace, error: findError } = await supabase
-      .from('places')
-      .select('*')
-      .eq('place_id', placeData.place_id)
-      .single();
+    const { data: existingPlace, error: findError } =
+      await supabase
+        .from('places')
+        .select('*')
+        .eq('place_id', placeData.place_id)
+        .single();
 
-    if (findError && findError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+    if (findError && findError.code !== 'PGRST116') {
+      // PGRST116 is "no rows returned"
       throw findError;
     }
 
@@ -19,11 +26,12 @@ export class PlaceService {
     }
 
     // If place doesn't exist, create it
-    const { data: newPlace, error: createError } = await supabase
-      .from('places')
-      .insert([placeData])
-      .select()
-      .single();
+    const { data: newPlace, error: createError } =
+      await supabase
+        .from('places')
+        .insert([placeData])
+        .select()
+        .single();
 
     if (createError) {
       throw createError;
@@ -49,7 +57,9 @@ export class PlaceService {
     return data;
   }
 
-  async getPlaceByPlaceId(placeId: string): Promise<Place | null> {
+  async getPlaceByPlaceId(
+    placeId: string,
+  ): Promise<Place | null> {
     const { data, error } = await supabase
       .from('places')
       .select('*')
@@ -82,7 +92,8 @@ export class PlaceService {
   async getCocktailLogsByPlaceId(placeId: string) {
     const { data, error } = await supabase
       .from('cocktail_logs')
-      .select(`
+      .select(
+        `
         *,
         places!inner (
           id,
@@ -92,7 +103,8 @@ export class PlaceService {
           lat,
           lng
         )
-      `)
+      `,
+      )
       .eq('place_id', placeId)
       .order('created_at', { ascending: false });
 
@@ -104,4 +116,4 @@ export class PlaceService {
   }
 }
 
-export const placeService = new PlaceService(); 
+export const placeService = new PlaceService();

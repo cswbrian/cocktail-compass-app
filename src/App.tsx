@@ -1,9 +1,9 @@
-import { BrowserRouter as Router } from 'react-router-dom'
-import AppLayout from './components/layout/AppLayout'
-import AppRoutes from './routes'
-import { ScrollToTop } from './components/ScrollToTop'
-import { UserSettingsProvider } from "@/context/UserSettingsContext";
-import { AuthProvider } from "@/context/AuthContext";
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppLayout from './components/layout/AppLayout';
+import AppRoutes from './routes';
+import { ScrollToTop } from './components/ScrollToTop';
+import { UserSettingsProvider } from '@/context/UserSettingsContext';
+import { AuthProvider } from '@/context/AuthContext';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         </Router>
       </UserSettingsProvider>
     </AuthProvider>
-  )
+  );
 }
 
-export default App 
+export default App;

@@ -1,16 +1,19 @@
 import { supabase } from '@/lib/supabase';
 import { AuthService } from '@/services/auth-service';
-import { BookmarkList, BookmarkedItem } from "@/types/bookmark";
+import {
+  BookmarkList,
+  BookmarkedItem,
+} from '@/types/bookmark';
 
 export class BookmarkService {
   private cachedUserId: string | null = null;
 
   private async getUserId(): Promise<string | null> {
     if (this.cachedUserId) return this.cachedUserId;
-    
+
     const user = await AuthService.getCurrentSession();
     if (!user) return null;
-    
+
     this.cachedUserId = user.id;
     return user.id;
   }
@@ -22,10 +25,12 @@ export class BookmarkService {
     // Fetch lists with their items in a single query
     const { data: lists, error } = await supabase
       .from('bookmark_lists')
-      .select(`
+      .select(
+        `
         *,
         items:bookmarked_items(*)
-      `)
+      `,
+      )
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
@@ -33,7 +38,9 @@ export class BookmarkService {
     return lists || [];
   }
 
-  async getBookmarkedItems(listId: string): Promise<BookmarkedItem[]> {
+  async getBookmarkedItems(
+    listId: string,
+  ): Promise<BookmarkedItem[]> {
     const { data: items, error } = await supabase
       .from('bookmarked_items')
       .select('*')
@@ -44,18 +51,24 @@ export class BookmarkService {
     return items || [];
   }
 
-  async addBookmark(listId: string, cocktailId: string): Promise<void> {
+  async addBookmark(
+    listId: string,
+    cocktailId: string,
+  ): Promise<void> {
     const { error } = await supabase
       .from('bookmarked_items')
       .insert({
         list_id: listId,
-        cocktail_id: cocktailId
+        cocktail_id: cocktailId,
       });
 
     if (error) throw error;
   }
 
-  async removeBookmark(listId: string, cocktailId: string): Promise<void> {
+  async removeBookmark(
+    listId: string,
+    cocktailId: string,
+  ): Promise<void> {
     const { error } = await supabase
       .from('bookmarked_items')
       .delete()
@@ -71,10 +84,10 @@ export class BookmarkService {
 
     const { data, error } = await supabase
       .from('bookmark_lists')
-      .insert({ 
+      .insert({
         name,
         is_default: false,
-        user_id: userId
+        user_id: userId,
       })
       .select()
       .single();
@@ -92,10 +105,16 @@ export class BookmarkService {
     if (error) throw error;
   }
 
-  async updateListName(listId: string, name: string): Promise<void> {
+  async updateListName(
+    listId: string,
+    name: string,
+  ): Promise<void> {
     const { error } = await supabase
       .from('bookmark_lists')
-      .update({ name, updated_at: new Date().toISOString() })
+      .update({
+        name,
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', listId);
 
     if (error) throw error;
@@ -106,8 +125,9 @@ export class BookmarkService {
     if (!user) return [];
 
     const { data, error } = await supabase
-      .from("bookmark_lists")
-      .select(`
+      .from('bookmark_lists')
+      .select(
+        `
         id,
         name,
         name_key,
@@ -121,9 +141,10 @@ export class BookmarkService {
           list_id,
           added_at
         )
-      `)
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+      `,
+      )
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
 
@@ -139,10 +160,10 @@ export class BookmarkService {
         id: item.id,
         cocktail_id: item.cocktail_id,
         list_id: item.list_id,
-        added_at: item.added_at
-      }))
+        added_at: item.added_at,
+      })),
     }));
   }
 }
 
-export const bookmarkService = new BookmarkService(); 
+export const bookmarkService = new BookmarkService();

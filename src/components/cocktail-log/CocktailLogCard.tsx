@@ -1,13 +1,13 @@
-import { CocktailLog } from "@/types/cocktail-log";
-import { PublicCocktailLogCard } from "./PublicCocktailLogCard";
-import { PrivateCocktailLogCard } from "./PrivateCocktailLogCard";
+import { CocktailLog } from '@/types/cocktail-log';
+import { PublicCocktailLogCard } from './PublicCocktailLogCard';
+import { PrivateCocktailLogCard } from './PrivateCocktailLogCard';
 
 interface CocktailLogCardProps {
   log: CocktailLog;
   onLogSaved?: () => void;
   onLogDeleted?: () => void;
   onLogsChange?: (logs: CocktailLog[]) => void;
-  variant?: "public" | "private";
+  variant?: 'public' | 'private';
 }
 
 export function CocktailLogCard({
@@ -15,9 +15,9 @@ export function CocktailLogCard({
   onLogSaved,
   onLogDeleted,
   onLogsChange,
-  variant = "private",
+  variant = 'private',
 }: CocktailLogCardProps) {
-  if (variant === "public") {
+  if (variant === 'public') {
     return (
       <PublicCocktailLogCard
         log={log}

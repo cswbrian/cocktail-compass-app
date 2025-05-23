@@ -1,5 +1,5 @@
-import { Navigate } from "react-router-dom";
-import { useLanguage } from "../context/LanguageContext";
+import { Navigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Home() {
   const { language } = useLanguage();

@@ -1,32 +1,36 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
-import { CocktailPreview } from "@/types/cocktail";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
-import { useNavigate } from "react-router-dom";
-import { slugify, normalizeText, formatBilingualText } from "@/lib/utils";
-import summary from "@/data/summary.json";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Clock, X, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { CocktailPreview } from '@/types/cocktail';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
+import { useNavigate } from 'react-router-dom';
+import {
+  normalizeText,
+  formatBilingualText,
+} from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Search, Clock, X, Trash2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { useCocktailDetails } from '@/hooks/useCocktailDetails';
+import { useIngredients } from '@/hooks/useIngredients';
 
 interface SearchClientProps {
   cocktails: CocktailPreview[];
 }
 
 interface SearchItem {
+  id: string;
   name: string;
   value: string;
   type: 'cocktail' | 'ingredient';
   category: string;
-  slug: string;
 }
 
 interface RecentSearch {
-  slug: string;
+  id: string;
   type: 'cocktail' | 'ingredient';
   timestamp: number;
 }
@@ -39,22 +43,30 @@ interface SearchItemProps {
   t: Record<string, string>;
 }
 
-function SearchItem({ item, onSelect, showCloseButton, onClose, t }: SearchItemProps) {
+function SearchItem({
+  item,
+  onSelect,
+  showCloseButton,
+  onClose,
+  t,
+}: SearchItemProps) {
   return (
     <div className="group flex items-center">
       <button
         onClick={() => onSelect(item.value, item)}
         className={cn(
-          "flex-1 text-left p-2 rounded-md hover:bg-accent transition-colors",
-          "flex flex-col"
+          'flex-1 text-left p-2 rounded-md hover:bg-accent transition-colors',
+          'flex flex-col',
         )}
       >
         <span className="font-medium">{item.name}</span>
-        <span className="text-sm text-muted-foreground">{t[item.category]}</span>
+        <span className="text-sm text-muted-foreground">
+          {t[item.category]}
+        </span>
       </button>
       {showCloseButton && (
         <button
-          onClick={() => onClose?.(item.slug)}
+          onClick={() => onClose?.(item.id)}
           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <X className="h-4 w-4" />
@@ -64,33 +76,54 @@ function SearchItem({ item, onSelect, showCloseButton, onClose, t }: SearchItemP
   );
 }
 
-export function SearchContainer({ cocktails }: SearchClientProps) {
+export function SearchContainer({
+  cocktails,
+}: SearchClientProps) {
   const navigate = useNavigate();
   const { language } = useLanguage();
   const t = translations[language];
   const [searchQuery, setSearchQuery] = useState('');
-  const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
+  const [recentSearches, setRecentSearches] = useState<
+    RecentSearch[]
+  >([]);
+  const { cocktailDetails } = useCocktailDetails();
+  const { baseSpirits, liqueurs, otherIngredients } =
+    useIngredients();
 
   useEffect(() => {
-    const storedSearches = localStorage.getItem('recentSearches');
+    const storedSearches = localStorage.getItem(
+      'recentSearches',
+    );
     if (storedSearches) {
       setRecentSearches(JSON.parse(storedSearches));
     }
   }, []);
 
-  const updateRecentSearches = (newSearch: Omit<RecentSearch, 'timestamp'>) => {
+  const updateRecentSearches = (
+    newSearch: Omit<RecentSearch, 'timestamp'>,
+  ) => {
     const updatedSearches = [
       { ...newSearch, timestamp: Date.now() },
-      ...recentSearches.filter(item => item.slug !== newSearch.slug)
+      ...recentSearches.filter(
+        item => item.id !== newSearch.id,
+      ),
     ].slice(0, 5);
     setRecentSearches(updatedSearches);
-    localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+    localStorage.setItem(
+      'recentSearches',
+      JSON.stringify(updatedSearches),
+    );
   };
 
-  const removeRecentSearch = (slug: string) => {
-    const updatedSearches = recentSearches.filter(item => item.slug !== slug);
+  const removeRecentSearch = (id: string) => {
+    const updatedSearches = recentSearches.filter(
+      item => item.id !== id,
+    );
     setRecentSearches(updatedSearches);
-    localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+    localStorage.setItem(
+      'recentSearches',
+      JSON.stringify(updatedSearches),
+    );
   };
 
   const clearRecentSearches = () => {
@@ -100,33 +133,42 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
 
   const searchItems: SearchItem[] = [
     ...cocktails.map(cocktail => ({
+      id: cocktail.id,
       name: formatBilingualText(cocktail.name, language),
       value: `cocktail:${cocktail.name.en}`,
       type: 'cocktail' as const,
       category: 'cocktail',
-      slug: slugify(cocktail.name.en)
     })),
-    ...summary.base_spirits.map(spirit => ({
-      name: formatBilingualText(spirit.name, language),
-      value: `ingredient:${spirit.name.en}`,
+    ...baseSpirits.map(spirit => ({
+      id: spirit.id,
+      name: formatBilingualText(
+        { en: spirit.nameEn, zh: spirit.nameZh },
+        language,
+      ),
+      value: `ingredient:${spirit.nameEn}`,
       type: 'ingredient' as const,
       category: 'baseSpirit',
-      slug: slugify(spirit.name.en)
     })),
-    ...summary.liqueurs.map(liqueur => ({
-      name: formatBilingualText(liqueur.name, language),
-      value: `ingredient:${liqueur.name.en}`,
+    ...liqueurs.map(liqueur => ({
+      id: liqueur.id,
+      name: formatBilingualText(
+        { en: liqueur.nameEn, zh: liqueur.nameZh },
+        language,
+      ),
+      value: `ingredient:${liqueur.nameEn}`,
       type: 'ingredient' as const,
       category: 'liqueur',
-      slug: slugify(liqueur.name.en)
     })),
-    ...summary.ingredients.map(ingredient => ({
-      name: formatBilingualText(ingredient.name, language),
-      value: `ingredient:${ingredient.name.en}`,
+    ...otherIngredients.map(ingredient => ({
+      id: ingredient.id,
+      name: formatBilingualText(
+        { en: ingredient.nameEn, zh: ingredient.nameZh },
+        language,
+      ),
+      value: `ingredient:${ingredient.nameEn}`,
       type: 'ingredient' as const,
       category: 'ingredient',
-      slug: slugify(ingredient.name.en)
-    }))
+    })),
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   const filteredItems = searchItems.filter(item => {
@@ -135,32 +177,54 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
     return normalizedName.includes(normalizedSearch);
   });
 
-  const handleItemSelect = (value: string, item: SearchItem) => {
-    updateRecentSearches({ slug: item.slug, type: item.type });
+  const handleItemSelect = (
+    value: string,
+    item: SearchItem,
+  ) => {
+    updateRecentSearches({ id: item.id, type: item.type });
     const [type, name] = value.split(':');
-    
     if (type === 'cocktail') {
-      navigate(`/${language}/cocktails/${slugify(name)}`);
+      const cocktail = cocktails.find(
+        c => c.id === item.id,
+      );
+      if (cocktail) {
+        navigate(`/${language}/cocktails/${cocktail.slug}`);
+      }
     } else if (type === 'ingredient') {
-      navigate(`/${language}/ingredients/${slugify(name)}`);
+      const ingredient = [
+        ...baseSpirits,
+        ...liqueurs,
+        ...otherIngredients,
+      ].find(i => i.id === item.id);
+      if (ingredient) {
+        navigate(
+          `/${language}/ingredients/${ingredient.slug}`,
+        );
+      }
     }
   };
 
-  const getItemDetails = (recentSearch: RecentSearch): SearchItem | null => {
-    const item = searchItems.find(item => item.slug === recentSearch.slug);
+  const getItemDetails = (
+    recentSearch: RecentSearch,
+  ): SearchItem | null => {
+    const item = searchItems.find(
+      item => item.id === recentSearch.id,
+    );
     if (!item) return null;
     return item;
   };
 
   return (
     <div className="flex flex-col h-full">
-      <div className='mt-1'>
+      <div className="mt-1">
         <div className="relative">
           <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
           <Input
             placeholder={t.search}
             value={searchQuery}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement>,
+            ) => setSearchQuery(e.target.value)}
             className="pl-9 pr-9"
           />
           {searchQuery && (
@@ -184,20 +248,38 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
             ) : (
               <>
                 {[
-                  { key: 'cocktail', translation: t.cocktail },
-                  { key: 'baseSpirit', translation: t.baseSpirit },
-                  { key: 'liqueur', translation: t.liqueur },
-                  { key: 'ingredient', translation: t.ingredient }
+                  {
+                    key: 'cocktail',
+                    translation: t.cocktail,
+                  },
+                  {
+                    key: 'baseSpirit',
+                    translation: t.baseSpirit,
+                  },
+                  {
+                    key: 'liqueur',
+                    translation: t.liqueur,
+                  },
+                  {
+                    key: 'ingredient',
+                    translation: t.ingredient,
+                  },
                 ].map(({ key, translation }) => {
-                  const categoryItems = filteredItems.filter(item => item.category === key);
-                  if (categoryItems.length === 0) return null;
+                  const categoryItems =
+                    filteredItems.filter(
+                      item => item.category === key,
+                    );
+                  if (categoryItems.length === 0)
+                    return null;
 
                   return (
                     <div key={key}>
-                      <h2 className="font-bold px-2 mt-4">{translation}</h2>
-                      {categoryItems.map((item) => (
+                      <h2 className="font-bold px-2 mt-4">
+                        {translation}
+                      </h2>
+                      {categoryItems.map(item => (
                         <SearchItem
-                          key={item.value}
+                          key={item.id}
                           item={item}
                           onSelect={handleItemSelect}
                           t={t}
@@ -215,17 +297,18 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
                 {t.recentSearches}
               </h2>
               <div className="space-y-1">
-                {recentSearches.map((recentSearch) => {
-                  const itemDetails = getItemDetails(recentSearch);
+                {recentSearches.map(recentSearch => {
+                  const itemDetails =
+                    getItemDetails(recentSearch);
                   if (!itemDetails) return null;
-                  
+
                   return (
                     <SearchItem
-                      key={recentSearch.slug}
+                      key={recentSearch.id}
                       item={itemDetails}
                       onSelect={handleItemSelect}
                       showCloseButton
-                      onClose={() => removeRecentSearch(recentSearch.slug)}
+                      onClose={removeRecentSearch}
                       t={t}
                     />
                   );
@@ -251,4 +334,4 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
       </ScrollArea>
     </div>
   );
-} 
+}

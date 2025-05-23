@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import {
   Sheet,
   SheetClose,
@@ -8,13 +8,20 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
-import { BUY_ME_A_DRINK_URL, FEEDBACK_FORM_URL } from "@/constants";
-import { useAuth } from "@/context/AuthContext";
-import { Button } from "./button";
+} from '@/components/ui/sheet';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
+import {
+  BUY_ME_A_DRINK_URL,
+  FEEDBACK_FORM_URL,
+} from '@/constants';
+import { useAuth } from '@/context/AuthContext';
+import { Button } from './button';
 // User Profile Component
 interface UserProfileProps {
   user: {
@@ -35,7 +42,11 @@ interface UserProfileProps {
   };
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout, t }) => (
+const UserProfile: React.FC<UserProfileProps> = ({
+  user,
+  onLogout,
+  t,
+}) => (
   <div className="flex justify-between gap-2 items-center">
     <div className="flex items-center gap-2">
       {user.user_metadata?.avatar_url && (
@@ -47,9 +58,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout, t }) => (
           className="rounded-full"
         />
       )}
-      <span className="font-medium">Halo, {user.user_metadata?.name || "User"}!</span>
+      <span className="font-medium">
+        Halo, {user.user_metadata?.name || 'User'}!
+      </span>
     </div>
-    <div className="text-sm text-primary" onClick={onLogout}>
+    <div
+      className="text-sm text-primary"
+      onClick={onLogout}
+    >
       {t.signOut}
     </div>
   </div>
@@ -75,14 +91,18 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger
           value="en"
-          onClick={() => language !== "en" && toggleLanguage()}
+          onClick={() =>
+            language !== 'en' && toggleLanguage()
+          }
           aria-label="English"
         >
           English
         </TabsTrigger>
         <TabsTrigger
           value="zh"
-          onClick={() => language !== "zh" && toggleLanguage()}
+          onClick={() =>
+            language !== 'zh' && toggleLanguage()
+          }
           aria-label="Chinese"
         >
           中文
@@ -130,7 +150,12 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ t }) => (
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img src="/github.svg" alt="GitHub" width={24} height={24} />
+          <img
+            src="/github.svg"
+            alt="GitHub"
+            width={24}
+            height={24}
+          />
         </a>
       </SheetClose>
       <SheetClose asChild>
@@ -140,7 +165,12 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ t }) => (
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img src="/threads.svg" alt="Threads" width={24} height={24} />
+          <img
+            src="/threads.svg"
+            alt="Threads"
+            width={24}
+            height={24}
+          />
         </a>
       </SheetClose>
     </div>
@@ -159,14 +189,16 @@ const FooterLinks: React.FC<FooterLinksProps> = ({ t }) => (
 // Main Menu Component
 export function Menu() {
   const { language, toggleLanguage } = useLanguage();
-  const { user, loading, signInWithProvider, signOut } = useAuth();
-  const t = translations[language as keyof typeof translations];
+  const { user, loading, signInWithProvider, signOut } =
+    useAuth();
+  const t =
+    translations[language as keyof typeof translations];
 
   const handleGoogleLogin = async () => {
     try {
       await signInWithProvider('google');
     } catch (error) {
-      console.error("Error signing in with Google:", error);
+      console.error('Error signing in with Google:', error);
     }
   };
 
@@ -174,7 +206,7 @@ export function Menu() {
     try {
       await signOut();
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error('Error signing out:', error);
     }
   };
 
@@ -196,17 +228,25 @@ export function Menu() {
                 />
               ) : (
                 <div className="w-full h-full bg-primary flex items-center justify-center text-white">
-                  {user.user_metadata?.name?.[0]?.toUpperCase() || "U"}
+                  {user.user_metadata?.name?.[0]?.toUpperCase() ||
+                    'U'}
                 </div>
               )}
             </div>
           ) : (
-            <Button variant="default" size="sm" className="px-4">
+            <Button
+              variant="default"
+              size="sm"
+              className="px-4"
+            >
               {t.login}
             </Button>
           )}
         </SheetTrigger>
-        <SheetContent side="right" className="h-full w-full sm:w-[540px]">
+        <SheetContent
+          side="right"
+          className="h-full w-full sm:w-[540px]"
+        >
           <div className="flex flex-col justify-between h-full">
             {/* Header */}
             <div>
@@ -221,9 +261,15 @@ export function Menu() {
               {/* Auth Section */}
               <div className="border-b border-gray-200 py-4 mb-4">
                 {loading ? (
-                  <p className="text-sm text-gray-500">{t.loading}</p>
+                  <p className="text-sm text-gray-500">
+                    {t.loading}
+                  </p>
                 ) : user ? (
-                  <UserProfile user={user} onLogout={handleLogout} t={t} />
+                  <UserProfile
+                    user={user}
+                    onLogout={handleLogout}
+                    t={t}
+                  />
                 ) : (
                   <Button
                     variant="outline"

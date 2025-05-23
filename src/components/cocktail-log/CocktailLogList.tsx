@@ -1,9 +1,14 @@
-import { CocktailLogCard } from "@/components/cocktail-log/CocktailLogCard";
-import { Skeleton } from "@/components/ui/skeleton";
-import { CocktailLog } from "@/types/cocktail-log";
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { CocktailLogCard } from '@/components/cocktail-log/CocktailLogCard';
+import { Skeleton } from '@/components/ui/skeleton';
+import { CocktailLog } from '@/types/cocktail-log';
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Loader2 } from "lucide-react";
+import { Loader2 } from 'lucide-react';
 
 interface CocktailLogListProps {
   logs?: CocktailLog[];
@@ -42,11 +47,11 @@ function CocktailLogListSkeleton() {
   );
 }
 
-export function CocktailLogList({ 
-  logs: providedLogs, 
+export function CocktailLogList({
+  logs: providedLogs,
   isLoading: providedIsLoading,
   hasMore: providedHasMore,
-  onLoadMore: providedOnLoadMore
+  onLoadMore: providedOnLoadMore,
 }: CocktailLogListProps) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const THROTTLE_DELAY = 300;
@@ -61,7 +66,10 @@ export function CocktailLogList({
 
   const loadMore = useCallback(async () => {
     const now = Date.now();
-    if (now - lastFetchTime.current < THROTTLE_DELAY || isLoadingRef.current) {
+    if (
+      now - lastFetchTime.current < THROTTLE_DELAY ||
+      isLoadingRef.current
+    ) {
       return;
     }
 
@@ -78,16 +86,34 @@ export function CocktailLogList({
       setIsLoadingMore(false);
       isLoadingRef.current = false;
     }
-  }, [providedHasMore, providedIsLoading, providedOnLoadMore]);
+  }, [
+    providedHasMore,
+    providedIsLoading,
+    providedOnLoadMore,
+  ]);
 
   // Load more when the last item comes into view
   useEffect(() => {
-    if (inView && providedHasMore && !providedIsLoading && !isLoadingMore) {
+    if (
+      inView &&
+      providedHasMore &&
+      !providedIsLoading &&
+      !isLoadingMore
+    ) {
       loadMore();
     }
-  }, [inView, providedHasMore, providedIsLoading, isLoadingMore, loadMore]);
+  }, [
+    inView,
+    providedHasMore,
+    providedIsLoading,
+    isLoadingMore,
+    loadMore,
+  ]);
 
-  if (providedIsLoading && (!providedLogs || providedLogs.length === 0)) {
+  if (
+    providedIsLoading &&
+    (!providedLogs || providedLogs.length === 0)
+  ) {
     return <CocktailLogListSkeleton />;
   }
 
@@ -96,15 +122,26 @@ export function CocktailLogList({
   }
 
   return (
-    <div className="space-y-4" key={`log-list-${providedLogs.length}`}>
+    <div
+      className="space-y-4"
+      key={`log-list-${providedLogs.length}`}
+    >
       {providedLogs.map((log, index) => (
-        <div 
+        <div
           key={log.id}
-          ref={index === providedLogs.length - 1 ? ref : undefined}
+          ref={
+            index === providedLogs.length - 1
+              ? ref
+              : undefined
+          }
         >
-          <CocktailLogCard 
-            log={log} 
-            variant={log.visibility === 'public' ? 'public' : 'private'}
+          <CocktailLogCard
+            log={log}
+            variant={
+              log.visibility === 'public'
+                ? 'public'
+                : 'private'
+            }
           />
         </div>
       ))}
@@ -115,4 +152,4 @@ export function CocktailLogList({
       )}
     </div>
   );
-} 
+}

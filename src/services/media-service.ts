@@ -27,19 +27,20 @@ type AllowedMimeTypes = {
 };
 
 export class MediaService {
-  private readonly defaultCompressionOptions: CompressionOptions = {
-    maxSizeMB: 1,
-    maxWidthOrHeight: 1920,
-    useWebWorker: true,
-    quality: 0.8,
-    convertToWebP: true
-  };
+  private readonly defaultCompressionOptions: CompressionOptions =
+    {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+      quality: 0.8,
+      convertToWebP: true,
+    };
 
   private readonly allowedMimeTypes: AllowedMimeTypes = {
     'image/jpeg': true,
     'image/png': true,
     'image/webp': true,
-    'image/gif': true
+    'image/gif': true,
   };
 
   private readonly maxFileSize = 5 * 1024 * 1024; // 5MB
@@ -48,15 +49,19 @@ export class MediaService {
 
   constructor(
     private readonly bucket: StorageBucket,
-    workerUrl: string = import.meta.env.VITE_UPLOAD_WORKER_URL || '',
-    r2BucketUrl: string = import.meta.env.VITE_R2_BUCKET_URL || ''
+    workerUrl: string = import.meta.env
+      .VITE_UPLOAD_WORKER_URL || '',
+    r2BucketUrl: string = import.meta.env
+      .VITE_R2_BUCKET_URL || '',
   ) {
     this.workerUrl = workerUrl;
     this.r2BucketUrl = r2BucketUrl;
 
     // Validate R2 bucket URL
     if (!this.r2BucketUrl) {
-      console.warn('R2 bucket URL is not configured. Media URLs may not work correctly.');
+      console.warn(
+        'R2 bucket URL is not configured. Media URLs may not work correctly.',
+      );
     }
   }
 
@@ -66,7 +71,10 @@ export class MediaService {
       return filePath;
     }
     if (!this.r2BucketUrl) {
-      console.warn('R2 bucket URL is not configured. Using relative path:', filePath);
+      console.warn(
+        'R2 bucket URL is not configured. Using relative path:',
+        filePath,
+      );
       return filePath;
     }
     return `${this.r2BucketUrl}/${filePath}`;
@@ -74,15 +82,23 @@ export class MediaService {
 
   private async validateFile(file: File): Promise<void> {
     if (file.size > this.maxFileSize) {
-      throw new Error(`File size exceeds maximum limit of ${this.maxFileSize / 1024 / 1024}MB`);
+      throw new Error(
+        `File size exceeds maximum limit of ${this.maxFileSize / 1024 / 1024}MB`,
+      );
     }
 
-    if (file.type.startsWith('image/') && !this.allowedMimeTypes[file.type]) {
+    if (
+      file.type.startsWith('image/') &&
+      !this.allowedMimeTypes[file.type]
+    ) {
       throw new Error('Unsupported image format');
     }
   }
 
-  private async compressImage(file: File, options: CompressionOptions = {}): Promise<File> {
+  private async compressImage(
+    file: File,
+    options: CompressionOptions = {},
+  ): Promise<File> {
     if (!file.type.startsWith('image/')) {
       return file;
     }
@@ -91,21 +107,29 @@ export class MediaService {
 
     const compressionOptions = {
       ...this.defaultCompressionOptions,
-      ...options
+      ...options,
     };
 
     try {
       const compressedFile = await imageCompression(file, {
         ...compressionOptions,
-        initialQuality: compressionOptions.quality
+        initialQuality: compressionOptions.quality,
       });
 
-      if (compressionOptions.convertToWebP && file.type !== 'image/webp') {
-        const webpBlob = await this.convertToWebP(compressedFile);
-        return new File([webpBlob], file.name.replace(/\.[^/.]+$/, '.webp'), {
-          type: 'image/webp',
-          lastModified: file.lastModified,
-        });
+      if (
+        compressionOptions.convertToWebP &&
+        file.type !== 'image/webp'
+      ) {
+        const webpBlob =
+          await this.convertToWebP(compressedFile);
+        return new File(
+          [webpBlob],
+          file.name.replace(/\.[^/.]+$/, '.webp'),
+          {
+            type: 'image/webp',
+            lastModified: file.lastModified,
+          },
+        );
       }
 
       return new File([compressedFile], file.name, {
@@ -131,12 +155,20 @@ export class MediaService {
           return;
         }
         ctx.drawImage(img, 0, 0);
-        canvas.toBlob((blob) => {
-          if (blob) resolve(blob);
-          else reject(new Error('Failed to convert to WebP'));
-        }, 'image/webp', 0.8);
+        canvas.toBlob(
+          blob => {
+            if (blob) resolve(blob);
+            else
+              reject(
+                new Error('Failed to convert to WebP'),
+              );
+          },
+          'image/webp',
+          0.8,
+        );
       };
-      img.onerror = () => reject(new Error('Failed to load image'));
+      img.onerror = () =>
+        reject(new Error('Failed to load image'));
       img.src = URL.createObjectURL(file);
     });
   }
@@ -158,45 +190,52 @@ export class MediaService {
     userId: string,
     entityId: string,
     metadata: Record<string, any> = {},
-    compressionOptions?: CompressionOptions
+    compressionOptions?: CompressionOptions,
   ): Promise<string> {
     // Process the file (compress and convert to WebP if needed)
     const processedFile = await this.compressImage(file, {
       ...compressionOptions,
       // If the file is already WebP, don't convert it again
-      convertToWebP: file.type !== 'image/webp' && (compressionOptions?.convertToWebP ?? this.defaultCompressionOptions.convertToWebP)
+      convertToWebP:
+        file.type !== 'image/webp' &&
+        (compressionOptions?.convertToWebP ??
+          this.defaultCompressionOptions.convertToWebP),
     });
 
     const authToken = await this.getAuthToken();
-    
+
     // Get upload URL from worker
-    const presignResponse = await fetch(`${this.workerUrl}/api/upload/presign`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
+    const presignResponse = await fetch(
+      `${this.workerUrl}/api/upload/presign`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          fileName: processedFile.name,
+          contentType: processedFile.type,
+          userId,
+          entityId,
+          entityType: metadata.entityType || 'cocktail_log',
+        }),
       },
-      body: JSON.stringify({
-        fileName: processedFile.name,
-        contentType: processedFile.type,
-        userId,
-        entityId,
-        entityType: metadata.entityType || 'cocktail_log'
-      }),
-    });
+    );
 
     if (!presignResponse.ok) {
       throw new Error('Failed to get upload URL');
     }
 
-    const { filePath, uploadUrl } = await presignResponse.json();
+    const { filePath, uploadUrl } =
+      await presignResponse.json();
 
     // Upload through worker
     const uploadResponse = await fetch(uploadUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': processedFile.type,
-        'Authorization': `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: processedFile,
     });
@@ -206,25 +245,29 @@ export class MediaService {
     }
 
     // Notify worker of successful upload
-    const completeResponse = await fetch(`${this.workerUrl}/api/upload/complete`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        filePath,
-        userId,
-        entityId,
-        metadata: {
-          ...metadata,
-          contentType: processedFile.type,
-          fileSize: processedFile.size,
-          originalName: processedFile.name,
-          entityType: metadata.entityType || 'cocktail_log'
+    const completeResponse = await fetch(
+      `${this.workerUrl}/api/upload/complete`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
         },
-      }),
-    });
+        body: JSON.stringify({
+          filePath,
+          userId,
+          entityId,
+          metadata: {
+            ...metadata,
+            contentType: processedFile.type,
+            fileSize: processedFile.size,
+            originalName: processedFile.name,
+            entityType:
+              metadata.entityType || 'cocktail_log',
+          },
+        }),
+      },
+    );
 
     if (!completeResponse.ok) {
       throw new Error('Failed to complete upload');
@@ -239,10 +282,16 @@ export class MediaService {
     userId: string,
     entityId: string,
     metadata: Record<string, any> = {},
-    compressionOptions?: CompressionOptions
+    compressionOptions?: CompressionOptions,
   ): Promise<string[]> {
-    const uploadPromises = files.map(file => 
-      this.uploadMedia(file, userId, entityId, metadata, compressionOptions)
+    const uploadPromises = files.map(file =>
+      this.uploadMedia(
+        file,
+        userId,
+        entityId,
+        metadata,
+        compressionOptions,
+      ),
     );
     return Promise.all(uploadPromises);
   }
@@ -250,21 +299,23 @@ export class MediaService {
   async softDeleteMedia(url: string): Promise<void> {
     const { error } = await supabase
       .from('media_items')
-      .update({ 
+      .update({
         status: 'deleted',
-        deleted_at: new Date().toISOString()
+        deleted_at: new Date().toISOString(),
       })
       .eq('url', url);
 
     if (error) throw error;
   }
 
-  async softDeleteMultipleMedia(ids: string[]): Promise<void> {
+  async softDeleteMultipleMedia(
+    ids: string[],
+  ): Promise<void> {
     const { error } = await supabase
       .from('media_items')
-      .update({ 
+      .update({
         status: 'deleted',
-        deleted_at: new Date().toISOString()
+        deleted_at: new Date().toISOString(),
       })
       .in('id', ids);
 
@@ -273,6 +324,12 @@ export class MediaService {
 }
 
 // Create instances for different buckets
-export const cocktailLogsMediaService = new MediaService(StorageBucket.COCKTAIL_LOGS);
-export const userAvatarsMediaService = new MediaService(StorageBucket.USER_AVATARS);
-export const cocktailImagesMediaService = new MediaService(StorageBucket.COCKTAIL_IMAGES); 
+export const cocktailLogsMediaService = new MediaService(
+  StorageBucket.COCKTAIL_LOGS,
+);
+export const userAvatarsMediaService = new MediaService(
+  StorageBucket.USER_AVATARS,
+);
+export const cocktailImagesMediaService = new MediaService(
+  StorageBucket.COCKTAIL_IMAGES,
+);

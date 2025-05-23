@@ -3,14 +3,23 @@ import path from 'path';
 import pako from 'pako';
 
 // Read the cocktails data
-const cocktailsPath = path.join(process.cwd(), 'data', 'cocktails.json');
-const cocktailsData = JSON.parse(fs.readFileSync(cocktailsPath, 'utf-8'));
+const cocktailsPath = path.join(
+  process.cwd(),
+  'data',
+  'cocktails.json',
+);
+const cocktailsData = JSON.parse(
+  fs.readFileSync(cocktailsPath, 'utf-8'),
+);
 
 // Compress the data
-const compressedData = pako.deflate(JSON.stringify(cocktailsData));
+const compressedData = pako.deflate(
+  JSON.stringify(cocktailsData),
+);
 
 // Convert to base64 for safe storage
-const base64Data = Buffer.from(compressedData).toString('base64');
+const base64Data =
+  Buffer.from(compressedData).toString('base64');
 
 // Create the output file content
 const outputContent = `// This file is auto-generated. Do not edit manually.
@@ -24,7 +33,11 @@ export function decompress(data: string): any {
 `;
 
 // Write the output file
-const outputPath = path.join(process.cwd(), 'lib', 'build-compression.ts');
+const outputPath = path.join(
+  process.cwd(),
+  'lib',
+  'build-compression.ts',
+);
 fs.writeFileSync(outputPath, outputContent);
 
-console.log('✅ Cocktails data compressed successfully'); 
+console.log('✅ Cocktails data compressed successfully');

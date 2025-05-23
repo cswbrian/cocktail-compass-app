@@ -1,16 +1,20 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { NotebookPenIcon } from "lucide-react";
-import { useCocktailLogs } from "@/context/CocktailLogContext";
-import { useLanguage } from "@/context/LanguageContext";
+import { Button } from '@/components/ui/button';
+import { NotebookPenIcon } from 'lucide-react';
+import { useCocktailLogs } from '@/context/CocktailLogContext';
+import { useLanguage } from '@/context/LanguageContext';
 
 export function AddLogButton() {
   const { openCreateForm } = useCocktailLogs();
   const { language } = useLanguage();
 
   const handleClick = () => {
-    window.history.pushState({}, '', `/${language}/logs/new`);
+    window.history.pushState(
+      {},
+      '',
+      `/${language}/logs/new`,
+    );
     openCreateForm();
   };
 
@@ -22,4 +26,4 @@ export function AddLogButton() {
       <NotebookPenIcon className="h-5 w-5" />
     </Button>
   );
-} 
+}

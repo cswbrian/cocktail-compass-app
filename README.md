@@ -14,11 +14,13 @@ A client-side only Progressive Web App (PWA) built with Next.js for exploring co
 ## Getting Started
 
 1. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 2. Run the development server:
+
 ```bash
 pnpm dev
 ```
@@ -40,11 +42,13 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 The project uses a two-step build process:
 
 1. Compress cocktail data:
+
 ```bash
 pnpm build:compress
 ```
 
 2. Build the application:
+
 ```bash
 pnpm build
 ```
@@ -54,6 +58,7 @@ pnpm build
 This project is configured for deployment on Cloudflare Pages. The build output is static and optimized for edge delivery.
 
 To deploy:
+
 1. Ensure your repository is connected to Cloudflare Pages
 2. Push to your main branch
 3. Cloudflare Pages will automatically build and deploy your site

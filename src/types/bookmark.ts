@@ -14,4 +14,4 @@ export interface BookmarkList {
   created_at: string;
   updated_at?: string;
   items?: BookmarkedItem[];
-} 
+}

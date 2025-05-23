@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Share } from "lucide-react";
-import { sendGAEvent } from "@/lib/ga";
+import { Button } from '@/components/ui/button';
+import { Share } from 'lucide-react';
+import { sendGAEvent } from '@/lib/ga';
 
 interface ShareButtonProps {
   url: string;
@@ -18,7 +18,7 @@ export function ShareButton({ url }: ShareButtonProps) {
       } else {
         await navigator.clipboard.writeText(url);
       }
-      
+
       sendGAEvent('share', 'share_cocktail', url);
     } catch (error) {
       console.error('Error sharing:', error);
@@ -35,4 +35,4 @@ export function ShareButton({ url }: ShareButtonProps) {
       <Share className="h-4 w-4" />
     </Button>
   );
-} 
+}

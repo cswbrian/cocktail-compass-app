@@ -16,10 +16,11 @@ export function Redirect({ to }: RedirectProps) {
   useEffect(() => {
     // If 'to' already includes a language prefix, use it as is
     // Otherwise, prepend the current language
-    const redirectPath = to.startsWith('/en/') || to.startsWith('/zh/') 
-      ? to 
-      : `/${language}${to}`;
-    
+    const redirectPath =
+      to.startsWith('/en/') || to.startsWith('/zh/')
+        ? to
+        : `/${language}${to}`;
+
     navigate(redirectPath);
   }, [navigate, language, to]);
 
@@ -28,4 +29,4 @@ export function Redirect({ to }: RedirectProps) {
       <Loading size="lg" />
     </div>
   );
-} 
+}

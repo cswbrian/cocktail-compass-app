@@ -1,8 +1,14 @@
-'use client'
+'use client';
 
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import { RankedCocktail } from '@/types/cocktail';
-import { useLanguage } from "@/context/LanguageContext";
+import { useLanguage } from '@/context/LanguageContext';
 import { rankCocktails } from '@/lib/cocktail-ranking';
 import { cocktailService } from '@/services/cocktail-service';
 import { translations } from '@/translations';
@@ -31,7 +37,7 @@ type CocktailContextType = {
   setSelectedLiqueurs: (value: string[]) => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
-  
+
   // Methods
   handleFlavorSelect: (flavor: string) => void;
   handleSubmit: () => RankedCocktail[];
@@ -41,7 +47,8 @@ type CocktailContextType = {
   startOver: () => void;
 };
 
-const CocktailContext = createContext<CocktailContextType | null>(null);
+const CocktailContext =
+  createContext<CocktailContextType | null>(null);
 
 interface CocktailExplorerState {
   sweetness: number | null;
@@ -58,66 +65,86 @@ interface CocktailExplorerState {
   results: RankedCocktail[];
 }
 
-export function CocktailProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<CocktailExplorerState>({
-    sweetness: 5,
-    sourness: 5,
-    body: 5,
-    complexity: 5,
-    booziness: 5,
-    bubbles: null,
-    selectedFlavors: [],
-    selectedBaseSpirits: [],
-    selectedIngredients: [],
-    selectedLiqueurs: [],
-    currentStep: 1,
-    results: [],
-  });
+export function CocktailProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [state, setState] = useState<CocktailExplorerState>(
+    {
+      sweetness: 5,
+      sourness: 5,
+      body: 5,
+      complexity: 5,
+      booziness: 5,
+      bubbles: null,
+      selectedFlavors: [],
+      selectedBaseSpirits: [],
+      selectedIngredients: [],
+      selectedLiqueurs: [],
+      currentStep: 1,
+      results: [],
+    },
+  );
 
   const { language } = useLanguage();
   const t = translations[language];
 
   // Individual setters that update the consolidated state
-  const setSweetness = (value: number | null) => 
+  const setSweetness = (value: number | null) =>
     setState(prev => ({ ...prev, sweetness: value }));
-  
+
   const setSourness = (value: number | null) =>
     setState(prev => ({ ...prev, sourness: value }));
-  
+
   const setBody = (value: number | null) =>
     setState(prev => ({ ...prev, body: value }));
-  
+
   const setComplexity = (value: number | null) =>
     setState(prev => ({ ...prev, complexity: value }));
-  
+
   const setBooziness = (value: number | null) =>
     setState(prev => ({ ...prev, booziness: value }));
-  
+
   const setBubbles = (value: boolean) =>
     setState(prev => ({ ...prev, bubbles: value }));
-  
+
   const setCurrentStep = (step: number) =>
     setState(prev => ({ ...prev, currentStep: step }));
 
-  const handleFlavorSelect = useCallback((flavor: string) => {
-    setState(prev => ({
-      ...prev,
-      selectedFlavors: prev.selectedFlavors.includes(flavor)
-        ? prev.selectedFlavors.filter(f => f !== flavor)
-        : prev.selectedFlavors.length < 3
-          ? [...prev.selectedFlavors, flavor]
-          : prev.selectedFlavors
-    }));
-  }, []);
+  const handleFlavorSelect = useCallback(
+    (flavor: string) => {
+      setState(prev => ({
+        ...prev,
+        selectedFlavors: prev.selectedFlavors.includes(
+          flavor,
+        )
+          ? prev.selectedFlavors.filter(f => f !== flavor)
+          : prev.selectedFlavors.length < 3
+            ? [...prev.selectedFlavors, flavor]
+            : prev.selectedFlavors,
+      }));
+    },
+    [],
+  );
 
   const setSelectedBaseSpirits = (value: string[]) =>
-    setState(prev => ({ ...prev, selectedBaseSpirits: value }));
+    setState(prev => ({
+      ...prev,
+      selectedBaseSpirits: value,
+    }));
 
   const setSelectedIngredients = (value: string[]) =>
-    setState(prev => ({ ...prev, selectedIngredients: value }));
+    setState(prev => ({
+      ...prev,
+      selectedIngredients: value,
+    }));
 
   const setSelectedLiqueurs = (value: string[]) =>
-    setState(prev => ({ ...prev, selectedLiqueurs: value }));
+    setState(prev => ({
+      ...prev,
+      selectedLiqueurs: value,
+    }));
 
   const startOver = useCallback(() => {
     setState({
@@ -137,7 +164,8 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const handleSubmit = useCallback(() => {
-    const cocktails = cocktailService.getAllCocktailsWithDetails();
+    const cocktails =
+      cocktailService.getRecommendableCocktails();
     const rankedResults = rankCocktails(cocktails, {
       sweetness: state.sweetness,
       sourness: state.sourness,
@@ -149,7 +177,7 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
       selectedIngredients: state.selectedIngredients,
       selectedLiqueurs: state.selectedLiqueurs,
       selectedFlavors: state.selectedFlavors,
-      language
+      language,
     });
 
     setState(prev => ({ ...prev, results: rankedResults }));
@@ -158,9 +186,16 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
 
   const nextStep = useCallback(() => {
     if (state.currentStep < 3) {
-      setState(prev => ({ ...prev, currentStep: prev.currentStep + 1 }));
+      setState(prev => ({
+        ...prev,
+        currentStep: prev.currentStep + 1,
+      }));
       // Push new state to history
-      window.history.pushState({ step: state.currentStep + 1 }, '', '');
+      window.history.pushState(
+        { step: state.currentStep + 1 },
+        '',
+        '',
+      );
     } else {
       const newResults = handleSubmit();
       if (newResults.length > 0) {
@@ -173,7 +208,10 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
 
   const prevStep = useCallback(() => {
     if (state.currentStep > 1) {
-      setState(prev => ({ ...prev, currentStep: prev.currentStep - 1 }));
+      setState(prev => ({
+        ...prev,
+        currentStep: prev.currentStep - 1,
+      }));
       window.history.back();
     }
   }, [state.currentStep]);
@@ -182,14 +220,21 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
     // Handle browser back/forward buttons
     const handlePopState = (event: PopStateEvent) => {
       if (event.state?.step) {
-        setState(prev => ({ ...prev, currentStep: event.state.step }));
+        setState(prev => ({
+          ...prev,
+          currentStep: event.state.step,
+        }));
       } else {
         setState(prev => ({ ...prev, currentStep: 1 }));
       }
     };
 
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    return () =>
+      window.removeEventListener(
+        'popstate',
+        handlePopState,
+      );
   }, []);
 
   const goToResults = useCallback(() => {
@@ -215,7 +260,7 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
     selectedIngredients: state.selectedIngredients,
     selectedLiqueurs: state.selectedLiqueurs,
     currentStep: state.currentStep,
-    
+
     // Setters
     setSweetness,
     setSourness,
@@ -227,14 +272,14 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
     setSelectedIngredients,
     setSelectedLiqueurs,
     setCurrentStep,
-    
+
     // Methods
     handleFlavorSelect,
     handleSubmit,
     nextStep,
     prevStep,
     goToResults,
-    startOver
+    startOver,
   };
 
   return (
@@ -247,7 +292,9 @@ export function CocktailProvider({ children }: { children: React.ReactNode }) {
 export function useCocktail() {
   const context = useContext(CocktailContext);
   if (!context) {
-    throw new Error('useCocktail must be used within a CocktailProvider');
+    throw new Error(
+      'useCocktail must be used within a CocktailProvider',
+    );
   }
   return context;
-} 
+}

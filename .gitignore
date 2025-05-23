@@ -50,6 +50,7 @@ data/cocktails.compressed.ts
 
 # Cloudflare Workers
 .wrangler
-.dev.vars
+dev.vars
+prod.vars
 dist/
 worker/

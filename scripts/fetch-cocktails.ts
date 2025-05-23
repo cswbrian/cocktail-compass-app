@@ -24,7 +24,7 @@ function transformCocktails(cocktails: any[]) {
       const { data, ...rest } = cocktail;
       return {
         ...rest,
-        ...data
+        ...data,
       };
     }
     return cocktail;
@@ -47,7 +47,8 @@ async function fetchAndSaveCocktails() {
     }
 
     // Transform the data to match the Cocktail interface
-    const transformedCocktails = transformCocktails(cocktails);
+    const transformedCocktails =
+      transformCocktails(cocktails);
 
     // Create data directory if it doesn't exist
     const dataDir = path.join(process.cwd(), 'data');
@@ -57,9 +58,14 @@ async function fetchAndSaveCocktails() {
 
     // Save the transformed data
     const filePath = path.join(dataDir, 'cocktails.json');
-    fs.writeFileSync(filePath, JSON.stringify(transformedCocktails, null, 2));
+    fs.writeFileSync(
+      filePath,
+      JSON.stringify(transformedCocktails, null, 2),
+    );
 
-    console.log('✅ Cocktails data fetched and saved successfully');
+    console.log(
+      '✅ Cocktails data fetched and saved successfully',
+    );
   } catch (error) {
     console.error('❌ Error fetching cocktails:', error);
     process.exit(1);
@@ -67,4 +73,4 @@ async function fetchAndSaveCocktails() {
 }
 
 // Run the function
-fetchAndSaveCocktails(); 
+fetchAndSaveCocktails();

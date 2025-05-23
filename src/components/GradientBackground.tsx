@@ -13,10 +13,10 @@ export function GradientBackground() {
   useEffect(() => {
     const move = () => {
       if (!interactiveRef.current) return;
-      
+
       curX.current += (tgX.current - curX.current) / 20;
       curY.current += (tgY.current - curY.current) / 20;
-      
+
       interactiveRef.current.style.transform = `translate(${Math.round(curX.current)}px, ${Math.round(curY.current)}px)`;
       requestAnimationFrame(move);
     };
@@ -29,7 +29,7 @@ export function GradientBackground() {
     const handleTouchMove = (event: TouchEvent) => {
       // Prevent scrolling while touching
       event.preventDefault();
-      
+
       // Get the first touch point
       const touch = event.touches[0];
       tgX.current = touch.clientX;
@@ -38,14 +38,22 @@ export function GradientBackground() {
 
     // Add both mouse and touch event listeners
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    
+    window.addEventListener('touchmove', handleTouchMove, {
+      passive: false,
+    });
+
     // Start the animation loop
     move();
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener(
+        'mousemove',
+        handleMouseMove,
+      );
+      window.removeEventListener(
+        'touchmove',
+        handleTouchMove,
+      );
     };
   }, []);
 
@@ -54,7 +62,11 @@ export function GradientBackground() {
       <svg xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id="goo">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur-sm" />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="10"
+              result="blur-sm"
+            />
             <feColorMatrix
               in="blur-sm"
               mode="matrix"
@@ -73,8 +85,11 @@ export function GradientBackground() {
         <div className={styles.g5}></div>
         <div className={styles.g6}></div>
         <div className={styles.g7}></div>
-        <div ref={interactiveRef} className={styles.interactive}></div>
+        <div
+          ref={interactiveRef}
+          className={styles.interactive}
+        ></div>
       </div>
     </div>
   );
-} 
+}

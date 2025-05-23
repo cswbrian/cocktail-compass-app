@@ -1,5 +1,5 @@
-import { FeedsNav } from "@/components/feeds/FeedsNav";
-import { Outlet } from "react-router-dom";
+import { FeedsNav } from '@/components/feeds/FeedsNav';
+import { Outlet } from 'react-router-dom';
 
 export default function JournalPage() {
   return (
@@ -8,4 +8,4 @@ export default function JournalPage() {
       <Outlet />
     </div>
   );
-} 
+}

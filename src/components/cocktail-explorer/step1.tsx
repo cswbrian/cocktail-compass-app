@@ -1,10 +1,10 @@
-import { motion } from "framer-motion";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
-import { useCocktail } from "@/context/CocktailContext";
+import { motion } from 'framer-motion';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
+import { useCocktail } from '@/context/CocktailContext';
 
 export default function Step1() {
   const { language } = useLanguage();
@@ -50,14 +50,18 @@ export default function Step1() {
         <div className="flex justify-end items-center space-x-2">
           <Switch
             id="master-no-preference"
-            checked={sweetness === null && 
-                    sourness === null && 
-                    body === null && 
-                    complexity === null && 
-                    booziness === null}
+            checked={
+              sweetness === null &&
+              sourness === null &&
+              body === null &&
+              complexity === null &&
+              booziness === null
+            }
             onCheckedChange={handleMasterNoPreference}
           />
-          <Label htmlFor="master-no-preference">{t.masterNoPreference}</Label>
+          <Label htmlFor="master-no-preference">
+            {t.masterNoPreference}
+          </Label>
         </div>
       </motion.div>
 
@@ -69,14 +73,24 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={sweetness === null ? "text-gray-700" : ""}>{t.sweetness}</h2>
+            <h2
+              className={
+                sweetness === null ? 'text-gray-700' : ''
+              }
+            >
+              {t.sweetness}
+            </h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-sweetness"
                 checked={sweetness === null}
-                onCheckedChange={(checked) => setSweetness(checked ? null : 5)}
+                onCheckedChange={checked =>
+                  setSweetness(checked ? null : 5)
+                }
               />
-              <Label htmlFor="no-sweetness">{t.noPreference}</Label>
+              <Label htmlFor="no-sweetness">
+                {t.noPreference}
+              </Label>
             </div>
           </div>
           <Slider
@@ -84,20 +98,32 @@ export default function Step1() {
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={sweetness === null ? "bg-gray-700" : "bg-rose-500"}
-            onValueChange={(value) => setSweetness(value[0])}
+            rangeClassName={
+              sweetness === null
+                ? 'bg-gray-700'
+                : 'bg-rose-500'
+            }
+            onValueChange={value => setSweetness(value[0])}
             disabled={sweetness === null}
           />
           <div
             className={`grid grid-cols-5 text-sm mt-1 ${
-              sweetness === null ? "text-gray-700" : "text-muted-foreground"
+              sweetness === null
+                ? 'text-gray-700'
+                : 'text-muted-foreground'
             }`}
           >
             <span className="text-left">{t.noSweet}</span>
-            <span className="text-center">{t.lightSweet}</span>
-            <span className="text-center">{t.mediumSweet}</span>
+            <span className="text-center">
+              {t.lightSweet}
+            </span>
+            <span className="text-center">
+              {t.mediumSweet}
+            </span>
             <span className="text-center">{t.sweet}</span>
-            <span className="text-right">{t.verySweet}</span>
+            <span className="text-right">
+              {t.verySweet}
+            </span>
           </div>
         </div>
       </motion.div>
@@ -110,14 +136,24 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={sourness === null ? "text-gray-700" : ""}>{t.sourness}</h2>
+            <h2
+              className={
+                sourness === null ? 'text-gray-700' : ''
+              }
+            >
+              {t.sourness}
+            </h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-sourness"
                 checked={sourness === null}
-                onCheckedChange={(checked) => setSourness(checked ? null : 5)}
+                onCheckedChange={checked =>
+                  setSourness(checked ? null : 5)
+                }
               />
-              <Label htmlFor="no-sourness">{t.noPreference}</Label>
+              <Label htmlFor="no-sourness">
+                {t.noPreference}
+              </Label>
             </div>
           </div>
           <Slider
@@ -125,18 +161,28 @@ export default function Step1() {
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={sourness === null ? "bg-gray-700" : "bg-yellow-500"}
-            onValueChange={(value) => setSourness(value[0])}
+            rangeClassName={
+              sourness === null
+                ? 'bg-gray-700'
+                : 'bg-yellow-500'
+            }
+            onValueChange={value => setSourness(value[0])}
             disabled={sourness === null}
           />
           <div
             className={`grid grid-cols-5 text-sm mt-1 ${
-              sourness === null ? "text-gray-700" : "text-muted-foreground"
+              sourness === null
+                ? 'text-gray-700'
+                : 'text-muted-foreground'
             }`}
           >
             <span className="text-left">{t.noSour}</span>
-            <span className="text-center">{t.lightSour}</span>
-            <span className="text-center">{t.mediumSour}</span>
+            <span className="text-center">
+              {t.lightSour}
+            </span>
+            <span className="text-center">
+              {t.mediumSour}
+            </span>
             <span className="text-center">{t.sour}</span>
             <span className="text-right">{t.verySour}</span>
           </div>
@@ -151,14 +197,24 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={body === null ? "text-gray-700" : ""}>{t.body}</h2>
+            <h2
+              className={
+                body === null ? 'text-gray-700' : ''
+              }
+            >
+              {t.body}
+            </h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-body"
                 checked={body === null}
-                onCheckedChange={(checked) => setBody(checked ? null : 5)}
+                onCheckedChange={checked =>
+                  setBody(checked ? null : 5)
+                }
               />
-              <Label htmlFor="no-body">{t.noPreference}</Label>
+              <Label htmlFor="no-body">
+                {t.noPreference}
+              </Label>
             </div>
           </div>
           <Slider
@@ -166,19 +222,31 @@ export default function Step1() {
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={body === null ? "bg-gray-700" : "bg-emerald-500"}
-            onValueChange={(value) => setBody(value[0])}
+            rangeClassName={
+              body === null
+                ? 'bg-gray-700'
+                : 'bg-emerald-500'
+            }
+            onValueChange={value => setBody(value[0])}
             disabled={body === null}
           />
           <div
             className={`grid grid-cols-5 text-sm mt-1 ${
-              body === null ? "text-gray-700" : "text-muted-foreground"
+              body === null
+                ? 'text-gray-700'
+                : 'text-muted-foreground'
             }`}
           >
             <span className="text-left">{t.thinBody}</span>
-            <span className="text-center">{t.lightBody}</span>
-            <span className="text-center">{t.mediumBody}</span>
-            <span className="text-center">{t.heavyBody}</span>
+            <span className="text-center">
+              {t.lightBody}
+            </span>
+            <span className="text-center">
+              {t.mediumBody}
+            </span>
+            <span className="text-center">
+              {t.heavyBody}
+            </span>
             <span className="text-right">{t.fullBody}</span>
           </div>
         </div>
@@ -192,14 +260,24 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={complexity === null ? "text-gray-700" : ""}>{t.complexity}</h2>
+            <h2
+              className={
+                complexity === null ? 'text-gray-700' : ''
+              }
+            >
+              {t.complexity}
+            </h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-complexity"
                 checked={complexity === null}
-                onCheckedChange={(checked) => setComplexity(checked ? null : 5)}
+                onCheckedChange={checked =>
+                  setComplexity(checked ? null : 5)
+                }
               />
-              <Label htmlFor="no-complexity">{t.noPreference}</Label>
+              <Label htmlFor="no-complexity">
+                {t.noPreference}
+              </Label>
             </div>
           </div>
           <Slider
@@ -207,20 +285,34 @@ export default function Step1() {
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={complexity === null ? "bg-gray-700" : "bg-sky-500"}
-            onValueChange={(value) => setComplexity(value[0])}
+            rangeClassName={
+              complexity === null
+                ? 'bg-gray-700'
+                : 'bg-sky-500'
+            }
+            onValueChange={value => setComplexity(value[0])}
             disabled={complexity === null}
           />
           <div
             className={`grid grid-cols-5 text-sm mt-1 ${
-              complexity === null ? "text-gray-700" : "text-muted-foreground"
+              complexity === null
+                ? 'text-gray-700'
+                : 'text-muted-foreground'
             }`}
           >
-            <span className="text-left">{t.simpleComplex}</span>
-            <span className="text-center">{t.someComplex}</span>
-            <span className="text-center">{t.mediumComplex}</span>
+            <span className="text-left">
+              {t.simpleComplex}
+            </span>
+            <span className="text-center">
+              {t.someComplex}
+            </span>
+            <span className="text-center">
+              {t.mediumComplex}
+            </span>
             <span className="text-center">{t.complex}</span>
-            <span className="text-right">{t.veryComplex}</span>
+            <span className="text-right">
+              {t.veryComplex}
+            </span>
           </div>
         </div>
       </motion.div>
@@ -233,14 +325,24 @@ export default function Step1() {
       >
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h2 className={booziness === null ? "text-gray-700" : ""}>{t.booziness}</h2>
+            <h2
+              className={
+                booziness === null ? 'text-gray-700' : ''
+              }
+            >
+              {t.booziness}
+            </h2>
             <div className="flex items-center space-x-2">
               <Switch
                 id="no-booziness"
                 checked={booziness === null}
-                onCheckedChange={(checked) => setBooziness(checked ? null : 5)}
+                onCheckedChange={checked =>
+                  setBooziness(checked ? null : 5)
+                }
               />
-              <Label htmlFor="no-booziness">{t.noPreference}</Label>
+              <Label htmlFor="no-booziness">
+                {t.noPreference}
+              </Label>
             </div>
           </div>
           <Slider
@@ -248,23 +350,37 @@ export default function Step1() {
             max={10}
             step={1}
             className="w-full"
-            rangeClassName={booziness === null ? "bg-gray-700" : "bg-orange-500"}
-            onValueChange={(value) => setBooziness(value[0])}
+            rangeClassName={
+              booziness === null
+                ? 'bg-gray-700'
+                : 'bg-orange-500'
+            }
+            onValueChange={value => setBooziness(value[0])}
             disabled={booziness === null}
           />
           <div
             className={`grid grid-cols-5 text-sm mt-1 ${
-              booziness === null ? "text-gray-700" : "text-muted-foreground"
+              booziness === null
+                ? 'text-gray-700'
+                : 'text-muted-foreground'
             }`}
           >
             <span className="text-left">{t.noAlcohol}</span>
-            <span className="text-center">{t.lightAlcohol}</span>
-            <span className="text-center">{t.mediumAlcohol}</span>
-            <span className="text-center">{t.strongAlcohol}</span>
-            <span className="text-right">{t.veryStrong}</span>
+            <span className="text-center">
+              {t.lightAlcohol}
+            </span>
+            <span className="text-center">
+              {t.mediumAlcohol}
+            </span>
+            <span className="text-center">
+              {t.strongAlcohol}
+            </span>
+            <span className="text-right">
+              {t.veryStrong}
+            </span>
           </div>
         </div>
       </motion.div>
     </div>
   );
-}; 
+}

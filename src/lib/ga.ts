@@ -6,10 +6,14 @@ export const initGA = () => {
 };
 
 // Helper function to send events
-export const sendGAEvent = (category: string, action: string, label?: string) => {
+export const sendGAEvent = (
+  category: string,
+  action: string,
+  label?: string,
+) => {
   ReactGA.event({
     category,
     action,
     label,
   });
-}; 
+};

@@ -1,15 +1,22 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { translations } from "@/translations";
-import { useLanguage } from "@/context/LanguageContext";
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ingredientService, Ingredient, IngredientType } from "@/services/ingredient-service";
-import { AuthService } from "@/services/auth-service";
-import { toast } from "sonner";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { translations } from '@/translations';
+import { useLanguage } from '@/context/LanguageContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from '@/components/ui/radio-group';
+import {
+  ingredientService,
+  Ingredient,
+  IngredientType,
+} from '@/services/ingredient-service';
+import { AuthService } from '@/services/auth-service';
+import { toast } from 'sonner';
 
 interface CustomIngredientModalProps {
   isOpen: boolean;
@@ -22,14 +29,16 @@ export function CustomIngredientModal({
   isOpen,
   onClose,
   onIngredientCreated,
-  initialName = "",
+  initialName = '',
 }: CustomIngredientModalProps) {
   const [nameEn, setNameEn] = useState(initialName);
   const [nameZh, setNameZh] = useState(initialName);
-  const [type, setType] = useState<IngredientType>("base_spirit");
+  const [type, setType] =
+    useState<IngredientType>('base_spirit');
   const [isLoading, setIsLoading] = useState(false);
   const { language } = useLanguage();
-  const t = translations[language as keyof typeof translations];
+  const t =
+    translations[language as keyof typeof translations];
 
   const handleCreate = async () => {
     if (!nameEn) {
@@ -45,24 +54,25 @@ export function CustomIngredientModal({
         return;
       }
 
-      const ingredient = await ingredientService.createIngredient(
-        nameEn,
-        nameZh || nameEn,
-        type
-      );
+      const ingredient =
+        await ingredientService.createIngredient(
+          nameEn,
+          nameZh || nameEn,
+          type,
+        );
 
       onIngredientCreated(ingredient);
-      
+
       // Reset form
-      setNameEn("");
-      setNameZh("");
-      setType("base_spirit");
+      setNameEn('');
+      setNameZh('');
+      setType('base_spirit');
       onClose();
       toast.success(t.success, {
-        description: t.createNewIngredient
+        description: t.createNewIngredient,
       });
     } catch (error) {
-      console.error("Error creating ingredient:", error);
+      console.error('Error creating ingredient:', error);
       toast.error(t.errorCreatingIngredient);
     } finally {
       setIsLoading(false);
@@ -81,10 +91,14 @@ export function CustomIngredientModal({
             onClick={onClose}
           />
           <motion.div
-            initial={{ y: "100%" }}
+            initial={{ y: '100%' }}
             animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            exit={{ y: '100%' }}
+            transition={{
+              type: 'spring',
+              damping: 25,
+              stiffness: 300,
+            }}
             className="fixed inset-0 z-50 bg-background"
           >
             <div className="h-full flex flex-col">
@@ -107,11 +121,13 @@ export function CustomIngredientModal({
               <div className="flex-1 overflow-y-auto">
                 <div className="px-4 py-4 space-y-4">
                   <div>
-                    <Label htmlFor="nameEn">{t.ingredientNameEn}</Label>
+                    <Label htmlFor="nameEn">
+                      {t.ingredientNameEn}
+                    </Label>
                     <Input
                       id="nameEn"
                       value={nameEn}
-                      onChange={(e) => {
+                      onChange={e => {
                         const value = e.target.value;
                         setNameEn(value);
                         setNameZh(value);
@@ -120,11 +136,15 @@ export function CustomIngredientModal({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="nameZh">{t.ingredientNameZh}</Label>
+                    <Label htmlFor="nameZh">
+                      {t.ingredientNameZh}
+                    </Label>
                     <Input
                       id="nameZh"
                       value={nameZh}
-                      onChange={(e) => setNameZh(e.target.value)}
+                      onChange={e =>
+                        setNameZh(e.target.value)
+                      }
                       placeholder={t.ingredientNameZh}
                     />
                   </div>
@@ -132,20 +152,46 @@ export function CustomIngredientModal({
                     <Label>{t.ingredientType}</Label>
                     <RadioGroup
                       value={type}
-                      onValueChange={(value) => setType(value as IngredientType)}
+                      onValueChange={value =>
+                        setType(value as IngredientType)
+                      }
                       className="mt-4 flex flex-col space-y-2"
                     >
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="base_spirit" id="base_spirit" />
-                        <Label htmlFor="base_spirit" className="cursor-pointer">{t.baseSpirit}</Label>
+                        <RadioGroupItem
+                          value="base_spirit"
+                          id="base_spirit"
+                        />
+                        <Label
+                          htmlFor="base_spirit"
+                          className="cursor-pointer"
+                        >
+                          {t.baseSpirit}
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="liqueur" id="liqueur" />
-                        <Label htmlFor="liqueur" className="cursor-pointer">{t.liqueur}</Label>
+                        <RadioGroupItem
+                          value="liqueur"
+                          id="liqueur"
+                        />
+                        <Label
+                          htmlFor="liqueur"
+                          className="cursor-pointer"
+                        >
+                          {t.liqueur}
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="ingredient" id="ingredient" />
-                        <Label htmlFor="ingredient" className="cursor-pointer">{t.ingredient}</Label>
+                        <RadioGroupItem
+                          value="ingredient"
+                          id="ingredient"
+                        />
+                        <Label
+                          htmlFor="ingredient"
+                          className="cursor-pointer"
+                        >
+                          {t.ingredient}
+                        </Label>
                       </div>
                     </RadioGroup>
                   </div>
@@ -154,7 +200,7 @@ export function CustomIngredientModal({
 
               <div className="p-4 border-t mt-auto">
                 <div className="flex w-full gap-2">
-                  <Button 
+                  <Button
                     variant="outline"
                     onClick={onClose}
                     className="flex-1"
@@ -176,4 +222,4 @@ export function CustomIngredientModal({
       )}
     </AnimatePresence>
   );
-} 
+}

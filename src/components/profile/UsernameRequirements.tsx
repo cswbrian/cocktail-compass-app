@@ -1,6 +1,6 @@
-import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
+import React from 'react';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
 
 export const UsernameRequirements: React.FC = () => {
   const { language } = useLanguage();
@@ -14,7 +14,9 @@ export const UsernameRequirements: React.FC = () => {
         <li>{t.usernameNoConsecutivePeriods}</li>
         <li>{t.usernameNoPeriodsStartEnd}</li>
       </ul>
-      <p className="text-sm mt-2">{t.usernameVisibilityNote}</p>
+      <p className="text-sm mt-2">
+        {t.usernameVisibilityNote}
+      </p>
     </div>
   );
-}; 
+};

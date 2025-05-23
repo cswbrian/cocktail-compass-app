@@ -24,16 +24,16 @@ By using the App, you represent and warrant that you are at least the legal drin
 
 You agree not to use the App for any purpose that is unlawful or prohibited by these Terms. This includes, but is not limited to:
 
-* Violating any applicable local, national, or international law or regulation.
-* Infringing upon our intellectual property rights or the intellectual property rights of others.
-* Attempting to gain unauthorized access to the App, user accounts, or computer systems or networks connected to the App through hacking, password mining, or any other means.
-* Scraping, accessing, monitoring, or copying any content or information of the App using any robot, spider, scraper, or other automated means or any manual process for any purpose without our express written permission.
-* Distributing viruses, malware, or any other harmful code.
-* Engaging in any conduct that is abusive, harassing, discriminatory, or otherwise objectionable.
-* Using the App for any unauthorized commercial purpose.
-* Collecting or harvesting any personally identifiable information from the App without authorization.
-* Posting or sharing content that encourages excessive alcohol consumption, underage drinking, or any illegal alcohol-related activities.
-* Posting or sharing misleading or inaccurate information regarding alcohol safety.
+- Violating any applicable local, national, or international law or regulation.
+- Infringing upon our intellectual property rights or the intellectual property rights of others.
+- Attempting to gain unauthorized access to the App, user accounts, or computer systems or networks connected to the App through hacking, password mining, or any other means.
+- Scraping, accessing, monitoring, or copying any content or information of the App using any robot, spider, scraper, or other automated means or any manual process for any purpose without our express written permission.
+- Distributing viruses, malware, or any other harmful code.
+- Engaging in any conduct that is abusive, harassing, discriminatory, or otherwise objectionable.
+- Using the App for any unauthorized commercial purpose.
+- Collecting or harvesting any personally identifiable information from the App without authorization.
+- Posting or sharing content that encourages excessive alcohol consumption, underage drinking, or any illegal alcohol-related activities.
+- Posting or sharing misleading or inaccurate information regarding alcohol safety.
 
 **3. User Content**
 
@@ -43,10 +43,10 @@ You retain all rights to your User Content. You may choose to keep your cocktail
 
 You agree that your User Content will not:
 
-* Be unlawful, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, libelous, or otherwise objectionable.
-* Infringe upon the intellectual property, privacy, or other rights of any person or entity.
-* Contain spam, commercial solicitations, or promotional materials.
-* Contain any content intended to impersonate another person or misrepresent your affiliation with any person or entity, including bars, restaurants, or bartenders.
+- Be unlawful, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, libelous, or otherwise objectionable.
+- Infringe upon the intellectual property, privacy, or other rights of any person or entity.
+- Contain spam, commercial solicitations, or promotional materials.
+- Contain any content intended to impersonate another person or misrepresent your affiliation with any person or entity, including bars, restaurants, or bartenders.
 
 We have the right, but not the obligation, to monitor, edit, or remove User Content that we determine in our sole discretion is unlawful, offensive, threatening, libelous, defamatory, obscene, or otherwise objectionable or violates these Terms. We may also suspend or terminate your account if your User Content violates these Terms.
 
