@@ -307,6 +307,8 @@ export const translations = {
     pageNotFoundDescription:
       "Let's get you back to mixing some cocktails!",
     backToHome: 'Back to Home',
+    alphabetical: 'Alphabetical',
+    recentlyAdded: 'Recently Added',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -592,5 +594,7 @@ export const translations = {
     pageNotFound: '哎呀！我哋可能飲醉咗 🍸',
     pageNotFoundDescription: '等我哋帶你返去溝返杯！',
     backToHome: '返屋企',
+    alphabetical: '字母排序',
+    recentlyAdded: '最近新增',
   },
 };
