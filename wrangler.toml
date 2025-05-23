@@ -14,7 +14,10 @@ preview_bucket_name = "cocktail-compass-staging"
 
 # Production environment
 [env.production]
-vars = { ALLOWED_ORIGINS = "https://cocktail-cult.pages.dev" }
+vars = { ALLOWED_ORIGINS = "https://cocktailcult.club" }
+routes = [
+  "upload.cocktailcult.club/*"
+]
 
 [[env.production.r2_buckets]]
 binding = "BUCKET"

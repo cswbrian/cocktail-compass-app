@@ -22,7 +22,7 @@ export function FeedsNav() {
         }`}
       >
         <CompassIcon className="w-4 h-4" />
-        {t.discover}
+        {t.recommendFeed}
       </Link>
       <Link
         to={`/${language}/feeds/me`}

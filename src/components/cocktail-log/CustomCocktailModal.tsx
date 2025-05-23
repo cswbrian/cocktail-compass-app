@@ -14,6 +14,7 @@ import { CustomIngredientModal } from "./CustomIngredientModal";
 import { customCocktailService } from "@/services/custom-cocktail-service";
 import { AuthService } from "@/services/auth-service";
 import { toast } from "sonner";
+import { useCocktailDetails } from "@/hooks/useCocktailDetails";
 
 interface CustomCocktailModalProps {
   isOpen: boolean;
@@ -47,6 +48,7 @@ export function CustomCocktailModal({
   const [isLoading, setIsLoading] = useState(false);
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];
+  const { mutate: mutateCocktailDetails } = useCocktailDetails();
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
@@ -101,6 +103,9 @@ export function CustomCocktailModal({
         },
         user.id
       );
+
+      // Invalidate the cocktail details cache
+      await mutateCocktailDetails();
 
       onCustomCocktailValues({
         id: cocktail.id,

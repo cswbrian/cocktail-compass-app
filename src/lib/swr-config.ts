@@ -40,6 +40,7 @@ export const CACHE_KEYS = {
   COCKTAIL_LOGS_BY_ID: (cocktailId: string) => ['cocktail-logs-by-id', cocktailId],
   BOOKMARKS: 'bookmarks',
   COCKTAILS: 'cocktails',
+  COCKTAIL_DETAILS: 'cocktail-details',
 } as const;
 
 // Helper functions for cache invalidation

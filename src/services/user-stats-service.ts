@@ -30,10 +30,23 @@ export class UserStatsService {
       .from('user_stats')
       .select('*')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
-    if (!data) return null;
+    if (!data) {
+      // Return default stats when no data exists
+      return {
+        basicStats: {
+          totalCocktailsDrunk: 0,
+          uniqueCocktails: 0,
+          uniquePlaces: 0
+        },
+        drinksByMonth: {},
+        topPlaces: [],
+        recentPhotos: [],
+        mostLoggedCocktails: []
+      };
+    }
 
     return {
       basicStats: {
@@ -53,10 +66,23 @@ export class UserStatsService {
       .from('user_stats')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
-    if (!data) return null;
+    if (!data) {
+      // Return default stats when no data exists
+      return {
+        basicStats: {
+          totalCocktailsDrunk: 0,
+          uniqueCocktails: 0,
+          uniquePlaces: 0
+        },
+        drinksByMonth: {},
+        topPlaces: [],
+        recentPhotos: [],
+        mostLoggedCocktails: []
+      };
+    }
 
     return {
       basicStats: {

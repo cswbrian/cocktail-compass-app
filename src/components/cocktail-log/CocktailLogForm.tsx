@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cocktailLogService } from "@/services/cocktail-log-service";
 import { cocktailService } from "@/services/cocktail-service";
+import { useCocktailDetails } from "@/hooks/useCocktailDetails";
 import { CocktailLog } from "@/types/cocktail-log";
 import { useToast } from "@/components/ui/use-toast";
 import { translations } from "@/translations";
@@ -87,6 +88,7 @@ export function CocktailLogForm({
   );
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
   const [mediaError, setMediaError] = useState<string | null>(null);
+  const { cocktailDetails } = useCocktailDetails();
 
   // Reset all form states
   const resetForm = () => {
@@ -142,8 +144,21 @@ export function CocktailLogForm({
     const loadCocktails = async () => {
       try {
         setIsLoadingCocktails(true);
-        const cocktails = cocktailService.getAllCocktails();
-        const filtered = cocktails
+        const staticCocktails = cocktailService.getCocktailPreviews();
+        
+        // Combine static and custom cocktails
+        const allCocktails = [
+          ...staticCocktails,
+          ...(cocktailDetails?.map(cocktail => ({
+            id: cocktail.id,
+            slug: cocktail.slug,
+            name: cocktail.name,
+            categories: cocktail.categories,
+            flavor_descriptors: cocktail.flavor_descriptors
+          })) || [])
+        ];
+
+        const filtered = allCocktails
           .filter(cocktail => {
             const normalizedSearch = normalizeText(cocktailNameInput);
             const normalizedName = normalizeText(formatBilingualText(cocktail.name, language));
@@ -173,7 +188,7 @@ export function CocktailLogForm({
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [cocktailNameInput, language, t]);
+  }, [cocktailNameInput, language, t, cocktailDetails]);
 
   // Reset form when opened for a new log
   useEffect(() => {

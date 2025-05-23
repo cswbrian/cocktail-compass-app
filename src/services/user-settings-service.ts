@@ -86,7 +86,7 @@ export class UserSettingsService {
       .from('user_settings')
       .select('username, instagram_url')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
     return data ? { username: data.username, instagram_url: data.instagram_url } : null;
@@ -105,9 +105,9 @@ export class UserSettingsService {
       .select('user_id')
       .ilike('username', username)
       .neq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
-    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 is "no rows returned" error
+    if (checkError) {
       throw checkError;
     }
 
@@ -144,7 +144,7 @@ export class UserSettingsService {
       .from('user_settings')
       .select('user_id, username')
       .eq('username', username)
-      .single();
+      .maybeSingle();
 
     return { data, error };
   }
@@ -154,7 +154,7 @@ export class UserSettingsService {
       .from('user_settings')
       .select('username, instagram_url')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
     return data ? { username: data.username, instagram_url: data.instagram_url } : null;
