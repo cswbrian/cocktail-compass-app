@@ -21,6 +21,7 @@ export type Ingredient = {
 
 // Update the base type for all ingredient types
 type BaseIngredient = {
+  id: string;
   name: LocalizedString;
   amount: number;
   unit: LocalizedString;

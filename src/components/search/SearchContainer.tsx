@@ -5,28 +5,29 @@ import { CocktailPreview } from "@/types/cocktail";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/translations";
 import { useNavigate } from "react-router-dom";
-import { slugify, normalizeText, formatBilingualText } from "@/lib/utils";
-import summary from "@/data/summary.json";
+import { normalizeText, formatBilingualText } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Clock, X, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useCocktailDetails } from "@/hooks/useCocktailDetails";
+import { useIngredients } from "@/hooks/useIngredients";
 
 interface SearchClientProps {
   cocktails: CocktailPreview[];
 }
 
 interface SearchItem {
+  id: string;
   name: string;
   value: string;
   type: 'cocktail' | 'ingredient';
   category: string;
-  slug: string;
 }
 
 interface RecentSearch {
-  slug: string;
+  id: string;
   type: 'cocktail' | 'ingredient';
   timestamp: number;
 }
@@ -54,7 +55,7 @@ function SearchItem({ item, onSelect, showCloseButton, onClose, t }: SearchItemP
       </button>
       {showCloseButton && (
         <button
-          onClick={() => onClose?.(item.slug)}
+          onClick={() => onClose?.(item.id)}
           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <X className="h-4 w-4" />
@@ -70,6 +71,8 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
   const t = translations[language];
   const [searchQuery, setSearchQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
+  const { cocktailDetails } = useCocktailDetails();
+  const { baseSpirits, liqueurs, otherIngredients } = useIngredients();
 
   useEffect(() => {
     const storedSearches = localStorage.getItem('recentSearches');
@@ -81,14 +84,14 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
   const updateRecentSearches = (newSearch: Omit<RecentSearch, 'timestamp'>) => {
     const updatedSearches = [
       { ...newSearch, timestamp: Date.now() },
-      ...recentSearches.filter(item => item.slug !== newSearch.slug)
+      ...recentSearches.filter(item => item.id !== newSearch.id)
     ].slice(0, 5);
     setRecentSearches(updatedSearches);
     localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
   };
 
-  const removeRecentSearch = (slug: string) => {
-    const updatedSearches = recentSearches.filter(item => item.slug !== slug);
+  const removeRecentSearch = (id: string) => {
+    const updatedSearches = recentSearches.filter(item => item.id !== id);
     setRecentSearches(updatedSearches);
     localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
   };
@@ -100,32 +103,32 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
 
   const searchItems: SearchItem[] = [
     ...cocktails.map(cocktail => ({
+      id: cocktail.id,
       name: formatBilingualText(cocktail.name, language),
       value: `cocktail:${cocktail.name.en}`,
       type: 'cocktail' as const,
       category: 'cocktail',
-      slug: slugify(cocktail.name.en)
     })),
-    ...summary.base_spirits.map(spirit => ({
-      name: formatBilingualText(spirit.name, language),
-      value: `ingredient:${spirit.name.en}`,
+    ...baseSpirits.map(spirit => ({
+      id: spirit.id,
+      name: formatBilingualText({ en: spirit.nameEn, zh: spirit.nameZh }, language),
+      value: `ingredient:${spirit.nameEn}`,
       type: 'ingredient' as const,
       category: 'baseSpirit',
-      slug: slugify(spirit.name.en)
     })),
-    ...summary.liqueurs.map(liqueur => ({
-      name: formatBilingualText(liqueur.name, language),
-      value: `ingredient:${liqueur.name.en}`,
+    ...liqueurs.map(liqueur => ({
+      id: liqueur.id,
+      name: formatBilingualText({ en: liqueur.nameEn, zh: liqueur.nameZh }, language),
+      value: `ingredient:${liqueur.nameEn}`,
       type: 'ingredient' as const,
       category: 'liqueur',
-      slug: slugify(liqueur.name.en)
     })),
-    ...summary.ingredients.map(ingredient => ({
-      name: formatBilingualText(ingredient.name, language),
-      value: `ingredient:${ingredient.name.en}`,
+    ...otherIngredients.map(ingredient => ({
+      id: ingredient.id,
+      name: formatBilingualText({ en: ingredient.nameEn, zh: ingredient.nameZh }, language),
+      value: `ingredient:${ingredient.nameEn}`,
       type: 'ingredient' as const,
       category: 'ingredient',
-      slug: slugify(ingredient.name.en)
     }))
   ].sort((a, b) => a.name.localeCompare(b.name));
 
@@ -136,18 +139,18 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
   });
 
   const handleItemSelect = (value: string, item: SearchItem) => {
-    updateRecentSearches({ slug: item.slug, type: item.type });
+    updateRecentSearches({ id: item.id, type: item.type });
     const [type, name] = value.split(':');
     
     if (type === 'cocktail') {
-      navigate(`/${language}/cocktails/${slugify(name)}`);
+      navigate(`/${language}/cocktails/${item.id}`);
     } else if (type === 'ingredient') {
-      navigate(`/${language}/ingredients/${slugify(name)}`);
+      navigate(`/${language}/ingredients/${item.id}`);
     }
   };
 
   const getItemDetails = (recentSearch: RecentSearch): SearchItem | null => {
-    const item = searchItems.find(item => item.slug === recentSearch.slug);
+    const item = searchItems.find(item => item.id === recentSearch.id);
     if (!item) return null;
     return item;
   };
@@ -197,7 +200,7 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
                       <h2 className="font-bold px-2 mt-4">{translation}</h2>
                       {categoryItems.map((item) => (
                         <SearchItem
-                          key={item.value}
+                          key={item.id}
                           item={item}
                           onSelect={handleItemSelect}
                           t={t}
@@ -221,11 +224,11 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
                   
                   return (
                     <SearchItem
-                      key={recentSearch.slug}
+                      key={recentSearch.id}
                       item={itemDetails}
                       onSelect={handleItemSelect}
                       showCloseButton
-                      onClose={() => removeRecentSearch(recentSearch.slug)}
+                      onClose={removeRecentSearch}
                       t={t}
                     />
                   );

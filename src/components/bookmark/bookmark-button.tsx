@@ -28,11 +28,10 @@ import { toast } from "sonner";
 import { cocktailService } from "@/services/cocktail-service";
 
 interface BookmarkButtonProps {
-  cocktailSlug: string;
-  cocktailName: string;
+  cocktailId: string;
 }
 
-export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonProps) {
+export function BookmarkButton({ cocktailId }: BookmarkButtonProps) {
   const { user } = useAuth();
   const { language } = useLanguage();
   const navigate = useNavigate();
@@ -42,7 +41,6 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
   const [bookmarks, setBookmarks] = React.useState<BookmarkList[]>([]);
   const [bookmarkedItems, setBookmarkedItems] = React.useState<{ [key: string]: BookmarkedItem[] }>({});
   const [isLoading, setIsLoading] = React.useState(false);
-  const [cocktailId, setCocktailId] = React.useState<string | null>(null);
 
   const handleBookmarkClick = () => {
     if (!user) {
@@ -58,14 +56,6 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
     if (!user) return;
     loadBookmarks();
   }, [user]);
-
-  // Get cocktail ID from slug
-  React.useEffect(() => {
-    const cocktail = cocktailService.getCocktailBySlug(cocktailSlug);
-    if (cocktail) {
-      setCocktailId(cocktail.id);
-    }
-  }, [cocktailSlug]);
 
   const loadBookmarks = async () => {
     try {
@@ -88,11 +78,6 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
   };
 
   const toggleList = async (listId: string) => {
-    if (!cocktailId) {
-      toast.error(t.errorLoadingCocktail);
-      return;
-    }
-
     try {
       setIsLoading(true);
       const items = bookmarkedItems[listId] || [];
@@ -106,7 +91,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
 
       // Track the event
       const action = isInList ? 'remove' : 'add';
-      sendGAEvent('bookmark', `bookmark_${action}`, `${listId}:${cocktailName}:${cocktailId}`);
+      sendGAEvent('bookmark', `bookmark_${action}`, `${listId}:${cocktailId}`);
 
       // Reload bookmarks to get the updated state
       await loadBookmarks();
@@ -118,7 +103,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
     }
   };
 
-  const isInAnyList = user && cocktailId ? Object.values(bookmarkedItems).some(items => 
+  const isInAnyList = user ? Object.values(bookmarkedItems).some(items => 
     items.some(item => item.cocktail_id === cocktailId)
   ) : false;
 
@@ -133,7 +118,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
             isInAnyList && "bg-accent text-accent-foreground"
           )}
           onClick={handleBookmarkClick}
-          disabled={isLoading || !cocktailId}
+          disabled={isLoading}
         >
           {isInAnyList ? (
             <BookmarkCheck className="h-4 w-4" />
@@ -155,7 +140,7 @@ export function BookmarkButton({ cocktailSlug, cocktailName }: BookmarkButtonPro
                     <CommandItem
                       key={list.id}
                       onSelect={() => toggleList(list.id)}
-                      disabled={isLoading || !cocktailId}
+                      disabled={isLoading}
                     >
                       <div
                         className={cn(

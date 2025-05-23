@@ -12,6 +12,16 @@ export interface Ingredient {
 }
 
 export class IngredientService {
+  async getAllIngredients(): Promise<Ingredient[]> {
+    const { data, error } = await supabase
+      .from("ingredients")
+      .select("*")
+      .order("name_en");
+
+    if (error) throw error;
+    return data.map(this.mapIngredient);
+  }
+
   async searchIngredients(query: string, type?: IngredientType): Promise<Ingredient[]> {
     const { data, error } = await supabase
       .from("ingredients")
@@ -42,7 +52,7 @@ export class IngredientService {
     return this.mapIngredient(data);
   }
 
-  private mapIngredient(data: any): Ingredient {
+  protected mapIngredient(data: any): Ingredient {
     return {
       id: data.id,
       type: data.type,

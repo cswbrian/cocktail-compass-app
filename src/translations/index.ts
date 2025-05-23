@@ -271,6 +271,9 @@ export const translations = {
     addToHomeScreenDescription: "Install this app for the best experience! Tap 'Install' or 'Add to Home Screen' when prompted.",
     addToHomeScreenInstructions: "To install this app, tap the Share button (box with arrow) at the bottom of your screen, then select 'Add to Home Screen'.",
     dismiss: "Dismiss",
+    recentSearches: "Recent Searches",
+    clearRecentSearches: "Clear Recent Searches",
+    searchPlaceholder: "Search for cocktails, spirits, or ingredients...",
   },
   "zh": {
     appName: "溝酒神燈 🍸🔮",
@@ -538,5 +541,8 @@ export const translations = {
     addToHomeScreenDescription: "安裝此應用程式以獲得最佳體驗！當提示出現時，點擊「安裝」或「加入主畫面」。",
     addToHomeScreenInstructions: "要安裝此應用程式，請點擊螢幕底部的分享按鈕（帶箭頭的方框），然後選擇「加入主畫面」。",
     dismiss: "關閉",
+    recentSearches: "最近搜尋",
+    clearRecentSearches: "清除最近搜尋",
+    searchPlaceholder: "搜尋調酒、基酒或材料...",
   },
 };

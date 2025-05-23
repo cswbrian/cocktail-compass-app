@@ -113,7 +113,7 @@ export function PublicCocktailLogDetail({
             <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
           ) : (
             <Link 
-              to={`/${language}/cocktails/${log.cocktail.slug}`}
+              to={`/${language}/cocktails/${log.cocktail.id}`}
               className="hover:text-primary transition-colors"
             >
               <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>

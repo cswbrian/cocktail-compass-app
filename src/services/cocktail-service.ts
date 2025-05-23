@@ -118,8 +118,45 @@ class CocktailService {
     return this.slugToCocktail.get(slug);
   }
 
-  public getCocktailById(id: string): Cocktail | undefined {
-    return this.cocktails.find(cocktail => cocktail.id === id);
+  private mapSupabaseResponseToCocktail(data: any): Cocktail {
+    const cocktailData = data.data || {};
+    return {
+      id: data.id,
+      slug: data.slug,
+      name: cocktailData.name || { en: '', zh: null },
+      flavor_profile: cocktailData.flavor_profile || {
+        body: 0,
+        booziness: 0,
+        bubbles: false,
+        complexity: 0,
+        sourness: 0,
+        sweetness: 0
+      },
+      base_spirits: cocktailData.base_spirits || [],
+      liqueurs: cocktailData.liqueurs || [],
+      ingredients: cocktailData.ingredients || [],
+      flavor_descriptors: cocktailData.flavor_descriptors || [],
+      technique: cocktailData.technique,
+      garnish: cocktailData.garnish,
+      description: cocktailData.description,
+      categories: cocktailData.categories || [],
+      is_custom: data.is_custom || false
+    };
+  }
+
+  public async getCocktailById(id: string): Promise<Cocktail | undefined> {
+    const { data, error } = await supabase
+      .from("cocktail_details")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error("Error fetching cocktail by id:", error);
+      return undefined;
+    }
+
+    return this.mapSupabaseResponseToCocktail(data);
   }
 
   public getCocktailsByFlavor(flavorSlug: string): Cocktail[] {

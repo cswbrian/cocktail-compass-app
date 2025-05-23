@@ -36,7 +36,7 @@ export default function AppRoutes() {
         <Route path="explorer" element={<ExplorerPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="bookmarks" element={<BookmarksPage />} />
-        <Route path="cocktails/:slug" element={<CocktailDetails />} />
+        <Route path="cocktails/:id" element={<CocktailDetails />} />
         <Route path="places/:placeId" element={<PlaceDetailPage />} />
         <Route path="drinkers/:username" element={<DrinkerProfilePage />} />
         <Route path="logs">

@@ -1,5 +1,5 @@
-import { slugify, getLocalizedText, validLanguages } from "@/lib/utils";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { getLocalizedText } from "@/lib/utils";
+import { Link, useParams } from "react-router-dom";
 import FlavorRadar from "@/components/flavor-radar";
 import { translations } from "@/translations";
 import ReactMarkdown from "react-markdown";
@@ -18,17 +18,24 @@ import { cocktailLogService } from '@/services/cocktail-log-service';
 import { CocktailLog } from '@/types/cocktail-log';
 
 export default function CocktailDetails() {
-  const { language, slug } = useParams();
+  const { language, id } = useParams();
+  const t = translations[language as keyof typeof translations] || translations.en;
   const [page, setPage] = useState(1);
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
   const PAGE_SIZE = 10;
 
-  const cocktail = cocktailService.getCocktailBySlug(slug || '');
-  if (!cocktail) return null;
+  const { data: cocktail, isLoading: isLoadingCocktail } = useSWR(
+    ['cocktail', id],
+    async () => {
+      if (!id) return null;
+      return await cocktailService.getCocktailById(id);
+    }
+  );
 
   const { data: logsData, isLoading: isLoadingLogs } = useSWR(
-    ['cocktail-logs', cocktail.id, page],
+    ['cocktail-logs', cocktail?.id, page],
     async () => {
+      if (!cocktail?.id) return { logs: [], hasMore: false };
       const result = await cocktailLogService.getLogsByCocktailId(cocktail.id, page, PAGE_SIZE);
       return result;
     },
@@ -50,7 +57,8 @@ export default function CocktailDetails() {
     }
   }, [logsData?.hasMore, isLoadingLogs]);
 
-  const t = translations[language as keyof typeof translations] || translations.en;
+  if (isLoadingCocktail) return <div>Loading...</div>;
+  if (!cocktail) return null;
 
   // Get the first flavor descriptor's color
   const color =
@@ -72,15 +80,14 @@ export default function CocktailDetails() {
           <div className="flex flex-col gap-2 items-end">
             <div className="flex gap-2">
               <BookmarkButton
-                cocktailSlug={cocktail.slug}
-                cocktailName={cocktail.name.en}
+                cocktailId={cocktail.id}
               />
               <ShareButton
-                url={`${window.location.origin}/${language || 'en'}/cocktails/${slug}`}
+                url={`${window.location.origin}/${language || 'en'}/cocktails/${cocktail.slug}`}
               />
             </div>
             <TwistButton
-              href={`/${language || 'en'}/twist?cocktail=${cocktail.slug}`}
+              href={`/${language || 'en'}/twist?cocktail=${cocktail.id}`}
               cocktailName={cocktail.name.en}
             >
               {t.findTwists}
@@ -118,7 +125,7 @@ export default function CocktailDetails() {
               {cocktail.base_spirits.map((spirit, i) => (
                 <li key={i} className="flex justify-between">
                   <Link
-                    to={`/${language || 'en'}/ingredients/${slugify(spirit.name.en)}`}
+                    to={`/${language || 'en'}/ingredients/${spirit.id}`}
                     className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                   >
                     {getLocalizedText(spirit.name, language || 'en')}
@@ -132,7 +139,7 @@ export default function CocktailDetails() {
               {cocktail.liqueurs.map((liqueur, i) => (
                 <li key={i} className="flex justify-between">
                   <Link
-                    to={`/${language || 'en'}/ingredients/${slugify(liqueur.name.en)}`}
+                    to={`/${language || 'en'}/ingredients/${liqueur.id}`}
                     className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                   >
                     {getLocalizedText(liqueur.name, language || 'en')}
@@ -146,7 +153,7 @@ export default function CocktailDetails() {
               {cocktail.ingredients.map((ingredient, i) => (
                 <li key={i} className="flex justify-between">
                   <Link
-                    to={`/${language || 'en'}/ingredients/${slugify(ingredient.name.en)}`}
+                    to={`/${language || 'en'}/ingredients/${ingredient.id}`}
                     className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
                   >
                     {getLocalizedText(ingredient.name, language || 'en')}
@@ -193,8 +200,6 @@ export default function CocktailDetails() {
 
       <div className="mt-8">
         <CocktailLogList 
-          type="cocktail" 
-          id={cocktail.id}
           logs={accumulatedLogs}
           isLoading={isLoadingLogs}
           hasMore={logsData?.hasMore}
