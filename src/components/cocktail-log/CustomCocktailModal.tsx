@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +18,7 @@ import { customCocktailService } from '@/services/custom-cocktail-service';
 import { AuthService } from '@/services/auth-service';
 import { toast } from 'sonner';
 import { useCocktailDetails } from '@/hooks/useCocktailDetails';
+import { supabase } from '@/lib/supabase';
 
 interface CustomCocktailModalProps {
   isOpen: boolean;
@@ -53,6 +54,7 @@ export function CustomCocktailModal({
   const [searchResults, setSearchResults] = useState<
     Ingredient[]
   >([]);
+  const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
   const [showNewIngredientForm, setShowNewIngredientForm] =
     useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,20 +64,34 @@ export function CustomCocktailModal({
   const { mutate: mutateCocktailDetails } =
     useCocktailDetails();
 
-  const handleSearch = async (query: string) => {
+  useEffect(() => {
+    const fetchAllIngredients = async () => {
+      try {
+        const ingredients = await ingredientService.getAllIngredients();
+        setAllIngredients(ingredients);
+      } catch (error) {
+        console.error('Error fetching all ingredients:', error);
+        toast.error(t.errorSearchingIngredients);
+      }
+    };
+
+    if (isOpen) {
+      fetchAllIngredients();
+    }
+  }, [isOpen, t.errorSearchingIngredients]);
+
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.length < 2) {
       setSearchResults([]);
       return;
     }
-    try {
-      const results =
-        await ingredientService.searchIngredients(query);
-      setSearchResults(results);
-    } catch (error) {
-      console.error('Error searching ingredients:', error);
-      toast.error(t.errorSearchingIngredients);
-    }
+
+    const results = allIngredients.filter(ingredient => 
+      ingredient.nameEn.toLowerCase().includes(query.toLowerCase()) ||
+      ingredient.nameZh.toLowerCase().includes(query.toLowerCase())
+    );
+    setSearchResults(results);
   };
 
   const handleAddIngredient = (ingredient: Ingredient) => {
@@ -113,14 +129,19 @@ export function CustomCocktailModal({
         return;
       }
 
-      const cocktail =
-        await customCocktailService.createCustomCocktail(
-          {
-            en: customCocktailName,
-            zh: customCocktailNameZh || customCocktailName,
-          },
-          user.id,
-        );
+      const cocktail = await customCocktailService.createCustomCocktail(
+        {
+          en: customCocktailName,
+          zh: customCocktailNameZh || customCocktailName,
+        },
+        user.id,
+        ingredients.map(ingredient => ({
+          id: ingredient.id,
+          type: ingredient.type,
+          nameEn: ingredient.nameEn,
+          nameZh: ingredient.nameZh,
+        }))
+      );
 
       // Invalidate the cocktail details cache
       await mutateCocktailDetails();
@@ -141,10 +162,7 @@ export function CustomCocktailModal({
         description: t.createCustomCocktail,
       });
     } catch (error) {
-      console.error(
-        'Error creating custom cocktail:',
-        error,
-      );
+      console.error('Error creating custom cocktail:', error);
       toast.error(t.errorCreatingCocktail);
     } finally {
       setIsLoading(false);

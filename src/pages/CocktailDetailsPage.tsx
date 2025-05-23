@@ -217,8 +217,12 @@ export default function CocktailDetails() {
               <p className="text-sm text-muted-foreground mb-4">
                 {t.customCocktailDescription}
               </p>
-              <ExternalLink message={t.feedbackMessage} />
             </div>
+            <CocktailIngredients
+              cocktail={cocktail}
+              language={language || 'en'}
+              t={t}
+            />
           </>
         ) : (
           <>

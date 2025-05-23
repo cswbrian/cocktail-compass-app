@@ -1,13 +1,24 @@
 import { supabase } from '@/lib/supabase';
 import { Cocktail } from '@/types/cocktail';
+import { Ingredient } from '@/services/ingredient-service';
+
+interface CustomCocktailIngredient {
+  id: string;
+  type: 'base_spirit' | 'liqueur' | 'ingredient';
+  nameEn: string;
+  nameZh: string;
+  amount?: number;
+  unitId?: string;
+}
 
 export class CustomCocktailService {
   async createCustomCocktail(
     name: { en: string; zh?: string },
     userId: string,
+    ingredients: CustomCocktailIngredient[],
   ): Promise<Cocktail> {
-
-    const { data: cocktail, error } = await supabase
+    // First create the cocktail
+    const { data: cocktail, error: cocktailError } = await supabase
       .from('cocktails')
       .insert([
         {
@@ -16,19 +27,6 @@ export class CustomCocktailService {
               en: name.en,
               zh: name.zh || name.en, // Fallback to English name if Chinese name is not provided
             },
-            flavor_profile: {
-              body: 0,
-              booziness: 0,
-              bubbles: false,
-              complexity: 0,
-              sourness: 0,
-              sweetness: 0,
-            },
-            base_spirits: [],
-            liqueurs: [],
-            ingredients: [],
-            flavor_descriptors: [],
-            categories: [],
           },
           is_custom: true,
           created_by: userId,
@@ -41,7 +39,24 @@ export class CustomCocktailService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (cocktailError) throw cocktailError;
+
+    // Then create the cocktail_ingredients records
+    if (ingredients.length > 0) {
+      const { error: ingredientsError } = await supabase
+        .from('cocktail_ingredients')
+        .insert(
+          ingredients.map(ingredient => ({
+            cocktail_id: cocktail.id,
+            ingredient_id: ingredient.id,
+            amount: ingredient.amount || null,
+            unit_id: ingredient.unitId || null,
+          }))
+        );
+
+      if (ingredientsError) throw ingredientsError;
+    }
+
     return cocktail;
   }
 
