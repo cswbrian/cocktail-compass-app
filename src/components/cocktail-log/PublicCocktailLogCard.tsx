@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from '@/components/ui/use-toast';
+import { ThreadsShareButton } from '@/components/ThreadsShareButton';
 
 const CHEERS_REACTION = 'cheers';
 
@@ -144,6 +145,7 @@ export function PublicCocktailLogCard({
                   />
                   <span>{cheerCount}</span>
                 </Button>
+                <ThreadsShareButton logId={log.id} userId={log.userId} />
               </div>
             </div>
           </div>

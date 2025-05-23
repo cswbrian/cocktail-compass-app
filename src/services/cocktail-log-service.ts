@@ -54,6 +54,13 @@ interface CocktailLogViewData {
   has_cheered: boolean;
 }
 
+interface ThreadsShareData {
+  text: string;
+  mediaUrls?: string[];
+  cocktailName: string;
+  location?: string;
+}
+
 export class CocktailLogService {
   private async handleMediaUpload(
     media: { url: string; type: 'image' | 'video' }[],
@@ -711,6 +718,30 @@ export class CocktailLogService {
       createdAt: new Date(),
       status: 'active',
     }));
+  }
+
+  async shareToThreads(logId: string, language: string): Promise<void> {
+    const log = await this.getLogById(logId);
+    if (!log) throw new Error('Log not found');
+
+    // Get the log URL
+    const logUrl = `${window.location.origin}/${language}/logs/${logId}`;
+    
+    // Create the text content using comments if available, otherwise use a default message
+    const text = log.comments 
+      ? `${log.comments}\n\n${logUrl}`
+      : `Just tried ${log.cocktail.name.en} at ${log.location ? JSON.parse(log.location).name : 'a secret spot'}! \n\n${logUrl}`;
+
+    // Encode the text for URL
+    const encodedText = encodeURIComponent(text);
+    
+    // Try to open Threads app first
+    window.location.href = `threads://post?text=${encodedText}`;
+    
+    // Fallback to web version after a short delay
+    setTimeout(() => {
+      window.open(`https://www.threads.net/intent/post?text=${encodedText}`, '_blank');
+    }, 1000);
   }
 }
 

@@ -311,6 +311,8 @@ export const translations = {
     backToHome: 'Back to Home',
     alphabetical: 'Alphabetical',
     recentlyAdded: 'Recently Added',
+    shareToThreadsFailed: 'Failed to share to Threads',
+    shareToThreads: 'Share to Threads',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -600,5 +602,7 @@ export const translations = {
     backToHome: '返屋企',
     alphabetical: '字母排序',
     recentlyAdded: '最近新增',
+    shareToThreadsFailed: '分享到 Threads 失敗',
+    shareToThreads: '分享到 Threads',
   },
 };

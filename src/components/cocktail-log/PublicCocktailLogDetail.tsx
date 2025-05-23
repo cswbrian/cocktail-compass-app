@@ -15,6 +15,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Link, useLocation } from 'react-router-dom';
 import { formatBilingualText } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
+import { ThreadsShareButton } from '@/components/ThreadsShareButton';
 
 interface PublicCocktailLogDetailProps {
   log: CocktailLog;
@@ -165,6 +166,12 @@ export function PublicCocktailLogDetail({
                 media={log.media}
                 size="lg"
               />
+            </div>
+          )}
+
+          {isOwnLog && (
+            <div className="mt-4">
+              <ThreadsShareButton logId={log.id} userId={log.userId} />
             </div>
           )}
         </div>
