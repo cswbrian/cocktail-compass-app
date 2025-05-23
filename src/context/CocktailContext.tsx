@@ -40,10 +40,10 @@ type CocktailContextType = {
 
   // Methods
   handleFlavorSelect: (flavor: string) => void;
-  handleSubmit: () => RankedCocktail[];
-  nextStep: () => void;
+  handleSubmit: () => Promise<RankedCocktail[]>;
+  nextStep: () => Promise<void>;
   prevStep: () => void;
-  goToResults: () => void;
+  goToResults: () => Promise<void>;
   startOver: () => void;
 };
 
@@ -163,9 +163,8 @@ export function CocktailProvider({
     });
   }, []);
 
-  const handleSubmit = useCallback(() => {
-    const cocktails =
-      cocktailService.getRecommendableCocktails();
+  const handleSubmit = useCallback(async () => {
+    const cocktails = await cocktailService.getRecommendableCocktails();
     const rankedResults = rankCocktails(cocktails, {
       sweetness: state.sweetness,
       sourness: state.sourness,
@@ -184,7 +183,7 @@ export function CocktailProvider({
     return rankedResults;
   }, [state, language]);
 
-  const nextStep = useCallback(() => {
+  const nextStep = useCallback(async () => {
     if (state.currentStep < 3) {
       setState(prev => ({
         ...prev,
@@ -197,7 +196,7 @@ export function CocktailProvider({
         '',
       );
     } else {
-      const newResults = handleSubmit();
+      const newResults = await handleSubmit();
       if (newResults.length > 0) {
         setState(prev => ({ ...prev, currentStep: 4 }));
         // Push new state to history
@@ -237,8 +236,8 @@ export function CocktailProvider({
       );
   }, []);
 
-  const goToResults = useCallback(() => {
-    const newResults = handleSubmit();
+  const goToResults = useCallback(async () => {
+    const newResults = await handleSubmit();
     if (newResults.length > 0) {
       setState(prev => ({ ...prev, currentStep: 4 }));
       // Push new state to history
