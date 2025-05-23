@@ -28,18 +28,23 @@ type BaseIngredient = {
 };
 
 export interface Cocktail {
-  id: string;  // UUID from Supabase
-  slug: string;  // Slug from Supabase
+  id: string; // UUID from Supabase
+  slug: string; // Slug from Supabase
   name: LocalizedString;
   flavor_profile: FlavorProfile;
   base_spirits: BaseIngredient[];
   liqueurs: BaseIngredient[];
   ingredients: BaseIngredient[];
   flavor_descriptors: LocalizedString[];
-  technique?: LocalizedString;  // Add since it's used in the component
-  garnish?: LocalizedString;    // Add since it's used in the component
+  technique?: LocalizedString; // Add since it's used in the component
+  garnish?: LocalizedString; // Add since it's used in the component
   description?: LocalizedString; // Add description field
-  categories: ('Strong & Spirit-Focused' | 'Sweet & Tart' | 'Tall & Bubbly' | 'Rich & Creamy')[]; // Add categories field with possible values
+  categories: (
+    | 'Strong & Spirit-Focused'
+    | 'Sweet & Tart'
+    | 'Tall & Bubbly'
+    | 'Rich & Creamy'
+  )[]; // Add categories field with possible values
   is_custom: boolean;
 }
 
@@ -51,6 +56,11 @@ export interface CocktailPreview {
   id: string;
   slug: string;
   name: LocalizedString;
-  categories: ('Strong & Spirit-Focused' | 'Sweet & Tart' | 'Tall & Bubbly' | 'Rich & Creamy')[];
+  categories: (
+    | 'Strong & Spirit-Focused'
+    | 'Sweet & Tart'
+    | 'Tall & Bubbly'
+    | 'Rich & Creamy'
+  )[];
   flavor_descriptors: LocalizedString[];
 }

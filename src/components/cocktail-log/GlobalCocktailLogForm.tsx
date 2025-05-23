@@ -1,9 +1,10 @@
-import { useCocktailLogs } from "@/context/CocktailLogContext";
-import { CocktailLogForm } from "./CocktailLogForm";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useCocktailLogs } from '@/context/CocktailLogContext';
+import { CocktailLogForm } from './CocktailLogForm';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export function GlobalCocktailLogForm() {
-  const { formState, closeForm, mutate } = useCocktailLogs();
+  const { formState, closeForm, mutate } =
+    useCocktailLogs();
   const { isOpen, mode, selectedLog } = formState;
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,4 +28,4 @@ export function GlobalCocktailLogForm() {
       }}
     />
   );
-} 
+}

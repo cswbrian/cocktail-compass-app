@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { Loading } from "@/components/ui/loading";
-import { HighlightsContainer } from "@/components/journal/HighlightsContainer";
+import { Loading } from '@/components/ui/loading';
+import { HighlightsContainer } from '@/components/journal/HighlightsContainer';
 
 export default function HighlightsPage() {
   return (
@@ -8,4 +8,4 @@ export default function HighlightsPage() {
       <HighlightsContainer />
     </Suspense>
   );
-} 
+}

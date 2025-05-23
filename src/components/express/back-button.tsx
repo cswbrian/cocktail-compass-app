@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from 'lucide-react';
 
 interface BackButtonProps {
   onClick: () => void;
@@ -6,8 +6,11 @@ interface BackButtonProps {
 
 export function BackButton({ onClick }: BackButtonProps) {
   return (
-    <div onClick={onClick} className="cursor-pointer mt-8 ml-4">
+    <div
+      onClick={onClick}
+      className="cursor-pointer mt-8 ml-4"
+    >
       <ArrowLeft />
     </div>
   );
-} 
+}

@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
-import { translations } from "@/translations";
-import { ExternalLink } from "@/components/external-link";
-import { useLanguage } from "@/context/LanguageContext";
+import { Link } from 'react-router-dom';
+import { translations } from '@/translations';
+import { ExternalLink } from '@/components/external-link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function NotFoundPage() {
   const { language } = useLanguage();
-  const t = translations[language as keyof typeof translations] || translations.en;
+  const t =
+    translations[language as keyof typeof translations] ||
+    translations.en;
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -33,4 +35,4 @@ export default function NotFoundPage() {
       </div>
     </div>
   );
-} 
+}

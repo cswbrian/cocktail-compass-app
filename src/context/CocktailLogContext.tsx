@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -7,15 +7,21 @@ import {
   useState,
   useCallback,
   useEffect,
-} from "react";
-import { CocktailLog } from "@/types/cocktail-log";
-import useSWR from "swr";
-import { CACHE_KEYS, fetchers, swrConfig, defaultData, invalidateCache } from "@/lib/swr-config";
-import { useNavigate } from "react-router-dom";
+} from 'react';
+import { CocktailLog } from '@/types/cocktail-log';
+import useSWR from 'swr';
+import {
+  CACHE_KEYS,
+  fetchers,
+  swrConfig,
+  defaultData,
+  invalidateCache,
+} from '@/lib/swr-config';
+import { useNavigate } from 'react-router-dom';
 
 interface FormState {
   isOpen: boolean;
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
   selectedLog: CocktailLog | null;
 }
 
@@ -44,13 +50,14 @@ interface CocktailLogContextProps {
   children: ReactNode;
 }
 
-const CocktailLogContext = createContext<CocktailLogContextType | null>(null);
+const CocktailLogContext =
+  createContext<CocktailLogContextType | null>(null);
 
 export function useCocktailLogs(): CocktailLogContextType {
   const context = useContext(CocktailLogContext);
   if (context === null) {
     throw new Error(
-      "useCocktailLogs must be used within a CocktailLogProvider"
+      'useCocktailLogs must be used within a CocktailLogProvider',
     );
   }
   return context;
@@ -62,14 +69,18 @@ export function CocktailLogProvider({
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
-  const [logType, setLogType] = useState<'public' | 'private'>('public');
+  const [accumulatedLogs, setAccumulatedLogs] = useState<
+    CocktailLog[]
+  >([]);
+  const [logType, setLogType] = useState<
+    'public' | 'private'
+  >('public');
   const PAGE_SIZE = 10;
 
   // Form state
   const [formState, setFormState] = useState<FormState>({
     isOpen: false,
-    mode: "create",
+    mode: 'create',
     selectedLog: null,
   });
 
@@ -80,28 +91,46 @@ export function CocktailLogProvider({
     error: logsError,
     mutate: mutateLogs,
   } = useSWR<{ logs: CocktailLog[]; hasMore: boolean }>(
-    [logType === 'public' ? CACHE_KEYS.PUBLIC_LOGS : CACHE_KEYS.OWN_LOGS, page],
+    [
+      logType === 'public'
+        ? CACHE_KEYS.PUBLIC_LOGS
+        : CACHE_KEYS.OWN_LOGS,
+      page,
+    ],
     async () => {
-      const result = logType === 'public' 
-        ? await fetchers.getPublicCocktailLogs(page, PAGE_SIZE)
-        : await fetchers.getOwnCocktailLogs(page, PAGE_SIZE);
+      const result =
+        logType === 'public'
+          ? await fetchers.getPublicCocktailLogs(
+              page,
+              PAGE_SIZE,
+            )
+          : await fetchers.getOwnCocktailLogs(
+              page,
+              PAGE_SIZE,
+            );
       return result;
     },
     {
       ...swrConfig,
       fallbackData: { logs: [], hasMore: true },
-      onSuccess: (data) => {
+      onSuccess: data => {
         setHasMore(data.hasMore);
         if (page === 1) {
           setAccumulatedLogs(data.logs);
         } else {
-          setAccumulatedLogs((prev) => [...prev, ...data.logs]);
+          setAccumulatedLogs(prev => [
+            ...prev,
+            ...data.logs,
+          ]);
         }
       },
-      onError: (err) => {
-        console.error("CocktailLogContext - Error fetching logs:", err);
+      onError: err => {
+        console.error(
+          'CocktailLogContext - Error fetching logs:',
+          err,
+        );
       },
-    }
+    },
   );
 
   const {
@@ -112,15 +141,18 @@ export function CocktailLogProvider({
     ...swrConfig,
     fallbackData: defaultData[CACHE_KEYS.USER_STATS],
     onSuccess: () => {},
-    onError: (err) => {
-      console.error("CocktailLogContext - Error fetching stats:", err);
+    onError: err => {
+      console.error(
+        'CocktailLogContext - Error fetching stats:',
+        err,
+      );
     },
   });
 
   const closeForm = useCallback(() => {
     setFormState({
       isOpen: false,
-      mode: "create",
+      mode: 'create',
       selectedLog: null,
     });
   }, []);
@@ -132,17 +164,20 @@ export function CocktailLogProvider({
       }
     };
 
-    window.addEventListener("popstate", handlePopState);
+    window.addEventListener('popstate', handlePopState);
 
     return () => {
-      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener(
+        'popstate',
+        handlePopState,
+      );
     };
   }, [formState.isOpen, closeForm]);
 
   const openCreateForm = useCallback(() => {
     setFormState({
       isOpen: true,
-      mode: "create",
+      mode: 'create',
       selectedLog: null,
     });
   }, []);
@@ -150,14 +185,14 @@ export function CocktailLogProvider({
   const openEditForm = useCallback((log: CocktailLog) => {
     setFormState({
       isOpen: true,
-      mode: "edit",
+      mode: 'edit',
       selectedLog: log,
     });
   }, []);
 
   const loadMore = useCallback(async () => {
     if (!hasMore || isLoadingLogs) return;
-    setPage((prev) => prev + 1);
+    setPage(prev => prev + 1);
   }, [hasMore, isLoadingLogs]);
 
   const value = {

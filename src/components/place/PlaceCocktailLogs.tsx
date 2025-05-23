@@ -1,6 +1,6 @@
 'use client';
 
-import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
+import { CocktailLogList } from '@/components/cocktail-log/CocktailLogList';
 import { useState, useCallback, useEffect } from 'react';
 import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
@@ -10,27 +10,39 @@ interface PlaceCocktailLogsProps {
   placeId: string;
 }
 
-export function PlaceCocktailLogs({ placeId }: PlaceCocktailLogsProps) {
+export function PlaceCocktailLogs({
+  placeId,
+}: PlaceCocktailLogsProps) {
   const [page, setPage] = useState(1);
-  const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
+  const [accumulatedLogs, setAccumulatedLogs] = useState<
+    CocktailLog[]
+  >([]);
   const PAGE_SIZE = 10;
 
   const { data, isLoading } = useSWR(
     ['place-logs', placeId, page],
     async () => {
-      const result = await cocktailLogService.getLogsByPlaceId(placeId, page, PAGE_SIZE);
+      const result =
+        await cocktailLogService.getLogsByPlaceId(
+          placeId,
+          page,
+          PAGE_SIZE,
+        );
       return result;
     },
-    { 
+    {
       fallbackData: { logs: [], hasMore: false },
-      onSuccess: (data) => {
+      onSuccess: data => {
         if (page === 1) {
           setAccumulatedLogs(data.logs);
         } else {
-          setAccumulatedLogs(prev => [...prev, ...data.logs]);
+          setAccumulatedLogs(prev => [
+            ...prev,
+            ...data.logs,
+          ]);
         }
-      }
-    }
+      },
+    },
   );
 
   const loadMore = useCallback(() => {
@@ -40,8 +52,8 @@ export function PlaceCocktailLogs({ placeId }: PlaceCocktailLogsProps) {
   }, [data?.hasMore, isLoading]);
 
   return (
-    <CocktailLogList 
-      type="place" 
+    <CocktailLogList
+      type="place"
       id={placeId}
       logs={accumulatedLogs}
       isLoading={isLoading}
@@ -49,4 +61,4 @@ export function PlaceCocktailLogs({ placeId }: PlaceCocktailLogsProps) {
       onLoadMore={loadMore}
     />
   );
-} 
+}

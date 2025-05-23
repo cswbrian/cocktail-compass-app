@@ -1,7 +1,7 @@
-import { BarChart } from "@/components/ui/bar-chart";
-import { format, subMonths, startOfMonth } from "date-fns";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
+import { BarChart } from '@/components/ui/bar-chart';
+import { format, subMonths, startOfMonth } from 'date-fns';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
 
 interface DrinksBarChartProps {
   drinksByMonth: Record<string, number>;
@@ -19,7 +19,11 @@ interface PreparedChartData {
 
 function prepareChartData(
   drinksByMonth: Record<string, number>,
-  t: { drinksOverTime: string; drinksMoreThanLastMonth: string; drinksLessThanLastMonth: string }
+  t: {
+    drinksOverTime: string;
+    drinksMoreThanLastMonth: string;
+    drinksLessThanLastMonth: string;
+  },
 ): PreparedChartData {
   // Get the last 6 months
   const today = new Date();
@@ -31,7 +35,7 @@ function prepareChartData(
   // Create data array with zero-filling for missing months
   const data = last6Months.map(month => ({
     month: format(new Date(month), 'MMM'),
-    drinks: drinksByMonth[month] || 0
+    drinks: drinksByMonth[month] || 0,
   }));
 
   const description = `${format(new Date(last6Months[0]), 'MMMM yyyy')} - ${format(new Date(last6Months[last6Months.length - 1]), 'MMMM yyyy')}`;
@@ -43,14 +47,21 @@ function prepareChartData(
     const currentCount = data[data.length - 1].drinks;
     const prevCount = data[data.length - 2].drinks;
     const difference = currentCount - prevCount;
-    
-    footerText = difference >= 0
-      ? t.drinksMoreThanLastMonth.replace('{count}', Math.abs(difference).toString())
-      : t.drinksLessThanLastMonth.replace('{count}', Math.abs(difference).toString());
+
+    footerText =
+      difference >= 0
+        ? t.drinksMoreThanLastMonth.replace(
+            '{count}',
+            Math.abs(difference).toString(),
+          )
+        : t.drinksLessThanLastMonth.replace(
+            '{count}',
+            Math.abs(difference).toString(),
+          );
 
     trendInfo = {
       value: Math.abs(difference),
-      isPositive: difference >= 0
+      isPositive: difference >= 0,
     };
   }
 
@@ -58,11 +69,13 @@ function prepareChartData(
     data,
     description,
     footerText,
-    trendInfo
+    trendInfo,
   };
 }
 
-export function DrinksBarChart({ drinksByMonth }: DrinksBarChartProps) {
+export function DrinksBarChart({
+  drinksByMonth,
+}: DrinksBarChartProps) {
   const { language } = useLanguage();
   const t = translations[language];
   const chartData = prepareChartData(drinksByMonth, t);
@@ -77,4 +90,4 @@ export function DrinksBarChart({ drinksByMonth }: DrinksBarChartProps) {
       trendInfo={chartData.trendInfo}
     />
   );
-} 
+}

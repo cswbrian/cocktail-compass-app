@@ -4,7 +4,11 @@ interface LoadingProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function Loading({ className = "", fullScreen = false, size = 'md' }: LoadingProps) {
+export function Loading({
+  className = '',
+  fullScreen = false,
+  size = 'md',
+}: LoadingProps) {
   const sizeClasses = {
     sm: 'w-4 h-4 text-sm',
     md: 'w-8 h-8 text-lg',
@@ -12,8 +16,12 @@ export function Loading({ className = "", fullScreen = false, size = 'md' }: Loa
   };
 
   const content = (
-    <div className={`flex flex-col items-center gap-3 text-primary ${className}`}>
-      <span className={`${sizeClasses[size]} animate-[fadeInOut_2s_ease-in-out_infinite] translate-x-[-50%]`}>
+    <div
+      className={`flex flex-col items-center gap-3 text-primary ${className}`}
+    >
+      <span
+        className={`${sizeClasses[size]} animate-[fadeInOut_2s_ease-in-out_infinite] translate-x-[-50%]`}
+      >
         Loading...
       </span>
     </div>
@@ -28,4 +36,4 @@ export function Loading({ className = "", fullScreen = false, size = 'md' }: Loa
   }
 
   return content;
-} 
+}

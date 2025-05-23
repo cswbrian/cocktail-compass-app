@@ -1,10 +1,14 @@
-import { useState } from "react";
-import { CocktailLog } from "@/types/cocktail-log";
-import { CocktailLogDetail } from "./CocktailLogDetail";
-import { CocktailLogMedia } from "./CocktailLogMedia";
-import { DateInfo, LocationInfo, CommentInfo } from "./CocktailLogInfo";
-import { useLanguage } from "@/context/LanguageContext";
-import { formatBilingualText } from "@/lib/utils";
+import { useState } from 'react';
+import { CocktailLog } from '@/types/cocktail-log';
+import { CocktailLogDetail } from './CocktailLogDetail';
+import { CocktailLogMedia } from './CocktailLogMedia';
+import {
+  DateInfo,
+  LocationInfo,
+  CommentInfo,
+} from './CocktailLogInfo';
+import { useLanguage } from '@/context/LanguageContext';
+import { formatBilingualText } from '@/lib/utils';
 
 interface PrivateCocktailLogCardProps {
   log: CocktailLog;
@@ -26,8 +30,8 @@ export function PrivateCocktailLogCard({
     setIsDetailOpen(true);
     window.history.pushState(
       { logId: log.id },
-      "",
-      `/${language}/logs/${log.id}`
+      '',
+      `/${language}/logs/${log.id}`,
     );
   };
 
@@ -39,10 +43,16 @@ export function PrivateCocktailLogCard({
       >
         <div>
           {log.drinkDate && (
-            <DateInfo date={new Date(log.drinkDate)} className="text-sm text-muted-foreground" />
+            <DateInfo
+              date={new Date(log.drinkDate)}
+              className="text-sm text-muted-foreground"
+            />
           )}
           <h3 className="text-lg font-semibold">
-            {formatBilingualText(log.cocktail.name, language)}
+            {formatBilingualText(
+              log.cocktail.name,
+              language,
+            )}
           </h3>
           <div className="space-y-2">
             <LocationInfo location={log.location} />
@@ -50,7 +60,10 @@ export function PrivateCocktailLogCard({
 
             {log.media && log.media.length > 0 && (
               <div className="mt-2">
-                <CocktailLogMedia media={log.media} size="sm" />
+                <CocktailLogMedia
+                  media={log.media}
+                  size="sm"
+                />
               </div>
             )}
           </div>
@@ -67,8 +80,10 @@ export function PrivateCocktailLogCard({
         onLogSaved={onLogSaved}
         onLogDeleted={onLogDeleted}
         onLogsChange={onLogsChange}
-        variant={log.visibility === 'public' ? 'public' : 'private'}
+        variant={
+          log.visibility === 'public' ? 'public' : 'private'
+        }
       />
     </>
   );
-} 
+}

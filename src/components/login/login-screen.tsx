@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
-import { Button } from "@/components/ui/button";
-import { AuthService } from "@/services/auth-service";
-import { toast } from "sonner";
+import { useState } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
+import { Button } from '@/components/ui/button';
+import { AuthService } from '@/services/auth-service';
+import { toast } from 'sonner';
 
 export function LoginScreen() {
   const { language } = useLanguage();
@@ -17,7 +17,7 @@ export function LoginScreen() {
     try {
       await AuthService.signInWithProvider('google');
     } catch (error) {
-      console.error("Error signing in with Google:", error);
+      console.error('Error signing in with Google:', error);
       toast.error(t.errorSigningIn, {
         description: t.pleaseTryAgain,
         duration: 3000,
@@ -72,4 +72,4 @@ export function LoginScreen() {
       </Button>
     </div>
   );
-} 
+}

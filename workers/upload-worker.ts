@@ -2,7 +2,10 @@ import { createClient } from '@supabase/supabase-js';
 
 // Cloudflare Worker types
 interface R2Bucket {
-  put: (key: string, value: ReadableStream | ArrayBuffer | string) => Promise<void>;
+  put: (
+    key: string,
+    value: ReadableStream | ArrayBuffer | string,
+  ) => Promise<void>;
   get: (key: string) => Promise<R2Object | null>;
   delete: (key: string) => Promise<void>;
   list: (options?: R2ListOptions) => Promise<R2ListResult>;
@@ -51,7 +54,7 @@ interface Env {
 function handleCORS(request: Request, env: Env): Response {
   const origin = request.headers.get('Origin');
   const allowedOrigins = env.ALLOWED_ORIGINS.split(',');
-  
+
   // Check if the origin is allowed
   if (!origin || !allowedOrigins.includes(origin)) {
     return new Response('Not allowed', { status: 403 });
@@ -62,8 +65,10 @@ function handleCORS(request: Request, env: Env): Response {
     return new Response(null, {
       headers: {
         'Access-Control-Allow-Origin': origin,
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Methods':
+          'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers':
+          'Content-Type, Authorization',
         'Access-Control-Max-Age': '86400',
       },
     });
@@ -73,14 +78,20 @@ function handleCORS(request: Request, env: Env): Response {
   return new Response(null, {
     headers: {
       'Access-Control-Allow-Origin': origin,
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Methods':
+        'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'Content-Type, Authorization',
     },
   });
 }
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     // Handle CORS preflight requests
     if (request.method === 'OPTIONS') {
       return handleCORS(request, env);
@@ -93,12 +104,20 @@ export default {
     }
 
     const token = authHeader.split(' ')[1];
-    const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
-    
+    const supabase = createClient(
+      env.SUPABASE_URL,
+      env.SUPABASE_SERVICE_ROLE_KEY,
+    );
+
     try {
-      const { data: { user }, error } = await supabase.auth.getUser(token);
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser(token);
       if (error || !user) {
-        return new Response('Invalid token', { status: 401 });
+        return new Response('Invalid token', {
+          status: 401,
+        });
       }
     } catch (error) {
       return new Response('Invalid token', { status: 401 });
@@ -109,18 +128,30 @@ export default {
 
     try {
       let response: Response;
-      if (path.startsWith('/api/upload/') && path !== '/api/upload/presign' && path !== '/api/upload/complete') {
+      if (
+        path.startsWith('/api/upload/') &&
+        path !== '/api/upload/presign' &&
+        path !== '/api/upload/complete'
+      ) {
         response = await handleDirectUpload(request, env);
       } else {
         switch (path) {
           case '/api/upload/presign':
-            response = await handlePresignRequest(request, env);
+            response = await handlePresignRequest(
+              request,
+              env,
+            );
             break;
           case '/api/upload/complete':
-            response = await handleUploadComplete(request, env);
+            response = await handleUploadComplete(
+              request,
+              env,
+            );
             break;
           default:
-            response = new Response('Not found', { status: 404 });
+            response = new Response('Not found', {
+              status: 404,
+            });
         }
       }
 
@@ -134,21 +165,32 @@ export default {
     } catch (error: unknown) {
       // Enhanced error logging
       console.error('Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-        cause: error instanceof Error ? error.cause : undefined
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Unknown error',
+        stack:
+          error instanceof Error ? error.stack : undefined,
+        cause:
+          error instanceof Error ? error.cause : undefined,
       });
-      
-      const response = new Response(JSON.stringify({
-        error: 'Internal Server Error',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      }), { 
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      
+
+      const response = new Response(
+        JSON.stringify({
+          error: 'Internal Server Error',
+          details:
+            error instanceof Error
+              ? error.message
+              : 'Unknown error',
+        }),
+        {
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
       // Add CORS headers to error response
       const corsHeaders = handleCORS(request, env).headers;
       for (const [key, value] of corsHeaders.entries()) {
@@ -160,58 +202,86 @@ export default {
   },
 };
 
-async function handlePresignRequest(request: Request, env: Env): Promise<Response> {
+async function handlePresignRequest(
+  request: Request,
+  env: Env,
+): Promise<Response> {
   if (request.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', {
+      status: 405,
+    });
   }
 
-  const { fileName, contentType, userId, entityId } = await request.json();
-  
+  const { fileName, contentType, userId, entityId } =
+    await request.json();
+
   // Validate file type
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/gif',
+  ];
   if (!allowedTypes.includes(contentType)) {
-    return new Response('Invalid file type', { status: 400 });
+    return new Response('Invalid file type', {
+      status: 400,
+    });
   }
-  
+
   // Generate a unique file path
   const filePath = `${userId}/${entityId}/${Date.now()}-${fileName}`;
-  
+
   try {
     // Instead of creating a presigned URL, we'll return the file path
     // The client will need to upload directly to the worker endpoint
-    return new Response(JSON.stringify({
-      filePath,
-      uploadUrl: `${new URL(request.url).origin}/api/upload/${filePath}`,
-    }), {
-      headers: {
-        'Content-Type': 'application/json',
+    return new Response(
+      JSON.stringify({
+        filePath,
+        uploadUrl: `${new URL(request.url).origin}/api/upload/${filePath}`,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
   } catch (error: unknown) {
     console.error('Error handling upload request:', error);
-    return new Response(JSON.stringify({
-      error: 'Failed to process upload request',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
+    return new Response(
+      JSON.stringify({
+        error: 'Failed to process upload request',
+        details:
+          error instanceof Error
+            ? error.message
+            : 'Unknown error',
+      }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
   }
 }
 
-async function handleUploadComplete(request: Request, env: Env): Promise<Response> {
+async function handleUploadComplete(
+  request: Request,
+  env: Env,
+): Promise<Response> {
   if (request.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', {
+      status: 405,
+    });
   }
 
-  const { filePath, userId, entityId, metadata } = await request.json();
+  const { filePath, userId, entityId, metadata } =
+    await request.json();
 
   // Initialize Supabase client with service role key
   const supabase = createClient(
     env.SUPABASE_URL,
-    env.SUPABASE_SERVICE_ROLE_KEY
+    env.SUPABASE_SERVICE_ROLE_KEY,
   );
 
   // Save metadata to Supabase
@@ -228,7 +298,7 @@ async function handleUploadComplete(request: Request, env: Env): Promise<Respons
       original_name: metadata.originalName,
       metadata,
       status: 'active',
-      cocktail_log_id: entityId
+      cocktail_log_id: entityId,
     });
 
   if (error) {
@@ -243,40 +313,54 @@ async function handleUploadComplete(request: Request, env: Env): Promise<Respons
 }
 
 // Add a new handler for direct uploads
-async function handleDirectUpload(request: Request, env: Env): Promise<Response> {
+async function handleDirectUpload(
+  request: Request,
+  env: Env,
+): Promise<Response> {
   if (request.method !== 'PUT') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', {
+      status: 405,
+    });
   }
 
   const url = new URL(request.url);
   const filePath = url.pathname.replace('/api/upload/', '');
-  
+
   try {
     // Clone the request to ensure we can read the body
     const clonedRequest = request.clone();
     const body = await clonedRequest.arrayBuffer();
-    
+
     // Store the file in R2
     await env.BUCKET.put(filePath, body);
-    
-    return new Response(JSON.stringify({
-      success: true,
-      filePath,
-    }), {
-      headers: {
-        'Content-Type': 'application/json',
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        filePath,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
   } catch (error: unknown) {
     console.error('Error uploading file:', error);
-    return new Response(JSON.stringify({
-      error: 'Failed to upload file',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
+    return new Response(
+      JSON.stringify({
+        error: 'Failed to upload file',
+        details:
+          error instanceof Error
+            ? error.message
+            : 'Unknown error',
+      }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
   }
-} 
+}

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { CocktailLog } from "@/types/cocktail-log";
-import { PublicCocktailLogDetail } from "./PublicCocktailLogDetail";
-import { PrivateCocktailLogDetail } from "./PrivateCocktailLogDetail";
+import { CocktailLog } from '@/types/cocktail-log';
+import { PublicCocktailLogDetail } from './PublicCocktailLogDetail';
+import { PrivateCocktailLogDetail } from './PrivateCocktailLogDetail';
 
 interface CocktailLogDetailProps {
   log: CocktailLog;
@@ -11,7 +11,7 @@ interface CocktailLogDetailProps {
   onLogSaved?: (log: CocktailLog) => void;
   onLogDeleted?: (logId: string) => void;
   onLogsChange?: (logs: CocktailLog[]) => void;
-  variant?: "public" | "private";
+  variant?: 'public' | 'private';
 }
 
 export function CocktailLogDetail({
@@ -21,9 +21,9 @@ export function CocktailLogDetail({
   onLogSaved,
   onLogDeleted,
   onLogsChange,
-  variant = "private",
+  variant = 'private',
 }: CocktailLogDetailProps) {
-  if (variant === "public") {
+  if (variant === 'public') {
     return (
       <PublicCocktailLogDetail
         log={log}
@@ -46,4 +46,4 @@ export function CocktailLogDetail({
       onLogsChange={onLogsChange}
     />
   );
-} 
+}

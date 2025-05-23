@@ -1,4 +1,4 @@
-import { BookmarksClient } from "@/components/bookmark/bookmarks-client";
+import { BookmarksClient } from '@/components/bookmark/bookmarks-client';
 
 export default function BookmarksPage() {
   return (
@@ -6,4 +6,4 @@ export default function BookmarksPage() {
       <BookmarksClient />
     </div>
   );
-} 
+}

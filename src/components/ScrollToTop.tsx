@@ -6,14 +6,16 @@ export function ScrollToTop() {
 
   useEffect(() => {
     // Find the main content container and scroll it to top
-    const mainContent = document.querySelector('.overflow-auto');
+    const mainContent = document.querySelector(
+      '.overflow-auto',
+    );
     if (mainContent) {
       mainContent.scrollTo({
         top: 0,
-        behavior: 'instant'
+        behavior: 'instant',
       });
     }
   }, [pathname, search]);
 
   return null;
-} 
+}

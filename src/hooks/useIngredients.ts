@@ -1,7 +1,10 @@
-import useSWR from "swr";
-import { CACHE_KEYS } from "@/lib/swr-config";
-import { Ingredient, IngredientType } from "@/services/ingredient-service";
-import { ingredientService } from "@/services/ingredient-service";
+import useSWR from 'swr';
+import { CACHE_KEYS } from '@/lib/swr-config';
+import {
+  Ingredient,
+  IngredientType,
+} from '@/services/ingredient-service';
+import { ingredientService } from '@/services/ingredient-service';
 
 // Add INGREDIENTS to CACHE_KEYS
 const CACHE_KEY = 'ingredients';
@@ -14,11 +17,16 @@ export function useIngredients() {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       dedupingInterval: 60000, // 1 minute
-    }
+    },
   );
 
   const getIngredientsByType = (type: IngredientType) => {
-    return data?.filter((ingredient: Ingredient) => ingredient.type === type) || [];
+    return (
+      data?.filter(
+        (ingredient: Ingredient) =>
+          ingredient.type === type,
+      ) || []
+    );
   };
 
   return {
@@ -28,6 +36,6 @@ export function useIngredients() {
     otherIngredients: getIngredientsByType('ingredient'),
     isLoading: !error && !data,
     isError: error,
-    mutate
+    mutate,
   };
-} 
+}

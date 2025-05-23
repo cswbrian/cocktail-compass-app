@@ -1,8 +1,12 @@
-import { useEffect, useRef } from "react";
-import { useNavigate, useLocation, Outlet } from "react-router-dom";
-import { useUserSettings } from "@/context/UserSettingsContext";
-import { useLanguage } from "@/context/LanguageContext";
-import { useAuth } from "@/context/AuthContext";
+import { useEffect, useRef } from 'react';
+import {
+  useNavigate,
+  useLocation,
+  Outlet,
+} from 'react-router-dom';
+import { useUserSettings } from '@/context/UserSettingsContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
 
 export function RequireUsername() {
   const { userSettings } = useUserSettings();
@@ -31,7 +35,10 @@ export function RequireUsername() {
     // If we haven't redirected yet, do it
     if (!hasRedirected.current) {
       hasRedirected.current = true;
-      navigate(`/${language}/profile/setup`, { replace: true, state: { from: location } });
+      navigate(`/${language}/profile/setup`, {
+        replace: true,
+        state: { from: location },
+      });
     }
   }, [userSettings, navigate, language, location]);
 
@@ -44,9 +51,13 @@ export function RequireUsername() {
   // 1. User is not authenticated (no need to check username)
   // 2. User is authenticated and has a username
   // 3. User is authenticated but userSettings is still loading
-  if (!user || userSettings?.username || (user && userSettings === null)) {
+  if (
+    !user ||
+    userSettings?.username ||
+    (user && userSettings === null)
+  ) {
     return <Outlet />;
   }
 
   return null;
-} 
+}

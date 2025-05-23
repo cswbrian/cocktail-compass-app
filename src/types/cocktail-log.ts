@@ -15,16 +15,18 @@ export interface CocktailLog {
   createdAt: Date;
   updatedAt: Date;
   drinkDate: Date | null;
-  media: {
-    id: string;
-    url: string;
-    type: 'image' | 'video';
-    contentType: string;
-    fileSize: number;
-    originalName: string;
-    createdAt: Date;
-    status: string;
-  }[] | null;
+  media:
+    | {
+        id: string;
+        url: string;
+        type: 'image' | 'video';
+        contentType: string;
+        fileSize: number;
+        originalName: string;
+        createdAt: Date;
+        status: string;
+      }[]
+    | null;
   deletedAt: Date | null;
   visibility: 'public' | 'private' | 'friends';
   user?: {
@@ -54,4 +56,4 @@ export interface LocationData {
   lng: number;
   main_text: string;
   secondary_text: string;
-} 
+}

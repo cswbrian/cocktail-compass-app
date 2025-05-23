@@ -1,16 +1,20 @@
-import { CocktailLog } from "@/types/cocktail-log";
-import { Edit, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
-import { CocktailLogForm } from "./CocktailLogForm";
-import { useState, useEffect } from "react";
-import { CocktailLogMedia } from "./CocktailLogMedia";
-import { LocationInfo, DateInfo, CommentInfo } from "./CocktailLogInfo";
-import { translations } from "@/translations";
-import { useLanguage } from "@/context/LanguageContext";
-import { Link, useLocation } from "react-router-dom";
-import { formatBilingualText } from "@/lib/utils";
-import { useAuth } from "@/context/AuthContext";
+import { CocktailLog } from '@/types/cocktail-log';
+import { Edit, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CocktailLogForm } from './CocktailLogForm';
+import { useState, useEffect } from 'react';
+import { CocktailLogMedia } from './CocktailLogMedia';
+import {
+  LocationInfo,
+  DateInfo,
+  CommentInfo,
+} from './CocktailLogInfo';
+import { translations } from '@/translations';
+import { useLanguage } from '@/context/LanguageContext';
+import { Link, useLocation } from 'react-router-dom';
+import { formatBilingualText } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 interface PublicCocktailLogDetailProps {
   log: CocktailLog;
@@ -27,7 +31,7 @@ export function PublicCocktailLogDetail({
   onClose,
   onLogSaved,
   onLogDeleted,
-  onLogsChange
+  onLogsChange,
 }: PublicCocktailLogDetailProps) {
   const [isEditing, setIsEditing] = useState(false);
   const { language } = useLanguage();
@@ -49,11 +53,19 @@ export function PublicCocktailLogDetail({
     };
 
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    return () =>
+      window.removeEventListener(
+        'popstate',
+        handlePopState,
+      );
   }, [isEditing]);
 
   const handleEditClick = () => {
-    window.history.pushState({}, '', `/${language}/logs/${log.id}/edit`);
+    window.history.pushState(
+      {},
+      '',
+      `/${language}/logs/${log.id}/edit`,
+    );
     setIsEditing(true);
   };
 
@@ -104,28 +116,55 @@ export function PublicCocktailLogDetail({
             <Link
               to={`/${language}/drinkers/${log.user?.username}`}
               className="font-medium text-primary"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
-              <span>{log.user?.username || "??"}</span>
+              <span>{log.user?.username || '??'}</span>
             </Link>
           </div>
           {log.cocktail.is_custom ? (
-            <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              {formatBilingualText(
+                log.cocktail.name,
+                language,
+              )}
+            </h3>
           ) : (
-            <Link 
+            <Link
               to={`/${language}/cocktails/${log.cocktail.slug}`}
               className="hover:text-primary transition-colors"
             >
-              <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
+              <h3 className="text-xl font-semibold mb-4">
+                {formatBilingualText(
+                  log.cocktail.name,
+                  language,
+                )}
+              </h3>
             </Link>
           )}
-          <LocationInfo location={log.location} showHeadings />
-          <DateInfo date={log.drinkDate ? new Date(log.drinkDate) : null} showHeadings />
-          <CommentInfo comments={log.comments} showHeadings />
+          <LocationInfo
+            location={log.location}
+            showHeadings
+          />
+          <DateInfo
+            date={
+              log.drinkDate ? new Date(log.drinkDate) : null
+            }
+            showHeadings
+          />
+          <CommentInfo
+            comments={log.comments}
+            showHeadings
+          />
 
           {log.media && log.media.length > 0 && (
-            <div className="mt-4" onClick={(e) => e.stopPropagation()}>
-              <CocktailLogMedia media={log.media} size="lg" />
+            <div
+              className="mt-4"
+              onClick={e => e.stopPropagation()}
+            >
+              <CocktailLogMedia
+                media={log.media}
+                size="lg"
+              />
             </div>
           )}
         </div>
@@ -147,10 +186,14 @@ export function PublicCocktailLogDetail({
             onClick={handleClose}
           />
           <motion.div
-            initial={{ x: "100%" }}
+            initial={{ x: '100%' }}
             animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            exit={{ x: '-100%' }}
+            transition={{
+              type: 'spring',
+              damping: 25,
+              stiffness: 300,
+            }}
             className="fixed inset-0 z-50 bg-background overflow-hidden"
           >
             {content}
@@ -166,4 +209,4 @@ export function PublicCocktailLogDetail({
       )}
     </AnimatePresence>
   );
-} 
+}

@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { ReactNode } from 'react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import {
   Bar,
   BarChart as RechartsBarChart,
   LabelList,
   XAxis,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 export type ChartConfig = Record<
   string,
@@ -31,14 +31,20 @@ interface ChartContainerProps {
   config: ChartConfig;
 }
 
-function ChartContainer({ children, config }: ChartContainerProps) {
+function ChartContainer({
+  children,
+  config,
+}: ChartContainerProps) {
   return (
     <div className="w-full">
       <style jsx global>{`
         :root {
           ${Object.entries(config)
-            .map(([key, { color }]) => `--color-${key}: ${color};`)
-            .join("\n")}
+            .map(
+              ([key, { color }]) =>
+                `--color-${key}: ${color};`,
+            )
+            .join('\n')}
         }
       `}</style>
       {children}
@@ -62,8 +68,8 @@ interface BarChartProps {
 
 const chartConfig = {
   drinks: {
-    label: "Drinks",
-    color: "hsl(var(--primary))",
+    label: 'Drinks',
+    color: 'hsl(var(--primary))',
   },
 } satisfies ChartConfig;
 
@@ -97,7 +103,7 @@ export function BarChart({
                   tickLine={false}
                   tickMargin={10}
                   axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 3)}
+                  tickFormatter={value => value.slice(0, 3)}
                 />
                 <Bar
                   dataKey="drinks"
@@ -121,7 +127,7 @@ export function BarChart({
       <CardFooter className="flex-col items-start gap-2 text-sm">
         {trendInfo && (
           <div className="flex gap-2 font-medium leading-none">
-            {footerText}{" "}
+            {footerText}{' '}
             {trendInfo.isPositive ? (
               <TrendingUp className="h-4 w-4" />
             ) : (

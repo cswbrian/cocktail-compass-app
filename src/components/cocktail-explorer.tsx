@@ -1,24 +1,27 @@
-"use client";
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
-import { useCocktail } from "@/context/CocktailContext";
-import { useEffect } from "react";
-import Step1 from "@/components/cocktail-explorer/step1";
-import Step2 from "@/components/cocktail-explorer/step2";
-import Step3 from "@/components/cocktail-explorer/step3";
-import Results from "@/components/cocktail-explorer/results";
-import Navigation from "@/components/cocktail-explorer/navigation";
+import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
+import { useCocktail } from '@/context/CocktailContext';
+import { useEffect } from 'react';
+import Step1 from '@/components/cocktail-explorer/step1';
+import Step2 from '@/components/cocktail-explorer/step2';
+import Step3 from '@/components/cocktail-explorer/step3';
+import Results from '@/components/cocktail-explorer/results';
+import Navigation from '@/components/cocktail-explorer/navigation';
 
 export function CocktailExplorer() {
   const { language } = useLanguage();
   const t = translations[language];
-  const { currentStep, results, setCurrentStep } = useCocktail();
+  const { currentStep, results, setCurrentStep } =
+    useCocktail();
 
   useEffect(() => {
     if (results.length > 0 && currentStep !== 4) {
-      const stored = sessionStorage.getItem('cocktailExplorerResults');
+      const stored = sessionStorage.getItem(
+        'cocktailExplorerResults',
+      );
       if (stored) {
         setCurrentStep(4);
       }
@@ -65,7 +68,9 @@ export function CocktailExplorer() {
         >
           {t.chooseYourPreference}
         </motion.h1>
-        <div className="mt-8 flex-1 overflow-y-auto pb-24">{renderCurrentStep()}</div>
+        <div className="mt-8 flex-1 overflow-y-auto pb-24">
+          {renderCurrentStep()}
+        </div>
       </div>
       <div className="fixed bottom-16 left-0 right-0 px-6 max-w-4xl mx-auto">
         <Navigation />

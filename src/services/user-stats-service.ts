@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase";
-import { AuthService } from "@/services/auth-service";
+import { supabase } from '@/lib/supabase';
+import { AuthService } from '@/services/auth-service';
 
 interface BasicStats {
   totalCocktailsDrunk: number;
@@ -39,12 +39,12 @@ export class UserStatsService {
         basicStats: {
           totalCocktailsDrunk: 0,
           uniqueCocktails: 0,
-          uniquePlaces: 0
+          uniquePlaces: 0,
         },
         drinksByMonth: {},
         topPlaces: [],
         recentPhotos: [],
-        mostLoggedCocktails: []
+        mostLoggedCocktails: [],
       };
     }
 
@@ -52,16 +52,18 @@ export class UserStatsService {
       basicStats: {
         totalCocktailsDrunk: data.total_cocktails_drunk,
         uniqueCocktails: data.unique_cocktails,
-        uniquePlaces: data.unique_places
+        uniquePlaces: data.unique_places,
       },
       drinksByMonth: data.drinks_by_month,
       topPlaces: data.top_places,
       recentPhotos: data.recent_photos,
-      mostLoggedCocktails: data.most_logged_cocktails
+      mostLoggedCocktails: data.most_logged_cocktails,
     };
   }
 
-  async getUserStatsByUserId(userId: string): Promise<UserStats | null> {
+  async getUserStatsByUserId(
+    userId: string,
+  ): Promise<UserStats | null> {
     const { data, error } = await supabase
       .from('user_stats')
       .select('*')
@@ -75,12 +77,12 @@ export class UserStatsService {
         basicStats: {
           totalCocktailsDrunk: 0,
           uniqueCocktails: 0,
-          uniquePlaces: 0
+          uniquePlaces: 0,
         },
         drinksByMonth: {},
         topPlaces: [],
         recentPhotos: [],
-        mostLoggedCocktails: []
+        mostLoggedCocktails: [],
       };
     }
 
@@ -88,14 +90,14 @@ export class UserStatsService {
       basicStats: {
         totalCocktailsDrunk: data.total_cocktails_drunk,
         uniqueCocktails: data.unique_cocktails,
-        uniquePlaces: data.unique_places
+        uniquePlaces: data.unique_places,
       },
       drinksByMonth: data.drinks_by_month,
       topPlaces: data.top_places,
       recentPhotos: data.recent_photos,
-      mostLoggedCocktails: data.most_logged_cocktails
+      mostLoggedCocktails: data.most_logged_cocktails,
     };
   }
 }
 
-export const userStatsService = new UserStatsService(); 
+export const userStatsService = new UserStatsService();

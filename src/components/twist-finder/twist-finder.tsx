@@ -1,45 +1,66 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
-import { Cocktail } from "@/types/cocktail";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
+import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { Cocktail } from '@/types/cocktail';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
 import { sendGAEvent } from '@/lib/ga';
-import { calculateDistance } from "@/lib/cocktail-twist";
-import { TwistResults } from "@/components/twist-finder/twist-results";
-import { slugify } from "@/lib/utils";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { calculateDistance } from '@/lib/cocktail-twist';
+import { TwistResults } from '@/components/twist-finder/twist-results';
+import { slugify } from '@/lib/utils';
+import {
+  useSearchParams,
+  useNavigate,
+} from 'react-router-dom';
 
 interface TwistFinderProps {
   cocktails: Cocktail[];
 }
 
-export function TwistFinder({ cocktails }: TwistFinderProps) {
+export function TwistFinder({
+  cocktails,
+}: TwistFinderProps) {
   const { language } = useLanguage();
   const searchParams = useSearchParams();
   const navigate = useNavigate();
-  const t = translations[language as keyof typeof translations];
-  const [selectedCocktail, setSelectedCocktail] = useState<string>("");
-  const [twists, setTwists] = useState<Array<{ cocktail: Cocktail; distance: number }>>([]);
+  const t =
+    translations[language as keyof typeof translations];
+  const [selectedCocktail, setSelectedCocktail] =
+    useState<string>('');
+  const [twists, setTwists] = useState<
+    Array<{ cocktail: Cocktail; distance: number }>
+  >([]);
 
-  const findTwists = useCallback((cocktailName: string) => {
-    const baseCocktail = cocktails.find(c => c.name.en === cocktailName);
-    if (!baseCocktail) return;
+  const findTwists = useCallback(
+    (cocktailName: string) => {
+      const baseCocktail = cocktails.find(
+        c => c.name.en === cocktailName,
+      );
+      if (!baseCocktail) return;
 
-    const cocktailScores = cocktails
-      .filter(c => c.name.en !== cocktailName)
-      .map(cocktail => {
-        const distance = calculateDistance(baseCocktail, cocktail);
-        return { cocktail, distance };
-      })
-      .sort((a, b) => a.distance - b.distance)
-      .slice(0, 10);
+      const cocktailScores = cocktails
+        .filter(c => c.name.en !== cocktailName)
+        .map(cocktail => {
+          const distance = calculateDistance(
+            baseCocktail,
+            cocktail,
+          );
+          return { cocktail, distance };
+        })
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 10);
 
-    setTwists(cocktailScores);
-    
-    sendGAEvent('twist_finder', 'find_twists', cocktailName);
-  }, [cocktails]);
+      setTwists(cocktailScores);
+
+      sendGAEvent(
+        'twist_finder',
+        'find_twists',
+        cocktailName,
+      );
+    },
+    [cocktails],
+  );
 
   useEffect(() => {
     if (!searchParams) return;
@@ -48,23 +69,30 @@ export function TwistFinder({ cocktails }: TwistFinderProps) {
       navigate(`/${language}`);
       return;
     }
-    
-    const cocktail = cocktails.find(c => slugify(c.name.en) === cocktailParam);
+
+    const cocktail = cocktails.find(
+      c => slugify(c.name.en) === cocktailParam,
+    );
     if (cocktail) {
       setSelectedCocktail(cocktail.name.en);
       findTwists(cocktail.name.en);
     }
-  }, [searchParams, cocktails, language, navigate, findTwists]);
+  }, [
+    searchParams,
+    cocktails,
+    language,
+    navigate,
+    findTwists,
+  ]);
 
-
-  const selectedCocktailData = selectedCocktail 
+  const selectedCocktailData = selectedCocktail
     ? cocktails.find(c => c.name.en === selectedCocktail)
     : null;
 
   if (selectedCocktailData && twists.length > 0) {
     return (
-      <TwistResults 
-        twists={twists} 
+      <TwistResults
+        twists={twists}
         baseCocktail={selectedCocktailData}
       />
     );

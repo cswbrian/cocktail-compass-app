@@ -1,7 +1,7 @@
-import { useLanguage } from "@/context/LanguageContext";
-import ReactMarkdown from "react-markdown";
-import termsEn from "@/content/terms-and-conditions/en.md?raw";
-import termsZh from "@/content/terms-and-conditions/zh.md?raw";
+import { useLanguage } from '@/context/LanguageContext';
+import ReactMarkdown from 'react-markdown';
+import termsEn from '@/content/terms-and-conditions/en.md?raw';
+import termsZh from '@/content/terms-and-conditions/zh.md?raw';
 
 const contentMap = {
   en: termsEn,
@@ -19,4 +19,4 @@ export default function TermsAndConditionsPage() {
       </div>
     </div>
   );
-} 
+}

@@ -1,37 +1,57 @@
-import { useParams } from "react-router-dom";
-import { slugify, getLocalizedText, validLanguages } from "@/lib/utils";
-import { CocktailCard } from "@/components/cocktail-card";
-import { Cocktail } from "@/types/cocktail";
-import { Link } from "react-router-dom";
-import { translations } from "@/translations/index";
-import { ExternalLink } from "@/components/external-link";
-import { cocktailService } from "@/services/cocktail-service";
-import { ingredientService, Ingredient, IngredientType } from "@/services/ingredient-service";
-import { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
+import {
+  slugify,
+  getLocalizedText,
+  validLanguages,
+} from '@/lib/utils';
+import { CocktailCard } from '@/components/cocktail-card';
+import { Cocktail } from '@/types/cocktail';
+import { Link } from 'react-router-dom';
+import { translations } from '@/translations/index';
+import { ExternalLink } from '@/components/external-link';
+import { cocktailService } from '@/services/cocktail-service';
+import {
+  ingredientService,
+  Ingredient,
+  IngredientType,
+} from '@/services/ingredient-service';
+import { useEffect, useState } from 'react';
 
 export default function IngredientDetailPage() {
   const { language, slug } = useParams();
-  const t = translations[language as keyof typeof translations];
-  const [ingredient, setIngredient] = useState<Ingredient | null>(null);
-  const [matchingCocktails, setMatchingCocktails] = useState<Cocktail[]>([]);
+  const t =
+    translations[language as keyof typeof translations];
+  const [ingredient, setIngredient] =
+    useState<Ingredient | null>(null);
+  const [matchingCocktails, setMatchingCocktails] =
+    useState<Cocktail[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       if (!language || !slug) return;
-      
+
       setIsLoading(true);
       try {
         // Get ingredient details
-        const ingredients = await ingredientService.getIngredientsBySlug(slug);
+        const ingredients =
+          await ingredientService.getIngredientsBySlug(
+            slug,
+          );
         if (ingredients.length > 0) {
           setIngredient(ingredients[0]);
           // Get matching cocktails
-          const cocktails = await cocktailService.getCocktailsByIngredientId(ingredients[0].id);
+          const cocktails =
+            await cocktailService.getCocktailsByIngredientId(
+              ingredients[0].id,
+            );
           setMatchingCocktails(cocktails);
         }
       } catch (error) {
-        console.error('Error loading ingredient data:', error);
+        console.error(
+          'Error loading ingredient data:',
+          error,
+        );
       } finally {
         setIsLoading(false);
       }
@@ -69,7 +89,9 @@ export default function IngredientDetailPage() {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-4xl mb-2">
-          {language === "en" ? ingredient.nameEn : ingredient.nameZh}
+          {language === 'en'
+            ? ingredient.nameEn
+            : ingredient.nameZh}
         </h1>
         <p className="text-gray-600">
           {getIngredientTypeLabel(ingredient.type)}
@@ -78,8 +100,10 @@ export default function IngredientDetailPage() {
 
       <h2 className="text-2xl mb-4">
         {t.cocktailsWithIngredient.replace(
-          "{ingredient}",
-          language === "en" ? ingredient.nameEn : ingredient.nameZh
+          '{ingredient}',
+          language === 'en'
+            ? ingredient.nameEn
+            : ingredient.nameZh,
         )}
       </h2>
 
@@ -91,16 +115,18 @@ export default function IngredientDetailPage() {
         </div>
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-4">
-          {matchingCocktails.map((cocktail) => (
+          {matchingCocktails.map(cocktail => (
             <Link
               key={cocktail.slug}
               to={`/${language}/cocktails/${cocktail.slug}`}
             >
-              <CocktailCard cocktail={cocktail as Cocktail} />
+              <CocktailCard
+                cocktail={cocktail as Cocktail}
+              />
             </Link>
           ))}
         </div>
       )}
     </div>
   );
-} 
+}

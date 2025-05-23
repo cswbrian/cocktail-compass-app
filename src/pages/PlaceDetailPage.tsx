@@ -1,15 +1,20 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { placeService } from "@/services/place-service";
-import { Button } from "@/components/ui/button";
-import { Place } from "@/types/place";
-import { useLanguage } from "@/context/LanguageContext";
-import { CocktailLogList } from "@/components/cocktail-log/CocktailLogList";
-import { MapPin, BadgeCheck, AlertCircle, ArrowLeft } from "lucide-react";
-import { translations } from "@/translations";
-import useSWR from "swr";
-import { fetchers, CACHE_KEYS } from "@/lib/swr-config";
-import { AuthWrapper } from "@/components/auth/auth-wrapper";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { placeService } from '@/services/place-service';
+import { Button } from '@/components/ui/button';
+import { Place } from '@/types/place';
+import { useLanguage } from '@/context/LanguageContext';
+import { CocktailLogList } from '@/components/cocktail-log/CocktailLogList';
+import {
+  MapPin,
+  BadgeCheck,
+  AlertCircle,
+  ArrowLeft,
+} from 'lucide-react';
+import { translations } from '@/translations';
+import useSWR from 'swr';
+import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
+import { AuthWrapper } from '@/components/auth/auth-wrapper';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -26,11 +31,12 @@ export default function PlaceDetailPage() {
   useEffect(() => {
     const fetchPlace = async () => {
       if (!placeId) return;
-      
+
       try {
         setIsLoading(true);
         setError(null);
-        const fetchedPlace = await placeService.getPlaceByPlaceId(placeId);
+        const fetchedPlace =
+          await placeService.getPlaceByPlaceId(placeId);
         if (fetchedPlace) {
           setPlace(fetchedPlace);
         } else {
@@ -48,7 +54,11 @@ export default function PlaceDetailPage() {
   }, [placeId]);
 
   // Fetch logs using SWR
-  const { data: logsData, isLoading: isLoadingLogs, mutate } = useSWR(
+  const {
+    data: logsData,
+    isLoading: isLoadingLogs,
+    mutate,
+  } = useSWR(
     placeId ? [CACHE_KEYS.PLACE_LOGS(placeId), page] : null,
     () => fetchers.getPlaceLogs(placeId!, page, PAGE_SIZE),
     {
@@ -57,7 +67,7 @@ export default function PlaceDetailPage() {
       revalidateIfStale: true,
       revalidateOnReconnect: true,
       dedupingInterval: 5000,
-    }
+    },
   );
 
   const loadMore = () => {
@@ -85,7 +95,9 @@ export default function PlaceDetailPage() {
       <div className="h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">
+            Loading...
+          </p>
         </div>
       </div>
     );
@@ -121,17 +133,21 @@ export default function PlaceDetailPage() {
             {place.is_verified ? (
               <div className="flex items-center text-primary">
                 <BadgeCheck className="w-5 h-5 mr-1" />
-                <span className="text-sm">{t.placeVerified}</span>
+                <span className="text-sm">
+                  {t.placeVerified}
+                </span>
               </div>
             ) : (
               <div className="flex items-center text-muted-foreground">
                 <AlertCircle className="w-5 h-5 mr-1" />
-                <span className="text-sm">{t.placeUnverified}</span>
+                <span className="text-sm">
+                  {t.placeUnverified}
+                </span>
               </div>
             )}
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            {place.is_verified 
+            {place.is_verified
               ? t.placeVerifiedDescription
               : t.placeUnverifiedDescription}
           </p>
@@ -161,4 +177,4 @@ export default function PlaceDetailPage() {
       </div>
     </AuthWrapper>
   );
-} 
+}

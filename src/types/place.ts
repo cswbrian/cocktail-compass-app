@@ -9,4 +9,4 @@ export interface Place {
   created_at: string;
   updated_at: string;
   is_verified: boolean;
-} 
+}

@@ -1,7 +1,13 @@
-"use client";
+'use client';
 
-import { createContext, useContext, ReactNode, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface BottomNavContextType {
   isBottomNavVisible: boolean;
@@ -16,18 +22,26 @@ const HIDE_BOTTOM_NAV_PATTERNS = [
 
 function shouldHideBottomNav(pathname: string): boolean {
   if (!pathname) return false;
-  
-  return HIDE_BOTTOM_NAV_PATTERNS.some(pattern => pattern.test(pathname));
+
+  return HIDE_BOTTOM_NAV_PATTERNS.some(pattern =>
+    pattern.test(pathname),
+  );
 }
 
-const BottomNavContext = createContext<BottomNavContextType>({
-  isBottomNavVisible: true,
-});
+const BottomNavContext =
+  createContext<BottomNavContextType>({
+    isBottomNavVisible: true,
+  });
 
-export function BottomNavProvider({ children }: { children: ReactNode }) {
+export function BottomNavProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const location = useLocation();
   const pathname = location.pathname;
-  const [isBottomNavVisible, setIsBottomNavVisible] = useState(true);
+  const [isBottomNavVisible, setIsBottomNavVisible] =
+    useState(true);
 
   useEffect(() => {
     if (!pathname) return;
@@ -35,7 +49,9 @@ export function BottomNavProvider({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   return (
-    <BottomNavContext.Provider value={{ isBottomNavVisible }}>
+    <BottomNavContext.Provider
+      value={{ isBottomNavVisible }}
+    >
       {children}
     </BottomNavContext.Provider>
   );
@@ -43,4 +59,4 @@ export function BottomNavProvider({ children }: { children: ReactNode }) {
 
 export function useBottomNav() {
   return useContext(BottomNavContext);
-} 
+}

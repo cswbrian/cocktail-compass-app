@@ -1,11 +1,16 @@
 'use client';
 
-import { BookmarksList } from "./bookmarks-list";
-import { AuthWrapper } from "@/components/auth/auth-wrapper";
-import { Skeleton } from "@/components/ui/skeleton";
+import { BookmarksList } from './bookmarks-list';
+import { AuthWrapper } from '@/components/auth/auth-wrapper';
+import { Skeleton } from '@/components/ui/skeleton';
 import useSWR from 'swr';
-import { useEffect } from "react";
-import { CACHE_KEYS, fetchers, swrConfig, defaultData } from '@/lib/swr-config';
+import { useEffect } from 'react';
+import {
+  CACHE_KEYS,
+  fetchers,
+  swrConfig,
+  defaultData,
+} from '@/lib/swr-config';
 
 function BookmarksSkeleton() {
   return (
@@ -21,10 +26,13 @@ function BookmarksSkeleton() {
       {/* Bookmarks Grid Skeleton */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6">
         {[...Array(6)].map((_, index) => (
-          <div key={index} className="rounded-lg border p-4 space-y-3">
+          <div
+            key={index}
+            className="rounded-lg border p-4 space-y-3"
+          >
             {/* Image Skeleton */}
             <Skeleton className="h-48 w-full rounded-md" />
-            
+
             {/* Title and Description */}
             <div className="space-y-2">
               <Skeleton className="h-5 w-3/4" />
@@ -53,35 +61,42 @@ export function BookmarksClient() {
     const initializeServices = async () => {
       await Promise.all([
         fetchers.getBookmarks(),
-        fetchers.getCocktails()
+        fetchers.getCocktails(),
       ]);
     };
     initializeServices();
   }, []);
 
   // Fetch bookmarks using SWR
-  const { data: bookmarks = defaultData[CACHE_KEYS.BOOKMARKS], isLoading: isLoadingBookmarks } = useSWR(
+  const {
+    data: bookmarks = defaultData[CACHE_KEYS.BOOKMARKS],
+    isLoading: isLoadingBookmarks,
+  } = useSWR(
     CACHE_KEYS.BOOKMARKS,
     fetchers.getBookmarks,
-    swrConfig
+    swrConfig,
   );
 
   // Fetch cocktails using SWR
-  const { data: cocktails = defaultData[CACHE_KEYS.COCKTAILS], isLoading: isLoadingCocktails } = useSWR(
+  const {
+    data: cocktails = defaultData[CACHE_KEYS.COCKTAILS],
+    isLoading: isLoadingCocktails,
+  } = useSWR(
     CACHE_KEYS.COCKTAILS,
     fetchers.getCocktails,
-    swrConfig
+    swrConfig,
   );
 
-  const isLoading = isLoadingBookmarks || isLoadingCocktails;
+  const isLoading =
+    isLoadingBookmarks || isLoadingCocktails;
 
   return (
     <AuthWrapper customLoading={<BookmarksSkeleton />}>
-      <BookmarksList 
+      <BookmarksList
         bookmarks={bookmarks}
         cocktails={cocktails}
         isLoading={isLoading}
       />
     </AuthWrapper>
   );
-} 
+}

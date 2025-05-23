@@ -1,77 +1,103 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { Step1 } from "./step1";
-import { Step2Strong, Step2SweetTart, Step2Bubbly, Step2Creamy } from "./step2";
-import { Results } from "./results";
+import { useEffect, useState } from 'react';
+import {
+  useSearchParams,
+  useNavigate,
+} from 'react-router-dom';
+import { Step1 } from './step1';
+import {
+  Step2Strong,
+  Step2SweetTart,
+  Step2Bubbly,
+  Step2Creamy,
+} from './step2';
+import { Results } from './results';
 import { sendGAEvent } from '@/lib/ga';
 
 type Category =
-  | "Strong & Spirit-Focused"
-  | "Sweet & Tart"
-  | "Tall & Bubbly"
-  | "Rich & Creamy";
+  | 'Strong & Spirit-Focused'
+  | 'Sweet & Tart'
+  | 'Tall & Bubbly'
+  | 'Rich & Creamy';
 
 export function ExpressPageClient() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [step, setStep] = useState<string>(searchParams.get("step") || "1");
+  const [step, setStep] = useState<string>(
+    searchParams.get('step') || '1',
+  );
   const [category, setCategory] = useState<Category | null>(
-    (searchParams.get("category") as Category) || null
+    (searchParams.get('category') as Category) || null,
   );
-  const [preference, setPreference] = useState<string | null>(
-    searchParams.get("preference") || null
-  );
+  const [preference, setPreference] = useState<
+    string | null
+  >(searchParams.get('preference') || null);
   const [spirit, setSpirit] = useState<string | null>(
-    searchParams.get("spirit") || null
+    searchParams.get('spirit') || null,
   );
 
   // Update URL when state changes
   useEffect(() => {
     const params = new URLSearchParams();
-    if (step) params.set("step", step);
-    if (category) params.set("category", category);
-    if (preference) params.set("preference", preference);
-    if (spirit) params.set("spirit", spirit);
-    
+    if (step) params.set('step', step);
+    if (category) params.set('category', category);
+    if (preference) params.set('preference', preference);
+    if (spirit) params.set('spirit', spirit);
+
     navigate(`?${params.toString()}`, { replace: true });
   }, [step, category, preference, spirit, navigate]);
 
-  const handleCategorySelect = (selectedCategory: Category) => {
+  const handleCategorySelect = (
+    selectedCategory: Category,
+  ) => {
     setCategory(selectedCategory);
-    setStep("2");
-    sendGAEvent("express_category_selected", "select_category", selectedCategory);
+    setStep('2');
+    sendGAEvent(
+      'express_category_selected',
+      'select_category',
+      selectedCategory,
+    );
   };
 
-  const handlePreferenceSelect = (selectedPreference: string) => {
+  const handlePreferenceSelect = (
+    selectedPreference: string,
+  ) => {
     setPreference(selectedPreference);
-    setStep("3");
-    sendGAEvent("express_preference_selected", "select_preference", selectedPreference);
+    setStep('3');
+    sendGAEvent(
+      'express_preference_selected',
+      'select_preference',
+      selectedPreference,
+    );
   };
 
   const handleSpiritSelect = (selectedSpirit: string) => {
     setSpirit(selectedSpirit);
-    setStep("3");
-    sendGAEvent("express_spirit_selected", "select_spirit", selectedSpirit);
+    setStep('3');
+    sendGAEvent(
+      'express_spirit_selected',
+      'select_spirit',
+      selectedSpirit,
+    );
   };
 
   const handleBack = () => {
-    if (step === "3") {
+    if (step === '3') {
       if (spirit) {
         setSpirit(null);
       } else if (preference) {
         setPreference(null);
       }
-      setStep("2");
-    } else if (step === "2") {
+      setStep('2');
+    } else if (step === '2') {
       setCategory(null);
-      setStep("1");
+      setStep('1');
     }
   };
 
   const handleRestart = () => {
-    setStep("1");
+    setStep('1');
     setCategory(null);
     setPreference(null);
     setSpirit(null);
@@ -79,24 +105,38 @@ export function ExpressPageClient() {
 
   return (
     <>
-      {step === "1" && <Step1 onSelect={handleCategorySelect} />}
-      {step === "2" && category && (
+      {step === '1' && (
+        <Step1 onSelect={handleCategorySelect} />
+      )}
+      {step === '2' && category && (
         <>
-          {category === "Strong & Spirit-Focused" && (
-            <Step2Strong onSelect={handleSpiritSelect} onBack={handleBack} />
+          {category === 'Strong & Spirit-Focused' && (
+            <Step2Strong
+              onSelect={handleSpiritSelect}
+              onBack={handleBack}
+            />
           )}
-          {category === "Sweet & Tart" && (
-            <Step2SweetTart onSelect={handlePreferenceSelect} onBack={handleBack} />
+          {category === 'Sweet & Tart' && (
+            <Step2SweetTart
+              onSelect={handlePreferenceSelect}
+              onBack={handleBack}
+            />
           )}
-          {category === "Tall & Bubbly" && (
-            <Step2Bubbly onSelect={handlePreferenceSelect} onBack={handleBack} />
+          {category === 'Tall & Bubbly' && (
+            <Step2Bubbly
+              onSelect={handlePreferenceSelect}
+              onBack={handleBack}
+            />
           )}
-          {category === "Rich & Creamy" && (
-            <Step2Creamy onSelect={handlePreferenceSelect} onBack={handleBack} />
+          {category === 'Rich & Creamy' && (
+            <Step2Creamy
+              onSelect={handlePreferenceSelect}
+              onBack={handleBack}
+            />
           )}
         </>
       )}
-      {step === "3" && category && (
+      {step === '3' && category && (
         <Results
           category={category}
           preference={preference || undefined}

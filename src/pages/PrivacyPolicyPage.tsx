@@ -1,7 +1,7 @@
-import { useLanguage } from "@/context/LanguageContext";
-import ReactMarkdown from "react-markdown";
-import privacyPolicyEn from "@/content/privacy-policy/en.md?raw";
-import privacyPolicyZh from "@/content/privacy-policy/zh.md?raw";
+import { useLanguage } from '@/context/LanguageContext';
+import ReactMarkdown from 'react-markdown';
+import privacyPolicyEn from '@/content/privacy-policy/en.md?raw';
+import privacyPolicyZh from '@/content/privacy-policy/zh.md?raw';
 
 const contentMap = {
   en: privacyPolicyEn,
@@ -19,4 +19,4 @@ export default function PrivacyPolicyPage() {
       </div>
     </div>
   );
-} 
+}

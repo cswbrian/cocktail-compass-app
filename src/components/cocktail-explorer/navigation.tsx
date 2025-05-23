@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
-import { useCocktail } from "@/context/CocktailContext";
-import { motion } from "framer-motion";
+import { useCallback } from 'react';
+import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
+import { useCocktail } from '@/context/CocktailContext';
+import { motion } from 'framer-motion';
 
 const TOTAL_STEPS = 3;
 
@@ -15,7 +15,7 @@ export default function Navigation() {
     nextStep,
     prevStep,
     goToResults,
-    startOver
+    startOver,
   } = useCocktail();
 
   // Wrap the handlers in useCallback to ensure stability
@@ -55,9 +55,7 @@ export default function Navigation() {
         )}
 
         {currentStep < TOTAL_STEPS && (
-          <Button onClick={handleNext}>
-            {t.next}
-          </Button>
+          <Button onClick={handleNext}>{t.next}</Button>
         )}
 
         {currentStep === TOTAL_STEPS && (
@@ -73,11 +71,14 @@ export default function Navigation() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          <Button onClick={handleStartOver} className="ml-auto">
+          <Button
+            onClick={handleStartOver}
+            className="ml-auto"
+          >
             {t.startOver}
           </Button>
         </motion.div>
       )}
     </motion.div>
   );
-};
+}

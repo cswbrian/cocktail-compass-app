@@ -1,7 +1,10 @@
-import { supabase } from "@/lib/supabase";
-import { slugify } from "@/lib/utils";
+import { supabase } from '@/lib/supabase';
+import { slugify } from '@/lib/utils';
 
-export type IngredientType = 'base_spirit' | 'liqueur' | 'ingredient';
+export type IngredientType =
+  | 'base_spirit'
+  | 'liqueur'
+  | 'ingredient';
 
 export interface Ingredient {
   id: string;
@@ -16,31 +19,38 @@ export interface Ingredient {
 export class IngredientService {
   async getAllIngredients(): Promise<Ingredient[]> {
     const { data, error } = await supabase
-      .from("ingredients")
-      .select("*")
-      .order("name_en");
+      .from('ingredients')
+      .select('*')
+      .order('name_en');
 
     if (error) throw error;
     return data.map(this.mapIngredient);
   }
 
-  async getIngredientsBySlug(slug: string): Promise<Ingredient[]> {
+  async getIngredientsBySlug(
+    slug: string,
+  ): Promise<Ingredient[]> {
     const { data, error } = await supabase
-      .from("ingredients")
-      .select("*")
-      .eq("slug", slug)
-      .order("name_en");
+      .from('ingredients')
+      .select('*')
+      .eq('slug', slug)
+      .order('name_en');
 
     if (error) throw error;
     return data.map(this.mapIngredient);
   }
 
-  async searchIngredients(query: string, type?: IngredientType): Promise<Ingredient[]> {
+  async searchIngredients(
+    query: string,
+    type?: IngredientType,
+  ): Promise<Ingredient[]> {
     const { data, error } = await supabase
-      .from("ingredients")
-      .select("*")
-      .or(`name_en.ilike.%${query}%,name_zh.ilike.%${query}%`)
-      .order("name_en");
+      .from('ingredients')
+      .select('*')
+      .or(
+        `name_en.ilike.%${query}%,name_zh.ilike.%${query}%`,
+      )
+      .order('name_en');
 
     if (error) throw error;
     return data.map(this.mapIngredient);
@@ -49,17 +59,19 @@ export class IngredientService {
   async createIngredient(
     nameEn: string,
     nameZh: string,
-    type: IngredientType
+    type: IngredientType,
   ): Promise<Ingredient> {
     const slug = slugify(nameEn);
     const { data, error } = await supabase
-      .from("ingredients")
-      .insert([{
-        name_en: nameEn,
-        name_zh: nameZh,
-        type,
-        slug
-      }])
+      .from('ingredients')
+      .insert([
+        {
+          name_en: nameEn,
+          name_zh: nameZh,
+          type,
+          slug,
+        },
+      ])
       .select()
       .single();
 
@@ -75,9 +87,9 @@ export class IngredientService {
       nameZh: data.name_zh,
       slug: data.slug,
       createdAt: data.created_at,
-      updatedAt: data.updated_at
+      updatedAt: data.updated_at,
     };
   }
 }
 
-export const ingredientService = new IngredientService(); 
+export const ingredientService = new IngredientService();

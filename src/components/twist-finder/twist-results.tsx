@@ -1,11 +1,11 @@
-import { Cocktail } from "@/types/cocktail";
-import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/translations";
-import { CocktailCard } from "@/components/cocktail-card";
-import { motion, AnimatePresence } from "framer-motion";
-import { BasedCocktailCard } from "./based-cocktail-card";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { Cocktail } from '@/types/cocktail';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
+import { CocktailCard } from '@/components/cocktail-card';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BasedCocktailCard } from './based-cocktail-card';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useState } from 'react';
 
 interface TwistResultsProps {
   twists: Array<{ cocktail: Cocktail; distance: number }>;
@@ -17,8 +17,10 @@ export function TwistResults({
   baseCocktail,
 }: TwistResultsProps) {
   const { language } = useLanguage();
-  const t = translations[language as keyof typeof translations];
-  const [isBaseCardExpanded, setIsBaseCardExpanded] = useState(false);
+  const t =
+    translations[language as keyof typeof translations];
+  const [isBaseCardExpanded, setIsBaseCardExpanded] =
+    useState(false);
 
   return (
     <motion.div
@@ -27,21 +29,32 @@ export function TwistResults({
       transition={{ duration: 0.5, delay: 0.1 }}
     >
       <button
-        onClick={() => setIsBaseCardExpanded(!isBaseCardExpanded)}
+        onClick={() =>
+          setIsBaseCardExpanded(!isBaseCardExpanded)
+        }
         className="w-full text-left group"
       >
         <h2 className="text-3xl mb-2 group-hover:opacity-80 transition-opacity">
-          <span className="font-medium">{baseCocktail.name.en}</span>
-          <span className="font-extralight"> {t.twists}</span>
+          <span className="font-medium">
+            {baseCocktail.name.en}
+          </span>
+          <span className="font-extralight">
+            {' '}
+            {t.twists}
+          </span>
         </h2>
-        {language === "zh" && (
-          <p className="text-muted-foreground mb-4">{baseCocktail.name.zh}</p>
+        {language === 'zh' && (
+          <p className="text-muted-foreground mb-4">
+            {baseCocktail.name.zh}
+          </p>
         )}
       </button>
 
       <div className="mb-8">
         <button
-          onClick={() => setIsBaseCardExpanded(!isBaseCardExpanded)}
+          onClick={() =>
+            setIsBaseCardExpanded(!isBaseCardExpanded)
+          }
           className="flex items-center gap-2 mb-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           {isBaseCardExpanded ? (
@@ -56,12 +69,19 @@ export function TwistResults({
           {isBaseCardExpanded && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                marginBottom: 0,
+              }}
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <BasedCocktailCard cocktail={baseCocktail} hideTitle />
+              <BasedCocktailCard
+                cocktail={baseCocktail}
+                hideTitle
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -73,9 +93,15 @@ export function TwistResults({
             key={cocktail.name.en}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
+            transition={{
+              duration: 0.3,
+              delay: index * 0.1,
+            }}
           >
-            <CocktailCard cocktail={cocktail} distance={distance} />
+            <CocktailCard
+              cocktail={cocktail}
+              distance={distance}
+            />
           </motion.div>
         ))}
       </div>

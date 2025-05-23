@@ -1,12 +1,17 @@
-"use client";
+'use client';
 
-import { BasicStats } from "@/components/stats/BasicStats";
-import { TopPlaces } from "@/components/stats/TopPlaces";
-import { DrinksBarChart } from "@/components/stats/DrinksBarChart";
-import { PhotoSnapshot } from "@/components/journal/photo-snapshot";
+import { BasicStats } from '@/components/stats/BasicStats';
+import { TopPlaces } from '@/components/stats/TopPlaces';
+import { DrinksBarChart } from '@/components/stats/DrinksBarChart';
+import { PhotoSnapshot } from '@/components/journal/photo-snapshot';
 import useSWR from 'swr';
-import { AuthWrapper } from "@/components/auth/auth-wrapper";
-import { CACHE_KEYS, fetchers, swrConfig, defaultData } from '@/lib/swr-config';
+import { AuthWrapper } from '@/components/auth/auth-wrapper';
+import {
+  CACHE_KEYS,
+  fetchers,
+  swrConfig,
+  defaultData,
+} from '@/lib/swr-config';
 
 export function HighlightsContainer() {
   // Use SWR for client-side updates
@@ -15,8 +20,8 @@ export function HighlightsContainer() {
     fetchers.getUserStats,
     {
       ...swrConfig,
-      fallbackData: defaultData[CACHE_KEYS.USER_STATS]
-    }
+      fallbackData: defaultData[CACHE_KEYS.USER_STATS],
+    },
   );
 
   const isLoading = isLoadingStats;
@@ -41,9 +46,12 @@ export function HighlightsContainer() {
         )}
 
         {/* Drinks Over Time */}
-        {stats?.drinksByMonth && Object.keys(stats.drinksByMonth).length > 0 && (
-          <DrinksBarChart drinksByMonth={stats.drinksByMonth} />
-        )}
+        {stats?.drinksByMonth &&
+          Object.keys(stats.drinksByMonth).length > 0 && (
+            <DrinksBarChart
+              drinksByMonth={stats.drinksByMonth}
+            />
+          )}
 
         {/* Top Places */}
         {stats?.topPlaces && stats.topPlaces.length > 0 && (
@@ -51,10 +59,11 @@ export function HighlightsContainer() {
         )}
 
         {/* Photo Snapshot */}
-        {stats?.recentPhotos && stats.recentPhotos.length > 0 && (
-          <PhotoSnapshot photos={stats.recentPhotos} />
-        )}
+        {stats?.recentPhotos &&
+          stats.recentPhotos.length > 0 && (
+            <PhotoSnapshot photos={stats.recentPhotos} />
+          )}
       </div>
     </AuthWrapper>
   );
-} 
+}

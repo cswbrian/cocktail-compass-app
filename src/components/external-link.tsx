@@ -1,11 +1,13 @@
-import { ExternalLink as ExternalLinkIcon } from "lucide-react"
-import { FEEDBACK_FORM_URL } from "@/constants"
+import { ExternalLink as ExternalLinkIcon } from 'lucide-react';
+import { FEEDBACK_FORM_URL } from '@/constants';
 
 interface ExternalLinkProps {
-  message: string
+  message: string;
 }
 
-export function ExternalLink({ message }: ExternalLinkProps) {
+export function ExternalLink({
+  message,
+}: ExternalLinkProps) {
   return (
     <p className="text-sm text-muted-foreground">
       <a
@@ -18,5 +20,5 @@ export function ExternalLink({ message }: ExternalLinkProps) {
         <ExternalLinkIcon className="w-4 h-4" />
       </a>
     </p>
-  )
-} 
+  );
+}

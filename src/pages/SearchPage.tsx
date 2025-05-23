@@ -1,11 +1,12 @@
 import { Suspense } from 'react';
-import { useCocktailDetails } from "@/hooks/useCocktailDetails";
-import { Loading } from "@/components/ui/loading";
-import { SearchContainer } from "@/components/search/SearchContainer";
+import { useCocktailDetails } from '@/hooks/useCocktailDetails';
+import { Loading } from '@/components/ui/loading';
+import { SearchContainer } from '@/components/search/SearchContainer';
 
 export default function SearchPage() {
-  const { cocktailDetails, isLoading } = useCocktailDetails();
-  
+  const { cocktailDetails, isLoading } =
+    useCocktailDetails();
+
   // Combine static and custom cocktails
   const cocktails = [
     ...(cocktailDetails?.map(cocktail => ({
@@ -13,8 +14,8 @@ export default function SearchPage() {
       slug: cocktail.slug,
       name: cocktail.name,
       categories: cocktail.categories,
-      flavor_descriptors: cocktail.flavor_descriptors
-    })) || [])
+      flavor_descriptors: cocktail.flavor_descriptors,
+    })) || []),
   ];
 
   return (
@@ -24,4 +25,4 @@ export default function SearchPage() {
       </div>
     </Suspense>
   );
-} 
+}

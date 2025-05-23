@@ -1,7 +1,7 @@
-import useSWR from "swr";
-import { CACHE_KEYS } from "@/lib/swr-config";
-import { CocktailPreview } from "@/types/cocktail";
-import { cocktailService } from "@/services/cocktail-service";
+import useSWR from 'swr';
+import { CACHE_KEYS } from '@/lib/swr-config';
+import { CocktailPreview } from '@/types/cocktail';
+import { cocktailService } from '@/services/cocktail-service';
 
 export function useCocktailDetails() {
   const { data, error, mutate } = useSWR(
@@ -11,13 +11,13 @@ export function useCocktailDetails() {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       dedupingInterval: 60000, // 1 minute
-    }
+    },
   );
 
   return {
     cocktailDetails: data,
     isLoading: !error && !data,
     isError: error,
-    mutate
+    mutate,
   };
-} 
+}
