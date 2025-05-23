@@ -229,6 +229,8 @@ export const translations = {
       'This place has been verified by our team. The information and menu are accurate and up-to-date.',
     placeUnverifiedDescription:
       'This page shows information and drink menus based on user submissions and system aggregation. Bar or restaurant owners can contact us to get verified and access additional services.',
+    customCocktailDescription:
+      'This cocktail is created by a user and the information and menu are based on user submissions. Bar or restaurant owners can contact us to get verified and access additional services.',
     errorSearchingIngredients:
       'Error searching ingredients',
     errorCreatingIngredient: 'Error creating ingredient',
@@ -525,7 +527,9 @@ export const translations = {
     placeVerifiedDescription:
       '此場所已經酒吧驗證，資訊和菜單都是準確且最新的。',
     placeUnverifiedDescription:
-      '此頁面顯示的資訊和飲品菜單是根據用戶提交的內容和系統整理而成，酒吧或餐廳負責人可聯絡我們驗證。',
+      '此頁面顯示的資訊和飲品菜單是根據用戶提交的內容整理而成，酒吧或餐廳負責人可聯絡我們驗證。',
+    customCocktailDescription:
+      '此調酒由用戶是根據用戶提交的內容整理而成，酒吧或餐廳負責人可聯絡我們驗證。',
     errorSearchingIngredients: '搜尋材料時出錯',
     errorCreatingIngredient: '新增材料時出錯',
     searchIngredients: '搜尋材料...',

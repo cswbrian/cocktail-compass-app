@@ -16,6 +16,107 @@ import { useState, useCallback } from 'react';
 import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { CocktailLog } from '@/types/cocktail-log';
+import { Cocktail } from '@/types/cocktail';
+
+interface CocktailIngredientsProps {
+  cocktail: Cocktail;
+  language: string;
+  t: (typeof translations)['en'];
+}
+
+function CocktailIngredients({
+  cocktail,
+  language,
+  t,
+}: CocktailIngredientsProps) {
+  console.log(cocktail);
+  return (
+    <div className="grid grid-cols-1 gap-8">
+      <div>
+        <h2 className="font-bold mb-2">{t.ingredients}</h2>
+        <ul className="space-y-2">
+          {cocktail.base_spirits.map((spirit, i) => (
+            <li key={i} className="flex justify-between">
+              <Link
+                to={`/${language || 'en'}/ingredients/${spirit.slug}`}
+                className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
+              >
+                {getLocalizedText(
+                  spirit.name,
+                  language || 'en',
+                )}
+                <Search className="w-4 h-4 text-muted-foreground" />
+              </Link>
+              <span className="text-gray-400">
+                {spirit.amount}{' '}
+                {getLocalizedText(
+                  spirit.unit,
+                  language || 'en',
+                )}
+              </span>
+            </li>
+          ))}
+          {cocktail.liqueurs.map((liqueur, i) => (
+            <li key={i} className="flex justify-between">
+              <Link
+                to={`/${language || 'en'}/ingredients/${liqueur.id}`}
+                className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
+              >
+                {getLocalizedText(
+                  liqueur.name,
+                  language || 'en',
+                )}
+                <Search className="w-4 h-4 text-muted-foreground" />
+              </Link>
+              <span className="text-gray-400">
+                {liqueur.amount}{' '}
+                {getLocalizedText(
+                  liqueur.unit,
+                  language || 'en',
+                )}
+              </span>
+            </li>
+          ))}
+          {cocktail.ingredients.map((ingredient, i) => (
+            <li key={i} className="flex justify-between">
+              <Link
+                to={`/${language || 'en'}/ingredients/${ingredient.id}`}
+                className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
+              >
+                {getLocalizedText(
+                  ingredient.name,
+                  language || 'en',
+                )}
+                <Search className="w-4 h-4 text-muted-foreground" />
+              </Link>
+              <span className="text-gray-400">
+                {ingredient.amount}{' '}
+                {getLocalizedText(
+                  ingredient.unit,
+                  language || 'en',
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {cocktail.garnish && (
+        <div>
+          <h4 className="text-gray-400">{t.garnish}</h4>
+          <p className="text-gray-300">
+            {getLocalizedText(
+              cocktail.garnish,
+              language || 'en',
+            )}
+          </p>
+        </div>
+      )}
+
+      <ExternalLink message={t.feedbackMessage} />
+    </div>
+  );
+}
 
 export default function CocktailDetails() {
   const { language, slug } = useParams();
@@ -102,158 +203,83 @@ export default function CocktailDetails() {
                 url={`${window.location.origin}/${language || 'en'}/cocktails/${cocktail.slug}`}
               />
             </div>
-            <TwistButton cocktailSlug={cocktail.slug}>
-              {t.findTwists}
-            </TwistButton>
+            {cocktail.is_custom ? null : (
+              <TwistButton cocktailSlug={cocktail.slug}>
+                {t.findTwists}
+              </TwistButton>
+            )}
           </div>
         </div>
 
-        {cocktail.flavor_descriptors && (
-          <div className="mb-6">
-            <h2 className="font-bold mb-2">
-              {t.flavorNotes}
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {cocktail.flavor_descriptors.map(
-                (descriptor, i) => (
-                  <FlavorDescriptor
-                    key={i}
-                    descriptor={descriptor}
-                    language={language || 'en'}
-                  />
-                ),
-              )}
+        {cocktail.is_custom ? (
+          <>
+            <div className="mb-6">
+              <p className="text-sm text-muted-foreground mb-4">
+                {t.customCocktailDescription}
+              </p>
+              <ExternalLink message={t.feedbackMessage} />
             </div>
-          </div>
-        )}
+          </>
+        ) : (
+          <>
+            {cocktail.flavor_descriptors && (
+              <div className="mb-6">
+                <h2 className="font-bold mb-2">
+                  {t.flavorNotes}
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {cocktail.flavor_descriptors.map(
+                    (descriptor, i) => (
+                      <FlavorDescriptor
+                        key={i}
+                        descriptor={descriptor}
+                        language={language || 'en'}
+                      />
+                    ),
+                  )}
+                </div>
+              </div>
+            )}
 
-        <div className="mt-8">
-          <FlavorRadar
-            flavorProfile={cocktail.flavor_profile}
-            t={t}
-            color={color}
-          />
-        </div>
+            <div className="mt-8">
+              <FlavorRadar
+                flavorProfile={cocktail.flavor_profile}
+                t={t}
+                color={color}
+              />
+            </div>
 
-        <div className="grid grid-cols-1 gap-8">
-          <div>
-            <h2 className="font-bold mb-2">
-              {t.ingredients}
-            </h2>
-            <ul className="space-y-2">
-              {cocktail.base_spirits.map((spirit, i) => (
-                <li
-                  key={i}
-                  className="flex justify-between"
-                >
-                  <Link
-                    to={`/${language || 'en'}/ingredients/${spirit.slug}`}
-                    className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
-                  >
-                    {getLocalizedText(
-                      spirit.name,
-                      language || 'en',
-                    )}
-                    <Search className="w-4 h-4 text-muted-foreground" />
-                  </Link>
-                  <span className="text-gray-400">
-                    {spirit.amount}{' '}
-                    {getLocalizedText(
-                      spirit.unit,
-                      language || 'en',
-                    )}
-                  </span>
-                </li>
-              ))}
-              {cocktail.liqueurs.map((liqueur, i) => (
-                <li
-                  key={i}
-                  className="flex justify-between"
-                >
-                  <Link
-                    to={`/${language || 'en'}/ingredients/${liqueur.id}`}
-                    className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
-                  >
-                    {getLocalizedText(
-                      liqueur.name,
-                      language || 'en',
-                    )}
-                    <Search className="w-4 h-4 text-muted-foreground" />
-                  </Link>
-                  <span className="text-gray-400">
-                    {liqueur.amount}{' '}
-                    {getLocalizedText(
-                      liqueur.unit,
-                      language || 'en',
-                    )}
-                  </span>
-                </li>
-              ))}
-              {cocktail.ingredients.map((ingredient, i) => (
-                <li
-                  key={i}
-                  className="flex justify-between"
-                >
-                  <Link
-                    to={`/${language || 'en'}/ingredients/${ingredient.id}`}
-                    className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
-                  >
-                    {getLocalizedText(
-                      ingredient.name,
-                      language || 'en',
-                    )}
-                    <Search className="w-4 h-4 text-muted-foreground" />
-                  </Link>
-                  <span className="text-gray-400">
-                    {ingredient.amount}{' '}
-                    {getLocalizedText(
-                      ingredient.unit,
-                      language || 'en',
-                    )}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <CocktailIngredients
+              cocktail={cocktail}
+              language={language || 'en'}
+              t={t}
+            />
 
-          {cocktail.garnish && (
             <div>
-              <h4 className="text-gray-400">{t.garnish}</h4>
+              <h2 className="font-bold mb-4">
+                {t.instructions}
+              </h2>
               <p className="text-gray-300">
-                {getLocalizedText(
-                  cocktail.garnish,
-                  language || 'en',
-                )}
+                {cocktail.technique
+                  ? getLocalizedText(
+                      cocktail.technique,
+                      language || 'en',
+                    )
+                  : ''}
               </p>
             </div>
-          )}
 
-          <ExternalLink message={t.feedbackMessage} />
-
-          <div>
-            <h2 className="font-bold mb-4">
-              {t.instructions}
-            </h2>
-            <p className="text-gray-300">
-              {cocktail.technique
-                ? getLocalizedText(
-                    cocktail.technique,
+            {cocktail.description && (
+              <div className="mt-8 text-gray-300 prose prose-invert">
+                <ReactMarkdown>
+                  {getLocalizedText(
+                    cocktail.description,
                     language || 'en',
-                  )
-                : ''}
-            </p>
-          </div>
-        </div>
-
-        {cocktail.description && (
-          <div className="mt-8 text-gray-300 prose prose-invert">
-            <ReactMarkdown>
-              {getLocalizedText(
-                cocktail.description,
-                language || 'en',
-              )}
-            </ReactMarkdown>
-          </div>
+                  )}
+                </ReactMarkdown>
+              </div>
+            )}
+          </>
         )}
       </div>
 

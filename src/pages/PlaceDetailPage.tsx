@@ -15,6 +15,7 @@ import { translations } from '@/translations';
 import useSWR from 'swr';
 import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
+import { ExternalLink } from '@/components/external-link';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -80,16 +81,6 @@ export default function PlaceDetailPage() {
     navigate(`/${language}/feeds`);
   };
 
-  const handleLogSaved = () => {
-    setPage(1);
-    mutate();
-  };
-
-  const handleLogDeleted = () => {
-    setPage(1);
-    mutate();
-  };
-
   if (isLoading) {
     return (
       <div className="h-screen bg-background flex items-center justify-center">
@@ -151,7 +142,8 @@ export default function PlaceDetailPage() {
               ? t.placeVerifiedDescription
               : t.placeUnverifiedDescription}
           </p>
-          <div className="flex items-center">
+          <ExternalLink message={t.feedbackMessage} />
+          <div className="mt-4 flex items-center">
             <MapPin className="w-4 h-4 mr-1" />
             {place.secondary_text && (
               <span className="ml-1">

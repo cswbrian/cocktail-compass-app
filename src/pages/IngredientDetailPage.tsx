@@ -1,9 +1,5 @@
 import { useParams } from 'react-router-dom';
-import {
-  slugify,
-  getLocalizedText,
-  validLanguages,
-} from '@/lib/utils';
+import { validLanguages } from '@/lib/utils';
 import { CocktailCard } from '@/components/cocktail-card';
 import { Cocktail } from '@/types/cocktail';
 import { Link } from 'react-router-dom';
