@@ -113,7 +113,7 @@ export function PublicCocktailLogDetail({
             <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
           ) : (
             <Link 
-              to={`/${language}/cocktails/${log.cocktail.id}`}
+              to={`/${language}/cocktails/${log.cocktail.slug}`}
               className="hover:text-primary transition-colors"
             >
               <h3 className="text-xl font-semibold mb-4">{formatBilingualText(log.cocktail.name, language)}</h3>
@@ -160,20 +160,7 @@ export function PublicCocktailLogDetail({
             isOpen={isEditing}
             onClose={handleCloseEdit}
             existingLog={log}
-            onLogSaved={(updatedLog) => {
-              handleCloseEdit();
-              onLogSaved?.(updatedLog);
-            }}
-            onLogDeleted={(logId) => {
-              handleCloseEdit();
-              handleClose();
-              onLogDeleted?.(logId);
-            }}
-            onLogsChange={onLogsChange}
-            onSuccess={() => {
-              handleCloseEdit();
-              handleClose();
-            }}
+            onSuccess={handleCloseEdit}
           />
         </>
       )}

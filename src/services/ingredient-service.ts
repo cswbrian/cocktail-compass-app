@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { slugify } from "@/lib/utils";
 
 export type IngredientType = 'base_spirit' | 'liqueur' | 'ingredient';
 
@@ -7,6 +8,7 @@ export interface Ingredient {
   type: IngredientType;
   nameEn: string;
   nameZh: string;
+  slug: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -16,6 +18,17 @@ export class IngredientService {
     const { data, error } = await supabase
       .from("ingredients")
       .select("*")
+      .order("name_en");
+
+    if (error) throw error;
+    return data.map(this.mapIngredient);
+  }
+
+  async getIngredientsBySlug(slug: string): Promise<Ingredient[]> {
+    const { data, error } = await supabase
+      .from("ingredients")
+      .select("*")
+      .eq("slug", slug)
       .order("name_en");
 
     if (error) throw error;
@@ -38,12 +51,14 @@ export class IngredientService {
     nameZh: string,
     type: IngredientType
   ): Promise<Ingredient> {
+    const slug = slugify(nameEn);
     const { data, error } = await supabase
       .from("ingredients")
       .insert([{
         name_en: nameEn,
         name_zh: nameZh,
-        type
+        type,
+        slug
       }])
       .select()
       .single();
@@ -58,6 +73,7 @@ export class IngredientService {
       type: data.type,
       nameEn: data.name_en,
       nameZh: data.name_zh,
+      slug: data.slug,
       createdAt: data.created_at,
       updatedAt: data.updated_at
     };

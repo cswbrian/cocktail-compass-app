@@ -18,17 +18,17 @@ import { cocktailLogService } from '@/services/cocktail-log-service';
 import { CocktailLog } from '@/types/cocktail-log';
 
 export default function CocktailDetails() {
-  const { language, id } = useParams();
+  const { language, slug } = useParams();
   const t = translations[language as keyof typeof translations] || translations.en;
   const [page, setPage] = useState(1);
   const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
   const PAGE_SIZE = 10;
 
   const { data: cocktail, isLoading: isLoadingCocktail } = useSWR(
-    ['cocktail', id],
+    ['cocktail', slug],
     async () => {
-      if (!id) return null;
-      return await cocktailService.getCocktailById(id);
+      if (!slug) return null;
+      return await cocktailService.getCocktailBySlug(slug);
     }
   );
 

@@ -141,11 +141,16 @@ export function SearchContainer({ cocktails }: SearchClientProps) {
   const handleItemSelect = (value: string, item: SearchItem) => {
     updateRecentSearches({ id: item.id, type: item.type });
     const [type, name] = value.split(':');
-    
     if (type === 'cocktail') {
-      navigate(`/${language}/cocktails/${item.id}`);
+      const cocktail = cocktails.find(c => c.id === item.id);
+      if (cocktail) {
+        navigate(`/${language}/cocktails/${cocktail.slug}`);
+      }
     } else if (type === 'ingredient') {
-      navigate(`/${language}/ingredients/${item.id}`);
+      const ingredient = [...baseSpirits, ...liqueurs, ...otherIngredients].find(i => i.id === item.id);
+      if (ingredient) {
+        navigate(`/${language}/ingredients/${ingredient.slug}`);
+      }
     }
   };
 

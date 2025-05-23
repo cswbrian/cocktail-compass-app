@@ -114,8 +114,19 @@ class CocktailService {
     return [...this.cocktails];
   }
 
-  public getCocktailBySlug(slug: string): Cocktail | undefined {
-    return this.slugToCocktail.get(slug);
+  public async getCocktailBySlug(slug: string): Promise<Cocktail | undefined> {
+    const { data, error } = await supabase
+      .from("cocktail_details")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (error) {
+      console.error("Error fetching cocktail by slug:", error);
+      return undefined;
+    }
+
+    return this.mapSupabaseResponseToCocktail(data);
   }
 
   private mapSupabaseResponseToCocktail(data: any): Cocktail {
@@ -175,25 +186,34 @@ class CocktailService {
     return matchingCocktails;
   }
 
-  public getCocktailsByIngredient(ingredientSlug: string): Cocktail[] {
-    // Check cache first
-    const cached = this.ingredientToCocktails.get(ingredientSlug);
-    if (cached) return cached;
+  public async getCocktailsByIngredientId(ingredientId: string): Promise<Cocktail[]> {
+    // First get all cocktail IDs that use this ingredient
+    const { data: cocktailIds, error: cocktailIdsError } = await supabase
+      .from("cocktail_ingredients")
+      .select("cocktail_id")
+      .eq("ingredient_id", ingredientId);
 
-    // If not in cache, compute and cache
-    const matchingCocktails = this.cocktails.filter(cocktail => {
-      const allIngredients = [
-        ...(cocktail.base_spirits ?? []),
-        ...(cocktail.liqueurs ?? []),
-        ...(cocktail.ingredients ?? []),
-      ];
-      return allIngredients.some(
-        ingredient => slugify(ingredient.name.en) === ingredientSlug
-      );
-    });
-    
-    this.ingredientToCocktails.set(ingredientSlug, matchingCocktails);
-    return matchingCocktails;
+    if (cocktailIdsError) {
+      console.error("Error fetching cocktail IDs:", cocktailIdsError);
+      return [];
+    }
+
+    if (!cocktailIds || cocktailIds.length === 0) {
+      return [];
+    }
+
+    // Then get the full cocktail details for these IDs
+    const { data, error } = await supabase
+      .from("cocktail_details")
+      .select("*")
+      .in("id", cocktailIds.map(ci => ci.cocktail_id));
+
+    if (error) {
+      console.error("Error fetching cocktails by ingredient:", error);
+      return [];
+    }
+
+    return data.map(this.mapSupabaseResponseToCocktail);
   }
 
   public getCocktailsByMood(category: 'Strong & Spirit-Focused' | 'Sweet & Tart' | 'Tall & Bubbly' | 'Rich & Creamy', spirit?: string, preference?: string): RankedCocktail[] {

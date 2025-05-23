@@ -103,7 +103,7 @@ export function PrivateCocktailLogDetail({
             </h3>
           ) : (
             <Link
-              to={`/${language}/cocktails/${log.cocktail.id}`}
+              to={`/${language}/cocktails/${log.cocktail.slug}`}
               className="hover:text-primary transition-colors"
             >
               <h3 className="text-xl font-semibold mb-4">

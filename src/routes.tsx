@@ -16,6 +16,7 @@ import ProfilePage from "./pages/ProfilePage";
 import NewLogPage from "./pages/NewLogPage";
 import DrinkerProfilePage from "./pages/DrinkerProfilePage";
 import SetupProfilePage from "./pages/SetupProfilePage";
+import IngredientDetailPage from "./pages/IngredientDetailPage";
 import { RequireUsername } from "@/components/RequireUsername";
 import { AuthWrapper } from "@/components/auth/auth-wrapper";
 
@@ -36,7 +37,8 @@ export default function AppRoutes() {
         <Route path="explorer" element={<ExplorerPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="bookmarks" element={<BookmarksPage />} />
-        <Route path="cocktails/:id" element={<CocktailDetails />} />
+        <Route path="cocktails/:slug" element={<CocktailDetails />} />
+        <Route path="ingredients/:slug" element={<IngredientDetailPage />} />
         <Route path="places/:placeId" element={<PlaceDetailPage />} />
         <Route path="drinkers/:username" element={<DrinkerProfilePage />} />
         <Route path="logs">
