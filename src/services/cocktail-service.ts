@@ -107,7 +107,7 @@ class CocktailService {
     return {
       id: data.id,
       slug: data.slug,
-      name: cocktailData.name || { en: '', zh: null },
+      name: data.name || { en: '', zh: null },
       flavor_profile: cocktailData.flavor_profile || {
         body: 0,
         booziness: 0,
