@@ -88,7 +88,7 @@ export default function AppRoutes() {
           <Route
             index
             element={
-              <Navigate to="/zh/feeds/recommend" replace />
+              <Navigate to="/zh/feeds/me" replace />
             }
           />
           <Route

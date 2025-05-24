@@ -4,7 +4,7 @@ compatibility_date = "2024-01-01"
 
 # Development environment (includes local and staging)
 [vars]
-ALLOWED_ORIGINS = "http://localhost:3000,https://develop.cocktail-cult.pages.dev"
+ALLOWED_ORIGINS = "http://localhost:5173,https://develop.cocktail-cult.pages.dev"
 
 # R2 bucket configuration for development
 [[r2_buckets]]
