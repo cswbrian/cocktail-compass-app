@@ -145,7 +145,6 @@ export function PublicCocktailLogCard({
                   />
                   <span>{cheerCount}</span>
                 </Button>
-                <ThreadsShareButton logId={log.id} userId={log.userId} />
               </div>
             </div>
           </div>
