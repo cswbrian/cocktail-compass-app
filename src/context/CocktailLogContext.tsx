@@ -133,6 +133,20 @@ export function CocktailLogProvider({
     },
   );
 
+  // Reset pagination when log type changes
+  const handleLogTypeChange = useCallback((type: 'public' | 'private') => {
+    // First update the log type
+    setLogType(type);
+    // Then reset all pagination state
+    setPage(1);
+    setAccumulatedLogs([]);
+    setHasMore(true);
+    // Finally invalidate the cache and revalidate
+    invalidateCache.allLogs().then(() => {
+      mutateLogs();
+    });
+  }, [mutateLogs]);
+
   const {
     data: stats,
     isLoading: isLoadingStats,
@@ -220,7 +234,7 @@ export function CocktailLogProvider({
     },
     // Log type
     logType,
-    setLogType,
+    setLogType: handleLogTypeChange,
   };
 
   return (

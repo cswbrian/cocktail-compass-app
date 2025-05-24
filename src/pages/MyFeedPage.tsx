@@ -23,6 +23,10 @@ export default function MyFeedPage() {
 
   useEffect(() => {
     setLogType('private');
+    return () => {
+      // Reset to default state when unmounting
+      setLogType('public');
+    };
   }, [setLogType]);
 
   return (

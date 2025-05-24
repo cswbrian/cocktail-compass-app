@@ -355,8 +355,7 @@ export class CocktailLogService {
       `,
         { count: 'exact' },
       )
-      .order('drink_date', { ascending: false })
-      .range(offset, to);
+      .order('drink_date', { ascending: false });
 
     if (additionalFilters) {
       Object.entries(additionalFilters).forEach(
@@ -366,13 +365,23 @@ export class CocktailLogService {
       );
     }
 
+    // Add range after all filters are applied
+    query = query.range(offset, to);
+
     const { data, count, error } = await query;
     if (error) throw error;
+
+    // If no data is returned, return empty result
+    if (!data) {
+      return { logs: [], hasMore: false };
+    }
 
     const logs = data.map((log: CocktailLogViewData) =>
       this.mapLogFromViewData(log),
     );
-    const hasMore = offset + pageSize < (count || 0);
+    const hasMore = count
+      ? offset + pageSize < count
+      : false;
 
     return { logs, hasMore };
   }
@@ -720,27 +729,33 @@ export class CocktailLogService {
     }));
   }
 
-  async shareToThreads(logId: string, language: string): Promise<void> {
+  async shareToThreads(
+    logId: string,
+    language: string,
+  ): Promise<void> {
     const log = await this.getLogById(logId);
     if (!log) throw new Error('Log not found');
 
     // Get the log URL
     const logUrl = `${window.location.origin}/${language}/logs/${logId}`;
-    
+
     // Create the text content using comments if available, otherwise use a default message
-    const text = log.comments 
+    const text = log.comments
       ? `${log.comments}\n\n${logUrl}`
       : `Just tried ${log.cocktail.name.en} at ${log.location ? JSON.parse(log.location).name : 'a secret spot'}! \n\n${logUrl}`;
 
     // Encode the text for URL
     const encodedText = encodeURIComponent(text);
-    
+
     // Try to open Threads app first
     window.location.href = `threads://post?text=${encodedText}`;
-    
+
     // Fallback to web version after a short delay
     setTimeout(() => {
-      window.open(`https://www.threads.net/intent/post?text=${encodedText}`, '_blank');
+      window.open(
+        `https://www.threads.net/intent/post?text=${encodedText}`,
+        '_blank',
+      );
     }, 1000);
   }
 }

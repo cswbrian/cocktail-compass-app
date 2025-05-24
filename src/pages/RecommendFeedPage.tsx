@@ -10,11 +10,20 @@ import { useEffect } from 'react';
 export default function RecommendFeedPage() {
   const { language } = useLanguage();
   const t = translations[language];
-  const { logs, isLoading, hasMore, loadMore, setLogType } =
-    useCocktailLogs();
+  const {
+    logs,
+    isLoading,
+    hasMore,
+    loadMore,
+    setLogType,
+  } = useCocktailLogs();
 
   useEffect(() => {
     setLogType('public');
+    return () => {
+      // Reset to default state when unmounting
+      setLogType('public');
+    };
   }, [setLogType]);
 
   return (
@@ -27,6 +36,7 @@ export default function RecommendFeedPage() {
           isLoading={isLoading}
           hasMore={hasMore}
           onLoadMore={loadMore}
+          key={`recommend-feed-${logs?.length}`}
         />
       </div>
     </AuthWrapper>
