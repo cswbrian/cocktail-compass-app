@@ -20,8 +20,8 @@ export default function SetupProfilePage() {
   const { refreshUserSettings } = useUserSettings();
   const t = translations[language];
   const [username, setUsername] = useState('');
-  const [instagramUsername, setInstagramUsername] =
-    useState('');
+  const [instagramUsername, setInstagramUsername] = useState('');
+  const [threadsUsername, setThreadsUsername] = useState('');
 
   const handleUsernameChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -35,12 +35,19 @@ export default function SetupProfilePage() {
     setInstagramUsername(e.target.value);
   };
 
+  const handleThreadsUsernameChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setThreadsUsername(e.target.value);
+  };
+
   const handleUsernameUpdate = async () => {
     try {
       await userSettingsService.updateUsername(username);
-      if (instagramUsername) {
+      if (instagramUsername || threadsUsername) {
         await userSettingsService.updateInstagramUrl(
           instagramUsername,
+          threadsUsername,
         );
       }
       // Refresh user settings to update the context
@@ -107,7 +114,23 @@ export default function SetupProfilePage() {
               type="text"
               value={instagramUsername}
               onChange={handleInstagramUsernameChange}
-              placeholder={t.enterInstagramUsername}
+              placeholder={t.enterNewInstagramName}
+              className="w-full"
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <img
+              src="/threads.svg"
+              alt="Threads"
+              width={16}
+              height={16}
+            />
+            <Input
+              type="text"
+              value={threadsUsername}
+              onChange={handleThreadsUsernameChange}
+              placeholder={t.enterNewThreadsName}
               className="w-full"
             />
           </div>

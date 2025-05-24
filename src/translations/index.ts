@@ -285,7 +285,6 @@ export const translations = {
     usernameVisibilityNote:
       'Your username will be visible to other users and can be changed anytime',
     continue: 'Continue',
-    enterInstagramUsername: 'Instagram username (optional)',
     completingAuthentication:
       'Completing authentication...',
     pleaseWaitWhileLoggingIn:
@@ -315,8 +314,8 @@ export const translations = {
     threadsUrlUpdated: 'Threads name updated successfully',
     threadsUrlUpdateFailed: 'Failed to update Threads name',
     editProfile: 'Edit Profile',
-    enterNewThreadsName: 'Enter your Threads name',
-    enterNewInstagramName: 'Enter your Instagram name',
+    enterNewThreadsName: 'Threads username (optional)',
+    enterNewInstagramName: 'Instagram username (optional)',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -586,7 +585,6 @@ export const translations = {
     usernameVisibilityNote:
       '其他用戶可以看到您的用戶名，您可以隨時更改',
     continue: '繼續',
-    enterInstagramUsername: 'Instagram 用戶名（可選填）',
     completingAuthentication: '登入中...',
     pleaseWaitWhileLoggingIn: '請稍候，我們正在為您登入。',
     installApp: '安裝應用程式',
@@ -612,7 +610,7 @@ export const translations = {
     threadsUrlUpdated: 'Threads 名稱更新成功',
     threadsUrlUpdateFailed: '更新 Threads 名稱失敗',
     editProfile: '編輯個人資料',
-    enterNewThreadsName: '輸入 Threads 名稱',
-    enterNewInstagramName: '輸入 Instagram 名稱',
+    enterNewThreadsName: 'Threads 用戶名（可選填）',
+    enterNewInstagramName: 'Instagram 用戶名（可選填）',
   },
 };
