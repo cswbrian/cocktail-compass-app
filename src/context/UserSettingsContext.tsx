@@ -8,8 +8,9 @@ import { userSettingsService } from '@/services/user-settings-service';
 import { useAuth } from '@/context/AuthContext';
 
 export type UserSettings = {
-  username: string;
-  instagram_url?: string;
+  username?: string;
+  instagram_handle?: string;
+  threads_handle?: string;
 } | null;
 
 type UserSettingsContextType = {

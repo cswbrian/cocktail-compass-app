@@ -269,11 +269,9 @@ export const translations = {
     userNotFound: 'User not found',
     userNotFoundDescription:
       "The user you're looking for doesn't exist or has been removed.",
-    instagramUrlUpdated:
-      'Instagram name updated successfully',
-    instagramUrlUpdateFailed:
-      'Failed to update Instagram URL',
-    updateInstagramUrl: 'Update name',
+    instagramUrlUpdated: 'Instagram URL updated successfully',
+    instagramUrlUpdateFailed: 'Failed to update Instagram URL',
+    updateInstagramUrl: 'Update Instagram URL',
     welcomeToCocktailCompass: 'Welcome to {appName}',
     pleaseSetUsername:
       'Please set up your username to continue',
@@ -313,6 +311,12 @@ export const translations = {
     recentlyAdded: 'Recently Added',
     shareToThreadsFailed: 'Failed to share to Threads',
     shareToThreads: 'Share to Threads',
+    updateThreadsUrl: 'Update Threads name',
+    threadsUrlUpdated: 'Threads name updated successfully',
+    threadsUrlUpdateFailed: 'Failed to update Threads name',
+    editProfile: 'Edit Profile',
+    enterNewThreadsName: 'Enter your Threads name',
+    enterNewInstagramName: 'Enter your Instagram name',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -515,8 +519,8 @@ export const translations = {
     errorCreatingCocktail: '新增調酒時出錯',
     cocktailNameEn: '調酒名稱（英文）',
     cocktailNameZh: '調酒名稱（中文）',
-    creating: '創建中...',
-    create: '創建',
+    creating: '建立中...',
+    create: '建立',
     selectLocation: '選擇地點',
     searchLocation: '搜尋地點...',
     noLocationsFound: '找不到地點',
@@ -569,9 +573,9 @@ export const translations = {
     userNotFound: '找不到用戶',
     userNotFoundDescription:
       '你要找的用戶不存在或已被移除。',
-    instagramUrlUpdated: '更新 Instagram 用戶名成功',
-    instagramUrlUpdateFailed: '更新 Instagram 用戶名失敗',
-    updateInstagramUrl: '更新 Instagram 用戶名',
+    instagramUrlUpdated: 'Instagram 链接更新成功',
+    instagramUrlUpdateFailed: '更新 Instagram 链接失败',
+    updateInstagramUrl: '更新 Instagram 链接',
     welcomeToCocktailCompass: '歡迎來到{appName}',
     pleaseSetUsername: '請設定您的用戶名稱以繼續',
     usernameRequirements: '用戶名要求：',
@@ -604,5 +608,11 @@ export const translations = {
     recentlyAdded: '最近新增',
     shareToThreadsFailed: '分享到 Threads 失敗',
     shareToThreads: '分享到 Threads',
+    updateThreadsUrl: '更新 Threads 名稱',
+    threadsUrlUpdated: 'Threads 名稱更新成功',
+    threadsUrlUpdateFailed: '更新 Threads 名稱失敗',
+    editProfile: '編輯個人資料',
+    enterNewThreadsName: '輸入 Threads 名稱',
+    enterNewInstagramName: '輸入 Instagram 名稱',
   },
 };

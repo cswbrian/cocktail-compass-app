@@ -66,8 +66,8 @@ const DrinkerProfilePage: React.FC = () => {
           await userSettingsService.getUserSettingsByUserId(
             userData.user_id,
           );
-        if (settings?.instagram_url) {
-          const url = new URL(settings.instagram_url);
+        if (settings?.instagram_handle) {
+          const url = new URL(`https://instagram.com/${settings.instagram_handle}`);
           setInstagramUsername(
             url.pathname.replace('/', ''),
           );

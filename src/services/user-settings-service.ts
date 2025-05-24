@@ -2,9 +2,10 @@ import { supabase } from '@/lib/supabase';
 import { AuthService } from '@/services/auth-service';
 import { userStatsService } from '@/services/user-stats-service';
 
-interface UserSettings {
-  username: string;
-  instagram_url?: string;
+export interface UserSettings {
+  username?: string;
+  instagram_handle?: string;
+  threads_handle?: string;
 }
 
 interface UserData {
@@ -26,9 +27,7 @@ export class UsernameValidationError extends Error {
 }
 
 export class UserSettingsService {
-  private validateInstagramUrl(
-    username: string | undefined,
-  ): void {
+  private validateInstagramUrl(username: string | undefined): void {
     if (!username) return;
 
     // Check length (Instagram usernames are 1-30 characters)
@@ -64,8 +63,48 @@ export class UserSettingsService {
     }
   }
 
+  private validateThreadsUrl(username: string | undefined): void {
+    if (!username) return;
+
+    // Check length (Threads usernames are 1-30 characters)
+    if (username.length > 30) {
+      throw new UsernameValidationError(
+        'Threads username cannot exceed 30 characters',
+      );
+    }
+
+    // Check for valid characters (letters, numbers, periods, and underscores only)
+    const validUsernameRegex = /^[a-zA-Z0-9._]+$/;
+    if (!validUsernameRegex.test(username)) {
+      throw new UsernameValidationError(
+        'Threads username can only contain letters, numbers, periods, and underscores',
+      );
+    }
+
+    // Check for consecutive periods
+    if (username.includes('..')) {
+      throw new UsernameValidationError(
+        'Threads username cannot contain consecutive periods',
+      );
+    }
+
+    // Check if username starts or ends with a period
+    if (
+      username.startsWith('.') ||
+      username.endsWith('.')
+    ) {
+      throw new UsernameValidationError(
+        'Threads username cannot start or end with a period',
+      );
+    }
+  }
+
   private formatInstagramUrl(username: string): string {
     return `https://instagram.com/${username}`;
+  }
+
+  private formatThreadsUrl(username: string): string {
+    return `https://threads.net/${username}`;
   }
 
   private validateUsername(username: string): void {
@@ -108,7 +147,7 @@ export class UserSettingsService {
 
     const { data, error } = await supabase
       .from('user_settings')
-      .select('username, instagram_url')
+      .select('username, instagram_handle, threads_handle')
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -116,7 +155,8 @@ export class UserSettingsService {
     return data
       ? {
           username: data.username,
-          instagram_url: data.instagram_url,
+          instagram_handle: data.instagram_handle,
+          threads_handle: data.threads_handle,
         }
       : null;
   }
@@ -155,24 +195,23 @@ export class UserSettingsService {
   }
 
   async updateInstagramUrl(
-    instagramUsername: string,
+    instagramHandle: string,
+    threadsHandle: string,
   ): Promise<void> {
     const user = await AuthService.getCurrentSession();
     if (!user) throw new Error('User not authenticated');
 
     // Validate Instagram username format
-    this.validateInstagramUrl(instagramUsername);
-
-    // Format the username into a full Instagram URL
-    const instagramUrl = this.formatInstagramUrl(
-      instagramUsername,
-    );
+    this.validateInstagramUrl(instagramHandle);
+    // Validate Threads username format
+    this.validateThreadsUrl(threadsHandle);
 
     const { error } = await supabase
       .from('user_settings')
       .upsert({
         user_id: user.id,
-        instagram_url: instagramUrl,
+        instagram_handle: instagramHandle,
+        threads_handle: threadsHandle,
       });
 
     if (error) throw error;
@@ -195,7 +234,7 @@ export class UserSettingsService {
   ): Promise<UserSettings | null> {
     const { data, error } = await supabase
       .from('user_settings')
-      .select('username, instagram_url')
+      .select('username, instagram_handle, threads_handle')
       .eq('user_id', userId)
       .maybeSingle();
 
@@ -203,7 +242,8 @@ export class UserSettingsService {
     return data
       ? {
           username: data.username,
-          instagram_url: data.instagram_url,
+          instagram_handle: data.instagram_handle,
+          threads_handle: data.threads_handle,
         }
       : null;
   }
