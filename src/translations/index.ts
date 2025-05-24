@@ -172,7 +172,9 @@ export const translations = {
     errorRefreshingLogs: 'Error refreshing logs',
     logs: 'Logs',
     addLog: 'Add Log',
-    noLogs: 'No logs yet',
+    noLogs: 'No logs yet.',
+    noLogsDescription:
+      'Start logging your cocktails to see your progress and find your favorite cocktails!',
     editLog: 'Edit Log',
     deleteLog: 'Delete Log',
     saveLog: 'Save Log',
@@ -316,6 +318,7 @@ export const translations = {
     editProfile: 'Edit Profile',
     enterNewThreadsName: 'Threads username (optional)',
     enterNewInstagramName: 'Instagram username (optional)',
+    sortBy: 'Sort by',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -481,7 +484,9 @@ export const translations = {
     errorRefreshingLogs: '重新整理日誌失敗',
     logs: '日誌',
     addLog: '新增日誌',
-    noLogs: '尚無日誌',
+    noLogs: '尚未有日誌',
+    noLogsDescription:
+      '先記下你飲過的調酒！',
     editLog: '編輯日誌',
     deleteLog: '刪除日誌',
     saveLog: '儲存日誌',
@@ -612,5 +617,6 @@ export const translations = {
     editProfile: '編輯個人資料',
     enterNewThreadsName: 'Threads 用戶名（可選填）',
     enterNewInstagramName: 'Instagram 用戶名（可選填）',
+    sortBy: '排序方式',
   },
 };

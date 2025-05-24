@@ -8,6 +8,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { SmilePlus } from 'lucide-react';
 
 export default function MyFeedPage() {
   const { language } = useLanguage();
@@ -42,13 +43,23 @@ export default function MyFeedPage() {
           </div>
         </Link>
 
-        <CocktailLogList
-          logs={logs}
-          isLoading={isLoading}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          key={`my-feed-${logs?.length}`}
-        />
+        {!isLoading && (!logs || logs.length === 0) ? (
+          <div className="flex flex-col items-center justify-center p-8 text-center">
+            <SmilePlus className="w-24 h-24 text-muted-foreground mb-6" />
+            <p className="text-2xl text-muted-foreground mb-4">{t.noLogs}</p>
+            <p className="text-lg text-muted-foreground">
+              {t.noLogsDescription}
+            </p>
+          </div>
+        ) : (
+          <CocktailLogList
+            logs={logs}
+            isLoading={isLoading}
+            hasMore={hasMore}
+            onLoadMore={loadMore}
+            key={`my-feed-${logs?.length}`}
+          />
+        )}
       </div>
     </AuthWrapper>
   );
