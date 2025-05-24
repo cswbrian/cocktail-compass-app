@@ -49,7 +49,7 @@ interface CocktailLogViewData {
   cocktail_id?: string;
   cocktail_slug?: string;
   cocktail_name?: string;
-  media_urls: string[];
+  media_urls: { id: string; url: string }[];
   cheers_count: number;
   has_cheered: boolean;
 }
@@ -103,22 +103,6 @@ export class CocktailLogService {
               entityId,
             },
           );
-
-        const { error: mediaError } = await supabase
-          .from('media_items')
-          .insert({
-            url: filePath,
-            user_id: userId,
-            entity_id: entityId,
-            entity_type: entityType,
-            bucket: 'cocktail-logs',
-            content_type: file.type,
-            file_size: file.size,
-            original_name: file.name,
-            status: 'active',
-          });
-
-        if (mediaError) throw mediaError;
       }),
     );
   }
@@ -141,27 +125,63 @@ export class CocktailLogService {
   }
 
   private async handleMediaDeletion(
-    mediaItems: { url: string; type: 'image' | 'video' }[],
-    existingMedia: {
-      url: string;
-      type: 'image' | 'video';
-    }[],
+    mediaItems: { id: string; url: string; type: 'image' | 'video' }[],
+    existingMedia: { id: string; url: string; type: 'image' | 'video' }[],
     entityId: string,
   ): Promise<void> {
+
+    // Filter out media items that are not in the current media list
     const removedMedia = existingMedia.filter(
-      existing =>
-        !mediaItems.some(
-          current => current.url === existing.url,
-        ),
+      existing => !mediaItems.some(current => current.id === existing.id)
     );
 
-    if (!removedMedia.length) return;
+    // Get the IDs of the media items to be removed
+    const mediaIdsToRemove = removedMedia.map(item => item.id);
 
-    await Promise.all(
-      removedMedia.map(item =>
-        cocktailLogsMediaService.softDeleteMedia(item.url),
-      ),
-    );
+    if (!mediaIdsToRemove.length) {
+      return;
+    }
+
+    try {
+      // Update the media_items table to mark items as deleted
+      const { data: updateData, error: updateError } = await supabase
+        .from('media_items')
+        .update({
+          status: 'deleted',
+          deleted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .in('id', mediaIdsToRemove)
+        .select();
+
+      if (updateError) {
+        console.error('Error updating media items:', {
+          error: updateError,
+          removedMediaIds: mediaIdsToRemove,
+        });
+        throw updateError;
+      }
+
+
+      // Then soft delete the media items from storage
+      await Promise.all(
+        mediaIdsToRemove.map(async id => {
+          try {
+            await cocktailLogsMediaService.softDeleteMedia(id);
+          } catch (error) {
+            console.error('Error soft deleting media item:', {
+              id,
+              error,
+            });
+            throw error;
+          }
+        }),
+      );
+      console.log('Completed all media deletion operations');
+    } catch (error) {
+      console.error('Error in handleMediaDeletion:', error);
+      throw error;
+    }
   }
 
   private async revalidateStats() {
@@ -226,29 +246,28 @@ export class CocktailLogService {
     comments?: string | null,
     location?: LocationData | null,
     drinkDate?: Date | null,
-    media?:
-      | { url: string; type: 'image' | 'video' }[]
-      | null,
+    media?: { id: string; url: string; type: 'image' | 'video' }[] | null,
     visibility?: 'public' | 'private' | 'friends',
   ): Promise<CocktailLog> {
     const placeId = await this.handleLocationData(location);
     const existingLog = await this.getLogById(id);
     if (!existingLog) throw new Error('Log not found');
-
-    if (media) {
+    
+    // Handle media changes
+    if (media !== undefined) {
       try {
-        if (existingLog.media) {
+        // If there's existing media, handle deletion of removed items
+        if (existingLog.media && existingLog.media.length > 0) {
           await this.handleMediaDeletion(
-            media,
+            media || [],
             existingLog.media,
             id,
           );
         }
 
-        const newMedia = media.filter(item =>
-          item.url.startsWith('blob:'),
-        );
-        if (newMedia.length) {
+        // Handle new media uploads
+        const newMedia = media?.filter(item => item.url.startsWith('blob:')) || [];
+        if (newMedia.length > 0) {
           await this.handleMediaUpload(
             newMedia,
             existingLog.userId,
@@ -256,10 +275,7 @@ export class CocktailLogService {
           );
         }
       } catch (error) {
-        console.error(
-          'Error handling media changes:',
-          error,
-        );
+        console.error('Error handling media changes:', error);
         throw error;
       }
     }
@@ -279,8 +295,7 @@ export class CocktailLogService {
     if (error) throw error;
 
     const updatedLog = await this.getLogById(id);
-    if (!updatedLog)
-      throw new Error('Failed to retrieve updated log');
+    if (!updatedLog) throw new Error('Failed to retrieve updated log');
 
     await this.revalidateStats();
     return updatedLog;
@@ -701,7 +716,7 @@ export class CocktailLogService {
     } as CocktailLog;
   }
 
-  private mapMediaFromUrls(urls: string[]): {
+  private mapMediaFromUrls(urls: { id: string; url: string }[]): {
     id: string;
     url: string;
     type: 'image' | 'video';
@@ -711,19 +726,19 @@ export class CocktailLogService {
     createdAt: Date;
     status: 'active';
   }[] {
-    return (urls || []).map((url: string) => ({
-      id: url,
-      url: url.startsWith('http')
-        ? url
-        : `${import.meta.env.VITE_R2_BUCKET_URL}/${url}`,
-      type: url.match(/\.(mp4|mov)$/i)
+    return (urls || []).map((item: { id: string; url: string }) => ({
+      id: item.id,
+      url: item.url.startsWith('http')
+        ? item.url
+        : `${import.meta.env.VITE_R2_BUCKET_URL}/${item.url}`,
+      type: item.url.match(/\.(mp4|mov)$/i)
         ? 'video'
         : ('image' as const),
-      contentType: url.match(/\.(mp4|mov)$/i)
+      contentType: item.url.match(/\.(mp4|mov)$/i)
         ? 'video/mp4'
         : 'image/jpeg',
       fileSize: 0,
-      originalName: url.split('/').pop() || '',
+      originalName: item.url.split('/').pop() || '',
       createdAt: new Date(),
       status: 'active',
     }));

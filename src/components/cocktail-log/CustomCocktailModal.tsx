@@ -135,12 +135,14 @@ export function CustomCocktailModal({
           zh: customCocktailNameZh || customCocktailName,
         },
         user.id,
-        ingredients.map(ingredient => ({
-          id: ingredient.id,
-          type: ingredient.type,
-          nameEn: ingredient.nameEn,
-          nameZh: ingredient.nameZh,
-        }))
+        ingredients.length > 0
+          ? ingredients.map(ingredient => ({
+              id: ingredient.id,
+              type: ingredient.type,
+              nameEn: ingredient.nameEn,
+              nameZh: ingredient.nameZh,
+            }))
+          : []
       );
 
       // Invalidate the cocktail details cache

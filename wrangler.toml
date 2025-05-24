@@ -2,12 +2,11 @@ name = "upload-worker"
 main = "workers/upload-worker.ts"
 compatibility_date = "2024-01-01"
 
-# Development environment (includes local and staging)
-[vars]
-ALLOWED_ORIGINS = "http://localhost:5173,https://develop.cocktail-cult.pages.dev"
+# Development environment
+[env.development]
+vars = { ALLOWED_ORIGINS = "http://localhost:5173,https://develop.cocktail-cult.pages.dev" }
 
-# R2 bucket configuration for development
-[[r2_buckets]]
+[[env.development.r2_buckets]]
 binding = "BUCKET"
 bucket_name = "cocktail-compass-staging"
 preview_bucket_name = "cocktail-compass-staging"

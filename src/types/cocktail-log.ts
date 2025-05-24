@@ -41,12 +41,6 @@ export interface CocktailLog {
 export interface MediaItem {
   id: string;
   url: string;
-  type: 'image' | 'video';
-  contentType: string;
-  fileSize: number;
-  originalName: string;
-  createdAt: string;
-  status: 'active' | 'deleted';
 }
 
 export interface LocationData {

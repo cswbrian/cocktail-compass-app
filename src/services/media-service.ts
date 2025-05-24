@@ -17,9 +17,8 @@ interface CompressionOptions {
 }
 
 interface MediaItem {
+  id: string;
   url: string;
-  type: 'image' | 'video';
-  metadata?: Record<string, any>;
 }
 
 type AllowedMimeTypes = {
@@ -116,22 +115,20 @@ export class MediaService {
         initialQuality: compressionOptions.quality,
       });
 
+      // If WebP conversion is enabled and the file isn't already WebP
       if (
         compressionOptions.convertToWebP &&
         file.type !== 'image/webp'
       ) {
-        const webpBlob =
-          await this.convertToWebP(compressedFile);
-        return new File(
-          [webpBlob],
-          file.name.replace(/\.[^/.]+$/, '.webp'),
-          {
-            type: 'image/webp',
-            lastModified: file.lastModified,
-          },
-        );
+        const webpBlob = await this.convertToWebP(compressedFile);
+        // Create a new file with the WebP blob, but keep the original name
+        return new File([webpBlob], file.name, {
+          type: 'image/webp',
+          lastModified: file.lastModified,
+        });
       }
 
+      // If no WebP conversion, return the compressed file
       return new File([compressedFile], file.name, {
         type: file.type,
         lastModified: file.lastModified,
@@ -296,30 +293,79 @@ export class MediaService {
     return Promise.all(uploadPromises);
   }
 
-  async softDeleteMedia(url: string): Promise<void> {
-    const { error } = await supabase
-      .from('media_items')
-      .update({
-        status: 'deleted',
-        deleted_at: new Date().toISOString(),
-      })
-      .eq('url', url);
+  async softDeleteMedia(mediaId: string): Promise<void> {
+    console.log('Starting soft delete for media item:', { mediaId });
+    
+    try {
+      const { data, error } = await supabase
+        .from('media_items')
+        .update({
+          status: 'deleted',
+          deleted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', mediaId)
+        .select();
 
-    if (error) throw error;
+      if (error) {
+        console.error('Error in softDeleteMedia:', {
+          mediaId,
+          error,
+        });
+        throw error;
+      }
+
+      console.log('Successfully soft deleted media item:', {
+        mediaId,
+        updatedItem: data?.[0],
+      });
+    } catch (error) {
+      console.error('Unexpected error in softDeleteMedia:', {
+        mediaId,
+        error,
+      });
+      throw error;
+    }
   }
 
   async softDeleteMultipleMedia(
     ids: string[],
   ): Promise<void> {
-    const { error } = await supabase
-      .from('media_items')
-      .update({
-        status: 'deleted',
-        deleted_at: new Date().toISOString(),
-      })
-      .in('id', ids);
+    console.log('Starting soft delete for multiple media items:', {
+      ids,
+    });
 
-    if (error) throw error;
+    try {
+      const { data, error } = await supabase
+        .from('media_items')
+        .update({
+          status: 'deleted',
+          deleted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .in('id', ids)
+        .select();
+
+      if (error) {
+        console.error('Error in softDeleteMultipleMedia:', {
+          ids,
+          error,
+        });
+        throw error;
+      }
+
+      console.log('Successfully soft deleted multiple media items:', {
+        ids,
+        updatedCount: data?.length,
+        updatedItems: data,
+      });
+    } catch (error) {
+      console.error('Unexpected error in softDeleteMultipleMedia:', {
+        ids,
+        error,
+      });
+      throw error;
+    }
   }
 }
 

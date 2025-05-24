@@ -29,7 +29,13 @@ function CocktailIngredients({
   language,
   t,
 }: CocktailIngredientsProps) {
-  console.log(cocktail);
+  const hasIngredients = 
+    cocktail.base_spirits.length > 0 || 
+    cocktail.liqueurs.length > 0 || 
+    cocktail.ingredients.length > 0;
+
+  if (!hasIngredients) return null;
+
   return (
     <div className="grid grid-cols-1 gap-8">
       <div>

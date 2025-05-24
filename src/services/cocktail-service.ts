@@ -76,32 +76,34 @@ class CocktailService {
 
     // Map ingredients based on their type
     if (data.ingredients && Array.isArray(data.ingredients)) {
-      data.ingredients.forEach((item: any) => {
-        const ingredient = {
-          id: item.ingredient.id,
-          slug: item.ingredient.slug,
-          name: {
-            en: item.ingredient.name_en,
-            zh: item.ingredient.name_zh
-          },
-          unit: {
-            en: item.unit.name_en,
-            zh: item.unit.name_zh
-          },
-          amount: item.amount,
-        };
+      data.ingredients
+        .filter((item: any) => item.ingredient?.id) // Filter out null ingredients
+        .forEach((item: any) => {
+          const ingredient = {
+            id: item.ingredient.id,
+            slug: item.ingredient.slug,
+            name: {
+              en: item.ingredient.name_en,
+              zh: item.ingredient.name_zh
+            },
+            unit: {
+              en: item.unit.name_en,
+              zh: item.unit.name_zh
+            },
+            amount: item.amount,
+          };
 
-        switch (item.ingredient.type) {
-          case 'base_spirit':
-            baseSpirits.push(ingredient);
-            break;
-          case 'liqueur':
-            liqueurs.push(ingredient);
-            break;
-          default:
-            ingredients.push(ingredient);
-        }
-      });
+          switch (item.ingredient.type) {
+            case 'base_spirit':
+              baseSpirits.push(ingredient);
+              break;
+            case 'liqueur':
+              liqueurs.push(ingredient);
+              break;
+            default:
+              ingredients.push(ingredient);
+          }
+        });
     }
 
     return {

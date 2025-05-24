@@ -17,7 +17,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { translations } from '@/translations';
 import { useLanguage } from '@/context/LanguageContext';
 import {
-  Star,
   Calendar,
   Check,
   X,
@@ -111,7 +110,7 @@ export function CocktailLogForm({
     Date | undefined
   >(new Date());
   const [media, setMedia] = useState<
-    { url: string; type: 'image' | 'video' }[]
+    { id?: string; url: string; type: 'image' | 'video' }[]
   >([]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -287,49 +286,33 @@ export function CocktailLogForm({
       // Use the existing cocktail ID, whether it's a custom cocktail or not
       const cocktailId = selectedCocktail.value;
 
-      // If this is an existing log, handle media deletion
-      if (existingLog) {
-        // Find media items that were removed (items in existingLog.media but not in new media)
-        const removedMedia =
-          existingLog.media?.filter(
-            (existing: {
-              url: string;
-              type: 'image' | 'video';
-            }) =>
-              !media.some(
-                newItem => newItem.url === existing.url,
-              ),
-          ) || [];
-
-        // Media deletion is now handled in the service layer
-        if (removedMedia.length > 0) {
-          console.log(
-            'Media items to be removed:',
-            removedMedia,
-          );
-        }
-      }
-
       // Create or update the log
       let savedLog;
       if (existingLog) {
+        // Update the log with all media items
+        // The service will handle both existing and new media internally
         savedLog = await cocktailLogService.updateLog(
           existingLog.id,
           cocktailId,
           comments || null,
           location,
           drinkDate || null,
-          media.length > 0 ? media : null,
+          media as {
+            id: string;
+            url: string;
+            type: 'image' | 'video';
+          }[], // Cast to required type
           visibility,
         );
       } else {
+        // For new logs, send all media items
         savedLog = await cocktailLogService.createLog(
           cocktailId,
           user.id,
           comments || null,
           location,
           drinkDate || null,
-          media.length > 0 ? media : null,
+          media, // Send all media items for new logs
           visibility,
         );
       }
@@ -357,7 +340,6 @@ export function CocktailLogForm({
         }
       }
     } catch (error) {
-      console.error('Error in form submission:', error);
       toast({
         description: t.errorSavingLog,
         variant: 'destructive',
@@ -397,6 +379,7 @@ export function CocktailLogForm({
       type: file.type.startsWith('video/')
         ? ('video' as const)
         : ('image' as const),
+      id: undefined, // New files won't have an ID until saved
     }));
     setMedia([...media, ...newMedia]);
   };

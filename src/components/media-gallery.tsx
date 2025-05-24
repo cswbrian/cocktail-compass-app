@@ -9,8 +9,8 @@ import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface MediaItem {
+  id: string;
   url: string;
-  type: string;
 }
 
 interface MediaGalleryProps {

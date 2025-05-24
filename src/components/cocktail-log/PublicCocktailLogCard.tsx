@@ -120,7 +120,6 @@ export function PublicCocktailLogCard({
             <div className="space-y-2">
               <LocationInfo location={log.location} />
               <CommentInfo comments={log.comments} />
-
               {log.media && log.media.length > 0 && (
                 <div className="mt-2">
                   <CocktailLogMedia

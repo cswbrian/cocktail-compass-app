@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -48,6 +48,12 @@ export const UpdateProfileDialog: React.FC<
     useState(instagramHandle);
   const [localThreads, setLocalThreads] =
     useState(threadsHandle);
+
+  useEffect(() => {
+    setLocalUsername(username);
+    setLocalInstagram(instagramHandle);
+    setLocalThreads(threadsHandle);
+  }, [username, instagramHandle, threadsHandle]);
 
   const handleUsernameChange = (
     e: React.ChangeEvent<HTMLInputElement>,
