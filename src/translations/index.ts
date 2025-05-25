@@ -174,7 +174,7 @@ export const translations = {
     addLog: 'Add Log',
     noLogs: 'It looks a little empty in here!',
     noLogsDescription:
-      'Start your cocktail journey by adding your first log.',
+      'You haven\'t started drinking yet? Start your cocktail journey by adding your first log.',
     editLog: 'Edit Log',
     deleteLog: 'Delete Log',
     saveLog: 'Save Log',
@@ -488,7 +488,7 @@ export const translations = {
     addLog: '新增日誌',
     noLogs: '這裡看起來有點空喔！',
     noLogsDescription:
-      '開始您的調酒之旅，新增您的第一個日誌吧。',
+      '你怎麼可能還未喝酒？新增您的第一個日誌，開始您的調酒之旅！',
     editLog: '編輯日誌',
     deleteLog: '刪除日誌',
     saveLog: '儲存日誌',
