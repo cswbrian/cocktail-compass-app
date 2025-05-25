@@ -11,6 +11,7 @@ import { userStatsService } from '@/services/user-stats-service';
 import { BasicStats } from '@/components/stats/BasicStats';
 import { CocktailLogList } from '@/components/cocktail-log/CocktailLogList';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SocialMediaLinks } from '@/components/profile/SocialMediaLinks';
 import useSWR from 'swr';
 import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
 import { Instagram } from 'lucide-react';
@@ -29,8 +30,8 @@ const DrinkerProfilePage: React.FC = () => {
     useState<UserStats | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [instagramUsername, setInstagramUsername] =
-    useState<string>('');
+  const [instagramHandle, setInstagramHandle] = useState<string>('');
+  const [threadsHandle, setThreadsHandle] = useState<string>('');
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
 
@@ -61,16 +62,16 @@ const DrinkerProfilePage: React.FC = () => {
           });
         }
 
-        // Get user settings for Instagram URL
+        // Get user settings for social media handles
         const settings =
           await userSettingsService.getUserSettingsByUserId(
             userData.user_id,
           );
         if (settings?.instagram_handle) {
-          const url = new URL(`https://instagram.com/${settings.instagram_handle}`);
-          setInstagramUsername(
-            url.pathname.replace('/', ''),
-          );
+          setInstagramHandle(settings.instagram_handle);
+        }
+        if (settings?.threads_handle) {
+          setThreadsHandle(settings.threads_handle);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -145,21 +146,10 @@ const DrinkerProfilePage: React.FC = () => {
         <h2 className="text-xl font-semibold">
           {username}
         </h2>
-
-        {instagramUsername && (
-          <div className="flex items-center mt-2">
-            <Instagram className="w-4 h-4 mr-2" />
-            <a
-              href={`https://instagram.com/${instagramUsername}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              {instagramUsername}
-            </a>
-          </div>
-        )}
-
+        <SocialMediaLinks 
+          instagramHandle={instagramHandle}
+          threadsHandle={threadsHandle}
+        />
         <div className="mt-4">
           <BasicStats stats={userStats} />
         </div>

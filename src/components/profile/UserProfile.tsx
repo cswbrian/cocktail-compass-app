@@ -3,9 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { translations } from '@/translations';
 import { userSettingsService } from '@/services/user-settings-service';
 import { useLanguage } from '@/context/LanguageContext';
-import {
-  Instagram,
-} from 'lucide-react';
+import { SocialMediaLinks } from './SocialMediaLinks';
 import { UpdateProfileDialog } from './UpdateProfileDialog';
 import { Button } from '../ui/button';
 
@@ -49,39 +47,11 @@ export const UserProfile: React.FC = () => {
       <div className="flex items-center text-muted-foreground mb-2">
         {user?.user_metadata?.name || t.user}
       </div>
-      <div className="flex items-center gap-x-4">
-        {instagramUsername && (
-          <div className="flex items-center gap-2">
-            <a
-              href={`https://instagram.com/${instagramUsername}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-muted-foreground gap-2"
-            >
-              <Instagram className="w-4 h-4" />
-              <span>{instagramUsername}</span>
-            </a>
-          </div>
-        )}
-        {threadsUsername && (
-          <div className="flex items-center gap-2">
-            <a
-              href={`https://threads.net/${threadsUsername}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-muted-foreground gap-2"
-            >
-              <img
-                src="/threads.svg"
-                alt="Threads"
-                width={16}
-                height={16}
-              />
-              <span>{threadsUsername}</span>
-            </a>
-          </div>
-        )}
-      </div>
+      
+      <SocialMediaLinks 
+        instagramHandle={instagramUsername}
+        threadsHandle={threadsUsername}
+      />
       <Button
         onClick={() => setIsProfileModalOpen(true)}
         variant="link"
