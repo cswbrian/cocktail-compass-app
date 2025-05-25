@@ -17,12 +17,29 @@ interface PreparedChartData {
   };
 }
 
+function generateMockData() {
+  // Get the last 6 months
+  const today = new Date();
+  const last6Months = Array.from({ length: 6 }, (_, i) => {
+    const date = subMonths(today, i);
+    return format(startOfMonth(date), 'yyyy-MM');
+  }).reverse();
+
+  // Hardcoded numbers for each month
+  const mockDrinks = [2, 5, 4, 7, 6, 10]; // Different numbers for each month
+  return last6Months.map((month, index) => ({
+    month: format(new Date(month), 'MMM'),
+    drinks: mockDrinks[index],
+  }));
+}
+
 function prepareChartData(
   drinksByMonth: Record<string, number>,
   t: {
     drinksOverTime: string;
     drinksMoreThanLastMonth: string;
     drinksLessThanLastMonth: string;
+    noDataMessage: string;
   },
 ): PreparedChartData {
   // Get the last 6 months
@@ -78,16 +95,30 @@ export function DrinksBarChart({
 }: DrinksBarChartProps) {
   const { language } = useLanguage();
   const t = translations[language];
+  
+  const hasData = Object.values(drinksByMonth).some(count => count > 0);
   const chartData = prepareChartData(drinksByMonth, t);
+  const mockData = generateMockData();
 
   return (
-    <BarChart
-      data={chartData.data}
-      title={t.drinksOverTime}
-      description={chartData.description}
-      footerText={chartData.footerText}
-      footerSubText={t.drinksOverTimeSubtext}
-      trendInfo={chartData.trendInfo}
-    />
+    <div className="relative">
+      <BarChart
+        data={hasData ? chartData.data : mockData}
+        title={t.drinksOverTime}
+        description={chartData.description}
+        footerText={hasData ? chartData.footerText : t.drinksOverTime}
+        footerSubText={t.drinksOverTimeSubtext}
+        trendInfo={hasData ? chartData.trendInfo : undefined}
+      />
+      {!hasData && (
+        <div className="absolute inset-x-0 top-[120px] h-[200px] flex items-center justify-center backdrop-blur-sm">
+          <div className="text-center px-12 py-6 max-w-md">
+            <p className="font-bold text-accent-foreground">
+              {t.noDataMessage}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

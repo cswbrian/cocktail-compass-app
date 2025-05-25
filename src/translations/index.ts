@@ -172,9 +172,9 @@ export const translations = {
     errorRefreshingLogs: 'Error refreshing logs',
     logs: 'Logs',
     addLog: 'Add Log',
-    noLogs: 'No logs yet.',
+    noLogs: 'It looks a little empty in here!',
     noLogsDescription:
-      'Start logging your cocktails to see your progress and find your favorite cocktails!',
+      'Start your cocktail journey by adding your first log.',
     editLog: 'Edit Log',
     deleteLog: 'Delete Log',
     saveLog: 'Save Log',
@@ -319,6 +319,7 @@ export const translations = {
     enterNewThreadsName: 'Threads username (optional)',
     enterNewInstagramName: 'Instagram username (optional)',
     sortBy: 'Sort by',
+    noDataMessage: 'Create your first log and watch your drinking stats come to life!',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -485,9 +486,9 @@ export const translations = {
     errorRefreshingLogs: '重新整理日誌失敗',
     logs: '日誌',
     addLog: '新增日誌',
-    noLogs: '尚未有日誌',
+    noLogs: '這裡看起來有點空喔！',
     noLogsDescription:
-      '先記下你飲過的調酒！',
+      '開始您的調酒之旅，新增您的第一個日誌吧。',
     editLog: '編輯日誌',
     deleteLog: '刪除日誌',
     saveLog: '儲存日誌',
@@ -619,5 +620,6 @@ export const translations = {
     enterNewThreadsName: 'Threads 用戶名（可選填）',
     enterNewInstagramName: 'Instagram 用戶名（可選填）',
     sortBy: '排序方式',
+    noDataMessage: '建立您的首個日誌，即解鎖為你度身訂造的飲酒統計。',
   },
 };

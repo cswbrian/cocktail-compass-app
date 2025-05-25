@@ -47,7 +47,7 @@ export default function MyFeedPage() {
           <div className="flex flex-col items-center justify-center p-8 text-center">
             <SmilePlus className="w-24 h-24 text-muted-foreground mb-6" />
             <p className="text-2xl text-muted-foreground mb-4">{t.noLogs}</p>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-md text-muted-foreground">
               {t.noLogsDescription}
             </p>
           </div>

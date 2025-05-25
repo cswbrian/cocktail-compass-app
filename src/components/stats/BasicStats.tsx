@@ -29,6 +29,7 @@ export function BasicStats({ stats }: BasicStatsProps) {
   const { language } = useLanguage();
   const t = translations[language];
 
+
   return (
     <div className="flex gap-6">
       <StatCard

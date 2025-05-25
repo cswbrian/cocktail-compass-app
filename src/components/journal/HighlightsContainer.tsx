@@ -46,17 +46,12 @@ export function HighlightsContainer() {
         )}
 
         {/* Drinks Over Time */}
-        {stats?.drinksByMonth &&
-          Object.keys(stats.drinksByMonth).length > 0 && (
-            <DrinksBarChart
-              drinksByMonth={stats.drinksByMonth}
-            />
-          )}
+        <DrinksBarChart
+          drinksByMonth={stats?.drinksByMonth || {}}
+        />
 
         {/* Top Places */}
-        {stats?.topPlaces && stats.topPlaces.length > 0 && (
-          <TopPlaces places={stats.topPlaces} />
-        )}
+        <TopPlaces places={stats?.topPlaces || []} />
 
         {/* Photo Snapshot */}
         {stats?.recentPhotos &&
