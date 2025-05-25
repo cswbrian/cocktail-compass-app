@@ -42,7 +42,7 @@ export class MediaService {
     'image/gif': true,
   };
 
-  private readonly maxFileSize = 5 * 1024 * 1024; // 5MB
+  private readonly maxFileSize = 8 * 1024 * 1024; // 5MB
   private readonly workerUrl: string;
   private readonly r2BucketUrl: string;
 
