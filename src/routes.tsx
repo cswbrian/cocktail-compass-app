@@ -20,6 +20,7 @@ import AuthCallbackPage from './pages/AuthCallbackPage';
 import ProfilePage from './pages/ProfilePage';
 import NewLogPage from './pages/NewLogPage';
 import NewVisitPage from './pages/NewVisitPage';
+import VisitDetailPage from './pages/VisitDetailPage';
 import DrinkerProfilePage from './pages/DrinkerProfilePage';
 import SetupProfilePage from './pages/SetupProfilePage';
 import IngredientDetailPage from './pages/IngredientDetailPage';
@@ -87,6 +88,8 @@ export default function AppRoutes() {
         </Route>
         <Route path="visits">
           <Route path="new" element={<NewVisitPage />} />
+          <Route path=":visitId" element={<VisitDetailPage />} />
+          <Route path=":visitId/edit" element={<VisitDetailPage />} />
         </Route>
         <Route path="feeds" element={<FeedsPage />}>
           <Route

@@ -1,6 +1,5 @@
-import { CocktailLogCard as LegacyCocktailLogCard } from '@/components/cocktail-log/LegacyCocktailLogCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CocktailLog } from '@/types/cocktail-log';
+import { Visit } from '@/types/visit';
 import {
   useEffect,
   useState,
@@ -9,15 +8,17 @@ import {
 } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Loader2 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
+import { VisitCard } from './VisitCard';
 
-interface CocktailLogListProps {
-  logs?: CocktailLog[];
+interface VisitListProps {
+  visits?: Visit[];
   isLoading?: boolean;
   hasMore?: boolean;
   onLoadMore?: () => void;
 }
 
-function CocktailLogSkeleton() {
+function VisitSkeleton() {
   return (
     <div className="rounded-lg border p-4 space-y-3">
       <div className="flex items-center space-x-4">
@@ -37,22 +38,22 @@ function CocktailLogSkeleton() {
   );
 }
 
-function CocktailLogListSkeleton() {
+function VisitListSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(3)].map((_, index) => (
-        <CocktailLogSkeleton key={index} />
+        <VisitSkeleton key={index} />
       ))}
     </div>
   );
 }
 
-export function CocktailLogList({
-  logs: providedLogs,
+export function VisitList({
+  visits: providedVisits,
   isLoading: providedIsLoading,
   hasMore: providedHasMore,
   onLoadMore: providedOnLoadMore,
-}: CocktailLogListProps) {
+}: VisitListProps) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const THROTTLE_DELAY = 300;
   const lastFetchTime = useRef<number>(0);
@@ -112,37 +113,30 @@ export function CocktailLogList({
 
   if (
     providedIsLoading &&
-    (!providedLogs || providedLogs.length === 0)
+    (!providedVisits || providedVisits.length === 0)
   ) {
-    return <CocktailLogListSkeleton />;
+    return <VisitListSkeleton />;
   }
 
-  if (!providedLogs || providedLogs.length === 0) {
+  if (!providedVisits || providedVisits.length === 0) {
     return null;
   }
 
   return (
     <div
       className="space-y-4"
-      key={`log-list-${providedLogs.length}`}
+      key={`visit-list-${providedVisits.length}`}
     >
-      {providedLogs.map((log, index) => (
+      {providedVisits.map((visit, index) => (
         <div
-          key={log.id}
+          key={visit.id}
           ref={
-            index === providedLogs.length - 1
+            index === providedVisits.length - 1
               ? ref
               : undefined
           }
         >
-          <LegacyCocktailLogCard
-            log={log}
-            variant={
-              log.visibility === 'public'
-                ? 'public'
-                : 'private'
-            }
-          />
+          <VisitCard visit={visit} />
         </div>
       ))}
       {isLoadingMore && (

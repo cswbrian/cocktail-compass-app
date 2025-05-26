@@ -6,8 +6,9 @@
     "fetch:cocktails": "tsx scripts/fetch-cocktails.ts",
     "generate:summary": "tsx scripts/generate-summary.ts",
     "dev": "pnpm fetch:cocktails && pnpm generate:summary && pnpm build:compress && pnpm vite:dev",
+    "dev:staging": "vite --mode staging",
     "build:compress": "tsx scripts/compress-cocktails.ts",
-    "build": "pnpm vite:build",
+    "build": "pnpm vite:build --mode staging",
     "vite:dev": "vite",
     "vite:build": "vite build",
     "vite:preview": "vite preview",
@@ -16,6 +17,7 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\""
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-navigation-menu": "^1.2.5",
@@ -48,6 +50,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^19.0.0",
     "react-ga4": "^2.1.0",
+    "react-hook-form": "^7.56.4",
     "react-intersection-observer": "^9.16.0",
     "react-markdown": "^9.0.3",
     "react-router-dom": "^6.22.3",
@@ -57,7 +60,8 @@
     "tailwind-merge": "^3.0.1",
     "use-places-autocomplete": "^4.0.1",
     "vaul": "^1.1.2",
-    "yet-another-react-lightbox": "^3.23.0"
+    "yet-another-react-lightbox": "^3.23.0",
+    "zod": "^3.25.28"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

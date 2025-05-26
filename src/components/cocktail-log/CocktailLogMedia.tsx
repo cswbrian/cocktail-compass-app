@@ -58,23 +58,14 @@ export function CocktailLogMedia({
                 }
               }}
             >
-              {item.type === 'image' ? (
-                <div className="relative w-full h-full">
+              <div className="relative w-full h-full">
                   <img
-                    src={item.url}
+                    src={`${import.meta.env.VITE_R2_BUCKET_URL}/${item.url}`}
                     alt={`Media ${index + 1}`}
                     className="object-cover rounded-lg hover:opacity-90 transition-opacity"
                     sizes={sizeClasses[size].image}
                   />
                 </div>
-              ) : (
-                <video
-                  src={item.url}
-                  className="w-full h-full object-cover rounded-lg"
-                  controls
-                  onClick={e => e.stopPropagation()}
-                />
-              )}
             </div>
           ))}
         </div>

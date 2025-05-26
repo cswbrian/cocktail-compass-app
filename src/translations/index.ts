@@ -176,6 +176,8 @@ export const translations = {
     noLogs: 'It looks a little empty in here!',
     noLogsDescription:
       'You haven\'t started drinking yet? Start your cocktail journey by adding your first log.',
+    noVisits: 'No visits yet',
+    noVisitsDescription: 'Start logging your bar visits to see them here.',
     editLog: 'Edit Log',
     deleteLog: 'Delete Log',
     saveLog: 'Save Log',
@@ -321,6 +323,7 @@ export const translations = {
     enterNewInstagramName: 'Instagram username (optional)',
     sortBy: 'Sort by',
     noDataMessage: 'Create your first log and watch your drinking stats come to life!',
+    visitDetails: 'Visit Details',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -491,6 +494,8 @@ export const translations = {
     noLogs: '這裡看起來有點空喔！',
     noLogsDescription:
       '你怎麼可能還未喝酒？新增您的第一個日誌，開始您的調酒之旅！',
+    noVisits: '暫時未有到訪記錄',
+    noVisitsDescription: '開始記錄您的酒吧到訪，即可在此查看。',
     editLog: '編輯日誌',
     deleteLog: '刪除日誌',
     saveLog: '儲存日誌',
@@ -623,5 +628,6 @@ export const translations = {
     enterNewInstagramName: 'Instagram 用戶名（可選填）',
     sortBy: '排序方式',
     noDataMessage: '建立您的首個日誌，即解鎖為你度身訂造的飲酒統計。',
+    visitDetails: '到訪詳情',
   },
 };

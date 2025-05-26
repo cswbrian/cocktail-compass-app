@@ -1,63 +1,50 @@
 'use client';
 
-import { useCocktailLogs } from '@/context/CocktailLogContext';
 import { BasicStats } from '@/components/stats/BasicStats';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
-import { CocktailLogList } from '@/components/cocktail-log/CocktailLogList';
+import { VisitList } from '@/components/visit/VisitList';
+import { useUserVisits } from '@/context/UserVisitContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 import { SmilePlus } from 'lucide-react';
 
 export default function MyFeedPage() {
   const { language } = useLanguage();
   const t = translations[language];
   const {
-    logs,
+    visits,
     isLoading,
-    stats,
     hasMore,
     loadMore,
-    setLogType,
-  } = useCocktailLogs();
-
-  useEffect(() => {
-    setLogType('private');
-    return () => {
-      // Reset to default state when unmounting
-      setLogType('public');
-    };
-  }, [setLogType]);
+  } = useUserVisits();
 
   return (
     <AuthWrapper
-      customLoading={<CocktailLogList isLoading={true} />}
+      customLoading={<VisitList isLoading={true} />}
     >
       <div className="space-y-6">
         <Link to={`/${language}/profile`}>
           <div className="px-6">
-            {stats?.basicStats && (
-              <BasicStats stats={stats.basicStats} />
-            )}
+            <BasicStats />
           </div>
         </Link>
 
-        {!isLoading && (!logs || logs.length === 0) ? (
+        {!isLoading && (!visits || visits.length === 0) ? (
           <div className="flex flex-col items-center justify-center p-8 text-center">
             <SmilePlus className="w-24 h-24 text-muted-foreground mb-6" />
-            <p className="text-2xl text-muted-foreground mb-4">{t.noLogs}</p>
+            <p className="text-2xl text-muted-foreground mb-4">{t.noVisits}</p>
             <p className="text-md text-muted-foreground">
-              {t.noLogsDescription}
+              {t.noVisitsDescription}
             </p>
           </div>
         ) : (
-          <CocktailLogList
-            logs={logs}
+          <VisitList
+            visits={visits}
             isLoading={isLoading}
             hasMore={hasMore}
             onLoadMore={loadMore}
-            key={`my-feed-${logs?.length}`}
+            key={`my-feed-${visits?.length}`}
           />
         )}
       </div>

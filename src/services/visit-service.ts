@@ -16,19 +16,43 @@ interface LocationData {
 
 interface Visit {
   id: string;
-  userId: string;
+  user: {
+    id: string;
+    username: string;
+  };
   visitDate: Date;
-  location: string | null;
+  location: {
+    name: string;
+    place_id: string;
+  } | null;
   comments: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
   visibility: 'public' | 'private' | 'friends';
-  logs: CocktailLog[];
+  logs: Array<{
+    id: string;
+    cocktail: {
+      id: string;
+      name: string;
+      slug: string;
+    };
+    comments: string | null;
+    drinkDate: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    visibility: string;
+    mediaUrls: Array<{
+      id: string;
+      url: string;
+    }>;
+  }>;
 }
 
 export class VisitService {
-  private async handleLocationData(location?: LocationData | null): Promise<string | null> {
+  private async handleLocationData(
+    location?: LocationData | null,
+  ): Promise<string | null> {
     if (!location) return null;
 
     const place = await placeService.getOrCreatePlace({
@@ -56,24 +80,26 @@ export class VisitService {
   ): Promise<Visit> {
     const placeId = await this.handleLocationData(location);
 
-    const { data: visitData, error: createError } = await supabase
-      .from('visits')
-      .insert([
-        {
-          user_id: userId,
-          visit_date: visitDate,
-          place_id: placeId,
-          comments,
-          visibility,
-        },
-      ])
-      .select()
-      .single();
+    const { data: visitData, error: createError } =
+      await supabase
+        .from('visits')
+        .insert([
+          {
+            user_id: userId,
+            visit_date: visitDate,
+            place_id: placeId,
+            comments,
+            visibility,
+          },
+        ])
+        .select()
+        .single();
 
     if (createError) throw createError;
 
     const visit = await this.getVisitById(visitData.id);
-    if (!visit) throw new Error('Failed to retrieve created visit');
+    if (!visit)
+      throw new Error('Failed to retrieve created visit');
 
     await this.revalidateStats();
     return visit;
@@ -104,7 +130,8 @@ export class VisitService {
     if (error) throw error;
 
     const updatedVisit = await this.getVisitById(id);
-    if (!updatedVisit) throw new Error('Failed to retrieve updated visit');
+    if (!updatedVisit)
+      throw new Error('Failed to retrieve updated visit');
 
     await this.revalidateStats();
     return updatedVisit;
@@ -122,33 +149,8 @@ export class VisitService {
 
   async getVisitById(id: string): Promise<Visit | null> {
     const { data, error } = await supabase
-      .from('visits')
-      .select(`
-        *,
-        places (
-          name,
-          place_id,
-          lat,
-          lng,
-          main_text,
-          secondary_text
-        ),
-        cocktail_logs (
-          id,
-          cocktail_id,
-          comments,
-          created_at,
-          updated_at,
-          deleted_at,
-          visibility,
-          cocktails (
-            id,
-            name,
-            slug,
-            is_custom
-          )
-        )
-      `)
+      .from('all_visits')
+      .select('*')
       .eq('id', id)
       .single();
 
@@ -167,85 +169,77 @@ export class VisitService {
     const to = offset + pageSize - 1;
 
     const { data, count, error } = await supabase
-      .from('visits')
-      .select(`
-        *,
-        places (
-          name,
-          place_id,
-          lat,
-          lng,
-          main_text,
-          secondary_text
-        ),
-        cocktail_logs (
-          id,
-          cocktail_id,
-          comments,
-          created_at,
-          updated_at,
-          deleted_at,
-          visibility,
-          cocktails (
-            id,
-            name,
-            slug,
-            is_custom
-          )
-        )
-      `, { count: 'exact' })
-      .eq('user_id', userId)
-      .is('deleted_at', null)
+      .from('my_visits')
+      .select('*', { count: 'exact' })
       .order('visit_date', { ascending: false })
       .range(offset, to);
 
     if (error) throw error;
 
     const visits = data.map(this.mapVisit);
-    const hasMore = count ? offset + pageSize < count : false;
+    const hasMore = count
+      ? offset + pageSize < count
+      : false;
+
+    return { visits, hasMore };
+  }
+
+  async getPublicVisits(
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<{ visits: Visit[]; hasMore: boolean }> {
+    const offset = (page - 1) * pageSize;
+    const to = offset + pageSize - 1;
+
+    const { data, count, error } = await supabase
+      .from('all_public_visits')
+      .select('*', { count: 'exact' })
+      .order('visit_date', { ascending: false })
+      .range(offset, to);
+
+    if (error) throw error;
+
+    const visits = data.map(this.mapVisit);
+    const hasMore = count
+      ? offset + pageSize < count
+      : false;
 
     return { visits, hasMore };
   }
 
   private mapVisit(data: any): Visit {
-    const locationData = data.places
-      ? JSON.stringify({
-          name: data.places.name,
-          place_id: data.places.place_id,
-          lat: data.places.lat,
-          lng: data.places.lng,
-          main_text: data.places.main_text,
-          secondary_text: data.places.secondary_text,
-        })
-      : null;
-
     return {
       id: data.id,
-      userId: data.user_id,
+      user: {
+        id: data.user_id,
+        username: data.username,
+      },
       visitDate: data.visit_date,
-      location: locationData,
+      location: data.place_id ? {
+        name: data.place_name,
+        place_id: data.place_id,
+      } : null,
       comments: data.comments,
       createdAt: data.created_at,
-      updatedAt: data.updated_at,
-      deletedAt: data.deleted_at,
+      updatedAt: data.created_at,
+      deletedAt: null,
       visibility: data.visibility,
-      logs: data.cocktail_logs
-        ?.filter((log: any) => !log.deleted_at)
-        .map((log: any) => ({
-          id: log.id,
-          cocktail: {
-            id: log.cocktails.id,
-            name: log.cocktails.name,
-            slug: log.cocktails.slug,
-            is_custom: log.cocktails.is_custom,
-          },
-          comments: log.comments,
-          createdAt: log.created_at,
-          updatedAt: log.updated_at,
-          visibility: log.visibility,
-        })) || [],
+      logs: (data.cocktail_logs || []).map((log: any) => ({
+        id: log.log_id,
+        cocktail: {
+          id: log.cocktail_id,
+          name: log.cocktail_name,
+          slug: log.cocktail_slug,
+        },
+        comments: log.comments,
+        drinkDate: log.drink_date,
+        createdAt: log.log_created_at,
+        updatedAt: log.log_created_at,
+        visibility: 'public',
+        media: log.media || [],
+      })),
     };
   }
 }
 
-export const visitService = new VisitService(); 
+export const visitService = new VisitService();

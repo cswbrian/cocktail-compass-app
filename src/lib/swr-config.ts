@@ -7,6 +7,7 @@ import { Cocktail } from '@/types/cocktail';
 import { BookmarkList } from '@/types/bookmark';
 import { AuthService } from '@/services/auth-service';
 import { mutate } from 'swr';
+import { visitService } from '@/services/visit-service';
 
 interface UserStats {
   basicStats: {
@@ -55,6 +56,8 @@ export const CACHE_KEYS = {
     visibility ? ['visits', visibility] : 'visits',
   OWN_VISITS: (page?: number) =>
     page ? ['own-visits', page] : 'own-visits',
+  PUBLIC_VISITS: (page?: number) => ['public-visits', page],
+  USER_VISITS: (userId: string, page?: number) => ['user-visits', userId, page],
 } as const;
 
 // Helper functions for cache invalidation
@@ -91,6 +94,8 @@ export const invalidateCache = {
   userStats: async () => {
     await mutate(CACHE_KEYS.USER_STATS);
   },
+  allVisits: () => mutate(CACHE_KEYS.PUBLIC_VISITS()),
+  userVisits: (userId: string) => mutate(CACHE_KEYS.USER_VISITS(userId)),
 };
 
 // Fetcher functions
@@ -205,6 +210,12 @@ export const fetchers = {
       throw error;
     }
   },
+
+  getPublicVisits: (page = 1, pageSize = 10) =>
+    visitService.getPublicVisits(page, pageSize),
+
+  getUserVisits: (userId: string, page = 1, pageSize = 10) =>
+    visitService.getVisitsByUserId(userId, page, pageSize),
 };
 
 // Default fallback data

@@ -4,59 +4,36 @@ import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
-
-interface LocationData {
-  id: string;
-  name: string;
-  place_id: string;
-  lat: number;
-  lng: number;
-  main_text: string;
-  secondary_text: string;
-}
-
 interface LocationInfoProps {
-  location: string | null;
+  location: {
+    name: string;
+    place_id: string;
+  } | null;
   showHeadings?: boolean;
   className?: string;
 }
 
 export function LocationInfo({
   location,
-  showHeadings = false,
   className,
 }: LocationInfoProps) {
   const { language } = useLanguage();
   const t =
     translations[language as keyof typeof translations];
 
-  let locationData: LocationData | null = null;
-  if (location) {
-    try {
-      locationData = JSON.parse(location);
-    } catch (error) {
-      console.error('Error parsing location data:', error);
-    }
-  }
-
-  if (!locationData) return null;
-
+  if (!location) return null;
+  
   return (
     <div
       className={cn('flex items-center gap-2', className)}
     >
-      {showHeadings && (
-        <span className="text-muted-foreground">
-          {t.location}
-        </span>
-      )}
       <MapPin className="size-4 text-muted-foreground" />
       <Link
-        to={`/${language}/places/${locationData.place_id}`}
+        to={`/${language}/places/${location.place_id}`}
         className="hover:text-primary transition-colors"
         onClick={e => e.stopPropagation()}
       >
-        {locationData.main_text}
+        {location.name}
       </Link>
     </div>
   );
@@ -96,14 +73,12 @@ export function DateInfo({
 
 interface CommentInfoProps {
   comments: string | null;
-  showHeadings?: boolean;
   className?: string;
   commentClassName?: string;
 }
 
 export function CommentInfo({
   comments,
-  showHeadings = false,
   className,
   commentClassName,
 }: CommentInfoProps) {

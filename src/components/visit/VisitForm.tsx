@@ -6,6 +6,9 @@ import {
   ChangeEvent,
   useRef,
 } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -50,15 +53,44 @@ import {
 import { useCocktailDetails } from '@/hooks/useCocktailDetails';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { CustomCocktailModal } from '../cocktail-log/CustomCocktailModal';
+import { Visit } from '@/types/visit';
 
-interface LocationData {
-  name: string;
-  place_id: string;
-  lat: number;
-  lng: number;
-  main_text: string;
-  secondary_text: string;
-}
+// Form schema
+const mediaSchema = z.object({
+  id: z.string().optional(),
+  url: z.string(),
+  type: z.enum(['image', 'video']),
+});
+
+const cocktailEntrySchema = z.object({
+  id: z.string().optional(),
+  cocktailId: z.string(),
+  cocktailName: z.string(),
+  comments: z.string(),
+  media: z.array(mediaSchema),
+  isSearchOpen: z.boolean().optional(),
+});
+
+const visitFormSchema = z.object({
+  visitDate: z.date(),
+  location: z
+    .object({
+      name: z.string(),
+      place_id: z.string(),
+      lat: z.number(),
+      lng: z.number(),
+      main_text: z.string(),
+      secondary_text: z.string(),
+    })
+    .nullable(),
+  comments: z.string().max(500),
+  visibility: z.enum(['public', 'private']),
+  cocktailEntries: z
+    .array(cocktailEntrySchema)
+    .min(1, 'At least one cocktail is required'),
+});
+
+type VisitFormData = z.infer<typeof visitFormSchema>;
 
 interface SearchItem {
   name: string;
@@ -83,48 +115,93 @@ interface VisitFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-}
-
-interface CocktailEntry {
-  id?: string;
-  cocktailId: string;
-  cocktailName: string;
-  comments: string;
-  media: { id?: string; url: string; type: 'image' | 'video' }[];
+  existingVisit?: Visit | null;
 }
 
 export function VisitForm({
   isOpen,
   onClose,
   onSuccess,
+  existingVisit,
 }: VisitFormProps) {
   const navigate = useNavigate();
-  const [visitDate, setVisitDate] = useState<Date>(new Date());
-  const [location, setLocation] = useState<LocationData | null>(null);
-  const [comments, setComments] = useState('');
-  const [visibility, setVisibility] = useState<'public' | 'private'>('public');
-  const [isLoading, setIsLoading] = useState(false);
-  const [cocktailEntries, setCocktailEntries] = useState<CocktailEntry[]>([]);
-  const [currentCocktailInput, setCurrentCocktailInput] = useState('');
-  const [open, setOpen] = useState(false);
-  const [filteredCocktails, setFilteredCocktails] = useState<SearchItem[]>([]);
-  const [isLoadingCocktails, setIsLoadingCocktails] = useState(false);
-  const [mediaError, setMediaError] = useState<string | null>(null);
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
-  const fileInputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
-  const [isCreatingCustom, setIsCreatingCustom] = useState(false);
-  const { toast } = useToast();
   const { language } = useLanguage();
-  const t = translations[language as keyof typeof translations];
+  const { toast } = useToast();
+  const t =
+    translations[language as keyof typeof translations];
   const { cocktailDetails } = useCocktailDetails();
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentCocktailInput, setCurrentCocktailInput] =
+    useState('');
+  const [entrySearchStates, setEntrySearchStates] =
+    useState<{ [key: number]: boolean }>({});
+  const [filteredCocktails, setFilteredCocktails] =
+    useState<SearchItem[]>([]);
+  const [isLoadingCocktails, setIsLoadingCocktails] =
+    useState(false);
+  const [mediaError, setMediaError] = useState<
+    string | null
+  >(null);
+  const [isCreatingCustom, setIsCreatingCustom] =
+    useState(false);
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+  const fileInputRefs = useRef<{
+    [key: number]: HTMLInputElement | null;
+  }>({});
+
+  const form = useForm<VisitFormData>({
+    resolver: zodResolver(visitFormSchema),
+    defaultValues: {
+      visitDate: existingVisit?.visitDate
+        ? new Date(existingVisit.visitDate)
+        : new Date(),
+      location: existingVisit?.location
+        ? {
+            name: existingVisit.location.name,
+            place_id: existingVisit.location.place_id,
+            lat: 0,
+            lng: 0,
+            main_text: existingVisit.location.name,
+            secondary_text: '',
+          }
+        : null,
+      comments: existingVisit?.comments || '',
+      visibility:
+        existingVisit?.visibility === 'private'
+          ? 'private'
+          : 'public',
+      cocktailEntries:
+        existingVisit?.logs.map(log => ({
+          id: log.id,
+          cocktailId: log.cocktail.id,
+          cocktailName: formatBilingualText(
+            log.cocktail.name,
+            language,
+          ),
+          comments: log.comments || '',
+          media: (log.media || []).map(m => ({
+            id: m.id,
+            url: m.url,
+            type: m.type as 'image' | 'video',
+          })),
+        })) || [],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'cocktailEntries',
+  });
 
   // Reset form
   const resetForm = () => {
-    setVisitDate(new Date());
-    setLocation(null);
-    setComments('');
-    setVisibility('public');
-    setCocktailEntries([]);
+    form.reset({
+      visitDate: new Date(),
+      location: null,
+      comments: '',
+      visibility: 'public',
+      cocktailEntries: [],
+    });
     setCurrentCocktailInput('');
     setMediaError(null);
     setIsCreatingCustom(false);
@@ -154,17 +231,27 @@ export function VisitForm({
 
         const filtered = allCocktails
           .filter(cocktail => {
-            const normalizedSearch = normalizeText(currentCocktailInput);
+            const normalizedSearch = normalizeText(
+              currentCocktailInput,
+            );
             const normalizedName = normalizeText(
               formatBilingualText(cocktail.name, language),
             );
-            return normalizedName.includes(normalizedSearch);
+            return normalizedName.includes(
+              normalizedSearch,
+            );
           })
           .map(cocktail => ({
-            name: formatBilingualText(cocktail.name, language),
+            name: formatBilingualText(
+              cocktail.name,
+              language,
+            ),
             value: cocktail.id,
             slug: cocktail.slug,
-            label: formatBilingualText(cocktail.name, language),
+            label: formatBilingualText(
+              cocktail.name,
+              language,
+            ),
           }));
         setFilteredCocktails(filtered);
       } catch (error) {
@@ -185,34 +272,48 @@ export function VisitForm({
     return () => clearTimeout(timeoutId);
   }, [currentCocktailInput, language, t, cocktailDetails]);
 
-  const handleAddCocktail = (cocktail: SearchItem) => {
-    setCocktailEntries([
-      ...cocktailEntries,
-      {
-        cocktailId: cocktail.value,
-        cocktailName: cocktail.name,
-        comments: '',
-        media: [],
-      },
-    ]);
-    setCurrentCocktailInput('');
-    setOpen(false);
+  const handleAddEmptyCocktail = () => {
+    append({
+      cocktailId: '',
+      cocktailName: '',
+      comments: '',
+      media: [],
+      isSearchOpen: true,
+    });
   };
 
-  const handleRemoveCocktail = (index: number) => {
-    setCocktailEntries(cocktailEntries.filter((_, i) => i !== index));
-  };
-
-  const handleCocktailCommentsChange = (
+  const handleSelectCocktail = (
     index: number,
-    comments: string,
+    cocktail: SearchItem,
   ) => {
-    const updatedEntries = [...cocktailEntries];
-    updatedEntries[index].comments = comments;
-    setCocktailEntries(updatedEntries);
+    const currentEntries = form.getValues(
+      'cocktailEntries',
+    );
+    currentEntries[index] = {
+      ...currentEntries[index],
+      cocktailId: cocktail.value,
+      cocktailName: cocktail.name,
+      isSearchOpen: false,
+    };
+    form.setValue('cocktailEntries', currentEntries);
+    setEntrySearchStates(prev => ({
+      ...prev,
+      [index]: false,
+    }));
+    setCurrentCocktailInput('');
   };
 
-  const handleMediaUpload = (index: number, e: ChangeEvent<HTMLInputElement>) => {
+  const handleAddCocktail = (
+    index: number,
+    cocktail: SearchItem,
+  ) => {
+    handleSelectCocktail(index, cocktail);
+  };
+
+  const handleMediaUpload = (
+    index: number,
+    e: ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = e.target.files;
     if (!files) return;
 
@@ -220,7 +321,8 @@ export function VisitForm({
     setMediaError(null);
 
     // Check if adding new media would exceed the limit
-    if (cocktailEntries[index].media.length + files.length > 5) {
+    const currentMedia = form.getValues(`cocktailEntries.${index}.media`);
+    if (currentMedia.length + files.length > 5) {
       setMediaError(t.maxMediaExceeded);
       return;
     }
@@ -240,50 +342,50 @@ export function VisitForm({
       type: file.type.startsWith('video/')
         ? ('video' as const)
         : ('image' as const),
-      id: undefined, // New files won't have an ID until saved
     }));
 
-    const updatedEntries = [...cocktailEntries];
-    updatedEntries[index].media = [...updatedEntries[index].media, ...newMedia];
-    setCocktailEntries(updatedEntries);
+    // Use useFieldArray to append new media items
+    const mediaArray = form.getValues(`cocktailEntries.${index}.media`);
+    form.setValue(`cocktailEntries.${index}.media`, [...mediaArray, ...newMedia], {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
   };
 
-  const handleRemoveMedia = (cocktailIndex: number, mediaIndex: number) => {
-    const updatedEntries = [...cocktailEntries];
-    updatedEntries[cocktailIndex].media = updatedEntries[cocktailIndex].media.filter(
-      (_, i) => i !== mediaIndex,
+  const handleRemoveMedia = (
+    cocktailIndex: number,
+    mediaIndex: number,
+  ) => {
+    const mediaArray = form.getValues(`cocktailEntries.${cocktailIndex}.media`);
+    form.setValue(
+      `cocktailEntries.${cocktailIndex}.media`,
+      mediaArray.filter((_, i) => i !== mediaIndex),
+      {
+        shouldValidate: true,
+        shouldDirty: true,
+      }
     );
-    setCocktailEntries(updatedEntries);
   };
 
   const handleMediaClick = (index: number) => {
     fileInputRefs.current[index]?.click();
   };
 
-  const handleCustomCocktailValues = (values: CustomCocktailValues) => {
-    setCocktailEntries([
-      ...cocktailEntries,
-      {
-        cocktailId: values.id,
-        cocktailName: `${values.nameEn} / ${values.nameZh}`,
-        comments: '',
-        media: [],
-      },
-    ]);
+  const handleCustomCocktailValues = (
+    values: CustomCocktailValues,
+  ) => {
+    append({
+      cocktailId: values.id,
+      cocktailName: `${values.nameEn} / ${values.nameZh}`,
+      comments: '',
+      media: [],
+      isSearchOpen: false,
+    });
     setCurrentCocktailInput('');
-    setOpen(false);
     setIsCreatingCustom(false);
   };
 
-  const handleSave = async () => {
-    if (cocktailEntries.length === 0) {
-      toast({
-        description: t.noLogs,
-        variant: 'destructive',
-      });
-      return;
-    }
-
+  const onSubmit = async (data: VisitFormData) => {
     try {
       setIsLoading(true);
 
@@ -297,34 +399,173 @@ export function VisitForm({
         return;
       }
 
-      // Create visit first
-      const visit = await visitService.createVisit(
-        user.id,
-        visitDate,
-        location,
-        comments,
-        visibility,
-      );
+      let savedVisit: Visit;
+      if (existingVisit) {
+        // Update existing visit
+        const updatedVisit = await visitService.updateVisit(
+          existingVisit.id,
+          data.visitDate,
+          data.location,
+          data.comments,
+          data.visibility,
+        );
+        savedVisit = {
+          ...updatedVisit,
+          visitDate: updatedVisit.visitDate.toISOString(),
+          createdAt: updatedVisit.createdAt.toISOString(),
+          updatedAt: updatedVisit.updatedAt.toISOString(),
+          deletedAt:
+            updatedVisit.deletedAt?.toISOString() || null,
+          logs: updatedVisit.logs.map(log => ({
+            id: log.id,
+            cocktail: {
+              id: log.cocktail.id,
+              name: {
+                en: log.cocktail.name,
+                zh: null,
+              },
+              slug: log.cocktail.slug,
+              is_custom: false,
+            },
+            userId: user.id,
+            location: data.location
+              ? JSON.stringify(data.location)
+              : null,
+            comments: log.comments,
+            createdAt: log.createdAt,
+            updatedAt: log.updatedAt,
+            drinkDate: log.drinkDate,
+            media:
+              log.mediaUrls?.map(m => ({
+                id: m.id,
+                url: m.url,
+                type: 'image' as const,
+                contentType: 'image/jpeg',
+                fileSize: 0,
+                originalName: '',
+                createdAt: new Date(),
+                status: 'active',
+              })) || null,
+            deletedAt: null,
+            visibility: log.visibility as
+              | 'public'
+              | 'private'
+              | 'friends',
+          })),
+        };
 
-
-      // Create cocktail logs with visit reference
-      await Promise.all(
-        cocktailEntries.map(entry =>
-          cocktailLogService.createLog(
-            entry.cocktailId,
-            user.id,
-            entry.comments,
-            location,
-            visitDate,
-            entry.media, // Pass media array
-            visibility,
-            visit.id, // Add visit reference
+        // Update existing logs
+        await Promise.all(
+          data.cocktailEntries.map(entry =>
+            entry.id
+              ? cocktailLogService.updateLog(
+                  entry.id,
+                  entry.cocktailId,
+                  entry.comments,
+                  data.location,
+                  data.visitDate,
+                  entry.media.map(m => ({
+                    id: m.id || '',
+                    url: m.url,
+                    type: m.type,
+                  })),
+                  data.visibility,
+                )
+              : cocktailLogService.createLog(
+                  entry.cocktailId,
+                  user.id,
+                  entry.comments,
+                  data.location,
+                  data.visitDate,
+                  entry.media.map(m => ({
+                    id: m.id || '',
+                    url: m.url,
+                    type: m.type,
+                  })),
+                  data.visibility,
+                  existingVisit.id,
+                ),
           ),
-        ),
-      );
+        );
+      } else {
+        // Create new visit
+        const newVisit = await visitService.createVisit(
+          user.id,
+          data.visitDate,
+          data.location,
+          data.comments,
+          data.visibility,
+        );
+        savedVisit = {
+          ...newVisit,
+          visitDate: newVisit.visitDate.toISOString(),
+          createdAt: newVisit.createdAt.toISOString(),
+          updatedAt: newVisit.updatedAt.toISOString(),
+          deletedAt:
+            newVisit.deletedAt?.toISOString() || null,
+          logs: newVisit.logs.map(log => ({
+            id: log.id,
+            cocktail: {
+              id: log.cocktail.id,
+              name: {
+                en: log.cocktail.name,
+                zh: null,
+              },
+              slug: log.cocktail.slug,
+              is_custom: false,
+            },
+            userId: user.id,
+            location: data.location
+              ? JSON.stringify(data.location)
+              : null,
+            comments: log.comments,
+            createdAt: log.createdAt,
+            updatedAt: log.updatedAt,
+            drinkDate: log.drinkDate,
+            media:
+              log.mediaUrls?.map(m => ({
+                id: m.id,
+                url: m.url,
+                type: 'image' as const,
+                contentType: 'image/jpeg',
+                fileSize: 0,
+                originalName: '',
+                createdAt: new Date(),
+                status: 'active',
+              })) || null,
+            deletedAt: null,
+            visibility: log.visibility as
+              | 'public'
+              | 'private'
+              | 'friends',
+          })),
+        };
+
+        // Create new logs
+        await Promise.all(
+          data.cocktailEntries.map(entry =>
+            cocktailLogService.createLog(
+              entry.cocktailId,
+              user.id,
+              entry.comments,
+              data.location,
+              data.visitDate,
+              entry.media.map(m => ({
+                id: m.id || '',
+                url: m.url,
+                type: m.type,
+              })),
+              data.visibility,
+              savedVisit.id,
+            ),
+          ),
+        );
+      }
 
       toast({
-        description: t.logSaved,
+        description: existingVisit
+          ? t.updateLog
+          : t.saveLog,
         variant: 'default',
       });
 
@@ -370,10 +611,14 @@ export function VisitForm({
                 <Loading size="lg" />
               </div>
             )}
-            <div className="h-full flex flex-col">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="h-full flex flex-col"
+            >
               <div className="px-4 py-3 border-b">
                 <div className="flex items-center relative">
                   <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
                     className="absolute left-0"
@@ -382,31 +627,37 @@ export function VisitForm({
                     <X className="h-5 w-5" />
                   </Button>
                   <h2 className="flex-1 text-center text-lg font-semibold">
-                    {t.addLog}
+                    {existingVisit ? t.editLog : t.addLog}
                   </h2>
                 </div>
               </div>
 
               <div className="flex-1 overflow-y-auto">
                 <div className="px-4 py-4 space-y-4">
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <Label>
                       {t.drinkDate}{' '}
-                      <span className="text-destructive">*</span>
+                      <span className="text-destructive">
+                        *
+                      </span>
                     </Label>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
+                          type="button"
                           variant="outline"
                           className={cn(
                             'w-full justify-start text-left font-normal',
-                            !visitDate &&
+                            !form.getValues('visitDate') &&
                               'text-muted-foreground border-destructive',
                           )}
                         >
                           <Calendar className="mr-2 h-4 w-4" />
-                          {visitDate ? (
-                            format(visitDate, 'PPP')
+                          {form.getValues('visitDate') ? (
+                            format(
+                              form.getValues('visitDate'),
+                              'PPP',
+                            )
                           ) : (
                             <span>{t.drinkDate}</span>
                           )}
@@ -418,8 +669,13 @@ export function VisitForm({
                       >
                         <CalendarComponent
                           mode="single"
-                          selected={visitDate}
-                          onSelect={(date) => date && setVisitDate(date)}
+                          selected={form.getValues(
+                            'visitDate',
+                          )}
+                          onSelect={date =>
+                            date &&
+                            form.setValue('visitDate', date)
+                          }
                           initialFocus
                         />
                       </PopoverContent>
@@ -427,183 +683,228 @@ export function VisitForm({
                   </div>
 
                   <LocationSelector
-                    value={location}
-                    onChange={setLocation}
+                    value={form.getValues('location')}
+                    onChange={location =>
+                      form.setValue('location', location)
+                    }
                   />
 
                   <div className="space-y-2">
                     <div className="relative">
                       <Textarea
-                        value={comments}
-                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                          if (e.target.value.length <= 500) {
-                            setComments(e.target.value);
-                          }
-                        }}
+                        {...form.register('comments')}
                         placeholder={t.notePlaceholder}
                         className="min-h-[100px] resize-none pr-20"
                       />
                       <div className="absolute bottom-2 right-2">
                         <span className="text-xs text-muted-foreground">
-                          {comments.length}/500
+                          {
+                            form.getValues('comments')
+                              .length
+                          }
+                          /500
                         </span>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label>{t.cocktail}</Label>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setOpen(true);
-                          setCurrentCocktailInput('');
-                        }}
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        {t.addCocktail}
-                      </Button>
-                    </div>
-
-                    {cocktailEntries.map((entry, index) => (
+                    {fields.map((field, index) => (
                       <div
-                        key={index}
+                        key={field.id}
                         className="p-4 border rounded-lg space-y-2"
                       >
                         <div className="flex items-center justify-between">
-                          <h3 className="font-medium">
-                            {entry.cocktailName}
-                          </h3>
+                          <Popover
+                            open={entrySearchStates[index]}
+                            onOpenChange={open =>
+                              setEntrySearchStates(
+                                prev => ({
+                                  ...prev,
+                                  [index]: open,
+                                }),
+                              )
+                            }
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                className="w-full justify-start text-left font-normal"
+                              >
+                                {field.cocktailId ? (
+                                  <span className="font-medium">
+                                    {field.cocktailName}
+                                  </span>
+                                ) : (
+                                  <span className="text-muted-foreground">
+                                    {t.selectCocktail}
+                                  </span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-[300px] p-0"
+                              align="start"
+                            >
+                              <div className="p-2">
+                                <div className="relative">
+                                  <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
+                                  <Input
+                                    placeholder={
+                                      t.searchCocktail
+                                    }
+                                    value={
+                                      currentCocktailInput
+                                    }
+                                    onChange={e => {
+                                      setCurrentCocktailInput(
+                                        e.target.value,
+                                      );
+                                    }}
+                                    className="pl-9"
+                                  />
+                                </div>
+                                <ScrollArea className="h-[200px]">
+                                  {isLoadingCocktails ? (
+                                    <div className="flex items-center justify-center py-4">
+                                      <Loading size="sm" />
+                                    </div>
+                                  ) : filteredCocktails.length >
+                                    0 ? (
+                                    <div className="mt-2">
+                                      {filteredCocktails.map(
+                                        cocktail => (
+                                          <button
+                                            key={
+                                              cocktail.value
+                                            }
+                                            type="button"
+                                            onClick={() =>
+                                              handleSelectCocktail(
+                                                index,
+                                                cocktail,
+                                              )
+                                            }
+                                            className="w-full text-left p-2 rounded-md hover:bg-accent transition-colors"
+                                          >
+                                            {cocktail.name}
+                                          </button>
+                                        ),
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <div className="text-center text-sm text-muted-foreground py-4">
+                                      {t.noCocktailsFound}
+                                    </div>
+                                  )}
+                                </ScrollArea>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="w-full mt-2"
+                                  onClick={() =>
+                                    setIsCreatingCustom(
+                                      true,
+                                    )
+                                  }
+                                >
+                                  {t.createCustomCocktail}
+                                </Button>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
                           <Button
+                            type="button"
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleRemoveCocktail(index)}
+                            onClick={() => remove(index)}
                           >
                             <X className="h-4 w-4" />
                           </Button>
                         </div>
-                        <Textarea
-                          value={entry.comments}
-                          onChange={(e) =>
-                            handleCocktailCommentsChange(
-                              index,
-                              e.target.value,
-                            )
-                          }
-                          placeholder={t.notePlaceholder}
-                          className="min-h-[80px] resize-none"
-                        />
-                        
-                        <div className="space-y-2">
-                          <Label>{t.media}</Label>
-                          <div className="overflow-x-auto">
-                            <div className="grid grid-flow-col auto-cols-[200px] gap-2">
-                              {entry.media.map((item, mediaIndex) => (
-                                <div
-                                  key={mediaIndex}
-                                  className="relative aspect-square"
-                                >
-                                  {item.type === 'image' ? (
-                                    <div className="relative w-full h-full">
-                                      <img
-                                        src={item.url}
-                                        alt={`Media ${mediaIndex + 1}`}
-                                        className="w-full h-full object-cover rounded-lg"
-                                      />
-                                    </div>
-                                  ) : (
-                                    <video
-                                      src={item.url}
-                                      className="w-full h-full object-cover rounded-lg"
-                                      controls
-                                    />
-                                  )}
-                                  <button
-                                    onClick={() =>
-                                      handleRemoveMedia(index, mediaIndex)
-                                    }
-                                    className="absolute top-1 right-1 p-1 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
-                                  >
-                                    <X className="h-4 w-4 text-white" />
-                                  </button>
-                                </div>
-                              ))}
-                              {entry.media.length < 5 && (
-                                <button
-                                  onClick={() => handleMediaClick(index)}
-                                  className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 transition-colors"
-                                >
-                                  <ImagePlus className="h-6 w-6 text-gray-400" />
-                                </button>
+                        {field.cocktailId && (
+                          <>
+                            <Textarea
+                              {...form.register(
+                                `cocktailEntries.${index}.comments`,
                               )}
+                              placeholder={
+                                t.notePlaceholder
+                              }
+                              className="min-h-[80px] resize-none"
+                            />
+
+                            <div className="space-y-2">
+                              <div className="overflow-x-auto">
+                                <div className="grid grid-flow-col auto-cols-[200px] gap-2">
+                                  {field.media.map((mediaItem, mediaIndex) => (
+                                    <div
+                                      key={mediaIndex}
+                                      className="relative aspect-square"
+                                    >
+                                      <div className="relative w-full h-full">
+                                        <img
+                                          src={mediaItem.id
+                                            ? `${import.meta.env.VITE_R2_BUCKET_URL}/${mediaItem.url}`
+                                            : mediaItem.url}
+                                          alt={`Media ${mediaIndex + 1}`}
+                                          className="w-full h-full object-cover rounded-lg"
+                                        />
+                                      </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveMedia(index, mediaIndex)}
+                                        className="absolute top-1 right-1 p-1 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+                                      >
+                                        <X className="h-4 w-4 text-white" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                  {field.media.length < 5 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleMediaClick(index)}
+                                      className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 transition-colors"
+                                    >
+                                      <ImagePlus className="h-6 w-6 text-gray-400" />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                              <input
+                                ref={el => {
+                                  fileInputRefs.current[
+                                    index
+                                  ] = el;
+                                }}
+                                type="file"
+                                accept="image/*,video/*"
+                                multiple
+                                onChange={e =>
+                                  handleMediaUpload(
+                                    index,
+                                    e,
+                                  )
+                                }
+                                className="hidden"
+                              />
                             </div>
-                          </div>
-                          <input
-                            ref={(el) => {
-                              fileInputRefs.current[index] = el;
-                            }}
-                            type="file"
-                            accept="image/*,video/*"
-                            multiple
-                            onChange={(e) => handleMediaUpload(index, e)}
-                            className="hidden"
-                          />
-                        </div>
+                          </>
+                        )}
                       </div>
                     ))}
 
-                    {open && (
-                      <div className="fixed inset-0 z-[70] flex items-start justify-center pt-20">
-                        <div className="w-full max-w-md bg-popover rounded-md shadow-md">
-                          <ScrollArea className="h-[200px]">
-                            <div className="p-2">
-                              <div className="relative">
-                                <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
-                                <Input
-                                  placeholder={t.searchCocktail}
-                                  value={currentCocktailInput}
-                                  onChange={(e) => {
-                                    setCurrentCocktailInput(e.target.value);
-                                    setOpen(true);
-                                  }}
-                                  className="pl-9"
-                                />
-                              </div>
-                              {isLoadingCocktails ? (
-                                <div className="flex items-center justify-center py-4">
-                                  <Loading size="sm" />
-                                </div>
-                              ) : filteredCocktails.length > 0 ? (
-                                <div className="mt-2">
-                                  {filteredCocktails.map((cocktail) => (
-                                    <button
-                                      key={cocktail.value}
-                                      onClick={() => handleAddCocktail(cocktail)}
-                                      className="w-full text-left p-2 rounded-md hover:bg-accent transition-colors"
-                                    >
-                                      {cocktail.name}
-                                    </button>
-                                  ))}
-                                </div>
-                              ) : (
-                                <div className="text-center text-sm text-muted-foreground py-4">
-                                  {t.noCocktailsFound}
-                                </div>
-                              )}
-                              <Button
-                                variant="outline"
-                                className="w-full"
-                                onClick={() => setIsCreatingCustom(true)}
-                              >
-                                {t.createCustomCocktail}
-                              </Button>
-                            </div>
-                          </ScrollArea>
-                        </div>
-                      </div>
-                    )}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAddEmptyCocktail}
+                      className="w-full"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      {t.addCocktail}
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -611,13 +912,15 @@ export function VisitForm({
               <div className="p-4 border-t mt-auto">
                 <div className="flex w-full gap-2 items-center">
                   <Select
-                    value={visibility}
-                    onValueChange={(value: 'public' | 'private') =>
-                      setVisibility(value)
-                    }
+                    value={form.watch('visibility')}
+                    onValueChange={(
+                      value: 'public' | 'private',
+                    ) => form.setValue('visibility', value)}
                   >
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder={t.visibility} />
+                      <SelectValue
+                        placeholder={t.visibility}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="public">
@@ -629,22 +932,27 @@ export function VisitForm({
                     </SelectContent>
                   </Select>
                   <Button
-                    onClick={handleSave}
-                    disabled={isLoading || !visitDate}
+                    type="submit"
+                    disabled={
+                      isLoading ||
+                      !form.getValues('visitDate')
+                    }
                     className="flex-1"
                   >
                     {isLoading ? t.saving : t.saveLog}
                   </Button>
                 </div>
               </div>
-            </div>
+            </form>
           </motion.div>
 
           {isCreatingCustom && (
             <CustomCocktailModal
               isOpen={isCreatingCustom}
               onClose={() => setIsCreatingCustom(false)}
-              onCustomCocktailValues={handleCustomCocktailValues}
+              onCustomCocktailValues={
+                handleCustomCocktailValues
+              }
               initialName={currentCocktailInput}
             />
           )}
@@ -652,4 +960,4 @@ export function VisitForm({
       )}
     </AnimatePresence>
   );
-} 
+}
