@@ -2,20 +2,20 @@
 
 import { Button } from '@/components/ui/button';
 import { NotebookPenIcon } from 'lucide-react';
-import { useCocktailLogs } from '@/context/CocktailLogContext';
+import { useVisitForm } from '@/context/VisitFormContext';
 import { useLanguage } from '@/context/LanguageContext';
 
 export function AddLogButton() {
-  const { openCreateForm } = useCocktailLogs();
+  const { openForm } = useVisitForm();
   const { language } = useLanguage();
 
   const handleClick = () => {
     window.history.pushState(
       {},
       '',
-      `/${language}/logs/new`,
+      `/${language}/visits/new`,
     );
-    openCreateForm();
+    openForm();
   };
 
   return (

@@ -51,6 +51,10 @@ export const CACHE_KEYS = {
   BOOKMARKS: 'bookmarks',
   COCKTAILS: 'cocktails',
   COCKTAIL_DETAILS: 'cocktail-details',
+  VISITS: (visibility?: 'public' | 'private' | 'friends') =>
+    visibility ? ['visits', visibility] : 'visits',
+  OWN_VISITS: (page?: number) =>
+    page ? ['own-visits', page] : 'own-visits',
 } as const;
 
 // Helper functions for cache invalidation

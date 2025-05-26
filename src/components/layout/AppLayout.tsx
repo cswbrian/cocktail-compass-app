@@ -11,6 +11,8 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { BottomNavProvider } from '@/context/BottomNavContext';
 import { CocktailLogProvider } from '@/context/CocktailLogContext';
+import { VisitFormProvider } from '@/context/VisitFormContext';
+import { GlobalVisitForm } from '@/components/visit/GlobalVisitForm';
 
 export default function AppLayout({
   children,
@@ -22,19 +24,22 @@ export default function AppLayout({
       <AuthProvider>
         <BottomNavProvider>
           <CocktailLogProvider>
-            <div className={`antialiased dark`}>
-              <div className="flex flex-col min-h-screen">
-                <Header />
-                <Menu />
-                <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
-                  <MainContent>{children}</MainContent>
-                </main>
-                <InstallPrompt />
-                <BottomNav />
-                <GlobalCocktailLogForm />
-                <Toaster />
+            <VisitFormProvider>
+              <div className={`antialiased dark`}>
+                <div className="flex flex-col min-h-screen">
+                  <Header />
+                  <Menu />
+                  <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
+                    <MainContent>{children}</MainContent>
+                  </main>
+                  <InstallPrompt />
+                  <BottomNav />
+                  <GlobalCocktailLogForm />
+                  <GlobalVisitForm />
+                  <Toaster />
+                </div>
               </div>
-            </div>
+            </VisitFormProvider>
           </CocktailLogProvider>
         </BottomNavProvider>
       </AuthProvider>

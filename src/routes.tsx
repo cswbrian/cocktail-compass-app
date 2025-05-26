@@ -19,6 +19,7 @@ import PlaceDetailPage from './pages/PlaceDetailPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 import ProfilePage from './pages/ProfilePage';
 import NewLogPage from './pages/NewLogPage';
+import NewVisitPage from './pages/NewVisitPage';
 import DrinkerProfilePage from './pages/DrinkerProfilePage';
 import SetupProfilePage from './pages/SetupProfilePage';
 import IngredientDetailPage from './pages/IngredientDetailPage';
@@ -83,6 +84,9 @@ export default function AppRoutes() {
             path=":logId/edit"
             element={<LogDetailPage />}
           />
+        </Route>
+        <Route path="visits">
+          <Route path="new" element={<NewVisitPage />} />
         </Route>
         <Route path="feeds" element={<FeedsPage />}>
           <Route

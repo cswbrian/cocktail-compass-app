@@ -198,6 +198,7 @@ export class CocktailLogService {
       | { url: string; type: 'image' | 'video' }[]
       | null,
     visibility: 'public' | 'private' | 'friends' = 'public',
+    visitId?: string | null,
   ): Promise<CocktailLog> {
     const placeId = await this.handleLocationData(location);
 
@@ -212,6 +213,7 @@ export class CocktailLogService {
             place_id: placeId,
             drink_date: drinkDate,
             visibility,
+            visit_id: visitId,
           },
         ])
         .select()

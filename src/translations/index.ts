@@ -172,6 +172,7 @@ export const translations = {
     errorRefreshingLogs: 'Error refreshing logs',
     logs: 'Logs',
     addLog: 'Add Log',
+    addCocktail: 'Add Cocktail',
     noLogs: 'It looks a little empty in here!',
     noLogsDescription:
       'You haven\'t started drinking yet? Start your cocktail journey by adding your first log.',
@@ -486,6 +487,7 @@ export const translations = {
     errorRefreshingLogs: '重新整理日誌失敗',
     logs: '日誌',
     addLog: '新增日誌',
+    addCocktail: '新增調酒',
     noLogs: '這裡看起來有點空喔！',
     noLogsDescription:
       '你怎麼可能還未喝酒？新增您的第一個日誌，開始您的調酒之旅！',
