@@ -4,6 +4,7 @@ import { placeService } from '@/services/place-service';
 import { mutate } from 'swr';
 import { CACHE_KEYS } from '@/lib/swr-config';
 import { CocktailLog } from '@/types/cocktail-log';
+import { cocktailLogsMediaService } from '@/services/media-service';
 
 interface LocationData {
   name: string;
@@ -236,7 +237,7 @@ export class VisitService {
         createdAt: log.log_created_at,
         updatedAt: log.log_created_at,
         visibility: 'public',
-        media: log.media || [],
+        media: cocktailLogsMediaService.mapMediaFromUrls(log.media || []),
       })),
     };
   }

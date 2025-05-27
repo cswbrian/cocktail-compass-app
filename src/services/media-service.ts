@@ -367,6 +367,34 @@ export class MediaService {
       throw error;
     }
   }
+
+  mapMediaFromUrls(urls: { id: string; url: string }[]): {
+    id: string;
+    url: string;
+    type: 'image' | 'video';
+    contentType: string;
+    fileSize: number;
+    originalName: string;
+    createdAt: Date;
+    status: 'active';
+  }[] {
+    return (urls || []).map((item: { id: string; url: string }) => ({
+      id: item.id,
+      url: item.url.startsWith('http')
+        ? item.url
+        : `${import.meta.env.VITE_R2_BUCKET_URL}/${item.url}`,
+      type: item.url.match(/\.(mp4|mov)$/i)
+        ? 'video'
+        : ('image' as const),
+      contentType: item.url.match(/\.(mp4|mov)$/i)
+        ? 'video/mp4'
+        : 'image/jpeg',
+      fileSize: 0,
+      originalName: item.url.split('/').pop() || '',
+      createdAt: new Date(),
+      status: 'active',
+    }));
+  }
 }
 
 // Create instances for different buckets

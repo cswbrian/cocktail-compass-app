@@ -60,7 +60,7 @@ export function CocktailLogMedia({
             >
               <div className="relative w-full h-full">
                   <img
-                    src={`${import.meta.env.VITE_R2_BUCKET_URL}/${item.url}`}
+                    src={item.url}
                     alt={`Media ${index + 1}`}
                     className="object-cover rounded-lg hover:opacity-90 transition-opacity"
                     sizes={sizeClasses[size].image}

@@ -206,9 +206,7 @@ const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
             >
               <div className="relative w-full h-full">
                 <img
-                  src={mediaItem.id
-                    ? `${import.meta.env.VITE_R2_BUCKET_URL}/${mediaItem.url}`
-                    : mediaItem.url}
+                  src={mediaItem.url}
                   alt={`Media ${mediaIndex + 1}`}
                   className="w-full h-full object-cover rounded-lg"
                 />
