@@ -27,7 +27,7 @@ export function VisitCard({ visit }: VisitCardProps) {
         <div className="flex-1">
           <div className="flex items-center space-x-2">
             <Link
-              to={`/${language}/drinkers/${visit.user.id}`}
+              to={`/${language}/drinkers/${visit.user.username}`}
               className="font-medium text-primary"
               onClick={e => e.stopPropagation()}
             >
