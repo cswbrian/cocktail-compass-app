@@ -61,7 +61,7 @@ const mediaSchema = z.object({
 
 const cocktailEntrySchema = z.object({
   id: z.string().optional(),
-  cocktailId: z.string(),
+  cocktailId: z.string().min(1, "Cocktail is required"),
   cocktailName: z.string(),
   comments: z.string(),
   media: z.array(mediaSchema),
@@ -877,7 +877,8 @@ export function VisitForm({
                     disabled={
                       isLoading ||
                       !form.watch('visitDate') ||
-                      !form.watch('location')
+                      !form.watch('location') ||
+                      form.getValues('cocktailEntries')?.some(entry => !entry.cocktailId)
                     }
                     className="flex-1"
                   >
