@@ -326,6 +326,9 @@ export const translations = {
     visitDetails: 'Visit Details',
     addNewLocation: 'Add New Location',
     selectBasedOnSixBaseSpirits: 'Select based on six base spirits',
+    loginAgreement: 'By signing in, you agree to our {terms} and {privacy}',
+    termsAndConditions: 'Terms and Conditions',
+    privacyPolicy: 'Privacy Policy',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -633,5 +636,8 @@ export const translations = {
     visitDetails: '到訪詳情',
     addNewLocation: '新增地點',
     selectBasedOnSixBaseSpirits: '以六大基酒為材料',
+    loginAgreement: '登入即表示您同意我們的{terms}和{privacy}',
+    termsAndConditions: '服務條款',
+    privacyPolicy: '隱私政策',
   },
 };

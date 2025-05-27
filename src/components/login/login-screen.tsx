@@ -35,7 +35,12 @@ export function LoginScreen() {
         alt="App Icon"
         className="w-20 h-20 mx-auto mb-4 drop-shadow-lg"
         animate={{ y: [0, -16, 0], scale: [1, 1.08, 1] }}
-        transition={{ duration: 1.2, repeat: Infinity, repeatType: 'loop', ease: 'easeInOut' }}
+        transition={{
+          duration: 1.2,
+          repeat: Infinity,
+          repeatType: 'loop',
+          ease: 'easeInOut',
+        }}
         draggable={false}
       />
       <h1 className="text-3xl mb-6 bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent">
@@ -83,6 +88,24 @@ export function LoginScreen() {
           </>
         )}
       </Button>
+      <p
+        className="text-xs text-muted-foreground text-center mt-4"
+        dangerouslySetInnerHTML={{
+          __html: t.loginAgreement
+            .replace(
+              '{terms}',
+              `<a href="/${language}/terms-and-conditions" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">${
+                t.termsAndConditions
+              }</a>`,
+            )
+            .replace(
+              '{privacy}',
+              `<a href="/${language}/privacy-policy" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">${
+                t.privacyPolicy
+              }</a>`,
+            ),
+        }}
+      />
     </div>
   );
 }
