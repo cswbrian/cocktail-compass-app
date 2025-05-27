@@ -5,7 +5,7 @@ import { translations } from '@/translations';
 import { Link, useLocation } from 'react-router-dom';
 import { Compass, Search, Home, User } from 'lucide-react';
 import { useBottomNav } from '@/context/BottomNavContext';
-import { AddLogButton } from '@/components/cocktail-log/AddLogButton';
+import { AddVisitButton } from '@/components/visit/AddVisitButton';
 
 export function BottomNav() {
   const { language } = useLanguage();
@@ -27,7 +27,7 @@ export function BottomNav() {
       href: `/${language}/explorer`,
       icon: Compass,
     },
-    null, // Middle position for AddLogButton
+    null, // Middle position for AddVisitButton
     {
       href: `/${language}/search`,
       icon: Search,
@@ -49,7 +49,7 @@ export function BottomNav() {
                   key="add-log"
                   className="flex items-center justify-center"
                 >
-                  <AddLogButton />
+                  <AddVisitButton />
                 </div>
               );
             }
