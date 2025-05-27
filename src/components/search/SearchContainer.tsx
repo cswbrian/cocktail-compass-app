@@ -14,7 +14,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, Clock, X, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useCocktailDetails } from '@/hooks/useCocktailDetails';
 import { useIngredients } from '@/hooks/useIngredients';
 
 interface SearchClientProps {
@@ -83,12 +82,49 @@ export function SearchContainer({
   const { language } = useLanguage();
   const t = translations[language];
   const [searchQuery, setSearchQuery] = useState('');
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [recentSearches, setRecentSearches] = useState<
     RecentSearch[]
   >([]);
-  const { cocktailDetails } = useCocktailDetails();
   const { baseSpirits, liqueurs, otherIngredients } =
     useIngredients();
+
+  const baseSpiritButtons = [
+    { 
+      name: 'whisky', 
+      label: t.spiritWhisky,
+      gradient: 'from-amber-900 to-amber-700'
+    },
+    { 
+      name: 'gin', 
+      label: t.spiritGin,
+      gradient: 'from-emerald-900 to-emerald-700'
+    },
+    { 
+      name: 'rum', 
+      label: t.spiritRum,
+      gradient: 'from-orange-900 to-orange-700'
+    },
+    { 
+      name: 'brandy', 
+      label: t.spiritBrandy,
+      gradient: 'from-red-900 to-red-700'
+    },
+    { 
+      name: 'tequila', 
+      label: t.spiritTequila,
+      gradient: 'from-lime-900 to-lime-700'
+    },
+    { 
+      name: 'vodka', 
+      label: t.spiritVodka,
+      gradient: 'from-slate-900 to-slate-700'
+    },
+  ];
+
+  const handleBaseSpiritClick = (name: string) => {
+    navigate(`/${language}/ingredients/${name}`);
+  };
 
   useEffect(() => {
     const storedSearches = localStorage.getItem(
@@ -225,6 +261,8 @@ export function SearchContainer({
             onChange={(
               e: React.ChangeEvent<HTMLInputElement>,
             ) => setSearchQuery(e.target.value)}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
             className="pl-9 pr-9"
           />
           {searchQuery && (
@@ -239,8 +277,31 @@ export function SearchContainer({
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="space-y-4">
-          {searchQuery ? (
+        <div className="mt-6 space-y-4">
+          {!isInputFocused && !searchQuery ? (
+            <>
+              <div className="px-2">
+                <h2 className="text-lg font-semibold text-white/90">
+                  {t.selectBasedOnSixBaseSpirits}
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {baseSpiritButtons.map((spirit) => (
+                  <Button
+                    key={spirit.name}
+                    variant="outline"
+                    className={cn(
+                      "rounded-sm h-24 text-lg font-medium text-white border-0 hover:opacity-90 transition-all",
+                      `bg-gradient-to-br ${spirit.gradient}`
+                    )}
+                    onClick={() => handleBaseSpiritClick(spirit.name)}
+                  >
+                    {spirit.label}
+                  </Button>
+                ))}
+              </div>
+            </>
+          ) : searchQuery ? (
             filteredItems.length === 0 ? (
               <div className="text-center text-muted-foreground">
                 {t.noResultsFound}

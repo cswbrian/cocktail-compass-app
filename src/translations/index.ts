@@ -325,6 +325,7 @@ export const translations = {
     noDataMessage: 'Create your first log and watch your drinking stats come to life!',
     visitDetails: 'Visit Details',
     addNewLocation: 'Add New Location',
+    selectBasedOnSixBaseSpirits: 'Select based on six base spirits',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -440,7 +441,7 @@ export const translations = {
       '揀你最鍾意嘅調酒，搵啲相似風味嘅Twist',
     twists: 'Twist',
     spiritBrandy: '白蘭地',
-    spiritGin: '氈酒',
+    spiritGin: '琴酒',
     spiritRum: '冧酒',
     spiritTequila: '龍舌蘭',
     spiritVodka: '伏特加',
@@ -631,5 +632,6 @@ export const translations = {
     noDataMessage: '建立您的首個日誌，即解鎖為你度身訂造的飲酒統計。',
     visitDetails: '到訪詳情',
     addNewLocation: '新增地點',
+    selectBasedOnSixBaseSpirits: '以六大基酒為材料',
   },
 };
