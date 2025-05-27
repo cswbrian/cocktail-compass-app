@@ -42,7 +42,7 @@ interface Visit {
     createdAt: Date;
     updatedAt: Date;
     visibility: string;
-    mediaUrls: Array<{
+    media: Array<{
       id: string;
       url: string;
     }>;

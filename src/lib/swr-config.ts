@@ -52,6 +52,7 @@ export const CACHE_KEYS = {
   BOOKMARKS: 'bookmarks',
   COCKTAILS: 'cocktails',
   COCKTAIL_DETAILS: 'cocktail-details',
+  COCKTAIL_LIST: 'cocktail-list',
   VISITS: (visibility?: 'public' | 'private' | 'friends') =>
     visibility ? ['visits', visibility] : 'visits',
   OWN_VISITS: (page?: number) =>
@@ -119,6 +120,8 @@ export const fetchers = {
       throw error;
     }
   },
+
+  getCocktailList: () => cocktailService.getCocktailList(),
 
   getUserStats: () => userStatsService.getUserStats(),
 

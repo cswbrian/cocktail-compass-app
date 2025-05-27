@@ -173,6 +173,7 @@ export function LocationSelector({
       };
 
       onChange(locationData);
+      setValue(description);
       setIsLocationDrawerOpen(false);
       clearSuggestions();
     } catch (error) {

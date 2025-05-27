@@ -6,7 +6,7 @@ import {
   ChangeEvent,
   useRef,
 } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, useWatch, Control, UseFormSetValue } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -54,12 +54,14 @@ import { useCocktailDetails } from '@/hooks/useCocktailDetails';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { CustomCocktailModal } from '../cocktail-log/CustomCocktailModal';
 import { Visit } from '@/types/visit';
+import { cocktailService } from '@/services/cocktail-service';
+import useSWR from 'swr';
+import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 
 // Form schema
 const mediaSchema = z.object({
   id: z.string().optional(),
   url: z.string(),
-  type: z.enum(['image', 'video']),
 });
 
 const cocktailEntrySchema = z.object({
@@ -118,6 +120,137 @@ interface VisitFormProps {
   existingVisit?: Visit | null;
 }
 
+interface MediaFieldProps {
+  control: Control<VisitFormData>;
+  setValue: UseFormSetValue<VisitFormData>;
+  index: number;
+  onError: (error: string | null) => void;
+}
+
+interface MediaItem {
+  id?: string;
+  url: string;
+  type: 'image' | 'video';
+}
+
+const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { language } = useLanguage();
+  const t = translations[language as keyof typeof translations];
+
+  // Watch the media array for changes
+  const media = useWatch({
+    control,
+    name: `cocktailEntries.${index}.media`,
+  }) || [];
+
+  const handleMediaUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    // Reset error message
+    onError(null);
+
+    // Get current media array using getValues to ensure we have the latest state
+    const currentMedia = control._getWatch(`cocktailEntries.${index}.media`) || [];
+
+    // Check if adding new media would exceed the limit
+    if (currentMedia.length + files.length > 5) {
+      console.log('Media limit exceeded');
+      onError(t.maxMediaExceeded);
+      return;
+    }
+
+    // Check each file's size
+    const oversizedFiles = Array.from(files).filter(
+      file => file.size > MAX_FILE_SIZE,
+    );
+    if (oversizedFiles.length > 0) {
+      console.log('Oversized files found:', oversizedFiles.length);
+      onError(t.maxFileSizeExceeded);
+      return;
+    }
+
+    // Create media items for valid files
+    const newMedia = Array.from(files).map(file => ({
+      url: URL.createObjectURL(file),
+      type: file.type.startsWith('video/')
+        ? ('video' as const)
+        : ('image' as const),
+    }));
+
+    // Update the media array using the current media array
+    const updatedMedia = [...currentMedia, ...newMedia];
+    
+    setValue(`cocktailEntries.${index}.media`, updatedMedia, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
+
+  const handleRemoveMedia = (mediaIndex: number) => {
+    const updatedMedia = media.filter((_: MediaItem, i: number) => i !== mediaIndex);
+    setValue(`cocktailEntries.${index}.media`, updatedMedia, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
+
+  const handleMediaClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="overflow-x-auto">
+        <div className="grid grid-flow-col auto-cols-[200px] gap-2">
+          {media.map((mediaItem: MediaItem, mediaIndex: number) => (
+            <div
+              key={mediaIndex}
+              className="relative aspect-square"
+            >
+              <div className="relative w-full h-full">
+                <img
+                  src={mediaItem.id
+                    ? `${import.meta.env.VITE_R2_BUCKET_URL}/${mediaItem.url}`
+                    : mediaItem.url}
+                  alt={`Media ${mediaIndex + 1}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => handleRemoveMedia(mediaIndex)}
+                className="absolute top-1 right-1 p-1 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+              >
+                <X className="h-4 w-4 text-white" />
+              </button>
+            </div>
+          ))}
+          {media.length < 5 && (
+            <button
+              type="button"
+              onClick={handleMediaClick}
+              className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 transition-colors"
+            >
+              <ImagePlus className="h-6 w-6 text-gray-400" />
+            </button>
+          )}
+        </div>
+      </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,video/*"
+        multiple
+        onChange={handleMediaUpload}
+        className="hidden"
+      />
+    </div>
+  );
+};
+
 export function VisitForm({
   isOpen,
   onClose,
@@ -127,27 +260,26 @@ export function VisitForm({
   const navigate = useNavigate();
   const { language } = useLanguage();
   const { toast } = useToast();
-  const t =
-    translations[language as keyof typeof translations];
+  const t = translations[language as keyof typeof translations];
   const { cocktailDetails } = useCocktailDetails();
   const [isLoading, setIsLoading] = useState(false);
-  const [currentCocktailInput, setCurrentCocktailInput] =
-    useState('');
-  const [entrySearchStates, setEntrySearchStates] =
-    useState<{ [key: number]: boolean }>({});
-  const [filteredCocktails, setFilteredCocktails] =
-    useState<SearchItem[]>([]);
-  const [isLoadingCocktails, setIsLoadingCocktails] =
-    useState(false);
-  const [mediaError, setMediaError] = useState<
-    string | null
-  >(null);
-  const [isCreatingCustom, setIsCreatingCustom] =
-    useState(false);
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
-  const fileInputRefs = useRef<{
-    [key: number]: HTMLInputElement | null;
-  }>({});
+  const [currentCocktailInput, setCurrentCocktailInput] = useState('');
+  const [entrySearchStates, setEntrySearchStates] = useState<{ [key: number]: boolean }>({});
+  const [filteredCocktails, setFilteredCocktails] = useState<SearchItem[]>([]);
+  const [isLoadingCocktails, setIsLoadingCocktails] = useState(false);
+  const [mediaError, setMediaError] = useState<string | null>(null);
+  const [isCreatingCustom, setIsCreatingCustom] = useState(false);
+  const fileInputRefs = useRef<{ [key: number]: HTMLInputElement | null; }>({});
+
+  // Use SWR to fetch cocktail list
+  const { data: allCocktails = [] } = useSWR(
+    CACHE_KEYS.COCKTAIL_LIST,
+    fetchers.getCocktailList,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: true,
+    }
+  );
 
   const form = useForm<VisitFormData>({
     resolver: zodResolver(visitFormSchema),
@@ -188,6 +320,17 @@ export function VisitForm({
     },
   });
 
+  // Add validation error logging
+  useEffect(() => {
+    const subscription = form.watch(() => {
+      const errors = form.formState.errors;
+      if (Object.keys(errors).length > 0) {
+        console.log('Form validation errors:', errors);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'cocktailEntries',
@@ -219,39 +362,17 @@ export function VisitForm({
       try {
         setIsLoadingCocktails(true);
 
-        const allCocktails = [
-          ...(cocktailDetails?.map(cocktail => ({
-            id: cocktail.id,
-            slug: cocktail.slug,
-            name: cocktail.name,
-            categories: cocktail.categories,
-            flavor_descriptors: cocktail.flavor_descriptors,
-          })) || []),
-        ];
-
         const filtered = allCocktails
           .filter(cocktail => {
-            const normalizedSearch = normalizeText(
-              currentCocktailInput,
-            );
-            const normalizedName = normalizeText(
-              formatBilingualText(cocktail.name, language),
-            );
-            return normalizedName.includes(
-              normalizedSearch,
-            );
+            const normalizedSearch = normalizeText(currentCocktailInput);
+            const normalizedName = normalizeText(formatBilingualText(cocktail.name, language));
+            return normalizedName.includes(normalizedSearch);
           })
           .map(cocktail => ({
-            name: formatBilingualText(
-              cocktail.name,
-              language,
-            ),
+            name: formatBilingualText(cocktail.name, language),
             value: cocktail.id,
             slug: cocktail.slug,
-            label: formatBilingualText(
-              cocktail.name,
-              language,
-            ),
+            label: formatBilingualText(cocktail.name, language),
           }));
         setFilteredCocktails(filtered);
       } catch (error) {
@@ -270,7 +391,7 @@ export function VisitForm({
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [currentCocktailInput, language, t, cocktailDetails]);
+  }, [currentCocktailInput, language, t, allCocktails]);
 
   const handleAddEmptyCocktail = () => {
     append({
@@ -308,67 +429,6 @@ export function VisitForm({
     cocktail: SearchItem,
   ) => {
     handleSelectCocktail(index, cocktail);
-  };
-
-  const handleMediaUpload = (
-    index: number,
-    e: ChangeEvent<HTMLInputElement>,
-  ) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    // Reset error message
-    setMediaError(null);
-
-    // Check if adding new media would exceed the limit
-    const currentMedia = form.getValues(`cocktailEntries.${index}.media`);
-    if (currentMedia.length + files.length > 5) {
-      setMediaError(t.maxMediaExceeded);
-      return;
-    }
-
-    // Check each file's size
-    const oversizedFiles = Array.from(files).filter(
-      file => file.size > MAX_FILE_SIZE,
-    );
-    if (oversizedFiles.length > 0) {
-      setMediaError(t.maxFileSizeExceeded);
-      return;
-    }
-
-    // Create media items for valid files
-    const newMedia = Array.from(files).map(file => ({
-      url: URL.createObjectURL(file),
-      type: file.type.startsWith('video/')
-        ? ('video' as const)
-        : ('image' as const),
-    }));
-
-    // Use useFieldArray to append new media items
-    const mediaArray = form.getValues(`cocktailEntries.${index}.media`);
-    form.setValue(`cocktailEntries.${index}.media`, [...mediaArray, ...newMedia], {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-  };
-
-  const handleRemoveMedia = (
-    cocktailIndex: number,
-    mediaIndex: number,
-  ) => {
-    const mediaArray = form.getValues(`cocktailEntries.${cocktailIndex}.media`);
-    form.setValue(
-      `cocktailEntries.${cocktailIndex}.media`,
-      mediaArray.filter((_, i) => i !== mediaIndex),
-      {
-        shouldValidate: true,
-        shouldDirty: true,
-      }
-    );
-  };
-
-  const handleMediaClick = (index: number) => {
-    fileInputRefs.current[index]?.click();
   };
 
   const handleCustomCocktailValues = (
@@ -411,11 +471,10 @@ export function VisitForm({
         );
         savedVisit = {
           ...updatedVisit,
-          visitDate: updatedVisit.visitDate.toISOString(),
-          createdAt: updatedVisit.createdAt.toISOString(),
-          updatedAt: updatedVisit.updatedAt.toISOString(),
-          deletedAt:
-            updatedVisit.deletedAt?.toISOString() || null,
+          visitDate: updatedVisit.visitDate,
+          createdAt: updatedVisit.createdAt,
+          updatedAt: updatedVisit.updatedAt,
+          deletedAt: updatedVisit.deletedAt,
           logs: updatedVisit.logs.map(log => ({
             id: log.id,
             cocktail: {
@@ -436,7 +495,7 @@ export function VisitForm({
             updatedAt: log.updatedAt,
             drinkDate: log.drinkDate,
             media:
-              log.mediaUrls?.map(m => ({
+              log.media?.map(m => ({
                 id: m.id,
                 url: m.url,
                 type: 'image' as const,
@@ -498,11 +557,10 @@ export function VisitForm({
         );
         savedVisit = {
           ...newVisit,
-          visitDate: newVisit.visitDate.toISOString(),
-          createdAt: newVisit.createdAt.toISOString(),
-          updatedAt: newVisit.updatedAt.toISOString(),
-          deletedAt:
-            newVisit.deletedAt?.toISOString() || null,
+          visitDate: newVisit.visitDate,
+          createdAt: newVisit.createdAt,
+          updatedAt: newVisit.updatedAt,
+          deletedAt: newVisit.deletedAt,
           logs: newVisit.logs.map(log => ({
             id: log.id,
             cocktail: {
@@ -523,7 +581,7 @@ export function VisitForm({
             updatedAt: log.updatedAt,
             drinkDate: log.drinkDate,
             media:
-              log.mediaUrls?.map(m => ({
+              log.media?.map(m => ({
                 id: m.id,
                 url: m.url,
                 type: 'image' as const,
@@ -575,6 +633,7 @@ export function VisitForm({
       // Always redirect to /feeds/me
       navigate(`/${language}/feeds/me`);
     } catch (error) {
+      console.error('Form submission error:', error);
       toast({
         description: t.errorSavingLog,
         variant: 'destructive',
@@ -648,14 +707,14 @@ export function VisitForm({
                           variant="outline"
                           className={cn(
                             'w-full justify-start text-left font-normal',
-                            !form.getValues('visitDate') &&
+                            !form.watch('visitDate') &&
                               'text-muted-foreground border-destructive',
                           )}
                         >
                           <Calendar className="mr-2 h-4 w-4" />
-                          {form.getValues('visitDate') ? (
+                          {form.watch('visitDate') ? (
                             format(
-                              form.getValues('visitDate'),
+                              form.watch('visitDate'),
                               'PPP',
                             )
                           ) : (
@@ -669,9 +728,7 @@ export function VisitForm({
                       >
                         <CalendarComponent
                           mode="single"
-                          selected={form.getValues(
-                            'visitDate',
-                          )}
+                          selected={form.watch('visitDate')}
                           onSelect={date =>
                             date &&
                             form.setValue('visitDate', date)
@@ -683,7 +740,7 @@ export function VisitForm({
                   </div>
 
                   <LocationSelector
-                    value={form.getValues('location')}
+                    value={form.watch('location')}
                     onChange={location =>
                       form.setValue('location', location)
                     }
@@ -699,7 +756,7 @@ export function VisitForm({
                       <div className="absolute bottom-2 right-2">
                         <span className="text-xs text-muted-foreground">
                           {
-                            form.getValues('comments')
+                            form.watch('comments')
                               .length
                           }
                           /500
@@ -834,62 +891,12 @@ export function VisitForm({
                               }
                               className="min-h-[80px] resize-none"
                             />
-
-                            <div className="space-y-2">
-                              <div className="overflow-x-auto">
-                                <div className="grid grid-flow-col auto-cols-[200px] gap-2">
-                                  {field.media.map((mediaItem, mediaIndex) => (
-                                    <div
-                                      key={mediaIndex}
-                                      className="relative aspect-square"
-                                    >
-                                      <div className="relative w-full h-full">
-                                        <img
-                                          src={mediaItem.id
-                                            ? `${import.meta.env.VITE_R2_BUCKET_URL}/${mediaItem.url}`
-                                            : mediaItem.url}
-                                          alt={`Media ${mediaIndex + 1}`}
-                                          className="w-full h-full object-cover rounded-lg"
-                                        />
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={() => handleRemoveMedia(index, mediaIndex)}
-                                        className="absolute top-1 right-1 p-1 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
-                                      >
-                                        <X className="h-4 w-4 text-white" />
-                                      </button>
-                                    </div>
-                                  ))}
-                                  {field.media.length < 5 && (
-                                    <button
-                                      type="button"
-                                      onClick={() => handleMediaClick(index)}
-                                      className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 transition-colors"
-                                    >
-                                      <ImagePlus className="h-6 w-6 text-gray-400" />
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-                              <input
-                                ref={el => {
-                                  fileInputRefs.current[
-                                    index
-                                  ] = el;
-                                }}
-                                type="file"
-                                accept="image/*,video/*"
-                                multiple
-                                onChange={e =>
-                                  handleMediaUpload(
-                                    index,
-                                    e,
-                                  )
-                                }
-                                className="hidden"
-                              />
-                            </div>
+                            <MediaField
+                              control={form.control}
+                              setValue={form.setValue}
+                              index={index}
+                              onError={setMediaError}
+                            />
                           </>
                         )}
                       </div>
@@ -935,7 +942,7 @@ export function VisitForm({
                     type="submit"
                     disabled={
                       isLoading ||
-                      !form.getValues('visitDate')
+                      !form.watch('visitDate')
                     }
                     className="flex-1"
                   >

@@ -322,6 +322,22 @@ class CocktailService {
 
     return data;
   }
+
+  public async getCocktailList(): Promise<{ id: string; slug: string; name: { en: string; zh: string | null } }[]> {
+    const { data, error } = await supabase
+      .from('cocktail_details')
+      .select('id, slug, name');
+
+    if (error) {
+      console.error(
+        'Error fetching cocktail list:',
+        error,
+      );
+      return [];
+    }
+
+    return data;
+  }
 }
 
 export const cocktailService =

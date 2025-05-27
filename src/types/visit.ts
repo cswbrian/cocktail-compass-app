@@ -1,5 +1,3 @@
-import { CocktailLog } from './cocktail-log';
-
 export interface Visit {
   id: string;
   user: {
@@ -15,7 +13,7 @@ export interface Visit {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  visibility: 'public' | 'private' | 'friends';
+  visibility: 'public' | 'private';
   logs: Array<{
     id: string;
     cocktail: {
@@ -31,7 +29,7 @@ export interface Visit {
     createdAt: Date;
     updatedAt: Date;
     visibility: string;
-    mediaUrls: Array<{
+    media: Array<{
       id: string;
       url: string;
     }>;

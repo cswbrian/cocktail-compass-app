@@ -18,7 +18,6 @@ export function VisitCard({ visit }: VisitCardProps) {
     navigate(`/${language}/visits/${visit.id}`);
   };
 
-  console.log(visit);
   return (
     <div
       className="bg-background border-b rounded-none px-6 py-4 cursor-pointer hover:shadow-md transition-shadow"
