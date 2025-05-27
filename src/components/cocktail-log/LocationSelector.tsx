@@ -1,23 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, MapPin, X } from 'lucide-react';
+import { Search, MapPin, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-  Suggestion,
-} from 'use-places-autocomplete';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { placeService } from '@/services/place-service';
+import { Place } from '@/types/place';
+import { GooglePlacesModal } from './GooglePlacesModal';
+import { toast } from 'sonner';
 
 interface LocationData {
   name: string;
@@ -37,160 +36,81 @@ export function LocationSelector({
   value,
   onChange,
 }: LocationSelectorProps) {
-  const [isLocationDrawerOpen, setIsLocationDrawerOpen] =
-    useState(false);
-  const [userLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGooglePlacesOpen, setIsGooglePlacesOpen] = useState(false);
   const { language } = useLanguage();
-  const t =
-    translations[language as keyof typeof translations];
+  const t = translations[language as keyof typeof translations];
 
-  const {
-    ready,
-    value: searchValue,
-    suggestions: { status, data },
-    setValue,
-    clearSuggestions,
-  } = usePlacesAutocomplete({
-    requestOptions: {
-      types: ['bar', 'night_club', 'restaurant', 'cafe'],
-      locationBias: userLocation
-        ? {
-            center: {
-              lat: userLocation.lat,
-              lng: userLocation.lng,
-            },
-            radius: 50000, // 50km radius
-          }
-        : {
-            // Default to Hong Kong as the primary location
-            center: { lat: 22.3193, lng: 114.1694 },
-            radius: 1000000, // 1000km radius to cover nearby countries
-            // Add location biases for countries and popular cocktail cities
-            locations: [
-              // Hong Kong (already set as center)
-              { lat: 22.3193, lng: 114.1694 }, // Hong Kong Central
-              { lat: 22.2783, lng: 114.1747 }, // Hong Kong TST
+  useEffect(() => {
+    const loadPlaces = async () => {
+      try {
+        setIsLoading(true);
+        const { data } = await placeService.getAllPlaces();
+        setPlaces(data);
+      } catch (error) {
+        console.error('Error loading places:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-              // Taiwan
-              { lat: 23.6978, lng: 120.9605 }, // Taiwan center
-              { lat: 25.033, lng: 121.5654 }, // Taipei
-              { lat: 22.9997, lng: 120.2269 }, // Tainan
-              { lat: 22.6273, lng: 120.3014 }, // Kaohsiung
+    if (isOpen) {
+      loadPlaces();
+    }
+  }, [isOpen]);
 
-              // Japan
-              { lat: 36.2048, lng: 138.2529 }, // Japan center
-              { lat: 35.6762, lng: 139.6503 }, // Tokyo
-              { lat: 34.6937, lng: 135.5023 }, // Osaka
-              { lat: 35.0116, lng: 135.7681 }, // Kyoto
-              { lat: 33.5902, lng: 130.4017 }, // Fukuoka
-
-              // Thailand
-              { lat: 15.87, lng: 100.9925 }, // Thailand center
-              { lat: 13.7563, lng: 100.5018 }, // Bangkok
-              { lat: 7.9519, lng: 98.3381 }, // Phuket
-              { lat: 18.7961, lng: 98.9797 }, // Chiang Mai
-
-              // Singapore
-              { lat: 1.3521, lng: 103.8198 }, // Singapore
-
-              // South Korea
-              { lat: 35.9078, lng: 127.7669 }, // South Korea center
-              { lat: 37.5665, lng: 126.978 }, // Seoul
-              { lat: 35.1796, lng: 129.0756 }, // Busan
-
-              // China
-              { lat: 35.8617, lng: 104.1954 }, // China center
-              { lat: 31.2304, lng: 121.4737 }, // Shanghai
-              { lat: 39.9042, lng: 116.4074 }, // Beijing
-              { lat: 22.5431, lng: 114.0579 }, // Shenzhen
-              { lat: 23.1291, lng: 113.2644 }, // Guangzhou
-
-              // Malaysia
-              { lat: 4.2105, lng: 101.9758 }, // Malaysia center
-              { lat: 3.139, lng: 101.6869 }, // Kuala Lumpur
-              { lat: 5.4141, lng: 100.3288 }, // Penang
-
-              // Philippines
-              { lat: 12.8797, lng: 121.774 }, // Philippines center
-              { lat: 14.5995, lng: 120.9842 }, // Manila
-              { lat: 10.3157, lng: 123.8854 }, // Cebu
-
-              // Vietnam
-              { lat: 16.4637, lng: 107.5909 }, // Vietnam center
-              { lat: 10.8231, lng: 106.6297 }, // Ho Chi Minh City
-              { lat: 16.0544, lng: 108.2022 }, // Da Nang
-
-              // Indonesia
-              { lat: -0.7893, lng: 113.9213 }, // Indonesia center
-              { lat: -6.2088, lng: 106.8456 }, // Jakarta
-              { lat: -8.4095, lng: 115.1889 }, // Bali
-
-              // Other popular cocktail destinations in Asia
-              { lat: 27.7172, lng: 85.324 }, // Kathmandu
-              { lat: 47.9184, lng: 106.9177 }, // Ulaanbaatar
-              { lat: 17.9757, lng: 102.6331 }, // Vientiane
-              { lat: 11.5564, lng: 104.9282 }, // Phnom Penh
-              { lat: 16.8661, lng: 96.1951 }, // Yangon
-
-              // Popular international cocktail cities
-              { lat: 40.7128, lng: -74.006 }, // New York
-              { lat: 51.5074, lng: -0.1278 }, // London
-              { lat: 48.8566, lng: 2.3522 }, // Paris
-              { lat: 19.4326, lng: -99.1332 }, // Mexico City
-              { lat: 41.3851, lng: 2.1734 }, // Barcelona
-              { lat: 59.9139, lng: 10.7522 }, // Oslo
-              { lat: 37.7749, lng: -122.4194 }, // San Francisco
-            ],
-          },
-    },
-    debounce: 300,
-  });
-
-  const handleLocationSearch = (searchTerm: string) => {
-    setValue(searchTerm);
+  const handleSearch = (query: string) => {
+    setSearchValue(query);
   };
 
-  const handleSelect = async (
-    placeId: string,
-    description: string,
-    mainText: string,
-    secondaryText: string,
-  ) => {
+  const handleSelectPlace = (place: Place) => {
+    const locationData: LocationData = {
+      name: place.name,
+      place_id: place.place_id,
+      lat: place.lat,
+      lng: place.lng,
+      main_text: place.main_text || '',
+      secondary_text: place.secondary_text || '',
+    };
+    onChange(locationData);
+    setIsOpen(false);
+    setSearchValue('');
+  };
+
+  const handleGooglePlaceSelect = async (location: LocationData, e?: React.MouseEvent) => {
+    // Stop event propagation and prevent default
+    e?.preventDefault();
+    e?.stopPropagation();
+
     try {
-      const results = await getGeocode({ placeId });
-      const { lat, lng } = await getLatLng(results[0]);
+      // The place is already saved in GooglePlacesModal
+      // Just update the form value and UI state
+      onChange(location);
+      setIsOpen(false);
+      setSearchValue('');
 
-      const locationData: LocationData = {
-        name: mainText,
-        place_id: placeId,
-        lat,
-        lng,
-        main_text: mainText,
-        secondary_text: secondaryText,
-      };
-
-      onChange(locationData);
-      setValue(description);
-      setIsLocationDrawerOpen(false);
-      clearSuggestions();
+      // Refresh the places list
+      const { data } = await placeService.getAllPlaces();
+      setPlaces(data);
     } catch (error) {
-      console.error(
-        'Error getting location details:',
-        error,
-      );
+      console.error('Error handling place selection:', error);
+      toast.error(t.errorSavingLog);
     }
   };
 
+  const filteredPlaces = places.filter(place =>
+    place.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+    (place.main_text || '').toLowerCase().includes(searchValue.toLowerCase()) ||
+    (place.secondary_text || '').toLowerCase().includes(searchValue.toLowerCase())
+  );
+
   return (
     <div className="space-y-2">
-      <Drawer
-        open={isLocationDrawerOpen}
-        onOpenChange={setIsLocationDrawerOpen}
-      >
-        <DrawerTrigger asChild>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
           <Button
             variant="outline"
             className="w-full justify-start text-left font-normal"
@@ -198,87 +118,68 @@ export function LocationSelector({
             <MapPin className="mr-2 h-4 w-4" />
             {value?.name || t.selectLocation}
           </Button>
-        </DrawerTrigger>
-        <DrawerContent className="h-dvh">
-          <div className="flex flex-col h-full">
-            <div className="px-4 py-3 border-b">
-              <div className="flex items-center relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute left-0"
-                  onClick={() =>
-                    setIsLocationDrawerOpen(false)
-                  }
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-                <h2 className="flex-1 text-center text-lg font-semibold">
-                  {t.selectLocation}
-                </h2>
-              </div>
+        </PopoverTrigger>
+        <PopoverContent className="w-[350px] p-0" align="start">
+          <div className="p-2">
+            <div className="relative">
+              <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder={t.searchLocation}
+                value={searchValue}
+                onChange={e => handleSearch(e.target.value)}
+                className="pl-9"
+              />
             </div>
-            <div className="flex-1 flex flex-col p-4 space-y-4 overflow-hidden">
-              <div className="relative flex-none">
-                <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  placeholder={t.searchLocation}
-                  value={searchValue}
-                  onChange={e =>
-                    handleLocationSearch(e.target.value)
-                  }
-                  className="pl-9"
-                  disabled={!ready}
-                />
-              </div>
-              <ScrollArea className="flex-1">
-                {status === 'OK' ? (
-                  <div className="space-y-2">
-                    {data.map((suggestion: Suggestion) => (
-                      <button
-                        key={suggestion.place_id}
-                        onClick={() =>
-                          handleSelect(
-                            suggestion.place_id,
-                            suggestion.description,
-                            suggestion.structured_formatting
-                              .main_text,
-                            suggestion.structured_formatting
-                              .secondary_text,
-                          )
-                        }
-                        className={cn(
-                          'w-full text-left p-2 rounded-md hover:bg-accent transition-colors',
-                          'flex flex-col',
-                        )}
-                      >
-                        <span className="font-medium">
-                          {
-                            suggestion.structured_formatting
-                              .main_text
-                          }
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          {
-                            suggestion.structured_formatting
-                              .secondary_text
-                          }
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center text-muted-foreground p-4">
-                    {searchValue
-                      ? t.noLocationsFound
-                      : t.searchLocation}
-                  </div>
-                )}
-              </ScrollArea>
-            </div>
+            <ScrollArea className="h-[200px]">
+              {isLoading ? (
+                <div className="flex items-center justify-center py-4">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
+                </div>
+              ) : filteredPlaces.length > 0 ? (
+                <div className="mt-2">
+                  {filteredPlaces.map(place => (
+                    <button
+                      key={place.id}
+                      onClick={() => handleSelectPlace(place)}
+                      className="w-full text-left p-2 rounded-md hover:bg-accent transition-colors"
+                    >
+                      <div className="font-medium">{place.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {place.secondary_text}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-sm text-muted-foreground py-4">
+                  {searchValue ? t.noLocationsFound : t.searchLocation}
+                </div>
+              )}
+              <div className="pt-2 border-t" />
+              <Button
+                variant="outline"
+                className="w-full mt-2"
+                onClick={() => {
+                  setIsGooglePlacesOpen(true);
+                  setIsOpen(false);
+                }}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {t.addNewLocation}
+              </Button>
+            </ScrollArea>
           </div>
-        </DrawerContent>
-      </Drawer>
+        </PopoverContent>
+      </Popover>
+
+      <GooglePlacesModal
+        isOpen={isGooglePlacesOpen}
+        onClose={() => setIsGooglePlacesOpen(false)}
+        onLocationSelect={(location: LocationData, e?: React.MouseEvent) => {
+          void handleGooglePlaceSelect(location, e);
+        }}
+        initialSearch={searchValue}
+      />
     </div>
   );
 }

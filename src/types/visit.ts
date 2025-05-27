@@ -13,7 +13,7 @@ export interface Visit {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  visibility: 'public' | 'private';
+  visibility: 'public' | 'private' | 'friends';
   logs: Array<{
     id: string;
     cocktail: {

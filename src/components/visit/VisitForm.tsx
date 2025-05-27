@@ -1,5 +1,3 @@
-'use client';
-
 import {
   useState,
   useEffect,
@@ -12,14 +10,12 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { visitService } from '@/services/visit-service';
 import { useToast } from '@/components/ui/use-toast';
 import { translations } from '@/translations';
 import { useLanguage } from '@/context/LanguageContext';
 import {
   Calendar,
-  Check,
   X,
   Search,
   Plus,
@@ -54,7 +50,6 @@ import { useCocktailDetails } from '@/hooks/useCocktailDetails';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { CustomCocktailModal } from '../cocktail-log/CustomCocktailModal';
 import { Visit } from '@/types/visit';
-import { cocktailService } from '@/services/cocktail-service';
 import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 
@@ -86,10 +81,10 @@ const visitFormSchema = z.object({
     })
     .nullable(),
   comments: z.string().max(500),
-  visibility: z.enum(['public', 'private']),
+  visibility: z.enum(['public', 'private', 'friends']),
   cocktailEntries: z
     .array(cocktailEntrySchema)
-    .min(1, 'At least one cocktail is required'),
+    .optional(),
 });
 
 type VisitFormData = z.infer<typeof visitFormSchema>;
@@ -130,7 +125,6 @@ interface MediaFieldProps {
 interface MediaItem {
   id?: string;
   url: string;
-  type: 'image' | 'video';
 }
 
 const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
@@ -242,7 +236,7 @@ const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*,video/*"
+        accept="image/*"
         multiple
         onChange={handleMediaUpload}
         className="hidden"
@@ -314,9 +308,14 @@ export function VisitForm({
           media: (log.media || []).map(m => ({
             id: m.id,
             url: m.url,
-            type: m.type as 'image' | 'video',
           })),
-        })) || [],
+        })) || [{
+          cocktailId: '',
+          cocktailName: '',
+          comments: '',
+          media: [],
+          isSearchOpen: true,
+        }],
     },
   });
 
@@ -343,7 +342,13 @@ export function VisitForm({
       location: null,
       comments: '',
       visibility: 'public',
-      cocktailEntries: [],
+      cocktailEntries: [{
+        cocktailId: '',
+        cocktailName: '',
+        comments: '',
+        media: [],
+        isSearchOpen: true,
+      }],
     });
     setCurrentCocktailInput('');
     setMediaError(null);
@@ -409,7 +414,7 @@ export function VisitForm({
   ) => {
     const currentEntries = form.getValues(
       'cocktailEntries',
-    );
+    ) || [];
     currentEntries[index] = {
       ...currentEntries[index],
       cocktailId: cocktail.value,
@@ -459,6 +464,9 @@ export function VisitForm({
         return;
       }
 
+      // Filter out entries with empty cocktail IDs if there are any entries
+      const validEntries = data.cocktailEntries?.filter(entry => entry.cocktailId && entry.cocktailId.trim() !== '') || [];
+
       let savedVisit: Visit;
       if (existingVisit) {
         // Update existing visit
@@ -475,77 +483,41 @@ export function VisitForm({
           createdAt: updatedVisit.createdAt,
           updatedAt: updatedVisit.updatedAt,
           deletedAt: updatedVisit.deletedAt,
-          logs: updatedVisit.logs.map(log => ({
-            id: log.id,
-            cocktail: {
-              id: log.cocktail.id,
-              name: {
-                en: log.cocktail.name,
-                zh: null,
-              },
-              slug: log.cocktail.slug,
-              is_custom: false,
-            },
-            userId: user.id,
-            location: data.location
-              ? JSON.stringify(data.location)
-              : null,
-            comments: log.comments,
-            createdAt: log.createdAt,
-            updatedAt: log.updatedAt,
-            drinkDate: log.drinkDate,
-            media:
-              log.media?.map(m => ({
-                id: m.id,
-                url: m.url,
-                type: 'image' as const,
-                contentType: 'image/jpeg',
-                fileSize: 0,
-                originalName: '',
-                createdAt: new Date(),
-                status: 'active',
-              })) || null,
-            deletedAt: null,
-            visibility: log.visibility as
-              | 'public'
-              | 'private'
-              | 'friends',
-          })),
         };
 
-        // Update existing logs
-        await Promise.all(
-          data.cocktailEntries.map(entry =>
-            entry.id
-              ? cocktailLogService.updateLog(
-                  entry.id,
-                  entry.cocktailId,
-                  entry.comments,
-                  data.location,
-                  data.visitDate,
-                  entry.media.map(m => ({
-                    id: m.id || '',
-                    url: m.url,
-                    type: m.type,
-                  })),
-                  data.visibility,
-                )
-              : cocktailLogService.createLog(
-                  entry.cocktailId,
-                  user.id,
-                  entry.comments,
-                  data.location,
-                  data.visitDate,
-                  entry.media.map(m => ({
-                    id: m.id || '',
-                    url: m.url,
-                    type: m.type,
-                  })),
-                  data.visibility,
-                  existingVisit.id,
-                ),
-          ),
-        );
+        // Update existing logs if there are any valid entries
+        if (validEntries.length > 0) {
+          await Promise.all(
+            validEntries.map(entry =>
+              entry.id
+                ? cocktailLogService.updateLog(
+                    entry.id,
+                    entry.cocktailId,
+                    entry.comments,
+                    data.location,
+                    data.visitDate,
+                    entry.media.map(m => ({
+                      id: m.id || '',
+                      url: m.url,
+                    })),
+                    data.visibility,
+                  )
+                : cocktailLogService.createLog(
+                    entry.cocktailId,
+                    user.id,
+                    entry.comments,
+                    data.location,
+                    data.visitDate,
+                    entry.media.map(m => ({
+                      id: m.id || '',
+                      url: m.url,
+                    })),
+                    data.visibility,
+                    existingVisit.id,
+                  ),
+            ),
+          );
+        }
       } else {
         // Create new visit
         const newVisit = await visitService.createVisit(
@@ -561,63 +533,28 @@ export function VisitForm({
           createdAt: newVisit.createdAt,
           updatedAt: newVisit.updatedAt,
           deletedAt: newVisit.deletedAt,
-          logs: newVisit.logs.map(log => ({
-            id: log.id,
-            cocktail: {
-              id: log.cocktail.id,
-              name: {
-                en: log.cocktail.name,
-                zh: null,
-              },
-              slug: log.cocktail.slug,
-              is_custom: false,
-            },
-            userId: user.id,
-            location: data.location
-              ? JSON.stringify(data.location)
-              : null,
-            comments: log.comments,
-            createdAt: log.createdAt,
-            updatedAt: log.updatedAt,
-            drinkDate: log.drinkDate,
-            media:
-              log.media?.map(m => ({
-                id: m.id,
-                url: m.url,
-                type: 'image' as const,
-                contentType: 'image/jpeg',
-                fileSize: 0,
-                originalName: '',
-                createdAt: new Date(),
-                status: 'active',
-              })) || null,
-            deletedAt: null,
-            visibility: log.visibility as
-              | 'public'
-              | 'private'
-              | 'friends',
-          })),
         };
 
-        // Create new logs
-        await Promise.all(
-          data.cocktailEntries.map(entry =>
-            cocktailLogService.createLog(
-              entry.cocktailId,
-              user.id,
-              entry.comments,
-              data.location,
-              data.visitDate,
-              entry.media.map(m => ({
-                id: m.id || '',
-                url: m.url,
-                type: m.type,
-              })),
-              data.visibility,
-              savedVisit.id,
+        // Create new logs if there are any valid entries
+        if (validEntries.length > 0) {
+          await Promise.all(
+            validEntries.map(entry =>
+              cocktailLogService.createLog(
+                entry.cocktailId,
+                user.id,
+                entry.comments,
+                data.location,
+                data.visitDate,
+                entry.media.map(m => ({
+                  id: m.id || '',
+                  url: m.url,
+                })),
+                data.visibility,
+                savedVisit.id,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
 
       toast({
@@ -694,12 +631,6 @@ export function VisitForm({
               <div className="flex-1 overflow-y-auto">
                 <div className="px-4 py-4 space-y-4">
                   <div className="flex flex-col gap-2">
-                    <Label>
-                      {t.drinkDate}{' '}
-                      <span className="text-destructive">
-                        *
-                      </span>
-                    </Label>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
@@ -921,7 +852,7 @@ export function VisitForm({
                   <Select
                     value={form.watch('visibility')}
                     onValueChange={(
-                      value: 'public' | 'private',
+                      value: 'public' | 'private' | 'friends',
                     ) => form.setValue('visibility', value)}
                   >
                     <SelectTrigger className="w-[180px]">
@@ -936,13 +867,17 @@ export function VisitForm({
                       <SelectItem value="private">
                         {t.visibilityPrivate}
                       </SelectItem>
+                      <SelectItem value="friends">
+                        {t.visibilityFriends}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <Button
                     type="submit"
                     disabled={
                       isLoading ||
-                      !form.watch('visitDate')
+                      !form.watch('visitDate') ||
+                      !form.watch('location')
                     }
                     className="flex-1"
                   >

@@ -222,7 +222,7 @@ export const translations = {
     creating: 'Creating...',
     create: 'Create',
     selectLocation: 'Select Location',
-    searchLocation: 'Search location...',
+    searchLocation: 'Search location',
     noLocationsFound: 'No locations found',
     useCurrentLocation: 'Use Current Location',
     required: 'Required',
@@ -324,6 +324,7 @@ export const translations = {
     sortBy: 'Sort by',
     noDataMessage: 'Create your first log and watch your drinking stats come to life!',
     visitDetails: 'Visit Details',
+    addNewLocation: 'Add New Location',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -535,7 +536,7 @@ export const translations = {
     creating: '建立中...',
     create: '建立',
     selectLocation: '選擇地點',
-    searchLocation: '搜尋地點...',
+    searchLocation: '搜尋地點',
     noLocationsFound: '找不到地點',
     useCurrentLocation: '使用目前位置',
     required: '必填',
@@ -629,5 +630,6 @@ export const translations = {
     sortBy: '排序方式',
     noDataMessage: '建立您的首個日誌，即解鎖為你度身訂造的飲酒統計。',
     visitDetails: '到訪詳情',
+    addNewLocation: '新增地點',
   },
 };

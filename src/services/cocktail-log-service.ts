@@ -63,7 +63,7 @@ interface ThreadsShareData {
 
 export class CocktailLogService {
   private async handleMediaUpload(
-    media: { url: string; type: 'image' | 'video' }[],
+    media: { url: string; }[],
     userId: string,
     entityId: string,
     entityType: string = 'cocktail_log',
@@ -195,7 +195,7 @@ export class CocktailLogService {
     location?: LocationData | null,
     drinkDate?: Date | null,
     media?:
-      | { url: string; type: 'image' | 'video' }[]
+      | { url: string; }[]
       | null,
     visibility: 'public' | 'private' | 'friends' = 'public',
     visitId?: string | null,
