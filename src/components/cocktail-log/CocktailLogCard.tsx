@@ -1,12 +1,10 @@
 import { CocktailLog } from '@/types/cocktail-log';
 import { CocktailLogMedia } from './CocktailLogMedia';
-import {
-  LocationInfo,
-  CommentInfo,
-} from './CocktailLogInfo';
+import { CommentInfo } from './CocktailLogInfo';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatBilingualText } from '@/lib/utils';
-
+import { Link } from 'react-router-dom';
+import { MartiniIcon } from 'lucide-react';
 
 interface CocktailLogCardProps {
   log: CocktailLog;
@@ -22,19 +20,25 @@ export function CocktailLogCard({
 
   return (
     <>
-      <div
-        className="bg-background border-b rounded-none py-4 transition-shadow"
-      >
+      <div className="bg-background border-b rounded-none py-4 transition-shadow">
         <div className="flex items-start space-x-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mt-1">
-              {formatBilingualText(
-                log.cocktail.name,
-                language,
-              )}
-            </h3>
+            <Link
+              to={`/${language}/cocktails/${log.cocktail.slug}`}
+              className="inline-flex hover:text-primary transition-colors"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-2">
+                <MartiniIcon className="w-4 h-4 size-4 text-muted-foreground" />
+                <h3>
+                  {formatBilingualText(
+                    log.cocktail.name,
+                    language,
+                  )}
+                </h3>
+              </div>
+            </Link>
             <div className="space-y-2">
-              <LocationInfo location={log.location} />
               <CommentInfo comments={log.comments} />
               {log.media && log.media.length > 0 && (
                 <div className="mt-2">
@@ -44,7 +48,6 @@ export function CocktailLogCard({
                   />
                 </div>
               )}
-
             </div>
           </div>
         </div>

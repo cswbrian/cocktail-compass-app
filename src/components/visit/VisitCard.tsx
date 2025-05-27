@@ -55,7 +55,6 @@ export function VisitCard({ visit }: VisitCardProps) {
         <div className="mt-4">
           <ConsolidatedCocktailLogCard
             logs={visit.logs}
-            variant="public"
           />
         </div>
       )}

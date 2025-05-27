@@ -1,26 +1,17 @@
 import { CocktailLog } from '@/types/cocktail-log';
 import { CocktailLogMedia } from './CocktailLogMedia';
-import { LocationInfo } from './CocktailLogInfo';
 import { CommentInfo } from './CocktailLogInfo';
-import { DateInfo } from './CocktailLogInfo';
 import { useLanguage } from '@/context/LanguageContext';
 import { Link } from 'react-router-dom';
 import { formatBilingualText } from '@/lib/utils';
+import { MartiniIcon } from 'lucide-react';
 
 interface ConsolidatedCocktailLogCardProps {
   logs: CocktailLog[];
-  onLogSaved?: () => void;
-  onLogDeleted?: () => void;
-  onLogsChange?: (logs: CocktailLog[]) => void;
-  variant?: 'public' | 'private';
 }
 
 export function ConsolidatedCocktailLogCard({
   logs,
-  onLogSaved,
-  onLogDeleted,
-  onLogsChange,
-  variant = 'private',
 }: ConsolidatedCocktailLogCardProps) {
   const { language } = useLanguage();
 
@@ -36,23 +27,27 @@ export function ConsolidatedCocktailLogCard({
   return (
     <div>
       {/* Display individual logs */}
-      <div className="mt-4 space-y-2">
+      <div className="mt-6 space-y-4">
         {logs.map(log => (
           <div key={log.id}>
             <Link
               to={`/${language}/cocktails/${log.cocktail.slug}`}
-              className="font-bold hover:text-primary transition-colors"
+              className="inline-flex hover:text-primary transition-colors"
+              onClick={e => e.stopPropagation()}
             >
-              <h3>
-                {formatBilingualText(
-                  log.cocktail.name,
-                  language,
-                )}
-              </h3>
+              <div className="flex items-center gap-2">
+                <MartiniIcon className="w-4 h-4 size-4 text-muted-foreground" />
+                <h3>
+                  {formatBilingualText(
+                    log.cocktail.name,
+                    language,
+                  )}
+                </h3>
+              </div>
             </Link>
             <CommentInfo
               comments={log.comments}
-              className="text-muted-foreground"
+              // className="text-muted-foreground"
             />
           </div>
         ))}
@@ -60,7 +55,10 @@ export function ConsolidatedCocktailLogCard({
 
       {/* Display consolidated media */}
       {consolidatedMedia.length > 0 && (
-        <div className="mt-4">
+        <div
+          className="mt-4"
+          onClick={e => e.stopPropagation()}
+        >
           <CocktailLogMedia
             media={consolidatedMedia}
             size="lg"

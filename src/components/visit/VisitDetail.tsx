@@ -5,13 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Edit, MapPin, X } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Link, useLocation } from 'react-router-dom';
-import { LocationInfo } from '../cocktail-log/CocktailLogInfo';
-import { DateInfo } from '../cocktail-log/CocktailLogInfo';
-import { CommentInfo } from '../cocktail-log/CocktailLogInfo';
+import {
+  DateInfo,
+  CommentInfo,
+} from '@/components/cocktail-log/CocktailLogInfo';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { CocktailLogCard } from '../cocktail-log/CocktailLogCard';
+import { CocktailLogCard } from '@/components/cocktail-log/CocktailLogCard';
 import { VisitForm } from './VisitForm';
 import { translations } from '@/translations';
 
@@ -34,7 +35,8 @@ export function VisitDetail({
   const location = useLocation();
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const t = translations[language as keyof typeof translations];
+  const t =
+    translations[language as keyof typeof translations];
 
   const isOwnVisit = user?.id === visit.user.id;
 
@@ -50,11 +52,19 @@ export function VisitDetail({
     };
 
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    return () =>
+      window.removeEventListener(
+        'popstate',
+        handlePopState,
+      );
   }, [isEditing]);
 
   const handleEditClick = () => {
-    window.history.pushState({}, '', `/${language}/visits/${visit.id}/edit`);
+    window.history.pushState(
+      {},
+      '',
+      `/${language}/visits/${visit.id}/edit`,
+    );
     setIsEditing(true);
   };
 
@@ -120,13 +130,15 @@ export function VisitDetail({
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4 max-w-3xl mx-auto">
           <div className="flex items-center space-x-2">
-            <Link
-              to={`/${language}/drinkers/${visit.user.id}`}
-              className="font-medium text-primary"
-              onClick={e => e.stopPropagation()}
-            >
-              <span>{visit.user.username}</span>
-            </Link>
+            {!isOwnVisit && (
+              <Link
+                to={`/${language}/drinkers/${visit.user.username}`}
+                className="font-medium text-primary"
+                onClick={e => e.stopPropagation()}
+              >
+                <span>{visit.user.username}</span>
+              </Link>
+            )}
             {visit.visitDate && (
               <DateInfo
                 date={new Date(visit.visitDate)}
@@ -135,7 +147,7 @@ export function VisitDetail({
             )}
           </div>
 
-          <h2 className="flex items-center gap-2 text-2xl font-bold mt-4 mb-6">
+          <h2 className="inline-flex items-center gap-2 text-2xl mt-4 mb-6">
             <MapPin className="size-4 text-muted-foreground" />
             <Link
               to={`/${language}/places/${visit.location?.place_id}`}
@@ -152,7 +164,7 @@ export function VisitDetail({
             )}
 
             {visit.logs.length > 0 && (
-              <div className="mt-6">
+              <div>
                 <div className="space-y-4">
                   {visit.logs.map(log => (
                     <CocktailLogCard
