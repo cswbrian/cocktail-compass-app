@@ -26,6 +26,7 @@ export default function RecommendFeedPage() {
           isLoading={publicVisitsLoading}
           hasMore={publicHasMore}
           onLoadMore={loadMorePublicVisits}
+          feedType="recommend"
           key={`recommend-feed-${publicVisits?.length}`}
         />
       </div>

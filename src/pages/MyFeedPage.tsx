@@ -44,6 +44,7 @@ export default function MyFeedPage() {
             isLoading={userVisitsLoading}
             hasMore={userHasMore}
             onLoadMore={loadMoreUserVisits}
+            feedType="my"
             key={`my-feed-${userVisits?.length}`}
           />
         )}

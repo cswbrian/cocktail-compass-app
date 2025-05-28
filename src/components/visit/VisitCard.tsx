@@ -8,9 +8,13 @@ import { Link, useNavigate } from 'react-router-dom';
 
 interface VisitCardProps {
   visit: Visit;
+  feedType?: 'recommend' | 'my';
 }
 
-export function VisitCard({ visit }: VisitCardProps) {
+export function VisitCard({
+  visit,
+  feedType = 'recommend',
+}: VisitCardProps) {
   const { language } = useLanguage();
   const navigate = useNavigate();
 
@@ -26,13 +30,15 @@ export function VisitCard({ visit }: VisitCardProps) {
       <div className="flex items-center space-x-4">
         <div className="flex-1">
           <div className="flex items-center space-x-2">
-            <Link
-              to={`/${language}/drinkers/${visit.user.username}`}
-              className="font-medium text-primary"
-              onClick={e => e.stopPropagation()}
-            >
-              <span>{visit.user.username}</span>
-            </Link>
+            {feedType === 'recommend' && (
+              <Link
+                to={`/${language}/drinkers/${visit.user.username}`}
+                className="font-medium text-primary"
+                onClick={e => e.stopPropagation()}
+              >
+                <span>{visit.user.username}</span>
+              </Link>
+            )}
             {visit.visitDate && (
               <DateInfo
                 date={new Date(visit.visitDate)}
@@ -53,9 +59,7 @@ export function VisitCard({ visit }: VisitCardProps) {
       </div>
       {visit.logs.length > 0 && (
         <div className="mt-4">
-          <ConsolidatedCocktailLogCard
-            logs={visit.logs}
-          />
+          <ConsolidatedCocktailLogCard logs={visit.logs} />
         </div>
       )}
     </div>

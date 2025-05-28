@@ -16,6 +16,7 @@ interface VisitListProps {
   isLoading?: boolean;
   hasMore?: boolean;
   onLoadMore?: () => void;
+  feedType?: 'recommend' | 'my';
 }
 
 function VisitSkeleton() {
@@ -53,6 +54,7 @@ export function VisitList({
   isLoading: providedIsLoading,
   hasMore: providedHasMore,
   onLoadMore: providedOnLoadMore,
+  feedType = 'recommend',
 }: VisitListProps) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const THROTTLE_DELAY = 300;
@@ -136,7 +138,7 @@ export function VisitList({
               : undefined
           }
         >
-          <VisitCard visit={visit} />
+          <VisitCard visit={visit} feedType={feedType} />
         </div>
       ))}
       {isLoadingMore && (
