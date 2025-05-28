@@ -208,7 +208,6 @@ export class VisitService {
   }
 
   private mapVisit(data: any): Visit {
-    console.log('data.id',  data.cocktail_logs.map((log: any) => log.cocktail_name));
     return {
       id: data.id,
       user: {

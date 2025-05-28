@@ -52,6 +52,7 @@ import { CustomCocktailModal } from '../cocktail-log/CustomCocktailModal';
 import { Visit } from '@/types/visit';
 import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
+import { useVisits } from '@/context/VisitContext';
 
 // Form schema
 const mediaSchema = z.object({
@@ -252,6 +253,7 @@ export function VisitForm({
   const navigate = useNavigate();
   const { language } = useLanguage();
   const { toast } = useToast();
+  const { mutate } = useVisits();
   const t = translations[language as keyof typeof translations];
   const { cocktailDetails } = useCocktailDetails();
   const [isLoading, setIsLoading] = useState(false);
@@ -497,6 +499,7 @@ export function VisitForm({
                     entry.media.map(m => ({
                       id: m.id || '',
                       url: m.url,
+                      type: 'image' as const,
                     })),
                     data.visibility,
                   )
@@ -509,6 +512,7 @@ export function VisitForm({
                     entry.media.map(m => ({
                       id: m.id || '',
                       url: m.url,
+                      type: 'image' as const,
                     })),
                     data.visibility,
                     existingVisit.id,
@@ -546,6 +550,7 @@ export function VisitForm({
                 entry.media.map(m => ({
                   id: m.id || '',
                   url: m.url,
+                  type: 'image' as const,
                 })),
                 data.visibility,
                 savedVisit.id,
@@ -554,6 +559,12 @@ export function VisitForm({
           );
         }
       }
+
+      // Invalidate both user and public visits
+      await Promise.all([
+        mutate('user'),
+        mutate('public')
+      ]);
 
       toast({
         description: existingVisit
