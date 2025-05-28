@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Share } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { sendGAEvent } from '@/lib/ga';
 
 interface ShareButtonProps {
@@ -32,7 +32,7 @@ export function ShareButton({ url }: ShareButtonProps) {
       onClick={handleShare}
       title="Share"
     >
-      <Share className="h-4 w-4" />
+      <Send className="h-4 w-4" />
     </Button>
   );
 }

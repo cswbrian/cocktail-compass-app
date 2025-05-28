@@ -5,7 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { FlavorDescriptor } from '@/components/flavor-descriptor';
 import { Button } from '@/components/ui/button';
-import { ShareButton } from '@/components/share-button';
+import { ShareButton } from '@/components/ShareButton';
 import { sendGAEvent } from '@/lib/ga';
 import { Link } from 'react-router-dom';
 

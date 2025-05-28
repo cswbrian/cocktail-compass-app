@@ -4,7 +4,7 @@ import FlavorRadar from '@/components/flavor-radar';
 import { translations } from '@/translations';
 import ReactMarkdown from 'react-markdown';
 import { FlavorDescriptor } from '@/components/flavor-descriptor';
-import { ShareButton } from '@/components/share-button';
+import { ShareButton } from '@/components/ShareButton';
 import { BookmarkButton } from '@/components/bookmark/bookmark-button';
 import { ExternalLink } from '@/components/external-link';
 import { Search } from 'lucide-react';
@@ -206,7 +206,7 @@ export default function CocktailDetails() {
             <div className="flex gap-2">
               <BookmarkButton cocktailId={cocktail.id} />
               <ShareButton
-                url={`${window.location.origin}/${language || 'en'}/cocktails/${cocktail.slug}`}
+                url={window.location.href}
               />
             </div>
             {cocktail.is_custom ? null : (
