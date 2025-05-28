@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import {
+  useParams,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import { placeService } from '@/services/place-service';
 import { Button } from '@/components/ui/button';
 import { Place } from '@/types/place';
@@ -16,6 +20,8 @@ import useSWR from 'swr';
 import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
 import { ExternalLink } from '@/components/external-link';
+import { VisitList } from '@/components/visit/VisitList';
+import { PlaceDetailNav } from '@/components/place/PlaceDetailNav';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -27,6 +33,12 @@ export default function PlaceDetailPage() {
   const { language } = useLanguage();
   const t = translations[language];
   const PAGE_SIZE = 10;
+  const location = useLocation();
+  const isRecommendFeed = location.pathname.includes(
+    '/feeds/recommend',
+  );
+  const isMyFeed = location.pathname.includes('/feeds/me');
+  const isVisitsView = location.pathname.includes('/feeds');
 
   // Fetch place details
   useEffect(() => {
@@ -60,7 +72,9 @@ export default function PlaceDetailPage() {
     isLoading: isLoadingLogs,
     mutate,
   } = useSWR(
-    placeId ? [CACHE_KEYS.PLACE_LOGS(placeId), page] : null,
+    placeId && !isVisitsView
+      ? [CACHE_KEYS.PLACE_LOGS(placeId), page]
+      : null,
     () => fetchers.getPlaceLogs(placeId!, page, PAGE_SIZE),
     {
       fallbackData: { logs: [], hasMore: false },
@@ -71,8 +85,43 @@ export default function PlaceDetailPage() {
     },
   );
 
+  // Fetch visits using SWR
+  const {
+    data: visitsData,
+    isLoading: isLoadingVisits,
+    mutate: mutateVisits,
+  } = useSWR(
+    placeId && isVisitsView
+      ? [
+          CACHE_KEYS.PLACE_VISITS(placeId),
+          page,
+          isRecommendFeed,
+        ]
+      : null,
+    () =>
+      fetchers.getPlaceVisits(
+        placeId!,
+        page,
+        PAGE_SIZE,
+        isRecommendFeed,
+      ),
+    {
+      fallbackData: { visits: [], hasMore: false },
+      revalidateOnFocus: false,
+      revalidateIfStale: true,
+      revalidateOnReconnect: true,
+      dedupingInterval: 5000,
+    },
+  );
+
   const loadMore = () => {
     if (logsData?.hasMore && !isLoadingLogs) {
+      setPage(prev => prev + 1);
+    }
+  };
+
+  const loadMoreVisits = () => {
+    if (visitsData?.hasMore && !isLoadingVisits) {
       setPage(prev => prev + 1);
     }
   };
@@ -160,12 +209,16 @@ export default function PlaceDetailPage() {
           </div>
         </div>
 
-        <CocktailLogList
-          logs={logsData?.logs || []}
-          isLoading={isLoadingLogs}
-          hasMore={logsData?.hasMore || false}
-          onLoadMore={loadMore}
-        />
+        <div>
+          <PlaceDetailNav />
+          <VisitList
+            visits={visitsData?.visits}
+            isLoading={isLoadingVisits}
+            hasMore={visitsData?.hasMore}
+            onLoadMore={loadMoreVisits}
+            feedType={isRecommendFeed ? 'recommend' : 'my'}
+          />
+        </div>
       </div>
     </AuthWrapper>
   );

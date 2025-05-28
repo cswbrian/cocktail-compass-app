@@ -329,6 +329,7 @@ export const translations = {
     loginAgreement: 'By signing in, you agree to our {terms} and {privacy}',
     termsAndConditions: 'Terms and Conditions',
     privacyPolicy: 'Privacy Policy',
+    visits: 'Visits',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -639,5 +640,6 @@ export const translations = {
     loginAgreement: '登入即表示您同意我們的{terms}和{privacy}',
     termsAndConditions: '服務條款',
     privacyPolicy: '隱私政策',
+    visits: '到訪',
   },
 };

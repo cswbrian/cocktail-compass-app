@@ -45,6 +45,7 @@ export const CACHE_KEYS = {
     page ? ['public-logs', page] : 'public-logs',
   USER_STATS: 'user-stats',
   PLACE_LOGS: (placeId: string) => ['place-logs', placeId],
+  PLACE_VISITS: (placeId: string) => ['place-visits', placeId],
   COCKTAIL_LOGS_BY_ID: (cocktailId: string) => [
     'cocktail-logs-by-id',
     cocktailId,
@@ -222,6 +223,27 @@ export const fetchers = {
 
   getPublicVisitsByUserId: (userId: string, page = 1, pageSize = 10) =>
     visitService.getPublicVisitsByUserId(userId, page, pageSize),
+
+  getPlaceVisits: async (
+    placeId: string,
+    page: number = 1,
+    pageSize: number = 10,
+    isRecommendFeed: boolean = true,
+  ) => {
+    try {
+      if (isRecommendFeed) {
+        return visitService.getPublicVisitsByPlaceId(placeId, page, pageSize);
+      } else {
+        const user = await AuthService.getCurrentSession();
+        if (!user) {
+          return { visits: [], hasMore: false };
+        }
+        return visitService.getVisitsByPlaceIdAndUserId(placeId, user.id, page, pageSize);
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 // Default fallback data

@@ -72,6 +72,25 @@ export default function AppRoutes() {
           element={<PlaceDetailPage />}
         />
         <Route
+          path="places/:placeId/feeds"
+          element={<PlaceDetailPage />}
+        >
+          <Route
+            index
+            element={
+              <Navigate
+                to="/zh/places/:placeId/feeds/recommend"
+                replace
+              />
+            }
+          />
+          <Route
+            path="recommend"
+            element={<PlaceDetailPage />}
+          />
+          <Route path="me" element={<PlaceDetailPage />} />
+        </Route>
+        <Route
           path="drinkers/:username"
           element={<DrinkerProfilePage />}
         />
@@ -88,8 +107,14 @@ export default function AppRoutes() {
         </Route>
         <Route path="visits">
           <Route path="new" element={<NewVisitPage />} />
-          <Route path=":visitId" element={<VisitDetailPage />} />
-          <Route path=":visitId/edit" element={<VisitDetailPage />} />
+          <Route
+            path=":visitId"
+            element={<VisitDetailPage />}
+          />
+          <Route
+            path=":visitId/edit"
+            element={<VisitDetailPage />}
+          />
         </Route>
         <Route path="feeds" element={<FeedsPage />}>
           <Route
@@ -115,7 +140,10 @@ export default function AppRoutes() {
         <Route path="profile" element={<ProfilePage />} />
       </Route>
 
-      <Route path="/" element={<Navigate to="/zh" replace />} />
+      <Route
+        path="/"
+        element={<Navigate to="/zh" replace />}
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
