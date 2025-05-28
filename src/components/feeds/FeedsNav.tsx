@@ -16,6 +16,10 @@ export function FeedsNav() {
   const location = useLocation();
   const pathname = location.pathname;
 
+  const handleFeedChange = (feedType: 'recommend' | 'me') => {
+    localStorage.setItem('preferred-feed', feedType);
+  };
+
   return (
     <div className="grid w-full grid-cols-2 mb-6">
       <Link
@@ -25,6 +29,7 @@ export function FeedsNav() {
             ? 'border-primary text-primary'
             : 'border-transparent'
         }`}
+        onClick={() => handleFeedChange('recommend')}
       >
         <CompassIcon className="w-4 h-4" />
         {t.recommendFeed}
@@ -36,6 +41,7 @@ export function FeedsNav() {
             ? 'border-primary text-primary'
             : 'border-transparent'
         }`}
+        onClick={() => handleFeedChange('me')}
       >
         <UserIcon className="w-4 h-4" />
         {t.myLogs}

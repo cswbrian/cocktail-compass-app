@@ -159,7 +159,7 @@ export default function PlaceDetailPage() {
   return (
     <AuthWrapper>
       <div className="flex-1 overflow-y-auto">
-        <div className="p-6 mb-6">
+        <div className="px-6 mb-6">
           <Button
             variant="link"
             onClick={handleClose}

@@ -28,6 +28,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import TwistPage from './pages/TwistPage';
 import { RequireUsername } from '@/components/RequireUsername';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
+import { FeedRedirect } from '@/components/FeedRedirect';
+import { PlaceFeedRedirect } from '@/components/place/PlaceFeedRedirect';
 
 export default function AppRoutes() {
   return (
@@ -69,7 +71,7 @@ export default function AppRoutes() {
         />
         <Route
           path="places/:placeId"
-          element={<PlaceDetailPage />}
+          element={<PlaceFeedRedirect />}
         />
         <Route
           path="places/:placeId/feeds"
@@ -77,12 +79,7 @@ export default function AppRoutes() {
         >
           <Route
             index
-            element={
-              <Navigate
-                to="/zh/places/:placeId/feeds/recommend"
-                replace
-              />
-            }
+            element={<PlaceFeedRedirect />}
           />
           <Route
             path="recommend"
@@ -119,9 +116,7 @@ export default function AppRoutes() {
         <Route path="feeds" element={<FeedsPage />}>
           <Route
             index
-            element={
-              <Navigate to="/zh/feeds/recommend" replace />
-            }
+            element={<FeedRedirect />}
           />
           <Route
             path="recommend"
