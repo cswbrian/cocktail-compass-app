@@ -18,10 +18,7 @@ export interface Visit {
     id: string;
     cocktail: {
       id: string;
-      name: {
-        en: string;
-        zh: string;
-      };
+      name: Record<string, string>;
       slug: string;
     };
     comments: string | null;

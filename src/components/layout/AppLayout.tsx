@@ -14,7 +14,6 @@ import { CocktailLogProvider } from '@/context/CocktailLogContext';
 import { VisitFormProvider } from '@/context/VisitFormContext';
 import { GlobalVisitForm } from '@/components/visit/GlobalVisitForm';
 import { VisitProvider } from '@/context/VisitContext';
-import { UserVisitProvider } from '@/context/UserVisitContext';
 
 export default function AppLayout({
   children,
@@ -27,7 +26,6 @@ export default function AppLayout({
         <BottomNavProvider>
           <CocktailLogProvider>
             <VisitProvider>
-              <UserVisitProvider>
                 <VisitFormProvider>
                   <div className={`antialiased dark`}>
                     <div className="flex flex-col min-h-screen">
@@ -44,7 +42,6 @@ export default function AppLayout({
                     </div>
                   </div>
                 </VisitFormProvider>
-              </UserVisitProvider>
             </VisitProvider>
           </CocktailLogProvider>
         </BottomNavProvider>

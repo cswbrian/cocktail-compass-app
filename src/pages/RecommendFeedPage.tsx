@@ -5,18 +5,16 @@ import { VisitList } from '@/components/visit/VisitList';
 import { useVisits } from '@/context/VisitContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
-import { useEffect } from 'react';
 
 export default function RecommendFeedPage() {
   const { language } = useLanguage();
   const t = translations[language];
   const {
-    visits,
-    isLoading,
-    hasMore,
-    loadMore,
+    publicVisits,
+    publicVisitsLoading,
+    publicHasMore,
+    loadMorePublicVisits,
   } = useVisits();
-
 
   return (
     <AuthWrapper
@@ -24,11 +22,11 @@ export default function RecommendFeedPage() {
     >
       <div className="space-y-6">
         <VisitList
-          visits={visits}
-          isLoading={isLoading}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          key={`recommend-feed-${visits?.length}`}
+          visits={publicVisits}
+          isLoading={publicVisitsLoading}
+          hasMore={publicHasMore}
+          onLoadMore={loadMorePublicVisits}
+          key={`recommend-feed-${publicVisits?.length}`}
         />
       </div>
     </AuthWrapper>

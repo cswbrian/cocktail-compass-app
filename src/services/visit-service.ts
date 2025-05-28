@@ -1,9 +1,7 @@
 import { supabase } from '@/lib/supabase';
-import { AuthService } from '@/services/auth-service';
 import { placeService } from '@/services/place-service';
 import { mutate } from 'swr';
 import { CACHE_KEYS } from '@/lib/swr-config';
-import { CocktailLog } from '@/types/cocktail-log';
 import { cocktailLogsMediaService } from '@/services/media-service';
 
 interface LocationData {
@@ -176,6 +174,7 @@ export class VisitService {
       .range(offset, to);
 
     if (error) throw error;
+    console.log('getVisitsByUserId');
 
     const visits = data.map(this.mapVisit);
     const hasMore = count
@@ -199,7 +198,7 @@ export class VisitService {
       .range(offset, to);
 
     if (error) throw error;
-
+    console.log('getPublicVisits');
     const visits = data.map(this.mapVisit);
     const hasMore = count
       ? offset + pageSize < count
@@ -209,6 +208,7 @@ export class VisitService {
   }
 
   private mapVisit(data: any): Visit {
+    console.log('data.id',  data.cocktail_logs.map((log: any) => log.cocktail_name));
     return {
       id: data.id,
       user: {

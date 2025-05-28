@@ -3,7 +3,7 @@
 import { BasicStats } from '@/components/stats/BasicStats';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
 import { VisitList } from '@/components/visit/VisitList';
-import { useUserVisits } from '@/context/UserVisitContext';
+import { useVisits } from '@/context/VisitContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { Link } from 'react-router-dom';
@@ -13,11 +13,11 @@ export default function MyFeedPage() {
   const { language } = useLanguage();
   const t = translations[language];
   const {
-    visits,
-    isLoading,
-    hasMore,
-    loadMore,
-  } = useUserVisits();
+    userVisits,
+    userVisitsLoading,
+    userHasMore,
+    loadMoreUserVisits,
+  } = useVisits();
 
   return (
     <AuthWrapper
@@ -30,7 +30,7 @@ export default function MyFeedPage() {
           </div>
         </Link>
 
-        {!isLoading && (!visits || visits.length === 0) ? (
+        {!userVisitsLoading && (!userVisits || userVisits.length === 0) ? (
           <div className="flex flex-col items-center justify-center p-8 text-center">
             <SmilePlus className="w-24 h-24 text-muted-foreground mb-6" />
             <p className="text-2xl text-muted-foreground mb-4">{t.noVisits}</p>
@@ -40,11 +40,11 @@ export default function MyFeedPage() {
           </div>
         ) : (
           <VisitList
-            visits={visits}
-            isLoading={isLoading}
-            hasMore={hasMore}
-            onLoadMore={loadMore}
-            key={`my-feed-${visits?.length}`}
+            visits={userVisits}
+            isLoading={userVisitsLoading}
+            hasMore={userHasMore}
+            onLoadMore={loadMoreUserVisits}
+            key={`my-feed-${userVisits?.length}`}
           />
         )}
       </div>
