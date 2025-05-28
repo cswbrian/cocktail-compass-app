@@ -865,9 +865,6 @@ export function VisitForm({
                       <SelectItem value="private">
                         {t.visibilityPrivate}
                       </SelectItem>
-                      <SelectItem value="friends">
-                        {t.visibilityFriends}
-                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <Button
