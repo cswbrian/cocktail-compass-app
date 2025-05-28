@@ -9,12 +9,13 @@ import { translations } from '@/translations';
 import { userSettingsService } from '@/services/user-settings-service';
 import { userStatsService } from '@/services/user-stats-service';
 import { BasicStats } from '@/components/stats/BasicStats';
-import { CocktailLogList } from '@/components/cocktail-log/CocktailLogList';
+import { VisitList } from '@/components/visit/VisitList';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SocialMediaLinks } from '@/components/profile/SocialMediaLinks';
 import useSWR from 'swr';
 import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
 import { Instagram } from 'lucide-react';
+import { Visit } from '@/types/visit';
 
 interface UserStats {
   totalCocktailsDrunk: number;
@@ -85,21 +86,21 @@ const DrinkerProfilePage: React.FC = () => {
     }
   }, [username]);
 
-  // Fetch logs using SWR
+  // Fetch public visits using SWR
   const {
-    data: logsData,
-    isLoading: isLoadingLogs,
+    data: visitsData,
+    isLoading: isLoadingVisits,
     mutate,
-  } = useSWR(
-    userId ? [CACHE_KEYS.PUBLIC_LOGS(page), userId] : null,
+  } = useSWR<{ visits: Visit[]; hasMore: boolean }>(
+    userId ? [CACHE_KEYS.PUBLIC_VISITS(page), userId] : null,
     () =>
-      fetchers.getPublicLogsByUserId(
+      fetchers.getPublicVisitsByUserId(
         userId!,
         page,
         PAGE_SIZE,
       ),
     {
-      fallbackData: { logs: [], hasMore: false },
+      fallbackData: { visits: [], hasMore: false },
       revalidateOnFocus: false,
       revalidateIfStale: true,
       revalidateOnReconnect: true,
@@ -108,10 +109,10 @@ const DrinkerProfilePage: React.FC = () => {
   );
 
   const loadMore = useCallback(() => {
-    if (logsData?.hasMore && !isLoadingLogs) {
+    if (visitsData?.hasMore && !isLoadingVisits) {
       setPage(prev => prev + 1);
     }
-  }, [logsData?.hasMore, isLoadingLogs]);
+  }, [visitsData?.hasMore, isLoadingVisits]);
 
   if (isLoading) {
     return (
@@ -151,16 +152,17 @@ const DrinkerProfilePage: React.FC = () => {
           threadsHandle={threadsHandle}
         />
         <div className="mt-4">
-          <BasicStats stats={userStats} />
+          <BasicStats />
         </div>
       </div>
 
       <div>
-        <CocktailLogList
-          logs={logsData?.logs || []}
-          isLoading={isLoadingLogs}
-          hasMore={logsData?.hasMore || false}
+        <VisitList
+          visits={visitsData?.visits || []}
+          isLoading={isLoadingVisits}
+          hasMore={visitsData?.hasMore || false}
           onLoadMore={loadMore}
+          feedType="recommend"
         />
       </div>
     </div>

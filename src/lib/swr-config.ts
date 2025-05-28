@@ -219,6 +219,9 @@ export const fetchers = {
 
   getUserVisits: (userId: string, page = 1, pageSize = 10) =>
     visitService.getVisitsByUserId(userId, page, pageSize),
+
+  getPublicVisitsByUserId: (userId: string, page = 1, pageSize = 10) =>
+    visitService.getPublicVisitsByUserId(userId, page, pageSize),
 };
 
 // Default fallback data

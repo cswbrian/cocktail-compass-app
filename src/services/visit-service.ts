@@ -207,6 +207,32 @@ export class VisitService {
     return { visits, hasMore };
   }
 
+  async getPublicVisitsByUserId(
+    userId: string,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<{ visits: Visit[]; hasMore: boolean }> {
+    const offset = (page - 1) * pageSize;
+    const to = offset + pageSize - 1;
+
+    const { data, count, error } = await supabase
+      .from('all_public_visits')
+      .select('*', { count: 'exact' })
+      .eq('user_id', userId)
+      .order('visit_date', { ascending: false })
+      .range(offset, to);
+
+    if (error) throw error;
+    console.log('getPublicVisitsByUserId');
+
+    const visits = data.map(this.mapVisit);
+    const hasMore = count
+      ? offset + pageSize < count
+      : false;
+
+    return { visits, hasMore };
+  }
+
   private mapVisit(data: any): Visit {
     return {
       id: data.id,
