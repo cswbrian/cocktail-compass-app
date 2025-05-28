@@ -22,14 +22,14 @@ export function CocktailLogMedia({
 
   const sizeClasses = {
     sm: {
+      container: 'max-h-[150px]',
+      grid: 'auto-cols-[150px]',
+      image: '150px',
+    },
+    lg: {
       container: 'max-h-[200px]',
       grid: 'auto-cols-[200px]',
       image: '200px',
-    },
-    lg: {
-      container: 'max-h-[300px]',
-      grid: 'auto-cols-[300px]',
-      image: '300px',
     },
   };
 
