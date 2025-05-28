@@ -5,6 +5,7 @@ import { CommentInfo } from '../cocktail-log/CocktailLogInfo';
 import { DateInfo } from '../cocktail-log/CocktailLogInfo';
 import { useLanguage } from '@/context/LanguageContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { VisibilityIndicator } from '../common/VisibilityIndicator';
 
 interface VisitCardProps {
   visit: Visit;
@@ -44,6 +45,9 @@ export function VisitCard({
                 date={new Date(visit.visitDate)}
                 className="text-base text-muted-foreground"
               />
+            )}
+            {feedType === 'my' && (
+              <VisibilityIndicator visibility={visit.visibility} />
             )}
           </div>
           {visit.location && (

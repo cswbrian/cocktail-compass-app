@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react';
 import { CocktailLogCard } from '@/components/cocktail-log/CocktailLogCard';
 import { VisitForm } from './VisitForm';
 import { translations } from '@/translations';
+import { VisibilityIndicator } from '../common/VisibilityIndicator';
 
 interface VisitDetailProps {
   visit: Visit;
@@ -144,6 +145,9 @@ export function VisitDetail({
                 date={new Date(visit.visitDate)}
                 className="text-base text-muted-foreground"
               />
+            )}
+            {isOwnVisit && (
+              <VisibilityIndicator visibility={visit.visibility} />
             )}
           </div>
 
