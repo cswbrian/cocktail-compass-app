@@ -129,7 +129,7 @@ interface MediaItem {
 }
 
 const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+  const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8MB in bytes
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { language } = useLanguage();
   const t = translations[language as keyof typeof translations];

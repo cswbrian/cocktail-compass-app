@@ -129,7 +129,7 @@ export function CocktailLogForm({
       ? 'private'
       : 'public',
   );
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+  const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8MB in bytes
   const [mediaError, setMediaError] = useState<
     string | null
   >(null);
