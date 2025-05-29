@@ -696,7 +696,7 @@ export function VisitForm({
                       <Textarea
                         {...form.register('comments')}
                         placeholder={t.visitNotePlaceholder}
-                        className="min-h-[100px] resize-none pr-20"
+                        className="min-h-[100px]"
                       />
                       <div className="absolute bottom-2 right-2">
                         <span className="text-xs text-muted-foreground">
@@ -844,7 +844,7 @@ export function VisitForm({
                                   placeholder={
                                     t.cocktailNotePlaceholder
                                   }
-                                  className="min-h-[150px] resize-none pr-20"
+                                  className="min-h-[150px]"
                                 />
                                 <div className="absolute bottom-2 right-2">
                                   <span className="text-xs text-muted-foreground">

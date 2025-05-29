@@ -633,7 +633,7 @@ export function CocktailLogForm({
                           }
                         }}
                         placeholder={t.notePlaceholder}
-                        className="min-h-[200px] resize-none pr-20"
+                        className="min-h-[200px]"
                       />
                       <div className="absolute bottom-2 right-2">
                         <span className="text-xs text-muted-foreground">
