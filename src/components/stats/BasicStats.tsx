@@ -1,7 +1,5 @@
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
-import useSWR from 'swr';
-import { fetchers, swrConfig } from '@/lib/swr-config';
 
 interface StatCardProps {
   title: string;
@@ -19,17 +17,19 @@ function StatCard({ title, value }: StatCardProps) {
   );
 }
 
-export function BasicStats() {
+interface BasicStatsProps {
+  stats: {
+    totalCocktailsDrunk: number;
+    uniqueCocktails: number;
+    uniquePlaces: number;
+  };
+}
+
+export function BasicStats({ stats }: BasicStatsProps) {
   const { language } = useLanguage();
   const t = translations[language];
 
-  const { data: stats } = useSWR(
-    'user-stats',
-    () => fetchers.getUserStats(),
-    swrConfig
-  );
-
-  if (!stats?.basicStats) {
+  if (!stats) {
     return null;
   }
 
@@ -37,15 +37,15 @@ export function BasicStats() {
     <div className="flex gap-6">
       <StatCard
         title={t.totalCocktailsDrunk}
-        value={stats.basicStats.totalCocktailsDrunk}
+        value={stats.totalCocktailsDrunk}
       />
       <StatCard
         title={t.totalPlacesVisited}
-        value={stats.basicStats.uniquePlaces}
+        value={stats.uniquePlaces}
       />
       <StatCard
         title={t.uniqueCocktails}
-        value={stats.basicStats.uniqueCocktails}
+        value={stats.uniqueCocktails}
       />
     </div>
   );

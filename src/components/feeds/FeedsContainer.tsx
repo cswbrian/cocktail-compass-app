@@ -15,10 +15,6 @@ export function FeedsContainer() {
     mutate,
   } = useCocktailData();
 
-  console.log('FeedsContainer - logs:', logs);
-  console.log('FeedsContainer - isLoading:', isLoading);
-  console.log('FeedsContainer - stats:', stats);
-
   return (
     <AuthWrapper
       customLoading={<CocktailLogList isLoading={true} />}
@@ -26,13 +22,11 @@ export function FeedsContainer() {
       <div className="space-y-6">
         <div className="px-6">
           <BasicStats
-            stats={
-              stats?.basicStats ?? {
-                totalCocktailsDrunk: 0,
-                uniqueCocktails: 0,
-                uniquePlaces: 0,
-              }
-            }
+            stats={stats?.basicStats ?? {
+              totalCocktailsDrunk: 0,
+              uniqueCocktails: 0,
+              uniquePlaces: 0,
+            }}
           />
         </div>
         <CocktailLogList

@@ -8,6 +8,8 @@ import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { Link } from 'react-router-dom';
 import { SmilePlus } from 'lucide-react';
+import useSWR from 'swr';
+import { fetchers, swrConfig } from '@/lib/swr-config';
 
 export default function MyFeedPage() {
   const { language } = useLanguage();
@@ -19,6 +21,12 @@ export default function MyFeedPage() {
     loadMoreUserVisits,
   } = useVisits();
 
+  const { data: stats } = useSWR(
+    'user-stats',
+    () => fetchers.getUserStats(),
+    swrConfig
+  );
+
   return (
     <AuthWrapper
       customLoading={<VisitList isLoading={true} />}
@@ -26,7 +34,11 @@ export default function MyFeedPage() {
       <div className="space-y-6">
         <Link to={`/${language}/profile`}>
           <div className="px-6">
-            <BasicStats />
+            <BasicStats stats={stats?.basicStats ?? {
+              totalCocktailsDrunk: 0,
+              uniqueCocktails: 0,
+              uniquePlaces: 0,
+            }} />
           </div>
         </Link>
 

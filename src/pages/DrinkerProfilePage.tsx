@@ -14,7 +14,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SocialMediaLinks } from '@/components/profile/SocialMediaLinks';
 import useSWR from 'swr';
 import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
-import { Instagram } from 'lucide-react';
 import { Visit } from '@/types/visit';
 
 interface UserStats {
@@ -45,7 +44,7 @@ const DrinkerProfilePage: React.FC = () => {
             username!,
           );
         if (!userData) return;
-
+        
         setUserId(userData.user_id);
 
         // Get user stats
@@ -152,7 +151,7 @@ const DrinkerProfilePage: React.FC = () => {
           threadsHandle={threadsHandle}
         />
         <div className="mt-4">
-          <BasicStats />
+          <BasicStats stats={userStats} />
         </div>
       </div>
 
