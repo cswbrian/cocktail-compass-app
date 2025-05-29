@@ -41,7 +41,7 @@ interface CocktailLogViewData {
   log_created_at: Date;
   comments: string | null;
   drink_date: Date | null;
-  visibility: 'public' | 'private' | 'friends';
+  visibility: 'public' | 'private';
   user_id: string;
   username: string | null;
   place_id: string | null;
@@ -197,7 +197,7 @@ export class CocktailLogService {
     media?:
       | { url: string; }[]
       | null,
-    visibility: 'public' | 'private' | 'friends' = 'public',
+    visibility: 'public' | 'private' = 'public',
     visitId?: string | null,
   ): Promise<CocktailLog> {
     const placeId = await this.handleLocationData(location);
@@ -249,7 +249,7 @@ export class CocktailLogService {
     location?: LocationData | null,
     drinkDate?: Date | null,
     media?: { id: string; url: string; type: 'image' | 'video' }[] | null,
-    visibility?: 'public' | 'private' | 'friends',
+    visibility?: 'public' | 'private',
   ): Promise<CocktailLog> {
     const placeId = await this.handleLocationData(location);
     const existingLog = await this.getLogById(id);

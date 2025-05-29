@@ -28,7 +28,7 @@ export interface CocktailLog {
       }[]
     | null;
   deletedAt: Date | null;
-  visibility: 'public' | 'private' | 'friends';
+  visibility: 'public' | 'private';
   user?: {
     id: string;
     username: string;

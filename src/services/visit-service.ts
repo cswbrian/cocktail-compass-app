@@ -28,7 +28,7 @@ interface Visit {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  visibility: 'public' | 'private' | 'friends';
+  visibility: 'public' | 'private';
   logs: Array<{
     id: string;
     cocktail: {
@@ -75,7 +75,7 @@ export class VisitService {
     visitDate: Date,
     location?: LocationData | null,
     comments?: string | null,
-    visibility: 'public' | 'private' | 'friends' = 'public',
+    visibility: 'public' | 'private' = 'public',
   ): Promise<Visit> {
     const placeId = await this.handleLocationData(location);
 
@@ -109,7 +109,7 @@ export class VisitService {
     visitDate?: Date,
     location?: LocationData | null,
     comments?: string | null,
-    visibility?: 'public' | 'private' | 'friends',
+    visibility?: 'public' | 'private',
   ): Promise<Visit> {
     const placeId = await this.handleLocationData(location);
     const existingVisit = await this.getVisitById(id);

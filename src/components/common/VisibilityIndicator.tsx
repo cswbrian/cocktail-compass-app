@@ -1,7 +1,7 @@
 import { LockKeyhole, Globe, Users } from 'lucide-react';
 
 interface VisibilityIndicatorProps {
-  visibility: 'private' | 'public' | 'friends';
+  visibility: 'private' | 'public';
   className?: string;
 }
 
@@ -16,12 +16,7 @@ export function VisibilityIndicator({
           className={`w-4 h-4 text-muted-foreground ${className}`}
         />
       );
-    case 'friends':
-      return (
-        <Users
-          className={`w-4 h-4 text-muted-foreground ${className}`}
-        />
-      );
+    case 'public':
     default:
       return (
         <Globe

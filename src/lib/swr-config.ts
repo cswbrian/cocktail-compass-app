@@ -34,7 +34,7 @@ interface UserStats {
 // Cache keys
 export const CACHE_KEYS = {
   COCKTAIL_LOGS: (
-    visibility?: 'public' | 'private' | 'friends',
+    visibility?: 'public' | 'private',
   ) =>
     visibility
       ? ['cocktail-logs', visibility]
@@ -54,7 +54,7 @@ export const CACHE_KEYS = {
   COCKTAILS: 'cocktails',
   COCKTAIL_DETAILS: 'cocktail-details',
   COCKTAIL_LIST: 'cocktail-list',
-  VISITS: (visibility?: 'public' | 'private' | 'friends') =>
+  VISITS: (visibility?: 'public' | 'private') =>
     visibility ? ['visits', visibility] : 'visits',
   OWN_VISITS: (page?: number) =>
     page ? ['own-visits', page] : 'own-visits',

@@ -82,7 +82,7 @@ const visitFormSchema = z.object({
     })
     .nullable(),
   comments: z.string().max(500),
-  visibility: z.enum(['public', 'private', 'friends']),
+  visibility: z.enum(['public', 'private']),
   cocktailEntries: z
     .array(cocktailEntrySchema)
     .optional(),
@@ -861,7 +861,7 @@ export function VisitForm({
                   <Select
                     value={form.watch('visibility')}
                     onValueChange={(
-                      value: 'public' | 'private' | 'friends',
+                      value: 'public' | 'private',
                     ) => form.setValue('visibility', value)}
                   >
                     <SelectTrigger className="w-[180px]">
