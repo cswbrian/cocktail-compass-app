@@ -56,32 +56,35 @@ function BookmarksSkeleton() {
 }
 
 export function BookmarksClient() {
-  // Initialize services
-  useEffect(() => {
-    const initializeServices = async () => {
-      try {
-        await fetchers.getUserBookmarksWithItems();
-      } catch (error) {
-        console.error('Failed to initialize bookmarks:', error);
-      }
-    };
-    initializeServices();
-  }, []);
-
-  // Fetch bookmarks using SWR
+  // Fetch bookmarks using SWR with immediate data fetching
   const {
     data: bookmarks = defaultData[CACHE_KEYS.BOOKMARKS],
     isLoading: isLoadingBookmarks,
     error: bookmarksError,
+    mutate: mutateBookmarks
   } = useSWR(
     CACHE_KEYS.BOOKMARKS,
     fetchers.getUserBookmarksWithItems,
     {
       ...swrConfig,
-      revalidateOnFocus: true, // Enable revalidation on focus
-      dedupingInterval: 2000, // Reduce deduping interval for more frequent updates
+      revalidateOnFocus: true,
+      dedupingInterval: 2000,
+      revalidateOnMount: true, // Ensure revalidation on mount
+      refreshInterval: 0, // Disable automatic refresh
     },
   );
+
+  // Initialize and refresh data on mount
+  useEffect(() => {
+    const initializeBookmarks = async () => {
+      try {
+        await mutateBookmarks(); // This will trigger a fresh fetch
+      } catch (error) {
+        console.error('Failed to initialize bookmarks:', error);
+      }
+    };
+    initializeBookmarks();
+  }, [mutateBookmarks]);
 
   // Handle error state
   if (bookmarksError) {
