@@ -1,4 +1,5 @@
 import ReactGA from 'react-ga4';
+import { AuthService } from '@/services/auth-service';
 
 // Initialize GA4 with your measurement ID
 export const initGA = () => {
@@ -16,12 +17,16 @@ export const setUserId = (userId: string) => {
 };
 
 // Helper function to send events
-export const sendGAEvent = (
+export const sendGAEvent = async (
   category: string,
   action: string,
   label?: string,
-  userId?: string,
 ) => {
+  // Get current user ID from auth service
+  const user = await AuthService.getCurrentSession();
+  const userId = user?.id;
+
+  
   const eventParams: any = {
     category,
     action,
@@ -36,7 +41,11 @@ export const sendGAEvent = (
 };
 
 // Track page views with user ID
-export const trackPageView = (path: string, userId?: string) => {
+export const trackPageView = async (path: string) => {
+  // Get current user ID from auth service
+  const user = await AuthService.getCurrentSession();
+  const userId = user?.id;
+
   const pageViewParams: any = {
     page: path,
   };
