@@ -174,7 +174,6 @@ export class VisitService {
       .range(offset, to);
 
     if (error) throw error;
-    console.log('getVisitsByUserId');
 
     const visits = data.map(this.mapVisit);
     const hasMore = count
@@ -198,7 +197,6 @@ export class VisitService {
       .range(offset, to);
 
     if (error) throw error;
-    console.log('getPublicVisits');
     const visits = data.map(this.mapVisit);
     const hasMore = count
       ? offset + pageSize < count
@@ -249,7 +247,6 @@ export class VisitService {
       .range(offset, to);
 
     if (error) throw error;
-    console.log('getPublicVisitsByPlaceId');
 
     const visits = data.map(this.mapVisit);
     const hasMore = count ? offset + pageSize < count : false;
