@@ -157,42 +157,57 @@ export function CustomIngredientModal({
                       }
                       className="mt-4 flex flex-col space-y-2"
                     >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="base_spirit"
-                          id="base_spirit"
-                        />
-                        <Label
-                          htmlFor="base_spirit"
-                          className="cursor-pointer"
-                        >
-                          {t.baseSpirit}
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="liqueur"
-                          id="liqueur"
-                        />
-                        <Label
-                          htmlFor="liqueur"
-                          className="cursor-pointer"
-                        >
-                          {t.liqueur}
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="ingredient"
-                          id="ingredient"
-                        />
-                        <Label
-                          htmlFor="ingredient"
-                          className="cursor-pointer"
-                        >
-                          {t.ingredient}
-                        </Label>
-                      </div>
+                      <Label
+                        htmlFor="base_spirit"
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-top space-x-2">
+                          <RadioGroupItem
+                            value="base_spirit"
+                            id="base_spirit"
+                          />
+                          <div className="flex flex-col gap-y-1">
+                            <span>{t.baseSpirit}</span>
+                            <span className="text-sm text-muted-foreground">
+                              {t.baseSpiritDescription}
+                            </span>
+                          </div>
+                        </div>
+                      </Label>
+                      <Label
+                        htmlFor="liqueur"
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-top space-x-2">
+                          <RadioGroupItem
+                            value="liqueur"
+                            id="liqueur"
+                          />
+                          <div className="flex flex-col gap-y-1">
+                            <span>{t.liqueur}</span>
+                            <span className="text-sm text-muted-foreground">
+                              {t.liqueurDescription}
+                            </span>
+                          </div>
+                        </div>
+                      </Label>
+                      <Label
+                        htmlFor="ingredient"
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-top space-x-2">
+                          <RadioGroupItem
+                            value="ingredient"
+                            id="ingredient"
+                          />
+                          <div className="flex flex-col gap-y-1">
+                            <span>{t.ingredient}</span>
+                            <span className="text-sm text-muted-foreground">
+                              {t.ingredientDescription}
+                            </span>
+                          </div>
+                        </div>
+                      </Label>
                     </RadioGroup>
                   </div>
                 </div>

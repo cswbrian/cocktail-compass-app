@@ -243,6 +243,10 @@ export function CustomCocktailModal({
                     />
                   </div>
 
+                  <div className="text-sm text-muted-foreground">
+                    {t.customCocktailHint}
+                  </div>
+
                   <div>
                     <Label>{t.ingredients}</Label>
                     <div className="space-y-2">

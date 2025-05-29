@@ -265,6 +265,7 @@ export function VisitForm({
   const [mediaError, setMediaError] = useState<string | null>(null);
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const fileInputRefs = useRef<{ [key: number]: HTMLInputElement | null; }>({});
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Use SWR to fetch cocktail list
   const { data: allCocktails = [] } = useSWR(
@@ -407,6 +408,16 @@ export function VisitForm({
       media: [],
       isSearchOpen: true,
     });
+
+    // Scroll to bottom with animation after a short delay to allow for the new entry to be rendered
+    setTimeout(() => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+          top: scrollContainerRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
   const handleSelectCocktail = (
@@ -428,13 +439,6 @@ export function VisitForm({
       [index]: false,
     }));
     setCurrentCocktailInput('');
-  };
-
-  const handleAddCocktail = (
-    index: number,
-    cocktail: SearchItem,
-  ) => {
-    handleSelectCocktail(index, cocktail);
   };
 
   const handleCustomCocktailValues = (
@@ -638,7 +642,7 @@ export function VisitForm({
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto" ref={scrollContainerRef}>
                 <div className="px-4 py-4 space-y-4">
                   <div className="flex flex-col gap-2">
                     <Popover>
@@ -707,164 +711,199 @@ export function VisitForm({
                   </div>
 
                   <div className="space-y-4">
-                    {fields.map((field, index) => (
-                      <div
-                        key={field.id}
-                        className="p-4 border rounded-lg space-y-2"
-                      >
-                        <div className="flex items-center justify-between">
-                          <Popover
-                            open={entrySearchStates[index]}
-                            onOpenChange={open =>
-                              setEntrySearchStates(
-                                prev => ({
-                                  ...prev,
-                                  [index]: open,
-                                }),
-                              )
-                            }
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                className="w-full justify-start text-left font-normal"
-                              >
-                                {field.cocktailId ? (
-                                  <span className="font-medium">
-                                    {field.cocktailName}
-                                  </span>
-                                ) : (
-                                  <span className="text-white">
-                                    {t.selectCocktail}
-                                  </span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-[300px] p-0"
-                              align="start"
+                    <AnimatePresence mode="popLayout">
+                      {fields.map((field, index) => (
+                        <motion.div
+                          key={field.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30
+                          }}
+                          className="p-4 border rounded-lg space-y-2"
+                        >
+                          <div className="flex items-center justify-between">
+                            <Popover
+                              open={entrySearchStates[index]}
+                              onOpenChange={open =>
+                                setEntrySearchStates(
+                                  prev => ({
+                                    ...prev,
+                                    [index]: open,
+                                  }),
+                                )
+                              }
                             >
-                              <div className="p-2">
-                                <div className="relative">
-                                  <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
-                                  <Input
-                                    placeholder={
-                                      t.searchCocktail
-                                    }
-                                    value={
-                                      currentCocktailInput
-                                    }
-                                    onChange={e => {
-                                      setCurrentCocktailInput(
-                                        e.target.value,
-                                      );
-                                    }}
-                                    className="pl-9"
-                                  />
-                                </div>
-                                <ScrollArea className="h-[200px]">
-                                  {isLoadingCocktails ? (
-                                    <div className="flex items-center justify-center py-4">
-                                      <Loading size="sm" />
-                                    </div>
-                                  ) : filteredCocktails.length >
-                                    0 ? (
-                                    <div className="mt-2">
-                                      {filteredCocktails.map(
-                                        cocktail => (
-                                          <button
-                                            key={
-                                              cocktail.value
-                                            }
-                                            type="button"
-                                            onClick={() =>
-                                              handleSelectCocktail(
-                                                index,
-                                                cocktail,
-                                              )
-                                            }
-                                            className="w-full text-left p-2 rounded-md hover:bg-accent transition-colors"
-                                          >
-                                            {cocktail.name}
-                                          </button>
-                                        ),
-                                      )}
-                                    </div>
-                                  ) : (
-                                    <div className="text-center text-sm text-muted-foreground py-4">
-                                      {t.noCocktailsFound}
-                                    </div>
-                                  )}
-                                </ScrollArea>
+                              <PopoverTrigger asChild>
                                 <Button
                                   type="button"
-                                  variant="outline"
-                                  className="w-full mt-2"
-                                  onClick={() =>
-                                    setIsCreatingCustom(
-                                      true,
-                                    )
-                                  }
+                                  variant="ghost"
+                                  className="w-full justify-start text-left font-normal"
                                 >
-                                  {t.createCustomCocktail}
+                                  {field.cocktailId ? (
+                                    <span className="font-medium">
+                                      {field.cocktailName}
+                                    </span>
+                                  ) : (
+                                    <span className="text-white">
+                                      {t.selectCocktail}
+                                    </span>
+                                  )}
                                 </Button>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-[300px] p-0"
+                                align="start"
+                              >
+                                <div className="p-2">
+                                  <div className="relative">
+                                    <Search className="absolute left-2 top-2 h-5 w-5 text-muted-foreground" />
+                                    <Input
+                                      placeholder={
+                                        t.searchCocktail
+                                      }
+                                      value={
+                                        currentCocktailInput
+                                      }
+                                      onChange={e => {
+                                        setCurrentCocktailInput(
+                                          e.target.value,
+                                        );
+                                      }}
+                                      className="pl-9"
+                                    />
+                                  </div>
+                                  <ScrollArea className="h-[200px]">
+                                    {isLoadingCocktails ? (
+                                      <div className="flex items-center justify-center py-4">
+                                        <Loading size="sm" />
+                                      </div>
+                                    ) : filteredCocktails.length >
+                                      0 ? (
+                                      <div className="mt-2">
+                                        {filteredCocktails.map(
+                                          cocktail => (
+                                            <button
+                                              key={
+                                                cocktail.value
+                                              }
+                                              type="button"
+                                              onClick={() =>
+                                                handleSelectCocktail(
+                                                  index,
+                                                  cocktail,
+                                                )
+                                              }
+                                              className="w-full text-left p-2 rounded-md hover:bg-accent transition-colors"
+                                            >
+                                              {cocktail.name}
+                                            </button>
+                                          ),
+                                        )}
+                                      </div>
+                                    ) : (
+                                      <div className="text-center text-sm text-muted-foreground py-4">
+                                        {t.noCocktailsFound}
+                                      </div>
+                                    )}
+                                  </ScrollArea>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full mt-2"
+                                    onClick={() =>
+                                      setIsCreatingCustom(
+                                        true,
+                                      )
+                                    }
+                                  >
+                                    {t.createCustomCocktail}
+                                  </Button>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => remove(index)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          {field.cocktailId && (
+                            <>
+                              <div className="relative">
+                                <Textarea
+                                  {...form.register(
+                                    `cocktailEntries.${index}.comments`,
+                                  )}
+                                  placeholder={
+                                    t.cocktailNotePlaceholder
+                                  }
+                                  className="min-h-[150px] resize-none pr-20"
+                                />
+                                <div className="absolute bottom-2 right-2">
+                                  <span className="text-xs text-muted-foreground">
+                                    {form.watch(`cocktailEntries.${index}.comments`)?.length || 0}/500
+                                  </span>
+                                </div>
                               </div>
-                            </PopoverContent>
-                          </Popover>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => remove(index)}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        {field.cocktailId && (
-                          <>
-                            <div className="relative">
-                              <Textarea
-                                {...form.register(
-                                  `cocktailEntries.${index}.comments`,
-                                )}
-                                placeholder={
-                                  t.cocktailNotePlaceholder
-                                }
-                                className="min-h-[150px] resize-none pr-20"
+                              <MediaField
+                                control={form.control}
+                                setValue={form.setValue}
+                                index={index}
+                                onError={setMediaError}
                               />
-                              <div className="absolute bottom-2 right-2">
-                                <span className="text-xs text-muted-foreground">
-                                  {form.watch(`cocktailEntries.${index}.comments`)?.length || 0}/500
-                                </span>
-                              </div>
-                            </div>
-                            <MediaField
-                              control={form.control}
-                              setValue={form.setValue}
-                              index={index}
-                              onError={setMediaError}
-                            />
-                          </>
-                        )}
-                      </div>
-                    ))}
+                            </>
+                          )}
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={handleAddEmptyCocktail}
-                      className="w-full"
+                    <motion.div
+                      layout
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 30,
+                        delay: 0.1
+                      }}
                     >
-                      <Plus className="h-4 w-4 mr-2" />
-                      {t.addCocktail}
-                    </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleAddEmptyCocktail}
+                        className="w-full"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        {t.addCocktailEntry}
+                      </Button>
+                    </motion.div>
                   </div>
                 </div>
               </div>
 
               <div className="p-4 border-t mt-auto">
+                <AnimatePresence>
+                  {(!form.watch('visitDate') || !form.watch('location') || form.getValues('cocktailEntries')?.some(entry => !entry.cocktailId)) && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-sm text-white mb-4"
+                    >
+                      {t.visitFormHint}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 <div className="flex w-full gap-2 items-center">
                   <Select
                     value={form.watch('visibility')}
