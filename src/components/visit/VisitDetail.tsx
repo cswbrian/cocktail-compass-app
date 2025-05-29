@@ -134,7 +134,7 @@ export function VisitDetail({
             {!isOwnVisit && (
               <Link
                 to={`/${language}/drinkers/${visit.user.username}`}
-                className="font-medium text-primary"
+                className="font-bold"
                 onClick={e => e.stopPropagation()}
               >
                 <span>{visit.user.username}</span>
@@ -155,7 +155,7 @@ export function VisitDetail({
             <MapPin className="size-4 text-muted-foreground" />
             <Link
               to={`/${language}/places/${visit.location?.place_id}`}
-              className="hover:text-primary transition-colors"
+              className="text-primary hover:underline transition-colors"
               onClick={e => e.stopPropagation()}
             >
               {visit.location?.name || 'Unnamed Location'}

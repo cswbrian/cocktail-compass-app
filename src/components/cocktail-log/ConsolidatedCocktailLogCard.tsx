@@ -37,7 +37,7 @@ export function ConsolidatedCocktailLogCard({
             >
               <div className="flex items-center gap-2">
                 <MartiniIcon className="w-4 h-4 size-4 text-muted-foreground" />
-                <h3>
+                <h3 className="text-primary hover:underline transition-colors">
                   {formatBilingualText(
                     log.cocktail.name,
                     language,

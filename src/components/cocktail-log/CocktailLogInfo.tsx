@@ -30,7 +30,7 @@ export function LocationInfo({
       <MapPin className="size-4 text-muted-foreground" />
       <Link
         to={`/${language}/places/${location.place_id}`}
-        className="hover:text-primary transition-colors"
+        className="text-primary hover:underline transition-colors"
         onClick={e => e.stopPropagation()}
       >
         {location.name}

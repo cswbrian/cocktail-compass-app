@@ -34,7 +34,7 @@ export function VisitCard({
             {feedType === 'recommend' && (
               <Link
                 to={`/${language}/drinkers/${visit.user.username}`}
-                className="font-medium text-primary"
+                className="font-bold"
                 onClick={e => e.stopPropagation()}
               >
                 <span>{visit.user.username}</span>
