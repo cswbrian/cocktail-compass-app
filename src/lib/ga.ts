@@ -10,15 +10,40 @@ export const initGA = () => {
   ReactGA.initialize(gaId);
 };
 
+// Set user ID for tracking
+export const setUserId = (userId: string) => {
+  ReactGA.set({ userId });
+};
+
 // Helper function to send events
 export const sendGAEvent = (
   category: string,
   action: string,
   label?: string,
+  userId?: string,
 ) => {
-  ReactGA.event({
+  const eventParams: any = {
     category,
     action,
     label,
-  });
+  };
+
+  if (userId) {
+    eventParams.userId = userId;
+  }
+
+  ReactGA.event(eventParams);
+};
+
+// Track page views with user ID
+export const trackPageView = (path: string, userId?: string) => {
+  const pageViewParams: any = {
+    page: path,
+  };
+
+  if (userId) {
+    pageViewParams.userId = userId;
+  }
+
+  ReactGA.send({ hitType: "pageview", ...pageViewParams });
 };
