@@ -15,6 +15,7 @@ import { Search, Clock, X, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useIngredients } from '@/hooks/useIngredients';
+import { sendGAEvent } from '@/lib/ga';
 
 interface SearchClientProps {
   cocktails: CocktailPreview[];
@@ -123,6 +124,7 @@ export function SearchContainer({
   ];
 
   const handleBaseSpiritClick = (name: string) => {
+    sendGAEvent('Search', 'Base Spirit Click', name);
     navigate(`/${language}/ingredients/${name}`);
   };
 
@@ -152,6 +154,11 @@ export function SearchContainer({
   };
 
   const removeRecentSearch = (id: string) => {
+    const searchToRemove = recentSearches.find(item => item.id === id);
+    if (searchToRemove) {
+      sendGAEvent('Search', 'Remove Recent Search', `${searchToRemove.type}:${id}`);
+    }
+    
     const updatedSearches = recentSearches.filter(
       item => item.id !== id,
     );
@@ -163,6 +170,7 @@ export function SearchContainer({
   };
 
   const clearRecentSearches = () => {
+    sendGAEvent('Search', 'Clear Recent Searches', `Count: ${recentSearches.length}`);
     setRecentSearches([]);
     localStorage.removeItem('recentSearches');
   };
@@ -217,6 +225,8 @@ export function SearchContainer({
     value: string,
     item: SearchItem,
   ) => {
+    sendGAEvent('Search', 'Select Item', `${item.type}:${item.name}`);
+    
     updateRecentSearches({ id: item.id, type: item.type });
     const [type, name] = value.split(':');
     if (type === 'cocktail') {
@@ -260,7 +270,13 @@ export function SearchContainer({
             value={searchQuery}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement>,
-            ) => setSearchQuery(e.target.value)}
+            ) => {
+              const newValue = e.target.value;
+              setSearchQuery(newValue);
+              if (newValue) {
+                sendGAEvent('Search', 'Search Query', newValue);
+              }
+            }}
             onFocus={() => setIsInputFocused(true)}
             onBlur={() => setIsInputFocused(false)}
             className="pl-9 pr-9"

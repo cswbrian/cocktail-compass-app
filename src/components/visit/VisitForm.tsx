@@ -54,6 +54,7 @@ import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 import { useVisits } from '@/context/VisitContext';
 import { VisibilityIndicator } from '@/components/common/VisibilityIndicator';
+import { sendGAEvent } from '@/lib/ga';
 
 // Form schema
 const mediaSchema = z.object({
@@ -409,6 +410,9 @@ export function VisitForm({
       isSearchOpen: true,
     });
 
+    // Track adding new cocktail entry
+    sendGAEvent('Visit Form', 'Add Cocktail Entry', 'New Entry');
+
     // Scroll to bottom with animation after a short delay to allow for the new entry to be rendered
     setTimeout(() => {
       if (scrollContainerRef.current) {
@@ -439,6 +443,9 @@ export function VisitForm({
       [index]: false,
     }));
     setCurrentCocktailInput('');
+
+    // Track cocktail selection
+    sendGAEvent('Visit Form', 'Select Cocktail', cocktail.name);
   };
 
   const handleCustomCocktailValues = (
@@ -453,6 +460,9 @@ export function VisitForm({
     });
     setCurrentCocktailInput('');
     setIsCreatingCustom(false);
+
+    // Track custom cocktail creation
+    sendGAEvent('Visit Form', 'Create Custom Cocktail', `${values.nameEn} / ${values.nameZh}`);
   };
 
   const onSubmit = async (data: VisitFormData) => {
@@ -489,6 +499,9 @@ export function VisitForm({
           updatedAt: updatedVisit.updatedAt,
           deletedAt: updatedVisit.deletedAt,
         };
+
+        // Track visit update
+        sendGAEvent('Visit Form', 'Update Visit', `Entries: ${validEntries.length}`);
 
         // Update existing logs if there are any valid entries
         if (validEntries.length > 0) {
@@ -542,6 +555,9 @@ export function VisitForm({
           deletedAt: newVisit.deletedAt,
         };
 
+        // Track new visit creation
+        sendGAEvent('Visit Form', 'Create Visit', `Entries: ${validEntries.length}`);
+
         // Create new logs if there are any valid entries
         if (validEntries.length > 0) {
           await Promise.all(
@@ -585,6 +601,8 @@ export function VisitForm({
       navigate(`/${language}/feeds/me`);
     } catch (error) {
       console.error('Form submission error:', error);
+      // Track form submission error
+      sendGAEvent('Visit Form', 'Submit Error', error instanceof Error ? error.message : 'Unknown error');
       toast({
         description: t.errorSavingLog,
         variant: 'destructive',
@@ -829,7 +847,11 @@ export function VisitForm({
                               type="button"
                               variant="ghost"
                               size="icon"
-                              onClick={() => remove(index)}
+                              onClick={() => {
+                                remove(index);
+                                // Track removing cocktail entry
+                                sendGAEvent('Visit Form', 'Remove Cocktail Entry', `Index: ${index}`);
+                              }}
                             >
                               <X className="h-4 w-4" />
                             </Button>

@@ -10,6 +10,7 @@ import { useInView } from 'react-intersection-observer';
 import { Loader2 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { VisitCard } from './VisitCard';
+import { sendGAEvent } from '@/lib/ga';
 
 interface VisitListProps {
   visits?: Visit[];
@@ -85,6 +86,8 @@ export function VisitList({
     isLoadingRef.current = true;
 
     if (providedOnLoadMore) {
+      // Track loading more visits
+      sendGAEvent('Visit List', 'Load More', `Feed: ${feedType}`);
       await providedOnLoadMore();
       setIsLoadingMore(false);
       isLoadingRef.current = false;
@@ -93,7 +96,15 @@ export function VisitList({
     providedHasMore,
     providedIsLoading,
     providedOnLoadMore,
+    feedType,
   ]);
+
+  // Track initial visits load
+  useEffect(() => {
+    if (providedVisits && providedVisits.length > 0) {
+      sendGAEvent('Visit List', 'Initial Load', `Feed: ${feedType}, Count: ${providedVisits.length}`);
+    }
+  }, [providedVisits, feedType]);
 
   // Load more when the last item comes into view
   useEffect(() => {

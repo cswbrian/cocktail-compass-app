@@ -16,6 +16,7 @@ import { CocktailLogCard } from '@/components/cocktail-log/CocktailLogCard';
 import { VisitForm } from './VisitForm';
 import { translations } from '@/translations';
 import { VisibilityIndicator } from '../common/VisibilityIndicator';
+import { sendGAEvent } from '@/lib/ga';
 
 interface VisitDetailProps {
   visit: Visit;
@@ -41,6 +42,13 @@ export function VisitDetail({
 
   const isOwnVisit = user?.id === visit.user.id;
 
+  // Track visit detail view
+  useEffect(() => {
+    if (isOpen) {
+      sendGAEvent('Visit Detail', 'View', `ID: ${visit.id}, Own: ${isOwnVisit}`);
+    }
+  }, [isOpen, visit.id, isOwnVisit]);
+
   useEffect(() => {
     setIsEditing(location.pathname.endsWith('/edit'));
   }, [location]);
@@ -61,6 +69,8 @@ export function VisitDetail({
   }, [isEditing]);
 
   const handleEditClick = () => {
+    // Track edit button click
+    sendGAEvent('Visit Detail', 'Edit Click', `ID: ${visit.id}`);
     window.history.pushState(
       {},
       '',
@@ -83,10 +93,24 @@ export function VisitDetail({
   };
 
   const handleVisitSaved = (updatedVisit: Visit) => {
+    // Track visit save
+    sendGAEvent('Visit Detail', 'Save', `ID: ${updatedVisit.id}`);
     if (onVisitSaved) {
       onVisitSaved(updatedVisit);
     }
     handleCloseEdit();
+  };
+
+  // Track location click
+  const handleLocationClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    sendGAEvent('Visit Detail', 'Location Click', visit.location?.name || 'Unnamed Location');
+  };
+
+  // Track user profile click
+  const handleUserClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    sendGAEvent('Visit Detail', 'User Click', visit.user.username);
   };
 
   if (isEditing) {
@@ -135,7 +159,7 @@ export function VisitDetail({
               <Link
                 to={`/${language}/drinkers/${visit.user.username}`}
                 className="font-bold"
-                onClick={e => e.stopPropagation()}
+                onClick={handleUserClick}
               >
                 <span>{visit.user.username}</span>
               </Link>
@@ -156,7 +180,7 @@ export function VisitDetail({
             <Link
               to={`/${language}/places/${visit.location?.place_id}`}
               className="text-primary hover:underline transition-colors"
-              onClick={e => e.stopPropagation()}
+              onClick={handleLocationClick}
             >
               {visit.location?.name || 'Unnamed Location'}
             </Link>
