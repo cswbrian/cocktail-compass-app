@@ -59,10 +59,7 @@ export function BookmarksClient() {
   // Initialize services
   useEffect(() => {
     const initializeServices = async () => {
-      await Promise.all([
-        fetchers.getBookmarks(),
-        fetchers.getCocktails(),
-      ]);
+      await fetchers.getUserBookmarksWithItems();
     };
     initializeServices();
   }, []);
@@ -73,29 +70,15 @@ export function BookmarksClient() {
     isLoading: isLoadingBookmarks,
   } = useSWR(
     CACHE_KEYS.BOOKMARKS,
-    fetchers.getBookmarks,
+    fetchers.getUserBookmarksWithItems,
     swrConfig,
   );
-
-  // Fetch cocktails using SWR
-  const {
-    data: cocktails = defaultData[CACHE_KEYS.COCKTAILS],
-    isLoading: isLoadingCocktails,
-  } = useSWR(
-    CACHE_KEYS.COCKTAILS,
-    fetchers.getCocktails,
-    swrConfig,
-  );
-
-  const isLoading =
-    isLoadingBookmarks || isLoadingCocktails;
 
   return (
     <AuthWrapper customLoading={<BookmarksSkeleton />}>
       <BookmarksList
         bookmarks={bookmarks}
-        cocktails={cocktails}
-        isLoading={isLoading}
+        isLoading={isLoadingBookmarks}
       />
     </AuthWrapper>
   );

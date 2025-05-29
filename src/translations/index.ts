@@ -330,6 +330,8 @@ export const translations = {
     termsAndConditions: 'Terms and Conditions',
     privacyPolicy: 'Privacy Policy',
     visits: 'Visits',
+    cocktails: 'Cocktails',
+    places: 'Places',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -641,5 +643,7 @@ export const translations = {
     termsAndConditions: '服務條款',
     privacyPolicy: '隱私政策',
     visits: '到訪',
+    cocktails: '調酒',
+    places: '地點',
   },
 };

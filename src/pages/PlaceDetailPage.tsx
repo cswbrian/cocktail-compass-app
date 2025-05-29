@@ -23,6 +23,7 @@ import { ExternalLink } from '@/components/external-link';
 import { VisitList } from '@/components/visit/VisitList';
 import { PlaceDetailNav } from '@/components/place/PlaceDetailNav';
 import { ShareButton } from '@/components/ShareButton';
+import { BookmarkButton } from '@/components/bookmark/bookmark-button';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -172,7 +173,8 @@ export default function PlaceDetailPage() {
           <div className="flex items-top gap-2">
             <h1 className="text-4xl mb-2">{place.name}</h1>
             <div className="flex gap-2">
-            <ShareButton url={window.location.href} />
+              <BookmarkButton placeId={place.id} />
+              <ShareButton url={window.location.href} />
             </div>
           </div>
           <div className="flex items-center gap-2 mb-2">

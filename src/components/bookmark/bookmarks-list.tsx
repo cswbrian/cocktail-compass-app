@@ -10,10 +10,15 @@ import {
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { CocktailCard } from '@/components/cocktail-card';
+import { PlaceCard } from '@/components/place/PlaceCard';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { BookmarkList } from '@/types/bookmark';
+import {
+  BookmarkList,
+  BookmarkedItem,
+} from '@/types/bookmark';
 import { Cocktail } from '@/types/cocktail';
+import { Place } from '@/types/place';
 import {
   Drawer,
   DrawerContent,
@@ -30,35 +35,30 @@ import {
   LayoutGrid,
   List,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface BookmarksListProps {
   bookmarks: BookmarkList[];
-  cocktails: Cocktail[];
   isLoading: boolean;
 }
 
 export function BookmarksList({
   bookmarks,
-  cocktails,
+  isLoading,
 }: BookmarksListProps) {
   const { user } = useAuth();
   const { language } = useLanguage();
   const navigate = useNavigate();
   const t = translations[language];
 
-  const [viewMode, setViewMode] = useState<
-    'default' | 'compact'
-  >(() => {
-    if (typeof window !== 'undefined') {
-      return (
-        (localStorage.getItem('bookmarks-view-mode') as
-          | 'default'
-          | 'compact') || 'compact'
-      );
-    }
-    return 'compact';
-  });
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [filters, setFilters] = useState<{
+    cocktails: boolean;
+    places: boolean;
+  }>({
+    cocktails: true,
+    places: false,
+  });
   const [sortBy, setSortBy] = useState<
     'recentlyAdded' | 'alphabetical'
   >(() => {
@@ -97,35 +97,62 @@ export function BookmarksList({
     );
   }
 
-  const getBookmarkedCocktails = (
+  const getBookmarkedItems = (
     listId: string,
-  ): Cocktail[] => {
+  ): (Cocktail | Place)[] => {
     const list = bookmarks.find(b => b.id === listId);
     if (!list?.items) return [];
 
-    const bookmarkedCocktails = list.items
-      .map(item => {
-        const cocktail = cocktails.find(
-          c => c.id === item.cocktail_id,
-        );
-        return cocktail || null;
-      })
-      .filter(
-        (cocktail): cocktail is Cocktail =>
-          cocktail !== null,
-      );
+    // Show all items if both filters are in the same state (both true or both false)
+    const showAll = filters.cocktails === filters.places;
+
+    const bookmarkedCocktails = (showAll || filters.cocktails)
+      ? list.items
+          .filter(item => item.cocktail)
+          .map(item => item.cocktail)
+          .filter(
+            (cocktail): cocktail is Cocktail =>
+              cocktail !== null,
+          )
+      : [];
+
+    const bookmarkedPlaces = (showAll || filters.places)
+      ? list.items
+          .filter(item => item.place)
+          .map(item => item.place)
+          .filter((place): place is Place => place !== null)
+      : [];
+
+    const allItems = [
+      ...bookmarkedCocktails,
+      ...bookmarkedPlaces,
+    ];
 
     if (sortBy === 'alphabetical') {
-      return [...bookmarkedCocktails].sort((a, b) =>
-        a.name.en.localeCompare(b.name.en),
-      );
+      return allItems.sort((a, b) => {
+        const aName =
+          'name' in a && typeof a.name === 'object'
+            ? a.name.en
+            : a.name;
+        const bName =
+          'name' in b && typeof b.name === 'object'
+            ? b.name.en
+            : b.name;
+        return String(aName).localeCompare(String(bName));
+      });
     } else {
-      return [...bookmarkedCocktails].sort((a, b) => {
+      return allItems.sort((a, b) => {
         const aItem = list.items?.find(
-          item => item.cocktail_id === a.id,
+          item =>
+            ('id' in a && item.cocktail_id === a.id) ||
+            ('place_id' in a &&
+              item.place_id === a.place_id),
         );
         const bItem = list.items?.find(
-          item => item.cocktail_id === b.id,
+          item =>
+            ('id' in b && item.cocktail_id === b.id) ||
+            ('place_id' in b &&
+              item.place_id === b.place_id),
         );
         return (
           new Date(bItem?.added_at || 0).getTime() -
@@ -162,7 +189,29 @@ export function BookmarksList({
           </TabsList>
         </div>
 
-        <div className="mb-6 flex justify-between items-center px-6">
+        <div className="mb-6 flex flex-col gap-4 px-6">
+          <div className="flex gap-2">
+            <Button
+              variant={filters.cocktails ? "default" : "secondary"}
+              size="sm"
+              onClick={() => setFilters(prev => ({
+                ...prev,
+                cocktails: !prev.cocktails
+              }))}
+            >
+              {t.cocktails}
+            </Button>
+            <Button
+              variant={filters.places ? "default" : "secondary"}
+              size="sm"
+              onClick={() => setFilters(prev => ({
+                ...prev,
+                places: !prev.places
+              }))}
+            >
+              {t.places}
+            </Button>
+          </div>
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => setIsDrawerOpen(true)}
@@ -173,27 +222,6 @@ export function BookmarksList({
                 ? t.recentlyAdded
                 : t.alphabetical}
             </span>
-          </div>
-
-          <div
-            className="flex items-center cursor-pointer"
-            onClick={() => {
-              const newViewMode =
-                viewMode === 'default'
-                  ? 'compact'
-                  : 'default';
-              setViewMode(newViewMode);
-              localStorage.setItem(
-                'bookmarks-view-mode',
-                newViewMode,
-              );
-            }}
-          >
-            {viewMode === 'default' ? (
-              <List className="h-4 w-4 text-white" />
-            ) : (
-              <LayoutGrid className="h-4 w-4 text-white" />
-            )}
           </div>
         </div>
 
@@ -261,12 +289,18 @@ export function BookmarksList({
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {getBookmarkedCocktails(list.id).map(
-                  cocktail => (
+                {getBookmarkedItems(list.id).map(item =>
+                  'place_id' in item ? (
+                    <PlaceCard
+                      key={(item as Place).place_id}
+                      place={item as Place}
+                      variant="compact"
+                    />
+                  ) : (
                     <CocktailCard
-                      key={cocktail.id}
-                      cocktail={cocktail}
-                      variant={viewMode}
+                      key={item.id}
+                      cocktail={item as Cocktail}
+                      variant="compact"
                     />
                   ),
                 )}

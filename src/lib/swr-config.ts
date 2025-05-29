@@ -8,6 +8,7 @@ import { BookmarkList } from '@/types/bookmark';
 import { AuthService } from '@/services/auth-service';
 import { mutate } from 'swr';
 import { visitService } from '@/services/visit-service';
+import { placeService } from '@/services/place-service';
 
 interface UserStats {
   basicStats: {
@@ -60,6 +61,7 @@ export const CACHE_KEYS = {
     page ? ['own-visits', page] : 'own-visits',
   PUBLIC_VISITS: (page?: number) => ['public-visits', page],
   USER_VISITS: (userId: string, page?: number) => ['user-visits', userId, page],
+  PLACES: 'places',
 } as const;
 
 // Helper functions for cache invalidation
@@ -244,6 +246,15 @@ export const fetchers = {
       throw error;
     }
   },
+
+  getUserBookmarksWithItems: async () => {
+    return bookmarkService.getUserBookmarksWithItems();
+  },
+
+  getPlaces: async () => {
+    const response = await placeService.getAllPlaces();
+    return response.data || [];
+  },
 };
 
 // Default fallback data
@@ -262,6 +273,7 @@ const defaultFallbackData = {
   } as UserStats,
   bookmarks: [] as BookmarkList[],
   cocktails: [] as Cocktail[],
+  [CACHE_KEYS.PLACES]: [],
 };
 
 // SWR configuration

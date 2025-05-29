@@ -22,58 +22,79 @@ export class BookmarkService {
     const userId = await this.getUserId();
     if (!userId) throw new Error('User not authenticated');
 
-    // Fetch lists with their items in a single query
-    const { data: lists, error } = await supabase
+    const { data, error } = await supabase
       .from('bookmark_lists')
-      .select(
-        `
+      .select(`
         *,
-        items:bookmarked_items(*)
-      `,
-      )
+        bookmarked_items (
+          id,
+          cocktail_id,
+          place_id,
+          list_id,
+          added_at,
+          cocktail:cocktails!cocktail_id (
+            id,
+            slug,
+            name
+          ),
+          place:places!place_id (
+            id,
+            place_id,
+            name
+          )
+        )
+      `)
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return lists || [];
+    return data || [];
   }
 
-  async getBookmarkedItems(
-    listId: string,
-  ): Promise<BookmarkedItem[]> {
-    const { data: items, error } = await supabase
+  async getBookmarkedItems(listId: string): Promise<BookmarkedItem[]> {
+    const { data, error } = await supabase
       .from('bookmarked_items')
-      .select('*')
+      .select(`
+        *,
+        cocktail:cocktails!cocktail_id (
+          id,
+          slug,
+          name
+        ),
+        place:places!place_id (
+          id,
+          place_id,
+          name
+        )
+      `)
       .eq('list_id', listId)
       .order('added_at', { ascending: false });
 
     if (error) throw error;
-    return items || [];
+    return data || [];
   }
 
-  async addBookmark(
-    listId: string,
-    cocktailId: string,
-  ): Promise<void> {
+  async addBookmark(listId: string, cocktailId?: string, placeId?: string): Promise<void> {
     const { error } = await supabase
       .from('bookmarked_items')
       .insert({
         list_id: listId,
-        cocktail_id: cocktailId,
+        cocktail_id: cocktailId || null,
+        place_id: placeId || null,
       });
 
     if (error) throw error;
   }
 
-  async removeBookmark(
-    listId: string,
-    cocktailId: string,
-  ): Promise<void> {
+  async removeBookmark(listId: string, cocktailId?: string, placeId?: string): Promise<void> {
     const { error } = await supabase
       .from('bookmarked_items')
       .delete()
-      .eq('list_id', listId)
-      .eq('cocktail_id', cocktailId);
+      .match({
+        list_id: listId,
+        cocktail_id: cocktailId || null,
+        place_id: placeId || null,
+      });
 
     if (error) throw error;
   }
@@ -120,14 +141,14 @@ export class BookmarkService {
     if (error) throw error;
   }
 
-  async getUserBookmarks(): Promise<BookmarkList[]> {
-    const user = await AuthService.getCurrentSession();
-    if (!user) return [];
+  // New optimized method to get all bookmarks with their items in a single query
+  async getUserBookmarksWithItems(): Promise<BookmarkList[]> {
+    const userId = await this.getUserId();
+    if (!userId) return [];
 
     const { data, error } = await supabase
       .from('bookmark_lists')
-      .select(
-        `
+      .select(`
         id,
         name,
         name_key,
@@ -138,12 +159,22 @@ export class BookmarkService {
         bookmarked_items (
           id,
           cocktail_id,
+          place_id,
           list_id,
-          added_at
+          added_at,
+          cocktail:cocktails!cocktail_id (
+            id,
+            slug,
+            name
+          ),
+          place:places!place_id (
+            id,
+            place_id,
+            name
+          )
         )
-      `,
-      )
-      .eq('user_id', user.id)
+      `)
+      .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -159,10 +190,69 @@ export class BookmarkService {
       items: list.bookmarked_items.map((item: any) => ({
         id: item.id,
         cocktail_id: item.cocktail_id,
+        place_id: item.place_id,
         list_id: item.list_id,
         added_at: item.added_at,
+        cocktail: item.cocktail,
+        place: item.place,
       })),
     }));
+  }
+
+  // New method to get a single bookmark list with its items
+  async getBookmarkListWithItems(listId: string): Promise<BookmarkList | null> {
+    const { data, error } = await supabase
+      .from('bookmark_lists')
+      .select(`
+        id,
+        name,
+        name_key,
+        is_default,
+        user_id,
+        created_at,
+        updated_at,
+        bookmarked_items (
+          id,
+          cocktail_id,
+          place_id,
+          list_id,
+          added_at,
+          cocktail:cocktails!cocktail_id (
+            id,
+            slug,
+            name
+          ),
+          place:places!place_id (
+            id,
+            place_id,
+            name
+          )
+        )
+      `)
+      .eq('id', listId)
+      .single();
+
+    if (error) throw error;
+    if (!data) return null;
+
+    return {
+      id: data.id,
+      name: data.name,
+      name_key: data.name_key,
+      is_default: data.is_default,
+      user_id: data.user_id,
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+      items: data.bookmarked_items.map((item: any) => ({
+        id: item.id,
+        cocktail_id: item.cocktail_id,
+        place_id: item.place_id,
+        list_id: item.list_id,
+        added_at: item.added_at,
+        cocktail: item.cocktail,
+        place: item.place,
+      })),
+    };
   }
 }
 
