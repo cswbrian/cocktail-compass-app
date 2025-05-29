@@ -13,7 +13,6 @@ import {
   MapPin,
   BadgeCheck,
   AlertCircle,
-  ArrowLeft,
 } from 'lucide-react';
 import { translations } from '@/translations';
 import useSWR from 'swr';
@@ -24,6 +23,7 @@ import { VisitList } from '@/components/visit/VisitList';
 import { PlaceDetailNav } from '@/components/place/PlaceDetailNav';
 import { ShareButton } from '@/components/ShareButton';
 import { BookmarkButton } from '@/components/bookmark/bookmark-button';
+import { BackButton } from '@/components/common/BackButton';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -162,14 +162,7 @@ export default function PlaceDetailPage() {
     <AuthWrapper>
       <div className="flex-1 overflow-y-auto">
         <div className="px-6 mb-6">
-          <Button
-            variant="link"
-            onClick={handleClose}
-            className="p-0 text-muted-foreground hover:no-underline"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t.back}
-          </Button>
+          <BackButton />
           <div className="flex items-top gap-2">
             <h1 className="text-4xl mb-2">{place.name}</h1>
             <div className="flex gap-2">

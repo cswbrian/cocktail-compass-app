@@ -17,6 +17,7 @@ import useSWR from 'swr';
 import { cocktailLogService } from '@/services/cocktail-log-service';
 import { CocktailLog } from '@/types/cocktail-log';
 import { Cocktail } from '@/types/cocktail';
+import { BackButton } from '@/components/common/BackButton';
 
 interface CocktailIngredientsProps {
   cocktail: Cocktail;
@@ -191,6 +192,7 @@ export default function CocktailDetails() {
   return (
     <div>
       <div className="px-6">
+        <BackButton to={`/${language}/feeds`} />
         <div className="mb-6 flex justify-between items-start">
           <div>
             <h1 className="text-4xl mb-2">
