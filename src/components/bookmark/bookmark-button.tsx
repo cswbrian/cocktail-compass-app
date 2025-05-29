@@ -29,6 +29,8 @@ import {
 } from '@/types/bookmark';
 import { toast } from 'sonner';
 import { cocktailService } from '@/services/cocktail-service';
+import useSWR from 'swr';
+import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
 
 interface BookmarkButtonProps {
   cocktailId?: string;
@@ -45,9 +47,40 @@ export function BookmarkButton({
   const location = useLocation();
   const t = translations[language];
   const [open, setOpen] = React.useState(false);
-  const [bookmarks, setBookmarks] = React.useState<BookmarkList[]>([]);
-  const [bookmarkedItems, setBookmarkedItems] = React.useState<{ [key: string]: BookmarkedItem[] }>({});
   const [isLoading, setIsLoading] = React.useState(false);
+
+  // Use SWR to fetch and cache bookmarks
+  const { data: bookmarks = [], mutate: mutateBookmarks } = useSWR(
+    user ? CACHE_KEYS.BOOKMARKS : null,
+    fetchers.getBookmarks,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: true,
+      revalidateOnReconnect: true,
+      dedupingInterval: 5000,
+    }
+  );
+
+  // Use SWR to fetch and cache bookmarked items
+  const { data: bookmarkedItems = {}, mutate: mutateBookmarkedItems } = useSWR(
+    user && bookmarks.length > 0
+      ? bookmarks.map(list => [CACHE_KEYS.BOOKMARKS, list.id])
+      : null,
+    async () => {
+      const itemsMap: { [key: string]: BookmarkedItem[] } = {};
+      for (const list of bookmarks) {
+        const items = await bookmarkService.getBookmarkedItems(list.id);
+        itemsMap[list.id] = items;
+      }
+      return itemsMap;
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: true,
+      revalidateOnReconnect: true,
+      dedupingInterval: 5000,
+    }
+  );
 
   const handleBookmarkClick = () => {
     if (!user) {
@@ -56,32 +89,6 @@ export function BookmarkButton({
       return;
     }
     setOpen(true);
-  };
-
-  // Load bookmarks from Supabase on component mount
-  React.useEffect(() => {
-    if (!user) return;
-    loadBookmarks();
-  }, [user]);
-
-  const loadBookmarks = async () => {
-    try {
-      setIsLoading(true);
-      const lists = await bookmarkService.getBookmarks();
-      setBookmarks(lists);
-
-      const itemsMap: { [key: string]: BookmarkedItem[] } = {};
-      for (const list of lists) {
-        const items = await bookmarkService.getBookmarkedItems(list.id);
-        itemsMap[list.id] = items;
-      }
-      setBookmarkedItems(itemsMap);
-    } catch (error) {
-      console.error('Error loading bookmarks:', error);
-      toast.error(t.errorLoadingBookmarks);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const toggleList = async (listId: string) => {
@@ -104,8 +111,11 @@ export function BookmarkButton({
       const itemType = cocktailId ? 'cocktail' : 'place';
       sendGAEvent('bookmark', `bookmark_${action}`, `${listId}:${itemType}:${cocktailId || placeId}`);
 
-      // Reload bookmarks to get the updated state
-      await loadBookmarks();
+      // Mutate both bookmarks and bookmarked items to reflect the changes
+      await Promise.all([
+        mutateBookmarks(),
+        mutateBookmarkedItems()
+      ]);
     } catch (error) {
       console.error('Error toggling bookmark:', error);
       toast.error(t.errorMigratingBookmarks);

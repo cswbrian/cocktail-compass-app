@@ -87,15 +87,18 @@ export class BookmarkService {
   }
 
   async removeBookmark(listId: string, cocktailId?: string, placeId?: string): Promise<void> {
-    const { error } = await supabase
+    let query = supabase
       .from('bookmarked_items')
       .delete()
-      .match({
-        list_id: listId,
-        cocktail_id: cocktailId || null,
-        place_id: placeId || null,
-      });
+      .eq('list_id', listId);
 
+    if (cocktailId) {
+      query = query.eq('cocktail_id', cocktailId).is('place_id', null);
+    } else if (placeId) {
+      query = query.eq('place_id', placeId).is('cocktail_id', null);
+    }
+
+    const { error } = await query;
     if (error) throw error;
   }
 

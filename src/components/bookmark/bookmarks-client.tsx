@@ -59,7 +59,11 @@ export function BookmarksClient() {
   // Initialize services
   useEffect(() => {
     const initializeServices = async () => {
-      await fetchers.getUserBookmarksWithItems();
+      try {
+        await fetchers.getUserBookmarksWithItems();
+      } catch (error) {
+        console.error('Failed to initialize bookmarks:', error);
+      }
     };
     initializeServices();
   }, []);
@@ -68,11 +72,21 @@ export function BookmarksClient() {
   const {
     data: bookmarks = defaultData[CACHE_KEYS.BOOKMARKS],
     isLoading: isLoadingBookmarks,
+    error: bookmarksError,
   } = useSWR(
     CACHE_KEYS.BOOKMARKS,
     fetchers.getUserBookmarksWithItems,
-    swrConfig,
+    {
+      ...swrConfig,
+      revalidateOnFocus: true, // Enable revalidation on focus
+      dedupingInterval: 2000, // Reduce deduping interval for more frequent updates
+    },
   );
+
+  // Handle error state
+  if (bookmarksError) {
+    console.error('Error loading bookmarks:', bookmarksError);
+  }
 
   return (
     <AuthWrapper customLoading={<BookmarksSkeleton />}>
