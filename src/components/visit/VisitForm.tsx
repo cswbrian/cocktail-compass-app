@@ -53,6 +53,7 @@ import { Visit } from '@/types/visit';
 import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 import { useVisits } from '@/context/VisitContext';
+import { VisibilityIndicator } from '@/components/common/VisibilityIndicator';
 
 // Form schema
 const mediaSchema = z.object({
@@ -871,10 +872,16 @@ export function VisitForm({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="public">
-                        {t.visibilityPublic}
+                        <div className="flex items-center gap-2">
+                          <VisibilityIndicator visibility="public" />
+                          {t.visibilityPublic}
+                        </div>
                       </SelectItem>
                       <SelectItem value="private">
-                        {t.visibilityPrivate}
+                        <div className="flex items-center gap-2">
+                          <VisibilityIndicator visibility="private" />
+                          {t.visibilityPrivate}
+                        </div>
                       </SelectItem>
                     </SelectContent>
                   </Select>
