@@ -65,7 +65,7 @@ const cocktailEntrySchema = z.object({
   id: z.string().optional(),
   cocktailId: z.string().min(1, "Cocktail is required"),
   cocktailName: z.string(),
-  comments: z.string(),
+  comments: z.string().max(500),
   media: z.array(mediaSchema),
   isSearchOpen: z.boolean().optional(),
 });
@@ -691,7 +691,7 @@ export function VisitForm({
                     <div className="relative">
                       <Textarea
                         {...form.register('comments')}
-                        placeholder={t.notePlaceholder}
+                        placeholder={t.visitNotePlaceholder}
                         className="min-h-[100px] resize-none pr-20"
                       />
                       <div className="absolute bottom-2 right-2">
@@ -735,7 +735,7 @@ export function VisitForm({
                                     {field.cocktailName}
                                   </span>
                                 ) : (
-                                  <span className="text-muted-foreground">
+                                  <span className="text-white">
                                     {t.selectCocktail}
                                   </span>
                                 )}
@@ -823,15 +823,22 @@ export function VisitForm({
                         </div>
                         {field.cocktailId && (
                           <>
-                            <Textarea
-                              {...form.register(
-                                `cocktailEntries.${index}.comments`,
-                              )}
-                              placeholder={
-                                t.notePlaceholder
-                              }
-                              className="min-h-[80px] resize-none"
-                            />
+                            <div className="relative">
+                              <Textarea
+                                {...form.register(
+                                  `cocktailEntries.${index}.comments`,
+                                )}
+                                placeholder={
+                                  t.cocktailNotePlaceholder
+                                }
+                                className="min-h-[150px] resize-none pr-20"
+                              />
+                              <div className="absolute bottom-2 right-2">
+                                <span className="text-xs text-muted-foreground">
+                                  {form.watch(`cocktailEntries.${index}.comments`)?.length || 0}/500
+                                </span>
+                              </div>
+                            </div>
                             <MediaField
                               control={form.control}
                               setValue={form.setValue}

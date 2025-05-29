@@ -144,7 +144,8 @@ export const translations = {
       'Sign in to unlock more features',
     login: 'Sign in',
     freeOfCharge: 'Free of charge!',
-    recordYourCocktails: 'Record and share cocktails you drank',
+    recordYourCocktails:
+      'Record and share cocktails you drank',
     monthlyStats: 'Auto-track your monthly stats',
     featureBookmark: 'Bookmark your favorite cocktails',
     welcomeBack: 'Welcome back!',
@@ -175,9 +176,10 @@ export const translations = {
     addCocktail: 'Add Cocktail',
     noLogs: 'It looks a little empty in here!',
     noLogsDescription:
-      'You haven\'t started drinking yet? Start your cocktail journey by adding your first log.',
+      "You haven't started drinking yet? Start your cocktail journey by adding your first log.",
     noVisits: 'No visits yet',
-    noVisitsDescription: 'Start logging your bar visits to see them here.',
+    noVisitsDescription:
+      'Start logging your bar visits to see them here.',
     editLog: 'Edit Log',
     deleteLog: 'Delete Log',
     saveLog: 'Save Log',
@@ -268,14 +270,25 @@ export const translations = {
     add: 'Add',
     cocktailName: 'Cocktail Name',
     notePlaceholder: 'Add your notes here...',
+    visitNotePlaceholder: `Share your overall impressions:
+Ambiance & Atmosphere: How was the vibe?
+Service & Staff: Were they attentive and helpful?`,
+    cocktailNotePlaceholder: `Aroma: What did you notice first?
+Taste: Was it sweet, sour, or bitter? What were the main flavors?
+Body: Was it light-bodied or full-bodied? Smooth or sharp?
+Bubbles: Did it have bubbles? Were there too many or too few?
+Complexity: How complex was the flavor?
+Price: Was it worth the price?`,
     visibility: 'Visibility',
     visibilityPublic: 'See by anyone',
     visibilityPrivate: 'See by you only',
     userNotFound: 'User not found',
     userNotFoundDescription:
       "The user you're looking for doesn't exist or has been removed.",
-    instagramUrlUpdated: 'Instagram URL updated successfully',
-    instagramUrlUpdateFailed: 'Failed to update Instagram URL',
+    instagramUrlUpdated:
+      'Instagram URL updated successfully',
+    instagramUrlUpdateFailed:
+      'Failed to update Instagram URL',
     updateInstagramUrl: 'Update Instagram URL',
     welcomeToCocktailCompass: 'Welcome to {appName}',
     pleaseSetUsername:
@@ -322,11 +335,14 @@ export const translations = {
     enterNewThreadsName: 'Threads username (optional)',
     enterNewInstagramName: 'Instagram username (optional)',
     sortBy: 'Sort by',
-    noDataMessage: 'Create your first log and watch your drinking stats come to life!',
+    noDataMessage:
+      'Create your first log and watch your drinking stats come to life!',
     visitDetails: 'Visit Details',
     addNewLocation: 'Add New Location',
-    selectBasedOnSixBaseSpirits: 'Select based on six base spirits',
-    loginAgreement: 'By signing in, you agree to our {terms} and {privacy}',
+    selectBasedOnSixBaseSpirits:
+      'Select based on six base spirits',
+    loginAgreement:
+      'By signing in, you agree to our {terms} and {privacy}',
     termsAndConditions: 'Terms and Conditions',
     privacyPolicy: 'Privacy Policy',
     visits: 'Visits',
@@ -439,7 +455,7 @@ export const translations = {
     favorites: '鍾意',
     wantToTry: '想試下',
     dontLike: '唔鍾意',
-    selectCocktail: '選擇一杯調酒',
+    selectCocktail: '選擇調酒',
     findTwists: '搵Twist',
     selectedCocktail: '你揀嘅調酒',
     suggestedTwists: '搵到嘅Twist',
@@ -503,7 +519,8 @@ export const translations = {
     noLogsDescription:
       '你怎麼可能還未喝酒？新增您的第一個日誌，開始您的調酒之旅！',
     noVisits: '暫時未有到訪記錄',
-    noVisitsDescription: '開始記錄您的酒吧到訪，即可在此查看。',
+    noVisitsDescription:
+      '開始記錄您的酒吧到訪，即可在此查看。',
     editLog: '編輯日誌',
     deleteLog: '刪除日誌',
     saveLog: '儲存日誌',
@@ -588,6 +605,15 @@ export const translations = {
     add: '新增',
     cocktailName: '調酒名稱',
     notePlaceholder: '在此寫筆記...',
+    visitNotePlaceholder: `分享整體印象：
+氣氛與環境： 感覺如何？
+服務與人員： 細心周到嗎？`,
+    cocktailNotePlaceholder: `氣味：帶有什麼香氣？
+風味： 偏甜／偏酸／偏苦？
+口感： 酒體輕盈或厚重？是否順滑？
+氣泡： 有氣泡嗎？多寡適中？
+複雜度： 口感層次豐富嗎？
+價格： 這個價錢值得嗎？`,
     visibility: '可見度',
     visibilityPublic: '所有人可見',
     visibilityPrivate: '只有自己',
@@ -635,11 +661,13 @@ export const translations = {
     enterNewThreadsName: 'Threads 用戶名（可選填）',
     enterNewInstagramName: 'Instagram 用戶名（可選填）',
     sortBy: '排序方式',
-    noDataMessage: '建立您的首個日誌，即解鎖為你度身訂造的飲酒統計。',
+    noDataMessage:
+      '建立您的首個日誌，即解鎖為你度身訂造的飲酒統計。',
     visitDetails: '到訪詳情',
     addNewLocation: '新增地點',
     selectBasedOnSixBaseSpirits: '以六大基酒為材料',
-    loginAgreement: '登入即表示您同意我們的{terms}和{privacy}',
+    loginAgreement:
+      '登入即表示您同意我們的{terms}和{privacy}',
     termsAndConditions: '服務條款',
     privacyPolicy: '隱私政策',
     visits: '到訪',
