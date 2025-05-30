@@ -9,14 +9,14 @@ import { VisitProvider } from '@/context/VisitContext';
 function App() {
   return (
     <AuthProvider>
-            <UserSettingsProvider>
-              <Router>
-                <ScrollToTop />
-                <AppLayout>
-                  <AppRoutes />
-                </AppLayout>
-              </Router>
-            </UserSettingsProvider>
+      <UserSettingsProvider>
+        <Router>
+          <ScrollToTop />
+          <AppLayout>
+            <AppRoutes />
+          </AppLayout>
+        </Router>
+      </UserSettingsProvider>
     </AuthProvider>
   );
 }

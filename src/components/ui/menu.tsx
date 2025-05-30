@@ -22,6 +22,8 @@ import {
 } from '@/constants';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from './button';
+import { GoogleLoginButton } from '../common/GoogleLoginButton';
+
 // User Profile Component
 interface UserProfileProps {
   user: {
@@ -271,20 +273,11 @@ export function Menu() {
                     t={t}
                   />
                 ) : (
-                  <Button
-                    variant="outline"
-                    className="w-full"
+                  <GoogleLoginButton
                     onClick={handleGoogleLogin}
-                  >
-                    <img
-                      src="/google.svg"
-                      alt="Google"
-                      width={20}
-                      height={20}
-                      className="mr-2"
-                    />
-                    {t.signInWithGoogle}
-                  </Button>
+                    className="w-full"
+                    checkInAppBrowser={true}
+                  />
                 )}
               </div>
 

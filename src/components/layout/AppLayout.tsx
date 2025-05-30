@@ -14,6 +14,7 @@ import { CocktailLogProvider } from '@/context/CocktailLogContext';
 import { VisitFormProvider } from '@/context/VisitFormContext';
 import { GlobalVisitForm } from '@/components/visit/GlobalVisitForm';
 import { VisitProvider } from '@/context/VisitContext';
+import { InAppBrowserWarning } from '@/components/InAppBrowserWarning';
 
 export default function AppLayout({
   children,
@@ -39,6 +40,7 @@ export default function AppLayout({
                       <GlobalCocktailLogForm />
                       <GlobalVisitForm />
                       <Toaster />
+                      <InAppBrowserWarning />
                     </div>
                   </div>
                 </VisitFormProvider>

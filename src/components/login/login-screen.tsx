@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
-import { Button } from '@/components/ui/button';
 import { AuthService } from '@/services/auth-service';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { GoogleLoginButton } from '@/components/common/GoogleLoginButton';
 
 export function LoginScreen() {
   const { language } = useLanguage();
@@ -64,30 +64,12 @@ export function LoginScreen() {
           {t.featureBookmark}
         </li>
       </ul>
-      <Button
-        variant="outline"
-        className="w-full max-w-sm"
+      <GoogleLoginButton
+        isLoading={isLoading}
         onClick={handleGoogleLogin}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            {t.signingIn}
-          </div>
-        ) : (
-          <>
-            <img
-              src="/google.svg"
-              alt="Google"
-              width={20}
-              height={20}
-              className="mr-2"
-            />
-            {t.signInWithGoogle}
-          </>
-        )}
-      </Button>
+        className="w-full max-w-sm"
+        checkInAppBrowser={true}
+      />
       <p
         className="text-xs text-muted-foreground text-center mt-4"
         dangerouslySetInnerHTML={{
