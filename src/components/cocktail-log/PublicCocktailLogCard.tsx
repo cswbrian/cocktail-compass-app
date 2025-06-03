@@ -129,7 +129,7 @@ export function PublicCocktailLogCard({
                 </div>
               )}
 
-              <div className="flex items-center space-x-4 mt-2">
+              {/* <div className="flex items-center space-x-4 mt-2">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -144,7 +144,7 @@ export function PublicCocktailLogCard({
                   />
                   <span>{cheerCount}</span>
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
