@@ -63,7 +63,7 @@ interface ThreadsShareData {
 
 export class CocktailLogService {
   private async handleMediaUpload(
-    media: { url: string; }[],
+    media: { url: string; type: 'image' | 'video' }[],
     userId: string,
     entityId: string,
     entityType: string = 'cocktail_log',
@@ -198,6 +198,7 @@ export class CocktailLogService {
       | { url: string; }[]
       | null,
     visibility: 'public' | 'private' = 'public',
+    rating?: number,
     visitId?: string | null,
   ): Promise<CocktailLog> {
     const placeId = await this.handleLocationData(location);
@@ -214,6 +215,7 @@ export class CocktailLogService {
             drink_date: drinkDate,
             visibility,
             visit_id: visitId,
+            rating: rating ?? null,
           },
         ])
         .select()
@@ -223,8 +225,16 @@ export class CocktailLogService {
 
     try {
       if (media?.length) {
+        // Ensure all media items have a type
+        const mediaWithType = media.map(item => {
+          if ('type' in item) {
+            return item as { url: string; type: 'image' | 'video' };
+          } else {
+            return { ...item, type: 'image' as const };
+          }
+        });
         await this.handleMediaUpload(
-          media,
+          mediaWithType,
           userId,
           logData.id,
         );
@@ -250,6 +260,7 @@ export class CocktailLogService {
     drinkDate?: Date | null,
     media?: { id: string; url: string; type: 'image' | 'video' }[] | null,
     visibility?: 'public' | 'private',
+    rating?: number,
   ): Promise<CocktailLog> {
     const placeId = await this.handleLocationData(location);
     const existingLog = await this.getLogById(id);
@@ -291,6 +302,7 @@ export class CocktailLogService {
         drink_date: drinkDate,
         updated_at: new Date(),
         visibility: visibility || undefined,
+        rating: rating ?? null,
       })
       .eq('id', id);
 
@@ -710,6 +722,7 @@ export class CocktailLogService {
       visibility: log.visibility,
       reactions,
       has_cheered: log.has_cheered || false,
+      rating: (log as any).rating ?? undefined,
       user: {
         id: log.user_id,
         username: log.username || null,

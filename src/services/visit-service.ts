@@ -310,6 +310,7 @@ export class VisitService {
         updatedAt: log.log_created_at,
         visibility: 'public',
         media: cocktailLogsMediaService.mapMediaFromUrls(log.media || []),
+        rating: log.rating,
       })),
     };
   }

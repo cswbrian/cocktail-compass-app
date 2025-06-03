@@ -33,5 +33,6 @@ export interface Visit {
       id: string;
       url: string;
     }>;
+    rating?: number;
   }>;
 } 

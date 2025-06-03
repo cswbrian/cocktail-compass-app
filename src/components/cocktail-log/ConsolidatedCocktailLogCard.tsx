@@ -5,6 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Link } from 'react-router-dom';
 import { formatBilingualText } from '@/lib/utils';
 import { MartiniIcon } from 'lucide-react';
+import { StarRating } from '@/components/common/StarRating';
 
 interface ConsolidatedCocktailLogCardProps {
   logs: CocktailLog[];
@@ -45,6 +46,11 @@ export function ConsolidatedCocktailLogCard({
                 </h3>
               </div>
             </Link>
+            {typeof log.rating === 'number' && (
+              <div className="mt-1">
+                <StarRating value={log.rating} readOnly size={18} />
+              </div>
+            )}
             <CommentInfo
               comments={log.comments}
               // className="text-muted-foreground"

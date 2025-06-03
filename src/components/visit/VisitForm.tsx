@@ -55,6 +55,7 @@ import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 import { useVisits } from '@/context/VisitContext';
 import { VisibilityIndicator } from '@/components/common/VisibilityIndicator';
 import { sendGAEvent } from '@/lib/ga';
+import { StarRating } from '@/components/common/StarRating';
 
 // Form schema
 const mediaSchema = z.object({
@@ -69,6 +70,7 @@ const cocktailEntrySchema = z.object({
   comments: z.string().max(500),
   media: z.array(mediaSchema),
   isSearchOpen: z.boolean().optional(),
+  rating: z.number().min(0).max(5).optional().nullable(),
 });
 
 const visitFormSchema = z.object({
@@ -312,12 +314,14 @@ export function VisitForm({
             id: m.id,
             url: m.url,
           })),
+          rating: log.rating ?? 0,
         })) || [{
           cocktailId: '',
           cocktailName: '',
           comments: '',
           media: [],
           isSearchOpen: true,
+          rating: 0,
         }],
     },
   });
@@ -351,6 +355,7 @@ export function VisitForm({
         comments: '',
         media: [],
         isSearchOpen: true,
+        rating: 0,
       }],
     });
     setCurrentCocktailInput('');
@@ -408,6 +413,7 @@ export function VisitForm({
       comments: '',
       media: [],
       isSearchOpen: true,
+      rating: 0,
     });
 
     // Track adding new cocktail entry
@@ -436,6 +442,7 @@ export function VisitForm({
       cocktailId: cocktail.value,
       cocktailName: cocktail.name,
       isSearchOpen: false,
+      rating: 0,
     };
     form.setValue('cocktailEntries', currentEntries);
     setEntrySearchStates(prev => ({
@@ -457,6 +464,7 @@ export function VisitForm({
       comments: '',
       media: [],
       isSearchOpen: false,
+      rating: 0,
     });
     setCurrentCocktailInput('');
     setIsCreatingCustom(false);
@@ -520,6 +528,7 @@ export function VisitForm({
                       type: 'image' as const,
                     })),
                     data.visibility,
+                    entry.rating,
                   )
                 : cocktailLogService.createLog(
                     entry.cocktailId,
@@ -534,6 +543,7 @@ export function VisitForm({
                     })),
                     data.visibility,
                     existingVisit.id,
+                    entry.rating,
                   ),
             ),
           );
@@ -575,6 +585,7 @@ export function VisitForm({
                 })),
                 data.visibility,
                 savedVisit.id,
+                entry.rating,
               ),
             ),
           );
@@ -858,6 +869,12 @@ export function VisitForm({
                           </div>
                           {field.cocktailId && (
                             <>
+                              <div className="mb-2">
+                                <StarRating
+                                  value={form.watch(`cocktailEntries.${index}.rating`) || 0}
+                                  onChange={val => form.setValue(`cocktailEntries.${index}.rating`, val, { shouldDirty: true })}
+                                />
+                              </div>
                               <div className="relative">
                                 <Textarea
                                   {...form.register(

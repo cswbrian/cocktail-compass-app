@@ -6,7 +6,6 @@ import { Toaster } from '@/components/ui/sonner';
 import { BottomNav } from '@/components/ui/bottom-nav';
 import { InstallPrompt } from '@/components/InstallPrompt';
 import { MainContent } from '@/components/ui/main-content';
-import { GlobalCocktailLogForm } from '@/components/cocktail-log/GlobalCocktailLogForm';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { BottomNavProvider } from '@/context/BottomNavContext';
@@ -37,7 +36,6 @@ export default function AppLayout({
                       </main>
                       <InstallPrompt />
                       <BottomNav />
-                      <GlobalCocktailLogForm />
                       <GlobalVisitForm />
                       <Toaster />
                       <InAppBrowserWarning />

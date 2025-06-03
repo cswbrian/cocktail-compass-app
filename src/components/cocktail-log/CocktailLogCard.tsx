@@ -5,6 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { formatBilingualText } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { MartiniIcon } from 'lucide-react';
+import { StarRating } from '@/components/common/StarRating';
 
 interface CocktailLogCardProps {
   log: CocktailLog;
@@ -39,6 +40,9 @@ export function CocktailLogCard({
               </div>
             </Link>
             <div className="space-y-2">
+              {typeof log.rating === 'number' && (
+                <StarRating value={log.rating} readOnly size={18} />
+              )}
               <CommentInfo comments={log.comments} />
               {log.media && log.media.length > 0 && (
                 <div className="mt-2">

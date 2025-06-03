@@ -36,6 +36,7 @@ export interface CocktailLog {
   } | null;
   reactions?: { [key: string]: number };
   has_cheered?: boolean;
+  rating?: number;
 }
 
 export interface MediaItem {

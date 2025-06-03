@@ -18,7 +18,6 @@ import LogDetailPage from './pages/LogDetailPage';
 import PlaceDetailPage from './pages/PlaceDetailPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 import ProfilePage from './pages/ProfilePage';
-import NewLogPage from './pages/NewLogPage';
 import NewVisitPage from './pages/NewVisitPage';
 import VisitDetailPage from './pages/VisitDetailPage';
 import DrinkerProfilePage from './pages/DrinkerProfilePage';
@@ -92,7 +91,6 @@ export default function AppRoutes() {
           element={<DrinkerProfilePage />}
         />
         <Route path="logs">
-          <Route path="new" element={<NewLogPage />} />
           <Route
             path=":logId"
             element={<LogDetailPage />}

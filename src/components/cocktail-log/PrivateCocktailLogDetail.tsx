@@ -2,7 +2,6 @@ import { CocktailLog } from '@/types/cocktail-log';
 import { Edit, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CocktailLogForm } from './CocktailLogForm';
 import { useState, useEffect } from 'react';
 import { CocktailLogMedia } from './CocktailLogMedia';
 import {
@@ -191,26 +190,6 @@ export function PrivateCocktailLogDetail({
           >
             {content}
           </motion.div>
-
-          <CocktailLogForm
-            isOpen={isEditing}
-            onClose={handleCloseEdit}
-            existingLog={log}
-            onLogSaved={updatedLog => {
-              handleCloseEdit();
-              onLogSaved?.(updatedLog);
-            }}
-            onLogDeleted={logId => {
-              handleCloseEdit();
-              handleClose();
-              onLogDeleted?.(logId);
-            }}
-            onLogsChange={onLogsChange}
-            onSuccess={() => {
-              handleCloseEdit();
-              handleClose();
-            }}
-          />
         </>
       )}
     </AnimatePresence>
