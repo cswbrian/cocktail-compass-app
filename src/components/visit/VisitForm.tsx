@@ -314,14 +314,14 @@ export function VisitForm({
             id: m.id,
             url: m.url,
           })),
-          rating: log.rating ?? 0,
+          rating: log.rating ?? null,
         })) || [{
           cocktailId: '',
           cocktailName: '',
           comments: '',
           media: [],
           isSearchOpen: true,
-          rating: 0,
+          rating: null,
         }],
     },
   });
