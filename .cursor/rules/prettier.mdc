@@ -1,0 +1,92 @@
+---
+description: Prettier configuration and code formatting guidelines
+globs: 
+alwaysApply: false
+---
+# Prettier Configuration Guidelines
+
+This document outlines our project's Prettier configuration and code formatting standards.
+
+## Current Configuration
+
+Our Prettier configuration is defined in `.prettierrc` with the following settings:
+
+```json
+{
+  "printWidth": 60,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "semi": true,
+  "tabWidth": 2,
+  "arrowParens": "avoid"
+}
+```
+
+## Formatting Rules
+
+1. **Line Length**
+   - Maximum line width: 60 characters
+   - Break long lines at appropriate points
+
+2. **Quotes**
+   - Use single quotes (`'`) for strings
+   - Double quotes (`"`) for JSON properties
+
+3. **Commas**
+   - Always use trailing commas in multiline structures
+   - Applies to arrays, objects, and function parameters
+
+4. **Semicolons**
+   - Always use semicolons at the end of statements
+
+5. **Indentation**
+   - Use 2 spaces for indentation
+   - Consistent across all file types
+
+6. **Arrow Functions**
+   - Omit parentheses around single parameters
+   - Example: `x => x * 2` instead of `(x) => x * 2`
+
+## Best Practices
+
+1. **File Types**
+   - Apply formatting to all JavaScript, TypeScript, JSON, CSS, and Markdown files
+   - Use the `.prettierrc` configuration for consistent formatting
+
+2. **Editor Integration**
+   - Enable "Format on Save" in your editor
+   - Use Prettier as the default formatter
+
+3. **Code Examples**
+
+```typescript
+// Good formatting
+const example = {
+  name: 'John',
+  age: 30,
+  hobbies: [
+    'reading',
+    'coding',
+    'gaming',
+  ],
+};
+
+const multiply = x => x * 2;
+
+// Bad formatting
+const example={
+  name:"John",
+  age:30,
+  hobbies:['reading','coding','gaming']
+}
+
+const multiply = (x) => {
+  return x * 2;
+};
+```
+
+## Maintenance
+
+- Keep the `.prettierrc` configuration in sync with this document
+- Update this document when Prettier settings change
+- Ensure all team members have Prettier installed and configured
