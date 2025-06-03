@@ -54,3 +54,6 @@ dev.vars
 prod.vars
 dist/
 worker/
+
+#cursor mcp
+.cursor/mcp.json
