@@ -170,6 +170,7 @@ export class VisitService {
     const { data, count, error } = await supabase
       .from('my_visits')
       .select('*', { count: 'exact' })
+      .eq('user_id', userId)
       .order('visit_date', { ascending: false })
       .range(offset, to);
 
