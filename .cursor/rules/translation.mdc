@@ -1,0 +1,68 @@
+---
+description: How to handle translations in our project
+globs: 
+alwaysApply: false
+---
+# Translation Guidelines
+
+How to handle translations in our project
+
+1. Translation Structure:
+   - All translations are stored in `src/translations/index.ts`
+   - Translations are organized by language code (e.g., 'en', 'zh')
+   - Each language object contains key-value pairs for all translatable strings
+
+2. Using Translations:
+   ```typescript
+   // Import the useLanguage hook
+   import { useLanguage } from '@/context/LanguageContext';
+   
+   // In your component:
+   const { language } = useLanguage();
+   const t = translations[language];
+   
+   // Use translations in JSX
+   <p>{t.someTranslationKey}</p>
+   ```
+
+3. Adding New Translations:
+   - Add new translation keys to both language objects (en and zh)
+   - Keep keys consistent between languages
+   - Use camelCase for translation keys
+   - Add descriptive comments for complex translations
+
+4. Translation Keys:
+   - Use descriptive, hierarchical names
+   - Group related translations with common prefixes
+   - Example: `errorLoadingData`, `errorSavingData`
+
+5. Best Practices:
+   - Never hardcode strings that need translation
+   - Use translation keys instead of direct strings
+   - Keep translations organized by feature/component
+   - Add new translations for both supported languages
+   - Use placeholders for dynamic content: `{variableName}`
+
+Example:
+```typescript
+// Good
+<p>{t.welcomeMessage}</p>
+<p>{t.drinksMoreThanLastMonth.replace('{count}', count.toString())}</p>
+
+// Bad
+<p>Welcome to our app!</p>
+<p>You drank {count} more drinks than last month</p>
+```
+
+6. Common Patterns:
+   - Error messages: `error{Action}`
+   - Success messages: `{action}Success`
+   - Button labels: `{action}Button`
+   - Placeholders: `{field}Placeholder`
+   - Descriptions: `{feature}Description`
+
+7. Maintenance:
+   - Keep translations in sync between languages
+   - Remove unused translation keys
+   - Update translations when UI text changes
+   - Document new translation keys in PR descriptions
