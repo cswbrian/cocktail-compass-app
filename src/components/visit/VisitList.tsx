@@ -7,10 +7,16 @@ import {
   useRef,
 } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Loader2 } from 'lucide-react';
+import {
+  Loader2,
+  LayoutList,
+  List,
+} from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { VisitCard } from './VisitCard';
 import { sendGAEvent } from '@/lib/ga';
+import { Button } from '@/components/ui/button';
+import { translations } from '@/translations';
 
 interface VisitListProps {
   visits?: Visit[];
@@ -50,6 +56,29 @@ function VisitListSkeleton() {
   );
 }
 
+function ViewToggle({ compact, setCompact, t }: { compact: boolean; setCompact: React.Dispatch<React.SetStateAction<boolean>>; t: any }) {
+  return (
+    <div className="flex px-6">
+      <Button
+        variant="link"
+        className="p-0 text-muted-foreground"
+        size="sm"
+        onClick={() => setCompact((v) => !v)}
+      >
+        {compact ? (
+          <>
+            <List className="h-4 w-4" /> {t.compactView}
+          </>
+        ) : (
+          <>
+            <LayoutList className="h-4 w-4" /> {t.cardView}
+          </>
+        )}
+      </Button>
+    </div>
+  );
+}
+
 export function VisitList({
   visits: providedVisits,
   isLoading: providedIsLoading,
@@ -58,9 +87,22 @@ export function VisitList({
   feedType = 'recommend',
 }: VisitListProps) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [compact, setCompact] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('visit-list-view-mode');
+      // 'compact' means compact view (default), 'normal' means normal view
+      return stored === null ? true : stored === 'compact' ? true : false;
+    }
+    return true;
+  });
+  
   const THROTTLE_DELAY = 300;
   const lastFetchTime = useRef<number>(0);
   const isLoadingRef = useRef(false);
+  const { language } = useLanguage();
+  const t =
+    translations[language as keyof typeof translations] ||
+    translations.en;
 
   // Set up intersection observer for infinite scrolling
   const { ref, inView } = useInView({
@@ -87,7 +129,11 @@ export function VisitList({
 
     if (providedOnLoadMore) {
       // Track loading more visits
-      sendGAEvent('Visit List', 'Load More', `Feed: ${feedType}`);
+      sendGAEvent(
+        'Visit List',
+        'Load More',
+        `Feed: ${feedType}`,
+      );
       await providedOnLoadMore();
       setIsLoadingMore(false);
       isLoadingRef.current = false;
@@ -102,7 +148,11 @@ export function VisitList({
   // Track initial visits load
   useEffect(() => {
     if (providedVisits && providedVisits.length > 0) {
-      sendGAEvent('Visit List', 'Initial Load', `Feed: ${feedType}, Count: ${providedVisits.length}`);
+      sendGAEvent(
+        'Visit List',
+        'Initial Load',
+        `Feed: ${feedType}, Count: ${providedVisits.length}`,
+      );
     }
   }, [providedVisits, feedType]);
 
@@ -124,6 +174,13 @@ export function VisitList({
     loadMore,
   ]);
 
+  // Save compact view to localStorage when it changes
+  useEffect(() => {
+    if (feedType === 'my' && typeof window !== 'undefined') {
+      localStorage.setItem('visit-list-view-mode', compact ? 'compact' : 'normal');
+    }
+  }, [compact, feedType]);
+
   if (
     providedIsLoading &&
     (!providedVisits || providedVisits.length === 0)
@@ -136,10 +193,10 @@ export function VisitList({
   }
 
   return (
-    <div
-      className="space-y-4"
-      key={`visit-list-${providedVisits.length}`}
-    >
+    <div key={`visit-list-${providedVisits.length}`}>
+      {feedType === 'my' && (
+        <ViewToggle compact={compact} setCompact={setCompact} t={t} />
+      )}
       {providedVisits.map((visit, index) => (
         <div
           key={visit.id}
@@ -149,7 +206,11 @@ export function VisitList({
               : undefined
           }
         >
-          <VisitCard visit={visit} feedType={feedType} />
+          <VisitCard
+            visit={visit}
+            feedType={feedType}
+            compact={feedType === 'my' ? compact : false}
+          />
         </div>
       ))}
       {isLoadingMore && (
