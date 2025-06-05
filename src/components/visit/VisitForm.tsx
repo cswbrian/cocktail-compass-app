@@ -542,8 +542,8 @@ export function VisitForm({
                       type: 'image' as const,
                     })),
                     data.visibility,
+                    entry.rating ?? undefined,
                     existingVisit.id,
-                    entry.rating,
                   ),
             ),
           );
@@ -584,8 +584,8 @@ export function VisitForm({
                   type: 'image' as const,
                 })),
                 data.visibility,
+                entry.rating ?? undefined,
                 savedVisit.id,
-                entry.rating,
               ),
             ),
           );
