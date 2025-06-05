@@ -36,12 +36,19 @@ export function VisitCard({
         className="bg-background border-b rounded-none px-6 py-2 cursor-pointer hover:shadow transition-shadow flex flex-col gap-1"
         onClick={handleClick}
       >
-        {visit.visitDate && (
-          <DateInfo
-            date={new Date(visit.visitDate)}
-            className="text-xs text-muted-foreground"
-          />
-        )}
+        <div className="flex items-center space-x-2">
+          {visit.visitDate && (
+            <DateInfo
+              date={new Date(visit.visitDate)}
+              className="text-xs text-muted-foreground"
+            />
+          )}
+          {feedType === 'my' && (
+            <VisibilityIndicator
+              visibility={visit.visibility}
+            />
+          )}
+        </div>
         <div className="font-semibold text-base">
           {visit.location
             ? visit.location.name
