@@ -37,6 +37,7 @@ type CocktailContextType = {
   setSelectedLiqueurs: (value: string[]) => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
+  isLoading: boolean;
 
   // Methods
   handleFlavorSelect: (flavor: string) => void;
@@ -63,6 +64,7 @@ interface CocktailExplorerState {
   selectedLiqueurs: string[];
   currentStep: number;
   results: RankedCocktail[];
+  isLoading: boolean;
 }
 
 const defaultState: CocktailExplorerState = {
@@ -78,6 +80,7 @@ const defaultState: CocktailExplorerState = {
   selectedLiqueurs: [],
   currentStep: 1,
   results: [],
+  isLoading: false,
 };
 
 export function CocktailProvider({
@@ -147,7 +150,7 @@ export function CocktailProvider({
     }));
 
   const startOver = useCallback(() => {
-    setState(defaultState);
+    setState(prev => ({ ...defaultState, isLoading: false }));
   }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -184,6 +187,7 @@ export function CocktailProvider({
       );
     } else {
       try {
+        setState(prev => ({ ...prev, isLoading: true }));
         const newResults = await handleSubmit();
         if (newResults && newResults.length > 0) {
           setState(prev => ({ ...prev, currentStep: 4 }));
@@ -192,6 +196,8 @@ export function CocktailProvider({
         }
       } catch (error) {
         console.error('nextStep: Error occurred:', error);
+      } finally {
+        setState(prev => ({ ...prev, isLoading: false }));
       }
     }
   }, [state.currentStep, handleSubmit]);
@@ -229,6 +235,7 @@ export function CocktailProvider({
 
   const goToResults = useCallback(async () => {
     try {
+      setState(prev => ({ ...prev, isLoading: true }));
       const newResults = await handleSubmit();
       if (newResults && newResults.length > 0) {
         setState(prev => ({ ...prev, currentStep: 4 }));
@@ -237,6 +244,8 @@ export function CocktailProvider({
       }
     } catch (error) {
       console.error('goToResults: Error occurred:', error);
+    } finally {
+      setState(prev => ({ ...prev, isLoading: false }));
     }
   }, [handleSubmit]);
 
@@ -254,6 +263,7 @@ export function CocktailProvider({
     selectedIngredients: state.selectedIngredients,
     selectedLiqueurs: state.selectedLiqueurs,
     currentStep: state.currentStep,
+    isLoading: state.isLoading,
 
     // Setters
     setSweetness,

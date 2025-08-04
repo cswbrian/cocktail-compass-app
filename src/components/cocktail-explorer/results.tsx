@@ -6,12 +6,14 @@ import { useCocktail } from '@/context/CocktailContext';
 import { sendGAEvent } from '@/lib/ga';
 import { useEffect } from 'react';
 import { ExternalLink } from '@/components/external-link';
+import { Loading } from '@/components/ui/loading';
 
 export default function Results() {
   const { language } = useLanguage();
   const t = translations[language];
   const {
     results,
+    isLoading,
     sweetness,
     sourness,
     body,
@@ -51,6 +53,22 @@ export default function Results() {
       );
     }
   }, [results, language]);
+
+  if (isLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="flex flex-col items-center justify-center py-12"
+      >
+        <Loading size="lg" />
+        <p className="mt-4 text-muted-foreground">
+          {t.loading || 'Loading...'}
+        </p>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

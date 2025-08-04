@@ -16,6 +16,7 @@ export default function Navigation() {
     prevStep,
     goToResults,
     startOver,
+    isLoading,
   } = useCocktail();
 
   // Wrap the handlers in useCallback to ensure stability
@@ -57,17 +58,29 @@ export default function Navigation() {
       ) : (
         <div className="flex gap-2">
           {currentStep > 1 && currentStep <= TOTAL_STEPS && (
-            <Button variant="outline" onClick={handlePrev}>
+            <Button 
+              variant="outline" 
+              onClick={handlePrev}
+              disabled={isLoading}
+            >
               {t.previous}
             </Button>
           )}
 
           {currentStep < TOTAL_STEPS && (
-            <Button onClick={handleNext}>{t.next}</Button>
+            <Button 
+              onClick={handleNext}
+              disabled={isLoading}
+            >
+              {t.next}
+            </Button>
           )}
 
           {currentStep === TOTAL_STEPS && (
-            <Button onClick={handleGoToResults}>
+            <Button 
+              onClick={handleGoToResults}
+              disabled={isLoading}
+            >
               {t.findCocktail}
             </Button>
           )}
