@@ -40,44 +40,38 @@ export default function Navigation() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.8 }}
-      className="bg-background py-2 flex justify-between"
+      className={`bg-background py-2 flex ${
+        currentStep === TOTAL_STEPS + 1 ? 'justify-start' : 'justify-end'
+      }`}
     >
-      {/* Reset button - always visible */}
-      <Button variant="outline" onClick={handleStartOver}>
-        {t.reset}
-      </Button>
-
-      <div className="flex gap-2 ml-auto">
-        {currentStep > 1 && (
-          <Button variant="outline" onClick={handlePrev}>
-            {t.previous}
-          </Button>
-        )}
-
-        {currentStep < TOTAL_STEPS && (
-          <Button onClick={handleNext}>{t.next}</Button>
-        )}
-
-        {currentStep === TOTAL_STEPS && (
-          <Button onClick={handleGoToResults}>
-            {t.findCocktail}
-          </Button>
-        )}
-      </div>
-
-      {currentStep === TOTAL_STEPS + 1 && (
+      {currentStep === TOTAL_STEPS + 1 ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          <Button
-            onClick={handleStartOver}
-            className="ml-auto"
-          >
+          <Button onClick={handleStartOver}>
             {t.startOver}
           </Button>
         </motion.div>
+      ) : (
+        <div className="flex gap-2">
+          {currentStep > 1 && currentStep <= TOTAL_STEPS && (
+            <Button variant="outline" onClick={handlePrev}>
+              {t.previous}
+            </Button>
+          )}
+
+          {currentStep < TOTAL_STEPS && (
+            <Button onClick={handleNext}>{t.next}</Button>
+          )}
+
+          {currentStep === TOTAL_STEPS && (
+            <Button onClick={handleGoToResults}>
+              {t.findCocktail}
+            </Button>
+          )}
+        </div>
       )}
     </motion.div>
   );

@@ -10,6 +10,7 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { BottomNavProvider } from '@/context/BottomNavContext';
 import { CocktailLogProvider } from '@/context/CocktailLogContext';
+import { CocktailProvider } from '@/context/CocktailContext';
 import { VisitFormProvider } from '@/context/VisitFormContext';
 import { GlobalVisitForm } from '@/components/visit/GlobalVisitForm';
 import { VisitProvider } from '@/context/VisitContext';
@@ -25,24 +26,26 @@ export default function AppLayout({
       <AuthProvider>
         <BottomNavProvider>
           <CocktailLogProvider>
-            <VisitProvider>
-                <VisitFormProvider>
-                  <div className={`antialiased dark`}>
-                    <div className="flex flex-col min-h-screen">
-                      <Header />
-                      <Menu />
-                      <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
-                        <MainContent>{children}</MainContent>
-                      </main>
-                      <InstallPrompt />
-                      <BottomNav />
-                      <GlobalVisitForm />
-                      <Toaster />
-                      <InAppBrowserWarning />
+            <CocktailProvider>
+              <VisitProvider>
+                  <VisitFormProvider>
+                    <div className={`antialiased dark`}>
+                      <div className="flex flex-col min-h-screen">
+                        <Header />
+                        <Menu />
+                        <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
+                          <MainContent>{children}</MainContent>
+                        </main>
+                        <InstallPrompt />
+                        <BottomNav />
+                        <GlobalVisitForm />
+                        <Toaster />
+                        <InAppBrowserWarning />
+                      </div>
                     </div>
-                  </div>
-                </VisitFormProvider>
-            </VisitProvider>
+                  </VisitFormProvider>
+              </VisitProvider>
+            </CocktailProvider>
           </CocktailLogProvider>
         </BottomNavProvider>
       </AuthProvider>

@@ -65,27 +65,27 @@ interface CocktailExplorerState {
   results: RankedCocktail[];
 }
 
+const defaultState: CocktailExplorerState = {
+  sweetness: 5,
+  sourness: 5,
+  body: 5,
+  complexity: 5,
+  booziness: 5,
+  bubbles: null,
+  selectedFlavors: [],
+  selectedBaseSpirits: [],
+  selectedIngredients: [],
+  selectedLiqueurs: [],
+  currentStep: 1,
+  results: [],
+};
+
 export function CocktailProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [state, setState] = useState<CocktailExplorerState>(
-    {
-      sweetness: 5,
-      sourness: 5,
-      body: 5,
-      complexity: 5,
-      booziness: 5,
-      bubbles: null,
-      selectedFlavors: [],
-      selectedBaseSpirits: [],
-      selectedIngredients: [],
-      selectedLiqueurs: [],
-      currentStep: 1,
-      results: [],
-    },
-  );
+  const [state, setState] = useState<CocktailExplorerState>(defaultState);
 
   const { language } = useLanguage();
   const t = translations[language];
@@ -147,20 +147,7 @@ export function CocktailProvider({
     }));
 
   const startOver = useCallback(() => {
-    setState({
-      sweetness: null,
-      sourness: null,
-      body: null,
-      complexity: null,
-      booziness: null,
-      bubbles: null,
-      selectedFlavors: [],
-      selectedBaseSpirits: [],
-      selectedIngredients: [],
-      selectedLiqueurs: [],
-      currentStep: 1,
-      results: [],
-    });
+    setState(defaultState);
   }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -196,11 +183,15 @@ export function CocktailProvider({
         '',
       );
     } else {
-      const newResults = await handleSubmit();
-      if (newResults.length > 0) {
-        setState(prev => ({ ...prev, currentStep: 4 }));
-        // Push new state to history
-        window.history.pushState({ step: 4 }, '', '');
+      try {
+        const newResults = await handleSubmit();
+        if (newResults && newResults.length > 0) {
+          setState(prev => ({ ...prev, currentStep: 4 }));
+          // Push new state to history
+          window.history.pushState({ step: 4 }, '', '');
+        }
+      } catch (error) {
+        console.error('nextStep: Error occurred:', error);
       }
     }
   }, [state.currentStep, handleSubmit]);
@@ -237,11 +228,15 @@ export function CocktailProvider({
   }, []);
 
   const goToResults = useCallback(async () => {
-    const newResults = await handleSubmit();
-    if (newResults.length > 0) {
-      setState(prev => ({ ...prev, currentStep: 4 }));
-      // Push new state to history
-      window.history.pushState({ step: 4 }, '', '');
+    try {
+      const newResults = await handleSubmit();
+      if (newResults && newResults.length > 0) {
+        setState(prev => ({ ...prev, currentStep: 4 }));
+        // Push new state to history
+        window.history.pushState({ step: 4 }, '', '');
+      }
+    } catch (error) {
+      console.error('goToResults: Error occurred:', error);
     }
   }, [handleSubmit]);
 

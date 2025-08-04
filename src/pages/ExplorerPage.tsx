@@ -1,7 +1,6 @@
 'use client';
 
 import { CocktailExplorer } from '@/components/cocktail-explorer';
-import { CocktailProvider } from '@/context/CocktailContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -21,9 +20,5 @@ export default function ExplorerPage() {
     }
   }, [lang, language, toggleLanguage]);
 
-  return (
-    <CocktailProvider>
-      <CocktailExplorer />
-    </CocktailProvider>
-  );
+  return <CocktailExplorer />;
 }
