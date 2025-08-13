@@ -30,18 +30,21 @@ Interactive map for discovering cocktail places with region-based filtering and 
 - **Migration**: Production-ready SQL migrations created ✅
 
 ## ✅ Day 2 Completed
-- ✅ Bottom sheet popover implementation
-- ✅ Swipeable place navigation carousel  
-- ✅ Place marker clustering for performance
-- ✅ Lazy loading optimization
-- ✅ **Enhanced UX**: Smooth transitions, no loading popups
-- ✅ **Unified Navigation**: Single bottom sheet with left/right buttons
-- ✅ **Clean Design**: White circular markers, no dark overlay
-- ✅ **Place Markers**: 🍹 emoji with white background circle
-- ✅ **Synchronized Navigation**: Map centers and markers update with button navigation
-- ✅ **Perfect Layout**: Map fits between header and bottom nav without overlap
-- ✅ **Immersive Fullscreen**: Transparent header with backdrop blur for full coverage
-- ✅ **Professional Polish**: Map occupies entire screen like modern map apps
+- ✅ **Core Components**: Bottom sheet popover + unified navigation system
+- ✅ **Performance**: Place marker clustering + lazy loading optimization
+- ✅ **Enhanced UX**: Smooth marker transitions, eliminated loading popups
+- ✅ **Navigation System**: Consolidated bottom sheet with left/right button navigation
+- ✅ **Visual Design**: White circular markers (🍹 emoji), removed dark overlays
+- ✅ **Map Interactions**: Center-on-click, remove Leaflet popups, prevent auto-recenter on drag
+- ✅ **Synchronized Experience**: Map centers and markers update with navigation buttons
+- ✅ **Perfect Layout**: Map fits precisely between header (64px) and bottom nav (48px)
+- ✅ **Immersive Fullscreen**: Transparent header with backdrop blur + glassmorphism
+- ✅ **Professional Polish**: Full-screen map coverage like modern map applications
+- ✅ **URL State Management**: Map center, zoom, selected marker persist across navigation
+- ✅ **State Restoration**: Smart session storage + browser history preservation
+- ✅ **Internationalization**: Full translation support (English/Chinese)
+- ✅ **Design Consistency**: Dark attribution control, floating bottom sheet design
+- ✅ **Accessibility**: Proper routing, bookmark integration, outline button variants
 
 ## 🎨 Design Decisions
 ### Place Markers Strategy
@@ -64,7 +67,15 @@ Interactive map for discovering cocktail places with region-based filtering and 
 - Offline map caching
 
 ## 📈 Current Status
-**Day 1**: ✅ **COMPLETED** - Foundation, geolocation, PostGIS, authentication
-**Day 2**: ✅ **COMPLETED** - Core map features, enhanced UX, unified navigation
-**Day 3**: 🔄 **NEXT** - PWA & UX features (region selector, "Near Me")
-**Day 4**: ⏳ Polish & testing
+**Day 1**: ✅ **COMPLETED** - Foundation, geolocation, PostGIS, authentication, routing
+**Day 2**: ✅ **COMPLETED** - Core features, enhanced UX, state management, internationalization
+**Day 3**: 🔄 **NEXT** - PWA & UX features (region selector, "Near Me", search functionality)
+**Day 4**: ⏳ Polish, testing, performance optimization, accessibility audit
+
+## 🎨 Latest Design Improvements ✅ COMPLETED
+- ✅ **Floating Bottom Sheet**: Modern design with rounded corners and margins
+- ✅ **Dark Theme Integration**: Attribution control with dark background and white text
+- ✅ **Glassmorphism Effects**: Backdrop blur and semi-transparent overlays throughout
+- ✅ **Translation Support**: Full i18n integration with English/Chinese support
+- ✅ **Smart Navigation**: Back button uses browser history, proper Link routing
+- ✅ **Design System**: Consistent button variants and styling patterns

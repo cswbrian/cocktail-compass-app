@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { MapContainer as LeafletMapContainer, TileLayer, useMapEvents, useMap } from 'react-leaflet';
 import { Map, LatLng, LatLngBounds } from 'leaflet';
-import { PlaceMarker, MapViewport, MAP_REGIONS } from '@/types/map';
+import { PlaceMarker, MapViewport } from '@/types/map';
 import { mapService } from '@/services/map-service';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
-import { MAP_CONFIG } from '@/config/map-config';
+import { MAP_CONFIG, MAP_REGIONS } from '@/config/map-config';
 import { Button } from '@/components/ui/button';
 import 'leaflet/dist/leaflet.css';
 
@@ -29,6 +29,7 @@ interface MapContainerProps {
   initialRegion?: string;
   initialCenter?: { lat: number; lng: number };
   initialZoom?: number;
+  shouldCenterOnUserLocation?: boolean;
   className?: string;
   height?: string;
   children?: React.ReactNode;
@@ -137,6 +138,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   initialRegion = 'hongkong',
   initialCenter,
   initialZoom,
+  shouldCenterOnUserLocation = true,
   className = '',
   height = '100vh',
   children,
@@ -208,14 +210,14 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     }
   }, [requestPermission, getCurrentPosition]);
 
-  // Center map on user location when detected
+  // Center map on user location when detected (only if no URL coordinates provided)
   useEffect(() => {
-    if (userPosition && mapRef.current) {
+    if (userPosition && mapRef.current && shouldCenterOnUserLocation) {
       const userLatLng = new LatLng(userPosition.latitude, userPosition.longitude);
       // Center map on user location with zoom level 16
       mapRef.current.setView(userLatLng, 16);
     }
-  }, [userPosition]);
+  }, [userPosition, shouldCenterOnUserLocation]);
 
   if (error) {
     console.error('Error loading map places:', error);

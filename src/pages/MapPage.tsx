@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import { LatLngBounds } from 'leaflet';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { MAP_CONFIG } from '@/config/map-config';
+import { MAP_CONFIG, MAP_REGIONS } from '@/config/map-config';
 
 export function MapPage() {
   const [selectedPlace, setSelectedPlace] = useState<PlaceMarker | null>(null);
@@ -31,10 +31,15 @@ export function MapPage() {
     const zoom = searchParams.get('zoom');
     const selectedPlaceId = searchParams.get('place');
 
+    // Use Hong Kong region as default (matching MapContainer's initialRegion)
+    const defaultRegion = MAP_REGIONS.hongkong;
+    const defaultCenter = { lat: defaultRegion.center.lat, lng: defaultRegion.center.lng };
+
     return {
-      center: lat && lng ? { lat: parseFloat(lat), lng: parseFloat(lng) } : { lat: 22.2849, lng: 114.1577 },
-      zoom: zoom ? parseInt(zoom) : 16,
+      center: lat && lng ? { lat: parseFloat(lat), lng: parseFloat(lng) } : defaultCenter,
+      zoom: zoom ? parseInt(zoom) : defaultRegion.defaultZoom,
       selectedPlaceId: selectedPlaceId,
+      hasUrlCoordinates: !!(lat && lng), // Track if URL has coordinates
     };
   }, [searchParams]);
 
@@ -138,6 +143,7 @@ export function MapPage() {
               center: { lat: place.lat, lng: place.lng },
               zoom: mapRef.current.getZoom(),
               selectedPlaceId: place.id,
+              hasUrlCoordinates: true, // Now has coordinates from place selection
             };
             setMapState(newMapState);
             updateURL(newMapState);
@@ -187,6 +193,7 @@ export function MapPage() {
       center: { lat: viewport.center.lat, lng: viewport.center.lng },
       zoom: viewport.zoom,
       selectedPlaceId: mapState.selectedPlaceId, // Keep current selection
+      hasUrlCoordinates: true, // Now has coordinates from user interaction
     };
     setMapState(newMapState);
     updateURL(newMapState);
@@ -222,6 +229,7 @@ export function MapPage() {
       center: { lat: place.lat, lng: place.lng },
       zoom: mapRef.current?.getZoom() || mapState.zoom,
       selectedPlaceId: place.id,
+      hasUrlCoordinates: true, // Now has coordinates from place navigation
     };
     setMapState(newMapState);
     updateURL(newMapState);
@@ -274,6 +282,7 @@ export function MapPage() {
         initialRegion="hongkong"
         initialCenter={mapState.center}
         initialZoom={mapState.zoom}
+        shouldCenterOnUserLocation={!mapState.hasUrlCoordinates && isInitialLoad}
         className="h-full w-full"
         places={displayPlaces}
         isLoading={isInitialLoad && isLoading}

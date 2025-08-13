@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { Place } from '@/types/place';
-import { PlaceMarker, PlaceSearchParams, PlaceWithStats, MAP_REGIONS } from '@/types/map';
+import { PlaceMarker, PlaceSearchParams, PlaceWithStats } from '@/types/map';
+import { MAP_REGIONS } from '@/config/map-config';
 import { LatLngBounds, LatLng } from 'leaflet';
 
 export class MapService {

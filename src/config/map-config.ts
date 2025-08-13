@@ -1,3 +1,6 @@
+import { LatLngBounds, LatLng } from 'leaflet';
+import { MapRegion } from '@/types/map';
+
 /**
  * Map configuration options
  * 
@@ -51,5 +54,23 @@ export const MAP_CONFIG = {
     errorRetryCount: 3,
   }
 } as const;
+
+// Pre-defined regions for Taiwan and Hong Kong
+export const MAP_REGIONS: Record<string, MapRegion> = {
+  taiwan: {
+    id: 'taiwan',
+    name: 'Taiwan',
+    bounds: new LatLngBounds([21.9, 120.0], [25.3, 122.0]),
+    center: new LatLng(23.8, 121.0),
+    defaultZoom: 8,
+  },
+  hongkong: {
+    id: 'hongkong',
+    name: 'Hong Kong',
+    bounds: new LatLngBounds([22.15, 113.8], [22.58, 114.5]),
+    center: new LatLng(22.2843556, 114.1527621), // Central district, Hong Kong
+    defaultZoom: 16,
+  },
+};
 
 export type MapConfig = typeof MAP_CONFIG;
