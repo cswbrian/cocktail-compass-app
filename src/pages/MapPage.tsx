@@ -10,6 +10,7 @@ import { LatLngBounds } from 'leaflet';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { MAP_CONFIG, MAP_REGIONS } from '@/config/map-config';
+import { sendGAEvent } from '@/lib/ga';
 
 export function MapPage() {
   const [selectedPlace, setSelectedPlace] = useState<PlaceMarker | null>(null);
@@ -188,6 +189,9 @@ export function MapPage() {
     setUserInteracted(true); // Mark that user has interacted with the map
     setUserDraggedMap(true); // Mark that user has manually moved the map
     
+    // Track map interaction
+    sendGAEvent('Map', 'viewport_change', `zoom_${viewport.zoom}`);
+    
     // Update map state and URL
     const newMapState = {
       center: { lat: viewport.center.lat, lng: viewport.center.lng },
@@ -203,6 +207,9 @@ export function MapPage() {
     setSelectedPlace(place);
     setShowBottomSheet(true);
     setUserDraggedMap(false); // Reset drag flag when user selects a place
+    
+    // Track place selection
+    sendGAEvent('Map', 'place_select', `${place.name} - ${place.id}`);
     
     // Update URL with selected place
     const newMapState = {
@@ -224,6 +231,9 @@ export function MapPage() {
       });
     }
     
+    // Track place navigation
+    sendGAEvent('Map', 'place_navigate', `${place.name} - ${place.id}`);
+    
     // Update URL with new selected place and center
     const newMapState = {
       center: { lat: place.lat, lng: place.lng },
@@ -239,6 +249,9 @@ export function MapPage() {
   const handleBottomSheetClose = useCallback(() => {
     setShowBottomSheet(false);
     
+    // Track bottom sheet close
+    sendGAEvent('Map', 'bottom_sheet_close', selectedPlace?.name || 'unknown');
+    
     // Clear selected place from URL
     const newMapState = {
       ...mapState,
@@ -246,7 +259,7 @@ export function MapPage() {
     };
     setMapState(newMapState);
     updateURL(newMapState);
-  }, [mapState, updateURL]);
+  }, [mapState, updateURL, selectedPlace]);
 
   const handleNavigateToPlace = useCallback((placeId: string) => {
     navigate(`/en/place/${placeId}`);

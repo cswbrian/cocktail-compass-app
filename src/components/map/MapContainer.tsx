@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 import { MAP_CONFIG, MAP_REGIONS } from '@/config/map-config';
 import { Button } from '@/components/ui/button';
+import { sendGAEvent } from '@/lib/ga';
 import 'leaflet/dist/leaflet.css';
 
 // Fix for default markers in react-leaflet
@@ -203,10 +204,18 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
 
   const handleLocationRequest = useCallback(async () => {
     try {
+      // Track geolocation request
+      sendGAEvent('Map', 'geolocation_request', 'user_location_button');
+      
       await requestPermission();
       await getCurrentPosition();
+      
+      // Track successful geolocation
+      sendGAEvent('Map', 'geolocation_success', 'user_location_found');
     } catch (error) {
       console.error('Failed to get user location:', error);
+      // Track geolocation failure
+      sendGAEvent('Map', 'geolocation_error', error instanceof Error ? error.message : 'unknown_error');
     }
   }, [requestPermission, getCurrentPosition]);
 
@@ -261,7 +270,10 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         <Button
           variant="outline"
           size="icon"
-          onClick={() => mapRef.current?.zoomIn()}
+          onClick={() => {
+            mapRef.current?.zoomIn();
+            sendGAEvent('Map', 'zoom_in', `current_zoom_${mapRef.current?.getZoom() || 'unknown'}`);
+          }}
           title="Zoom in"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,7 +283,10 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         <Button
           variant="outline"
           size="icon"
-          onClick={() => mapRef.current?.zoomOut()}
+          onClick={() => {
+            mapRef.current?.zoomOut();
+            sendGAEvent('Map', 'zoom_out', `current_zoom_${mapRef.current?.getZoom() || 'unknown'}`);
+          }}
           title="Zoom out"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

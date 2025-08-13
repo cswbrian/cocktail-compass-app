@@ -11,6 +11,7 @@ import { BookmarkButton } from '@/components/bookmark/bookmark-button';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { Link } from 'react-router-dom';
+import { sendGAEvent } from '@/lib/ga';
 import { ExternalLink, MapPin, Clock, Phone, Globe, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 interface PlaceBottomSheetProps {
@@ -98,6 +99,7 @@ export function PlaceBottomSheet({
   const handlePrevPlace = useCallback(() => {
     if (canNavigatePrev) {
       const prevPlace = places[currentIndex - 1];
+      sendGAEvent('Map', 'bottom_sheet_navigate', `prev_${prevPlace.name}`);
       onPlaceChange?.(prevPlace);
     }
   }, [canNavigatePrev, places, currentIndex, onPlaceChange]);
@@ -105,6 +107,7 @@ export function PlaceBottomSheet({
   const handleNextPlace = useCallback(() => {
     if (canNavigateNext) {
       const nextPlace = places[currentIndex + 1];
+      sendGAEvent('Map', 'bottom_sheet_navigate', `next_${nextPlace.name}`);
       onPlaceChange?.(nextPlace);
     }
   }, [canNavigateNext, places, currentIndex, onPlaceChange]);
@@ -300,12 +303,17 @@ export function PlaceBottomSheet({
               className="flex-1 bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/20"
               variant="outline"
             >
-              <Link to={`/${language}/places/${displayPlace.place_id}`}>
+              <Link 
+                to={`/${language}/places/${displayPlace.place_id}`}
+                onClick={() => sendGAEvent('Map', 'place_detail_view', displayPlace.name)}
+              >
                 {t.seeMore}
               </Link>
             </Button>
             <Button
               onClick={() => {
+                // Track directions click
+                sendGAEvent('Map', 'directions_click', displayPlace.name);
                 // Open in maps app
                 const url = `https://www.google.com/maps/search/?api=1&query=${displayPlace.lat},${displayPlace.lng}`;
                 window.open(url, '_blank');
