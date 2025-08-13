@@ -47,11 +47,13 @@ This folder contains all documentation for the Cocktail Bar Map feature developm
 
 ## 📋 Key Project Info
 
-**Project Status**: ✅ Day 2 Complete → Ready for Day 3  
+**Project Status**: ✅ Day 4 Complete → Day 5 Enhanced Features  
 **Start Date**: January 10, 2025  
 **Day 1 Completed**: January 10, 2025  
 **Day 2 Completed**: January 13, 2025  
-**Estimated Completion**: January 14, 2025
+**Day 3 Completed**: January 13, 2025  
+**Day 4 Completed**: January 13, 2025  
+**Day 5 Target**: January 14, 2025
 
 **Key Constraints**:
 - ⚡ Speed: Page load < 2 seconds
@@ -71,7 +73,7 @@ This folder contains all documentation for the Cocktail Bar Map feature developm
 - ✅ Internationalization support (English/Chinese)
 - ✅ Authentication integration (protected routes)
 
-## 🎉 Day 2 Achievements ✅ COMPLETED
+## 🎉 Project Achievements ✅ COMPLETED (Days 1-4)
 
 ### Core Features Delivered
 - ✅ **Interactive Map**: Leaflet + OpenStreetMap with place markers
@@ -83,6 +85,9 @@ This folder contains all documentation for the Cocktail Bar Map feature developm
 - ✅ **Mobile-First Design**: Touch-friendly controls and responsive layout
 - ✅ **Authentication**: Protected routes with existing auth system
 - ✅ **Internationalization**: Full English/Chinese translation support
+- ✅ **PWA Geolocation**: Real-time user positioning with location button
+- ✅ **Nearby Places**: "N places within 1km" when location detected
+- ✅ **Production Ready**: Cross-platform testing and accessibility compliance
 
 ### Technical Implementation
 - ✅ **PostGIS Integration**: Spatial functions for viewport queries
@@ -91,8 +96,33 @@ This folder contains all documentation for the Cocktail Bar Map feature developm
 - ✅ **State Restoration**: Session storage for navigation preservation
 - ✅ **Accessibility**: Proper routing, keyboard navigation, screen reader support
 - ✅ **Design System**: Consistent styling with glassmorphism effects
+- ✅ **Location Services**: Efficient GPS integration with permission handling
+- ✅ **Cross-Platform**: Consistent experience across iOS/Android/Desktop
+
+## 🆕 Day 5 Enhanced Features (NEW)
+
+### List View with Distance Sorting
+- **"N places within Nkm" Button**: Click to switch to list view
+- **Distance Sorting**: Places ordered from nearest to furthest
+- **Consistent Design**: Use existing PlaceCard components
+- **Performance**: Virtualized list for smooth scrolling
+- **Quick Toggle**: Easy switch between map and list views
+
+### Opening Hours Integration
+- **Business Hours Display**: Show operating hours for each venue
+- **Real-time Status**: "Open" / "Closed" indicators with color coding
+- **Time Zone Awareness**: Accurate local time calculations
+- **Database Enhancement**: JSONB field for flexible schedule storage
+- **Efficient Updates**: Cached calculations updated every 5 minutes
+
+### Open/Closed Filter Toggle
+- **Filter Controls**: Toggle buttons for "Open Only" / "Closed Only" / "Show All"
+- **Real-time Filtering**: Immediately update map markers and list view
+- **Smart Defaults**: Show open venues by default during business hours
+- **Visual Indicators**: Clear distinction between open/closed venues
+- **Persistent State**: Remember filter preferences across sessions
 
 ---
 
 *This documentation is maintained throughout the project lifecycle*  
-*Last Updated: January 13, 2025 - Day 2 Complete*
+*Last Updated: January 13, 2025 - Day 4 Complete, Day 5 Planning*

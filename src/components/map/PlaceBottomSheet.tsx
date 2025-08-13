@@ -222,35 +222,13 @@ export function PlaceBottomSheet({
             {displayPlace.secondary_text && (
               <p className="text-sm text-white/50 mb-2">{displayPlace.secondary_text}</p>
             )}
-
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2 mb-3">
-              {displayPlace.is_verified && (
-                <Badge variant="secondary" className="bg-green-500/20 text-green-300 border border-green-500/20">
-                  ✓ {t.placeVerified}
-                </Badge>
-              )}
-              {(displayPlace as PlaceMarker).distance !== undefined && (
-                <Badge variant="outline" className="bg-white/10 text-white/70 border border-white/20">
-                  <MapPin className="w-3 h-3 mr-1" />
-                  {((displayPlace as PlaceMarker).distance || 0).toFixed(1)} km away
-                </Badge>
-              )}
-            </div>
           </div>
 
-          {/* Loading State */}
-          {isLoading && (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/60"></div>
-              <span className="ml-2 text-white/60">{t.loading}</span>
-            </div>
-          )}
 
 
 
           {/* Place Details */}
-          <div className="space-y-3 mb-6">
+          {/* <div className="space-y-3 mb-6">
             {(displayPlace as any).formatted_address && (
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-white/50 mt-0.5 flex-shrink-0" />
@@ -294,7 +272,7 @@ export function PlaceBottomSheet({
                 </a>
               </div>
             )}
-          </div>
+          </div> */}
 
           {/* Action Buttons */}
           <div className="flex gap-3 pt-4 border-t border-white/20">
