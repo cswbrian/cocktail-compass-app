@@ -128,8 +128,8 @@ export default function PlaceDetailPage() {
     }
   };
 
-  const handleClose = () => {
-    navigate(`/${language}/feeds`);
+  const handleGoBack = () => {
+    navigate(-1);
   };
 
   if (isLoading) {
@@ -150,7 +150,7 @@ export default function PlaceDetailPage() {
       <div className="h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <p className="text-destructive mb-4">{error}</p>
-          <Button onClick={handleClose}>Go Back</Button>
+          <Button onClick={handleGoBack}>Go Back</Button>
         </div>
       </div>
     );

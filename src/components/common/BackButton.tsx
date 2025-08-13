@@ -18,7 +18,8 @@ export function BackButton({ to, className }: BackButtonProps) {
     if (to) {
       navigate(to);
     } else {
-      navigate(`/${language}/feeds`);
+      // Go back to previous page in browser history
+      navigate(-1);
     }
   };
 

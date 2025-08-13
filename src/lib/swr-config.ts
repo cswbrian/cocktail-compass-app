@@ -9,6 +9,7 @@ import { AuthService } from '@/services/auth-service';
 import { mutate } from 'swr';
 import { visitService } from '@/services/visit-service';
 import { placeService } from '@/services/place-service';
+import { mapService } from '@/services/map-service';
 
 interface UserStats {
   basicStats: {
@@ -62,6 +63,11 @@ export const CACHE_KEYS = {
   PUBLIC_VISITS: (page?: number) => ['public-visits', page],
   USER_VISITS: (userId: string, page?: number) => ['user-visits', userId, page],
   PLACES: 'places',
+  // Map-specific cache keys
+  PLACES_IN_VIEWPORT: (boundsString: string) => ['places-viewport', boundsString],
+  NEARBY_PLACES: (lat: number, lng: number, radius: number) => ['nearby-places', lat, lng, radius],
+  PLACES_BY_REGION: (regionId: string) => ['places-region', regionId],
+  PLACE_WITH_STATS: (placeId: string) => ['place-stats', placeId],
 } as const;
 
 // Helper functions for cache invalidation
@@ -100,6 +106,15 @@ export const invalidateCache = {
   },
   allVisits: () => mutate(CACHE_KEYS.PUBLIC_VISITS()),
   userVisits: (userId: string) => mutate(CACHE_KEYS.USER_VISITS(userId)),
+  // Map-specific cache invalidation
+  mapPlaces: async () => {
+    await Promise.all([
+      mutate(key => Array.isArray(key) && key[0] === 'places-viewport'),
+      mutate(key => Array.isArray(key) && key[0] === 'nearby-places'),
+      mutate(key => Array.isArray(key) && key[0] === 'places-region'),
+    ]);
+  },
+  placeStats: (placeId: string) => mutate(CACHE_KEYS.PLACE_WITH_STATS(placeId)),
 };
 
 // Fetcher functions
@@ -254,6 +269,55 @@ export const fetchers = {
   getPlaces: async () => {
     const response = await placeService.getAllPlaces();
     return response.data || [];
+  },
+
+  // Map-specific fetchers
+  getPlacesInViewport: async (boundsString: string) => {
+    console.log('🔧 Fetcher Called: getPlacesInViewport', {
+      boundsString,
+      timestamp: new Date().toISOString()
+    });
+
+    // Parse bounds string from Leaflet's toBBoxString(): "west,south,east,north" (lng,lat,lng,lat)
+    const [west, south, east, north] = boundsString.split(',').map(Number);
+
+    console.log('📐 Parsed Bounds (west,south,east,north):', {
+      west,
+      south,
+      east,
+      north,
+    });
+
+    const L = await import('leaflet');
+    // Construct using [lat, lng]
+    const bounds = new L.LatLngBounds(
+      [south, west], // southwest corner (lat, lng)
+      [north, east]  // northeast corner (lat, lng)
+    );
+
+    const result = await mapService.getPlacesInViewport(bounds);
+
+    console.log('✅ Viewport Result:', {
+      placesCount: result.length,
+      firstPlace: result[0]?.name,
+      timestamp: new Date().toISOString()
+    });
+
+    return result;
+  },
+
+  getNearbyPlaces: async (lat: number, lng: number, radius: number = 5) => {
+    const L = await import('leaflet');
+    const center = new L.LatLng(lat, lng);
+    return mapService.getNearbyPlaces(center, radius);
+  },
+
+  getPlacesByRegion: async (regionId: string) => {
+    return mapService.getPlacesByRegion(regionId);
+  },
+
+  getPlaceWithStats: async (placeId: string) => {
+    return mapService.getPlaceWithStats(placeId);
   },
 };
 

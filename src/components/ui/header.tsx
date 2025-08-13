@@ -113,15 +113,15 @@ export function Header() {
   };
 
   return (
-    <header className="flex justify-between items-center px-6 py-4 sticky top-0 z-50">
+    <header className="flex justify-between items-center px-6 py-4 fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center gap-2">
-        <Link to={`/${language}`} className="font-medium">
+        <Link to={`/${language}`} className="font-medium text-white drop-shadow-lg">
           {t.appName}
         </Link>
         {!isInstalled && (deferredPrompt || isIOS) && (
           <button
             onClick={handleInstallClick}
-            className="text-sm text-muted-foreground hover:text-muted-foreground/80 flex items-center gap-1"
+            className="text-sm text-white/80 hover:text-white flex items-center gap-1 drop-shadow-lg"
           >
             <Download className="h-3 w-3" />
             {t.installApp}

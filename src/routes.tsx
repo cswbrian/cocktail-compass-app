@@ -25,6 +25,7 @@ import SetupProfilePage from './pages/SetupProfilePage';
 import IngredientDetailPage from './pages/IngredientDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 import TwistPage from './pages/TwistPage';
+import { MapPage } from './pages/MapPage';
 import { RequireUsername } from '@/components/RequireUsername';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
 import { FeedRedirect } from '@/components/FeedRedirect';
@@ -52,6 +53,7 @@ export default function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="explorer" element={<ExplorerPage />} />
         <Route path="search" element={<SearchPage />} />
+        <Route path="map" element={<MapPage />} />
         <Route
           path="bookmarks"
           element={<BookmarksPage />}
