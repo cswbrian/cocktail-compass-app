@@ -32,6 +32,7 @@ import { BackButton } from '@/components/common/BackButton';
 import { PlaceStatusDisplay } from '@/components/common/PlaceStatusDisplay';
 import { sendGAEvent } from '@/lib/ga';
 import { buildGoogleMapsUrl } from '@/lib/utils';
+import { MAP_CONFIG } from '@/config/map-config';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -294,7 +295,7 @@ export default function PlaceDetailPage() {
                     place: place.id,
                     lat: String(place.lat),
                     lng: String(place.lng),
-                    zoom: '18',
+                    zoom: String(MAP_CONFIG.interactions.markerFocusZoom),
                   });
                   navigate(`/${language}/map?${params.toString()}`, {
                     state: { place },

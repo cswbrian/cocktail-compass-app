@@ -219,7 +219,7 @@ export function PlaceMarkers({ places, onPlaceClick, selectedPlaceId, enableClus
               eventHandlers={{
                 click: () => {
                   // Center map on clicked marker with smooth transition
-                  map.setView([place.lat, place.lng], map.getZoom(), {
+                  map.setView([place.lat, place.lng], MAP_CONFIG.interactions.markerFocusZoom, {
                     animate: true,
                     duration: MAP_CONFIG.interactions.centerDuration
                   });

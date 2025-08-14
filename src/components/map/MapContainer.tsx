@@ -281,7 +281,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       const latLng = new LatLng(place.lat, place.lng);
       
       // Center and zoom to the marker with smooth transition
-      mapRef.current.setView(latLng, 18, {
+      mapRef.current.setView(latLng, MAP_CONFIG.interactions.markerFocusZoom, {
         animate: true,
         duration: 0.5, // 500ms transition
         easeLinearity: 0.25,

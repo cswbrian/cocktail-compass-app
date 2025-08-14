@@ -41,6 +41,8 @@ export const MAP_CONFIG = {
     centerDuration: 0.5,
     // Whether to show popups on marker click (false = use bottom sheet instead)
     showPopups: false,
+    // Zoom level when a marker is clicked/focused
+    markerFocusZoom: 17,
   },
   
   // SWR cache settings

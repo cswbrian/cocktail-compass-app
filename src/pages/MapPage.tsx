@@ -182,7 +182,7 @@ export default function MapPage() {
       setShowBottomSheet(true);
       const newMapState = {
         center: { lat: statePlace.lat, lng: statePlace.lng },
-        zoom: 18,
+        zoom: MAP_CONFIG.interactions.markerFocusZoom,
         selectedPlaceId: statePlace.id,
         hasUrlCoordinates: true,
       };
@@ -206,7 +206,7 @@ export default function MapPage() {
           // Center if place is not in current view (threshold: 0.001 degrees ≈ 100m)
           // or if this is the initial load with a place ID
           if (placeDistance > 0.001 || isInitialLoad) {
-            mapRef.current.setView([place.lat, place.lng], mapRef.current.getZoom(), {
+            mapRef.current.setView([place.lat, place.lng], MAP_CONFIG.interactions.markerFocusZoom, {
               animate: !isInitialLoad, // No animation on initial load for faster UX
               duration: MAP_CONFIG.interactions.centerDuration
             });
@@ -214,7 +214,7 @@ export default function MapPage() {
             // Update the URL to match the actual place coordinates
             const newMapState = {
               center: { lat: place.lat, lng: place.lng },
-              zoom: mapRef.current.getZoom(),
+              zoom: MAP_CONFIG.interactions.markerFocusZoom,
               selectedPlaceId: place.id,
               hasUrlCoordinates: true, // Now has coordinates from place selection
             };
@@ -279,7 +279,7 @@ export default function MapPage() {
     setUserDraggedMap(false); // Reset drag flag when navigating between places
     // Center map on the new place
     if (mapRef.current) {
-      mapRef.current.setView([place.lat, place.lng], mapRef.current.getZoom(), {
+      mapRef.current.setView([place.lat, place.lng], MAP_CONFIG.interactions.markerFocusZoom, {
         animate: true,
         duration: MAP_CONFIG.interactions.centerDuration
       });
@@ -291,7 +291,7 @@ export default function MapPage() {
     // Update URL with new selected place and center
     const newMapState = {
       center: { lat: place.lat, lng: place.lng },
-      zoom: mapRef.current?.getZoom() || mapState.zoom,
+      zoom: MAP_CONFIG.interactions.markerFocusZoom,
       selectedPlaceId: place.id,
       hasUrlCoordinates: true, // Now has coordinates from place navigation
     };
