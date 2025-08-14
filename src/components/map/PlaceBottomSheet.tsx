@@ -222,6 +222,20 @@ export function PlaceBottomSheet({
             {displayPlace.secondary_text && (
               <p className="text-sm text-white/50 mb-2">{displayPlace.secondary_text}</p>
             )}
+
+            {/* Open/Closed Status */}
+            {displayPlace.is_open !== null && displayPlace.is_open !== undefined && (
+              <div className="flex items-center gap-2 mb-2">
+                <div className={`w-2 h-2 rounded-full ${
+                  displayPlace.is_open ? 'bg-green-400' : 'bg-red-400'
+                }`} />
+                <span className={`text-sm font-medium ${
+                  displayPlace.is_open ? 'text-green-400' : 'text-red-400'
+                }`}>
+                  {displayPlace.is_open ? t.open : t.closed}
+                </span>
+              </div>
+            )}
           </div>
 
 

@@ -231,6 +231,8 @@ export const translations = {
     required: 'Required',
     errorRemovingMedia: 'Error removing media',
     viewOnGoogleMaps: 'View on Google Maps',
+    open: 'Open',
+    closed: 'Closed',
     placeVerified: 'Verified Place',
     placeUnverified: 'Unverified Place',
     placeVerifiedDescription:
@@ -583,6 +585,8 @@ Price: Was it worth the price?`,
     required: '必填',
     errorRemovingMedia: '移除媒體時出錯',
     viewOnGoogleMaps: '在 Google 地圖查看',
+    open: '開啟',
+    closed: '關閉',
     placeVerified: '已驗證場所',
     placeUnverified: '未驗證場所',
     placeVerifiedDescription:
