@@ -55,7 +55,8 @@ export default function PlaceDetailPage() {
     const hour = parseInt(timeStr.substring(0, 2));
     const minute = timeStr.substring(2, 4);
     const period = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    const displayHour =
+      hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
     return `${displayHour}:${minute} ${period}`;
   };
 
@@ -64,44 +65,74 @@ export default function PlaceDetailPage() {
     if (!openingHours) return null;
 
     // Show weekday_text if available (most readable)
-    if (openingHours.weekday_text && Array.isArray(openingHours.weekday_text)) {
+    if (
+      openingHours.weekday_text &&
+      Array.isArray(openingHours.weekday_text)
+    ) {
       return (
         <div className="space-y-1">
-          {openingHours.weekday_text.map((dayText: string, index: number) => (
-            <div key={index} className="text-sm text-muted-foreground">
-              {dayText}
-            </div>
-          ))}
+          {openingHours.weekday_text.map(
+            (dayText: string, index: number) => (
+              <div
+                key={index}
+                className="text-sm text-muted-foreground"
+              >
+                {dayText}
+              </div>
+            ),
+          )}
         </div>
       );
     }
 
     // Fallback to periods if weekday_text not available
-    if (openingHours.periods && Array.isArray(openingHours.periods)) {
-      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      
+    if (
+      openingHours.periods &&
+      Array.isArray(openingHours.periods)
+    ) {
+      const days = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ];
+
       return (
         <div className="space-y-1">
-          {openingHours.periods.map((period: any, index: number) => {
-            const openDay = days[period.open.day];
-            const closeDay = days[period.close.day];
-            const openTime = formatTime(period.open.time);
-            const closeTime = formatTime(period.close.time);
-            
-            if (period.open.day === period.close.day) {
-              return (
-                <div key={index} className="text-sm text-muted-foreground">
-                  {openDay}: {openTime} - {closeTime}
-                </div>
+          {openingHours.periods.map(
+            (period: any, index: number) => {
+              const openDay = days[period.open.day];
+              const closeDay = days[period.close.day];
+              const openTime = formatTime(period.open.time);
+              const closeTime = formatTime(
+                period.close.time,
               );
-            } else {
-              return (
-                <div key={index} className="text-sm text-muted-foreground">
-                  {openDay} {openTime} - {closeDay} {closeTime}
-                </div>
-              );
-            }
-          })}
+
+              if (period.open.day === period.close.day) {
+                return (
+                  <div
+                    key={index}
+                    className="text-sm text-muted-foreground"
+                  >
+                    {openDay}: {openTime} - {closeTime}
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    key={index}
+                    className="text-sm text-muted-foreground"
+                  >
+                    {openDay} {openTime} - {closeDay}{' '}
+                    {closeTime}
+                  </div>
+                );
+              }
+            },
+          )}
         </div>
       );
     }
@@ -259,47 +290,72 @@ export default function PlaceDetailPage() {
               ? t.placeVerifiedDescription
               : t.placeUnverifiedDescription}
           </p>
-          
+
           {/* Place Status and Details */}
-          <PlaceStatusDisplay 
+          <PlaceStatusDisplay
             place={place}
             className="mb-4"
           />
-          
+
           {/* Full Opening Hours Display */}
           {place.opening_hours && (
             <div className="space-y-3 mb-4">
               <div className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
-                  <div className="font-medium mb-2">{t.openingHours}</div>
+                  <div className="font-medium mb-2">
+                    {t.openingHours}
+                  </div>
                   {renderOpeningHours(place.opening_hours)}
                 </div>
               </div>
             </div>
           )}
-          
+
           {/* Contact Information */}
-          {(place.phone_number || place.website || place.secondary_text) && (
+          {(place.phone_number ||
+            place.website ||
+            place.secondary_text) && (
             <div className="space-y-3 mb-4">
               {/* Address */}
               {place.secondary_text && (
-                <div className="flex items-start gap-3">
+                <div
+                  className="flex items-start gap-3"
+                  onClick={() => {
+                    sendGAEvent(
+                      'PlaceDetail',
+                      'directions_click',
+                      place.name,
+                    );
+                    const url = buildGoogleMapsUrl({
+                      name: place.name,
+                      place_id: place.place_id,
+                      lat: place.lat,
+                      lng: place.lng,
+                    });
+                    window.open(url, '_blank');
+                  }}
+                >
                   <MapPin className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
-                    <div className="text-muted-foreground">{place.secondary_text}</div>
+                    <div className="text-primary flex items-center gap-1">
+                      {place.secondary_text}
+                      <ExternalLink className="w-3 h-3" />
+                    </div>
                     {place.description && (
-                      <div className="text-sm text-muted-foreground/80 mt-1">{place.description}</div>
+                      <div className="text-sm text-muted-foreground/80 mt-1">
+                        {place.description}
+                      </div>
                     )}
                   </div>
                 </div>
               )}
-              
+
               {/* Phone Number */}
               {place.phone_number && (
                 <div className="flex items-start gap-3">
                   <Phone className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
-                  <a 
+                  <a
                     href={`tel:${place.phone_number}`}
                     className="text-primary hover:text-primary/80 hover:underline"
                   >
@@ -307,12 +363,12 @@ export default function PlaceDetailPage() {
                   </a>
                 </div>
               )}
-              
+
               {/* Website */}
               {place.website && (
                 <div className="flex items-start gap-3">
                   <Globe className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
-                  <a 
+                  <a
                     href={place.website}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -325,35 +381,19 @@ export default function PlaceDetailPage() {
               )}
             </div>
           )}
-          
-          {/* View on Google Maps */}
-          <div className="mb-6">
-            <Button
-              variant="outline"
-              onClick={() => {
-                sendGAEvent('PlaceDetail', 'directions_click', place.name);
-                const url = buildGoogleMapsUrl({
-                  name: place.name,
-                  place_id: place.place_id,
-                  lat: place.lat,
-                  lng: place.lng,
-                });
-                window.open(url, '_blank');
-              }}
-              className="inline-flex items-center gap-2"
-            >
-              {t.viewOnGoogleMaps}
-              <ExternalLink className="w-4 h-4" />
-            </Button>
-          </div>
-          
-          <ExternalLinkComponent message={t.feedbackMessage} />
+
+          <ExternalLinkComponent
+            message={t.feedbackMessage}
+          />
         </div>
 
         <div>
           <PlaceDetailNav />
           <VisitList
-            visits={(visitsData?.visits as unknown as Visit[]) || []}
+            visits={
+              (visitsData?.visits as unknown as Visit[]) ||
+              []
+            }
             isLoading={isLoadingVisits}
             hasMore={visitsData?.hasMore}
             onLoadMore={loadMoreVisits}

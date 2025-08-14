@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { translations } from '@/translations';
 import { Toaster } from '@/components/ui/sonner';
 import { HighlightsContainer } from '@/components/journal/HighlightsContainer';
@@ -6,6 +6,7 @@ import { BookmarksClient } from '@/components/bookmark/bookmarks-client';
 import { useLanguage } from '@/context/LanguageContext';
 import { StarIcon, BarChart3Icon } from 'lucide-react';
 import { UserProfile } from '@/components/profile/UserProfile';
+import { useSearchParams } from 'react-router-dom';
 
 const ProfileTabs: React.FC<{
   activeTab: 'highlights' | 'bookmarks';
@@ -43,7 +44,26 @@ const ProfileTabs: React.FC<{
 };
 
 const ProfilePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'highlights' | 'bookmarks'>('highlights');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'highlights' | 'bookmarks'>(() => {
+    const tabFromQuery = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('tab') : null;
+    if (tabFromQuery === 'highlights' || tabFromQuery === 'bookmarks') return tabFromQuery;
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('profile-active-tab') : null;
+    if (stored === 'highlights' || stored === 'bookmarks') return stored;
+    return 'highlights';
+  });
+
+  // Persist tab in URL and localStorage; push history so Back toggles tabs
+  useEffect(() => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev as any);
+      next.set('tab', activeTab);
+      return next;
+    }, { replace: false });
+    try {
+      localStorage.setItem('profile-active-tab', activeTab);
+    } catch {}
+  }, [activeTab, setSearchParams]);
 
   return (
     <div>
