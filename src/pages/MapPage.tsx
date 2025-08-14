@@ -146,6 +146,20 @@ export default function MapPage() {
 
   // Restore selected place from URL and center map
   useEffect(() => {
+    // If navigation state contains a place, prioritize it on first render
+    if (!selectedPlace && (location.state as any)?.place) {
+      const statePlace = (location.state as any).place as PlaceMarker;
+      setSelectedPlace(statePlace);
+      setShowBottomSheet(true);
+      const newMapState = {
+        center: { lat: statePlace.lat, lng: statePlace.lng },
+        zoom: 18,
+        selectedPlaceId: statePlace.id,
+        hasUrlCoordinates: true,
+      };
+      setMapState(newMapState);
+      updateURL(newMapState);
+    }
     if (mapState.selectedPlaceId && displayPlaces.length > 0) {
       const place = displayPlaces.find(p => p.id === mapState.selectedPlaceId);
       if (place) {
@@ -181,7 +195,7 @@ export default function MapPage() {
         }
       }
     }
-  }, [mapState.selectedPlaceId, displayPlaces, selectedPlace, isInitialLoad, userDraggedMap, updateURL]);
+  }, [mapState.selectedPlaceId, displayPlaces, selectedPlace, isInitialLoad, userDraggedMap, updateURL, location.state]);
 
   // Save map state to sessionStorage for bottom nav persistence
   useEffect(() => {

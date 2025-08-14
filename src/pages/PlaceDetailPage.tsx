@@ -285,6 +285,29 @@ export default function PlaceDetailPage() {
               </div>
             )}
           </div>
+          {place.show_on_map && (
+            <div className="mb-4">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const params = new URLSearchParams({
+                    place: place.id,
+                    lat: String(place.lat),
+                    lng: String(place.lng),
+                    zoom: '18',
+                  });
+                  navigate(`/${language}/map?${params.toString()}`, {
+                    state: { place },
+                  });
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  {t.viewOnMap || 'View on Map'}
+                </span>
+              </Button>
+            </div>
+          )}
           <p className="text-sm text-muted-foreground mb-4">
             {place.is_verified
               ? t.placeVerifiedDescription
