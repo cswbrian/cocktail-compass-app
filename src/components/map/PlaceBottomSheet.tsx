@@ -41,10 +41,12 @@ export function PlaceBottomSheet({
   const [currentY, setCurrentY] = useState(0);
   const [sheetHeight, setSheetHeight] = useState(400); // Default height
   
-  // Navigation state
+  // Navigation state - only navigate through filtered places
   const currentIndex = place ? places.findIndex(p => p.id === place.id) : -1;
   const canNavigatePrev = currentIndex > 0;
   const canNavigateNext = currentIndex < places.length - 1;
+
+
 
   // Fetch place details with stats
   const { data: placeWithStats, isLoading } = useSWR(
@@ -97,9 +99,9 @@ export function PlaceBottomSheet({
     }
   }, [isDragging, currentY, startY, onClose]);
 
-  // Navigation handlers
+  // Navigation handlers - only navigate through filtered places
   const handlePrevPlace = useCallback(() => {
-    if (canNavigatePrev) {
+    if (canNavigatePrev && places.length > 0) {
       const prevPlace = places[currentIndex - 1];
       sendGAEvent('Map', 'bottom_sheet_navigate', `prev_${prevPlace.name}`);
       onPlaceChange?.(prevPlace);
@@ -107,7 +109,7 @@ export function PlaceBottomSheet({
   }, [canNavigatePrev, places, currentIndex, onPlaceChange]);
 
   const handleNextPlace = useCallback(() => {
-    if (canNavigateNext) {
+    if (canNavigateNext && places.length > 0) {
       const nextPlace = places[currentIndex + 1];
       sendGAEvent('Map', 'bottom_sheet_navigate', `next_${nextPlace.name}`);
       onPlaceChange?.(nextPlace);
@@ -136,6 +138,11 @@ export function PlaceBottomSheet({
   }, [isOpen, onClose]);
 
   if (!place || !isOpen) {
+    return null;
+  }
+
+  // Safety check: ensure the current place is in the filtered places
+  if (!places.find(p => p.id === place.id)) {
     return null;
   }
 
@@ -190,7 +197,7 @@ export function PlaceBottomSheet({
                       ? 'text-white/90 hover:bg-white/10 hover:text-white' 
                       : 'text-white/30 cursor-not-allowed'
                   }`}
-                  title="Previous place"
+                  title={canNavigatePrev ? "Previous place" : "No more places in this direction"}
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -204,7 +211,7 @@ export function PlaceBottomSheet({
                       ? 'text-white/90 hover:bg-white/10 hover:text-white' 
                       : 'text-white/30 cursor-not-allowed'
                   }`}
-                  title="Next place"
+                  title={canNavigateNext ? "Next place" : "No more places in this direction"}
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -236,6 +243,18 @@ export function PlaceBottomSheet({
                 place={displayPlace}
               />
             </div>
+
+            {/* Filter status indicator */}
+            {places.length > 0 && (
+              <div className="text-xs text-white/50 mb-2">
+                {places.length} places match current filters
+                {places.length > 1 && (
+                  <span className="ml-2 text-white/40">
+                    ({currentIndex + 1} of {places.length})
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
 

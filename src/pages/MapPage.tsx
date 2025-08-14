@@ -128,6 +128,35 @@ export default function MapPage() {
     return filtered;
   }, [displayPlaces, openNowOnly, asias50Only]);
 
+  // Update selected place when filters change to ensure it's still in filtered results
+  useEffect(() => {
+    if (selectedPlace && !renderPlaces.find(p => p.id === selectedPlace.id)) {
+      // Selected place is no longer in filtered results, select the first available place
+      if (renderPlaces.length > 0) {
+        setSelectedPlace(renderPlaces[0]);
+        setShowBottomSheet(true);
+        // Update URL with new selected place
+        const newMapState = {
+          ...mapState,
+          selectedPlaceId: renderPlaces[0].id,
+        };
+        setMapState(newMapState);
+        updateURL(newMapState);
+      } else {
+        // No places match the filter, close bottom sheet
+        setSelectedPlace(null);
+        setShowBottomSheet(false);
+        // Clear selected place from URL
+        const newMapState = {
+          ...mapState,
+          selectedPlaceId: null,
+        };
+        setMapState(newMapState);
+        updateURL(newMapState);
+      }
+    }
+  }, [renderPlaces, selectedPlace, mapState, updateURL]);
+
   // Smooth place updates - keep previous places visible while loading new ones
   useEffect(() => {
     if (!isLoading && places.length > 0) {
@@ -447,7 +476,7 @@ export default function MapPage() {
       {/* Enhanced Bottom Sheet with Navigation */}
       <PlaceBottomSheet
         place={selectedPlace}
-        places={displayPlaces}
+        places={renderPlaces}
         isOpen={showBottomSheet}
         onClose={handleBottomSheetClose}
         onNavigateToPlace={handleNavigateToPlace}
