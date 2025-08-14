@@ -35,39 +35,49 @@ interface UserStats {
 
 // Cache keys
 export const CACHE_KEYS = {
-  COCKTAIL_LOGS: (
-    visibility?: 'public' | 'private',
-  ) =>
-    visibility
-      ? ['cocktail-logs', visibility]
-      : 'cocktail-logs',
-  OWN_LOGS: (page?: number) =>
-    page ? ['own-logs', page] : 'own-logs',
-  PUBLIC_LOGS: (page?: number) =>
-    page ? ['public-logs', page] : 'public-logs',
-  USER_STATS: 'user-stats',
+  // Map and Places
+  PLACES_IN_VIEWPORT: (bounds: string) => ['places-viewport', bounds],
+  PLACES_NEARBY: (lat: number, lng: number, radius: number) => ['places-nearby', lat, lng, radius],
+  PLACES_SMART_FALLBACK: ['places-smart-fallback'],
+  PLACES: 'places',
+  
+  // Place details
+  PLACE_WITH_STATS: (placeId: string) => ['place-with-stats', placeId],
   PLACE_LOGS: (placeId: string) => ['place-logs', placeId],
   PLACE_VISITS: (placeId: string) => ['place-visits', placeId],
-  COCKTAIL_LOGS_BY_ID: (cocktailId: string) => [
-    'cocktail-logs-by-id',
-    cocktailId,
-  ],
-  BOOKMARKS: 'bookmarks',
-  COCKTAILS: 'cocktails',
-  COCKTAIL_DETAILS: 'cocktail-details',
+  
+  // Cocktails
+  COCKTAIL_DETAILS: (cocktailId: string) => ['cocktail-details', cocktailId],
+  COCKTAIL_INGREDIENTS: (cocktailId: string) => ['cocktail-ingredients', cocktailId],
   COCKTAIL_LIST: 'cocktail-list',
+  COCKTAIL_LOGS: (visibility?: 'public' | 'private') =>
+    visibility ? ['cocktail-logs', visibility] : 'cocktail-logs',
+  COCKTAIL_LOGS_BY_ID: (cocktailId: string) => ['cocktail-logs-by-id', cocktailId],
+  
+  // User data
+  USER_BOOKMARKS: (userId: string) => ['user-bookmarks', userId],
+  USER_COCKTAIL_LOGS: (userId: string) => ['user-cocktail-logs', userId],
+  USER_VISITS: (userId: string) => ['user-visits', userId],
+  USER_STATS: (userId: string) => ['user-stats', userId],
+  USER_SETTINGS: (userId: string) => ['user-settings', userId],
+  OWN_LOGS: (page?: number) => page ? ['own-logs', page] : 'own-logs',
+  PUBLIC_LOGS: (page?: number) => page ? ['public-logs', page] : 'public-logs',
+  
+  // Visits
   VISITS: (visibility?: 'public' | 'private') =>
     visibility ? ['visits', visibility] : 'visits',
-  OWN_VISITS: (page?: number) =>
-    page ? ['own-visits', page] : 'own-visits',
+  OWN_VISITS: (page?: number) => page ? ['own-visits', page] : 'own-visits',
   PUBLIC_VISITS: (page?: number) => ['public-visits', page],
-  USER_VISITS: (userId: string, page?: number) => ['user-visits', userId, page],
-  PLACES: 'places',
-  // Map-specific cache keys
-  PLACES_IN_VIEWPORT: (boundsString: string) => ['places-viewport', boundsString],
-  NEARBY_PLACES: (lat: number, lng: number, radius: number) => ['nearby-places', lat, lng, radius],
-  PLACES_BY_REGION: (regionId: string) => ['places-region', regionId],
-  PLACE_WITH_STATS: (placeId: string) => ['place-stats', placeId],
+  
+  // Search
+  COCKTAIL_SEARCH: (query: string, filters: string) => ['cocktail-search', query, filters],
+  INGREDIENT_SEARCH: (query: string) => ['ingredient-search', query],
+  
+  // Bookmarks
+  BOOKMARKS: 'bookmarks',
+  
+  // Auth
+  CURRENT_USER: () => ['current-user'],
 } as const;
 
 // Helper functions for cache invalidation
@@ -111,7 +121,6 @@ export const invalidateCache = {
     await Promise.all([
       mutate(key => Array.isArray(key) && key[0] === 'places-viewport'),
       mutate(key => Array.isArray(key) && key[0] === 'nearby-places'),
-      mutate(key => Array.isArray(key) && key[0] === 'places-region'),
     ]);
   },
   placeStats: (placeId: string) => mutate(CACHE_KEYS.PLACE_WITH_STATS(placeId)),
@@ -312,8 +321,37 @@ export const fetchers = {
     return mapService.getNearbyPlaces(center, radius);
   },
 
-  getPlacesByRegion: async (regionId: string) => {
-    return mapService.getPlacesByRegion(regionId);
+
+  getPlacesWithSmartFallback: async (viewportKey?: string) => {
+    console.log('🔧 Fetcher Called: getPlacesWithSmartFallback', {
+      viewportKey,
+      timestamp: new Date().toISOString()
+    });
+
+    // If viewportKey is provided and it's a valid bounds string, use it
+    if (viewportKey && viewportKey !== 'default') {
+      try {
+        // Parse bounds string from Leaflet's toBBoxString(): "west,south,east,north" (lng,lat,lng,lat)
+        const [west, south, east, north] = viewportKey.split(',').map(Number);
+        
+        if (!isNaN(west) && !isNaN(south) && !isNaN(east) && !isNaN(north)) {
+          const L = await import('leaflet');
+          const bounds = new L.LatLngBounds(
+            [south, west], // southwest corner (lat, lng)
+            [north, east]  // northeast corner (lat, lng)
+          );
+          
+          console.log('📐 Using provided viewport bounds for smart fallback');
+          return await mapService.getPlacesInViewport(bounds);
+        }
+      } catch (error) {
+        console.warn('Failed to parse viewport bounds, using default fallback:', error);
+      }
+    }
+    
+    // Use smart fallback (default Hong Kong area)
+    console.log('🔄 Using smart fallback viewport for initial data loading');
+    return await mapService.getPlacesWithSmartFallback();
   },
 
   getPlaceWithStats: async (placeId: string) => {

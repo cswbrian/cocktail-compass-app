@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { Place } from '@/types/place';
 import { PlaceMarker, PlaceSearchParams, PlaceWithStats } from '@/types/map';
-import { MAP_REGIONS } from '@/config/map-config';
+import { SMART_DEFAULT_VIEWPORT } from '@/config/map-config';
 import { LatLngBounds, LatLng } from 'leaflet';
 
 export class MapService {
@@ -23,7 +23,7 @@ export class MapService {
       timestamp: new Date().toISOString()
     });
     
-    const { data, error } = await supabase.rpc('places_in_viewport', params);
+    const { data, error } = await supabase.rpc('places_in_viewport_with_status', params);
 
     if (error) {
       console.error('❌ PostGIS Error:', error);
@@ -47,7 +47,7 @@ export class MapService {
     radiusKm: number = 5,
     limit: number = 50
   ): Promise<PlaceMarker[]> {
-    const { data, error } = await supabase.rpc('nearby_places', {
+    const { data, error } = await supabase.rpc('nearby_places_with_status', {
       user_lat: center.lat,
       user_lng: center.lng,
       radius_km: radiusKm,
@@ -63,36 +63,32 @@ export class MapService {
   }
 
   /**
-   * Get places by region (Taiwan/Hong Kong)
+   * Get places with smart fallback strategy
+   * This method provides fallback data loading when no viewport is available
    */
-  async getPlacesByRegion(regionId: string, limit: number = 100): Promise<PlaceMarker[]> {
-    const region = MAP_REGIONS[regionId];
-    if (!region) {
-      throw new Error(`Unknown region: ${regionId}`);
+  async getPlacesWithSmartFallback(viewport?: LatLngBounds, limit: number = 100): Promise<PlaceMarker[]> {
+    // If viewport is provided and large enough, use it
+    if (viewport && this.isViewportLargeEnough(viewport)) {
+      return this.getPlacesInViewport(viewport, limit);
     }
 
-    // Map region keys to database region names
-    const regionNameMap: Record<string, string> = {
-      'hongkong': 'Hong Kong',
-      'taiwan': 'Taiwan'
-    };
+    // Otherwise, use smart default viewport
+    const bounds = new (await import('leaflet')).LatLngBounds(
+      [SMART_DEFAULT_VIEWPORT.fallbackViewport.min_lat, SMART_DEFAULT_VIEWPORT.fallbackViewport.min_lng] as any,
+      [SMART_DEFAULT_VIEWPORT.fallbackViewport.max_lat, SMART_DEFAULT_VIEWPORT.fallbackViewport.max_lng] as any,
+    );
+    return this.getPlacesInViewport(bounds, limit);
+  }
 
-    const regionName = regionNameMap[regionId];
-    if (!regionName) {
-      throw new Error(`No database region mapping for: ${regionId}`);
-    }
-
-    const { data, error } = await supabase.rpc('places_by_region', {
-      region_name: regionName,
-      result_limit: limit,
-    });
-
-    if (error) {
-      console.error('Error fetching places by region:', error);
-      throw error;
-    }
-
-    return data || [];
+  /**
+   * Check if a viewport is large enough for meaningful data loading
+   */
+  private isViewportLargeEnough(viewport: LatLngBounds): boolean {
+    const latSpan = Math.abs(viewport.getNorth() - viewport.getSouth());
+    const lngSpan = Math.abs(viewport.getEast() - viewport.getWest());
+    
+    return latSpan >= SMART_DEFAULT_VIEWPORT.minViewportSize.lat && 
+           lngSpan >= SMART_DEFAULT_VIEWPORT.minViewportSize.lng;
   }
 
   /**
@@ -121,18 +117,6 @@ export class MapService {
   }
 
   /**
-   * Auto-detect user's region based on their location
-   */
-  detectRegion(position: LatLng): string | null {
-    for (const [regionId, region] of Object.entries(MAP_REGIONS)) {
-      if (region.bounds.contains(position)) {
-        return regionId;
-      }
-    }
-    return null;
-  }
-
-  /**
    * Search places by text query with optional spatial filtering
    */
   async searchPlaces(query: string, params?: PlaceSearchParams): Promise<PlaceMarker[]> {
@@ -140,6 +124,9 @@ export class MapService {
       .from('places')
       .select('*')
       .or(`name.ilike.%${query}%, main_text.ilike.%${query}%, secondary_text.ilike.%${query}%`);
+    
+    // Only include places that should be shown on the map
+    queryBuilder = queryBuilder.eq('show_on_map', true);
 
     // Add spatial filtering if viewport is provided
     if (params?.viewport) {

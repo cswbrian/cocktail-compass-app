@@ -14,13 +14,6 @@ export interface PlaceMarker extends Place {
   clusterGroup?: string; // For marker clustering
 }
 
-export interface MapRegion {
-  id: string;
-  name: string;
-  bounds: LatLngBounds;
-  center: LatLng;
-  defaultZoom: number;
-}
 
 export interface GeolocationPosition {
   latitude: number;
@@ -38,7 +31,6 @@ export interface GeolocationState {
 // Map search/filter types
 export interface PlaceSearchParams {
   viewport?: LatLngBounds;
-  region?: string;
   nearLocation?: LatLng;
   radiusKm?: number;
   limit?: number;

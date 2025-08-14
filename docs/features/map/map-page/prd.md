@@ -83,12 +83,28 @@ Interactive map for discovering cocktail places with region-based filtering and 
 - **Visual indicators**: Color-coded status (green=open, red=closed)
 - **Timezone handling**: Proper local time calculations
 
+#### Implementation details
+- **Data source**: Use `places.opening_hours` JSON and `timezone`
+- **Computation**: Compute status at query-time via `is_open_now(opening_hours, timezone)` SQL function (timezone-aware; supports overnight periods)
+- **DB functions**: Update `places_in_viewport` and `nearby_places` to select `is_open_now(...) as is_open`
+- **No persisted column**: `places.is_open` is deprecated and removed; status is dynamic and computed per query
+- **UI**: Reuse `PlaceStatusDisplay` in bottom sheet and place cards
+- **Validation**: Fallback safely when `opening_hours` missing or invalid
+
 ### Open/Closed Filter Toggle 🆕
 - **Filter controls**: Toggle buttons for "Show Open Only" / "Show Closed Only"
 - **Real-time filtering**: Immediately update map markers and list
 - **Clear indicators**: Visual distinction between open/closed venues
 - **Persistent state**: Remember filter preferences across sessions
 - **Smart defaults**: Default to "Show Open Only" during business hours
+
+#### Interaction & state
+- **Entry point**: A floating control labeled "Open Now" on the map (right-side control stack)
+- **Behavior**: Tap to toggle between "All" and "Open Now"; applies to markers and list view
+- **URL/state**: Persist with `?open=1` in URL and session storage for nav restore
+- **Count badge**: Top-center counter reflects filtered results (e.g., "8 open places")
+- **i18n**: Add translation keys for `openNow`, `openPlacesCount`, `allPlacesCount`
+- **Analytics**: Track events `filter_open_now_on/off`
 
 ## ❓ Future Considerations
 - Search functionality scope
@@ -140,3 +156,28 @@ Interactive map for discovering cocktail places with region-based filtering and 
 - **Quick Access**: Easily accessible but not intrusive
 - **Status Display**: Show filter count "5 open venues" / "12 closed venues"
 - **Clear All**: Quick option to remove all filters
+
+### Place Tags & Multi-Tag Filtering 🆕
+
+- **UX**:
+  - Tag chips control on the map (top overlay or filter drawer)
+  - Multi-select tags; support match mode: Any/All
+  - Persist selection in URL and session (e.g., `?tags=speakeasy,tiki&match=any`)
+  - Show tags as chips in `PlaceBottomSheet`
+- **Data**:
+  - Add `places.tags text[]` with GIN index; backfill from `place_types` via mapping
+  - Deterministic mapping from Google `types[]` to curated app tags (e.g., `speakeasy`, `rooftop`, `tiki`, `whisky`, `hotel_bar`, `outdoor`, `live_music`, `happy_hour`)
+- **API**:
+  - Extend viewport/nearby RPCs with optional `filter_tags text[]` and `match text` (`'any'|'all'`)
+  - Filtering logic: `any` → `p.tags && filter_tags`; `all` → `p.tags @> filter_tags`
+- **Performance**:
+  - Ensure `idx_places_tags` (GIN) is present; verify query plans use it
+- **i18n**:
+  - Reuse `tags` key; add `matchAnyTags`, `matchAllTags` if needed
+- **Analytics**:
+  - Track `filter_tags_apply`, `filter_tags_clear`, `filter_match_mode_change`
+- **Acceptance Criteria**:
+  - Users can select multiple tags and see markers filtered in <500ms
+  - Tags appear on the place detail bottom sheet
+  - URL share preserves selected tags and match mode
+  - Queries return within SLA using GIN index

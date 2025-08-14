@@ -25,7 +25,7 @@ import SetupProfilePage from './pages/SetupProfilePage';
 import IngredientDetailPage from './pages/IngredientDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 import TwistPage from './pages/TwistPage';
-import { MapPage } from './pages/MapPage';
+import MapPage from './pages/MapPage';
 import { RequireUsername } from '@/components/RequireUsername';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
 import { FeedRedirect } from '@/components/FeedRedirect';

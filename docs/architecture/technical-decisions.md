@@ -66,8 +66,7 @@ interface Place {
     saturday?: { open: string; close: string; closed?: boolean };
     sunday?: { open: string; close: string; closed?: boolean };
   };
-  timezone?: string;  // 🆕 For accurate open/closed status
-  is_open?: boolean;  // 🆕 Computed real-time status
+  timezone?: string  // 🆕 For accurate open/closed status
 }
 
 interface PlaceWithDistance extends Place {

@@ -39,8 +39,7 @@ places (
   
   -- Day 5 Enhanced Fields
   opening_hours jsonb, -- Flexible schedule storage
-  timezone text DEFAULT 'Asia/Hong_Kong',
-  is_open boolean -- Computed real-time status
+  timezone text DEFAULT 'Asia/Hong_Kong'
 )
 ```
 
@@ -103,8 +102,7 @@ RETURNS TABLE (
   lat double precision,
   lng double precision,
   region text,
-  opening_hours jsonb,
-  is_open boolean
+  opening_hours jsonb
 )
 ```
 

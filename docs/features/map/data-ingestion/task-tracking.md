@@ -60,7 +60,12 @@
   - Data source attribution
   - Verification status tracking
 
-#### 2.3 Data Validation Layer
+#### 2.3 Manual Tags Support (NEW)
+- [ ] Update `scripts/places/src/types/types.ts` `PlaceInput` to accept `tags?: string[]`
+- [ ] Update JSON input parsing in `readInputFile` to pass through `item.tags`
+- [ ] Display manual tags in CLI preview (e.g., `Tags: speakeasy, rooftop`)
+
+#### 2.4 Data Validation Layer
 - [ ] **Implement comprehensive validation**
   - Coordinate boundaries and format validation
   - Phone numbers and website URL validation
@@ -115,6 +120,24 @@ Confirm insert? (y/N/s=show more/q=quit):
 - [ ] **Integration testing (Google Places API + Supabase)**
 - [ ] **CLI confirmation flow validation**
 - [ ] **Performance testing with larger datasets**
+
+### Phase 4: Manual Tags in Ingestion (NEW)
+
+#### 4.1 Database Migration
+- [ ] Add `tags text[]` to `places` and `idx_places_tags` (GIN)
+- [ ] (Optional) One-time backfill not required; tags are manual
+
+#### 4.2 Ingestion Pipeline
+- [ ] Accept manual `tags` from input JSON (`my-bars.json`)
+- [ ] Pass `tags` into upsert payload so they persist to `places.tags`
+- [ ] Ensure both insert and update flows carry `tags`
+
+#### 4.3 CLI Confirmation
+- [ ] Show `Tags: ...` in both summary and details views
+
+#### 4.4 Tests
+- [ ] Schema test: `tags` column exists; GIN index present
+- [ ] Ingestion test: input `tags` persist to database on insert/update
 
 **Expected Output**: Production-ready CLI tool with comprehensive features
 

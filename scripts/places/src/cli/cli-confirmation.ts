@@ -14,7 +14,8 @@ export class CliConfirmation {
   displayPlaceDetails(
     place: GooglePlaceDetails,
     action: 'insert' | 'update' | 'skip',
-    dataCompleteness: number
+    dataCompleteness: number,
+    manualTags?: string[]
   ): void {
     console.log('\n' + '='.repeat(80));
     
@@ -63,6 +64,11 @@ export class CliConfirmation {
         const status = place.opening_hours.open_now ? '🟢 Open Now' : '🔴 Closed';
         console.log(`🕒 Status: ${status}`);
       }
+    }
+
+    // Manual Tags
+    if (manualTags && manualTags.length > 0) {
+      console.log(`🏷️  Tags: ${manualTags.join(', ')}`);
     }
 
     // Place Types and Features
@@ -141,10 +147,11 @@ export class CliConfirmation {
    */
   async confirmPlace(
     place: GooglePlaceDetails,
-    action: 'insert' | 'update' | 'skip'
+    action: 'insert' | 'update' | 'skip',
+    manualTags?: string[]
   ): Promise<boolean> {
     const dataCompleteness = this.calculateDataCompleteness(place);
-    this.displayPlaceDetails(place, action, dataCompleteness);
+    this.displayPlaceDetails(place, action, dataCompleteness, manualTags);
 
     if (action === 'skip') {
       console.log('\n⏭️  This place already exists and will be skipped.');
@@ -165,7 +172,7 @@ export class CliConfirmation {
       case 's':
       case 'show':
         this.showDetailedPlaceInfo(place);
-        return await this.confirmPlace(place, action);
+        return await this.confirmPlace(place, action, manualTags);
       case 'q':
       case 'quit':
         console.log('\n👋 Exiting...');

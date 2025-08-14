@@ -6,6 +6,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import { MAP_CONFIG } from '@/config/map-config';
+import { useMarkerClick } from './MapContainer';
 
 interface PlaceMarkersProps {
   places: PlaceMarker[];
@@ -52,16 +53,8 @@ export function PlaceMarkers({ places, onPlaceClick, selectedPlaceId, enableClus
   const map = useMap();
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
+  const handleMarkerClick = useMarkerClick();
   
-  // Debug logging for marker updates
-  console.log('🏷️ PlaceMarkers Update:', {
-    placesCount: places.length,
-    enableClustering,
-    selectedPlaceId,
-    currentMarkersCount: markersRef.current.size,
-    clusterGroupExists: !!clusterGroupRef.current,
-    timestamp: new Date().toISOString()
-  });
 
   // Initialize cluster group
   useEffect(() => {
@@ -107,31 +100,19 @@ export function PlaceMarkers({ places, onPlaceClick, selectedPlaceId, enableClus
 
   // Update markers when places change
   useEffect(() => {
-    console.log('🔄 Markers Update Effect Triggered:', {
-      placesCount: places.length,
-      enableClustering,
-      hasClusterGroup: !!clusterGroupRef.current,
-      currentMarkersCount: markersRef.current.size
-    });
+    
     
     if (!clusterGroupRef.current && !enableClustering) {
-      console.log('❌ Early return: No cluster group and clustering disabled');
       return;
     }
     
     const currentMarkers = markersRef.current;
     const newMarkerIds = new Set(places.map(p => p.id));
     
-    console.log('📝 Marker Comparison:', {
-      newPlaceIds: Array.from(newMarkerIds),
-      currentMarkerIds: Array.from(currentMarkers.keys())
-    });
-    
     // Add smooth fade-out transition for markers being removed
     const markersToRemove: Array<[string, L.Marker]> = [];
     for (const [markerId, marker] of currentMarkers) {
       if (!newMarkerIds.has(markerId)) {
-        console.log('🗑️ Preparing to remove marker:', markerId);
         markersToRemove.push([markerId, marker]);
         
         // Add fade-out class
@@ -153,7 +134,6 @@ export function PlaceMarkers({ places, onPlaceClick, selectedPlaceId, enableClus
           }
           currentMarkers.delete(markerId);
         });
-        console.log('🗑️ Removed markers count:', markersToRemove.length);
       }, 300); // Match the CSS animation duration
     }
 
@@ -169,23 +149,19 @@ export function PlaceMarkers({ places, onPlaceClick, selectedPlaceId, enableClus
       
       if (marker) {
         // Update existing marker
-        console.log('🔄 Updating existing marker:', place.id, place.name);
         marker.setIcon(icon);
         marker.setLatLng([place.lat, place.lng]);
         updatedCount++;
       } else {
         // Create new marker
-        console.log('🆕 Creating new marker:', place.id, place.name);
         marker = L.marker([place.lat, place.lng], { icon });
         addedCount++;
         
         // Add click handler with map centering
         marker.on('click', () => {
-          // Center map on clicked marker with smooth transition
-          map.setView([place.lat, place.lng], map.getZoom(), {
-            animate: true,
-            duration: MAP_CONFIG.interactions.centerDuration
-          });
+          // Use the MapContainer's marker click handler for smooth zoom and center
+          handleMarkerClick(place);
+          // Also call the original onPlaceClick for backward compatibility
           onPlaceClick?.(place);
         });
         
@@ -222,12 +198,7 @@ export function PlaceMarkers({ places, onPlaceClick, selectedPlaceId, enableClus
       }
     }
     
-    console.log('✅ Marker Update Complete:', {
-      addedCount,
-      updatedCount,
-      totalMarkersNow: markersRef.current.size,
-      clusterLayerCount: clusterGroupRef.current ? clusterGroupRef.current.getLayers().length : 0
-    });
+    
   }, [places, selectedPlaceId, onPlaceClick, map, enableClustering]);
 
   // Global function removed since popups are no longer used

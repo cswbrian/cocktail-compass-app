@@ -83,6 +83,9 @@ export interface OpeningPeriod {
 export interface PlaceInput {
   name: string;
   searchQuery?: string;
+  tags?: string[];
+  description?: string;
+  show_on_map?: boolean;
 }
 
 // Data ingestion result types

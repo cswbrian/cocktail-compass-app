@@ -7,23 +7,29 @@ import {
 import { placeService } from '@/services/place-service';
 import { Button } from '@/components/ui/button';
 import { Place } from '@/types/place';
+import { Visit } from '@/types/visit';
 import { useLanguage } from '@/context/LanguageContext';
 import { CocktailLogList } from '@/components/cocktail-log/CocktailLogList';
 import {
   MapPin,
   BadgeCheck,
   AlertCircle,
+  Clock,
+  Phone,
+  Globe,
+  ExternalLink,
 } from 'lucide-react';
 import { translations } from '@/translations';
 import useSWR from 'swr';
 import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
-import { ExternalLink } from '@/components/external-link';
+import { ExternalLink as ExternalLinkComponent } from '@/components/external-link';
 import { VisitList } from '@/components/visit/VisitList';
 import { PlaceDetailNav } from '@/components/place/PlaceDetailNav';
 import { ShareButton } from '@/components/ShareButton';
 import { BookmarkButton } from '@/components/bookmark/bookmark-button';
 import { BackButton } from '@/components/common/BackButton';
+import { PlaceStatusDisplay } from '@/components/common/PlaceStatusDisplay';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -42,6 +48,65 @@ export default function PlaceDetailPage() {
   const isMyFeed = location.pathname.includes('/feeds/me');
   const isVisitsView = location.pathname.includes('/feeds');
 
+  // Helper function to format time (e.g., "1700" -> "5:00 PM")
+  const formatTime = (timeStr: string) => {
+    const hour = parseInt(timeStr.substring(0, 2));
+    const minute = timeStr.substring(2, 4);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    return `${displayHour}:${minute} ${period}`;
+  };
+
+  // Helper function to render opening hours
+  const renderOpeningHours = (openingHours: any) => {
+    if (!openingHours) return null;
+
+    // Show weekday_text if available (most readable)
+    if (openingHours.weekday_text && Array.isArray(openingHours.weekday_text)) {
+      return (
+        <div className="space-y-1">
+          {openingHours.weekday_text.map((dayText: string, index: number) => (
+            <div key={index} className="text-sm text-muted-foreground">
+              {dayText}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // Fallback to periods if weekday_text not available
+    if (openingHours.periods && Array.isArray(openingHours.periods)) {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      
+      return (
+        <div className="space-y-1">
+          {openingHours.periods.map((period: any, index: number) => {
+            const openDay = days[period.open.day];
+            const closeDay = days[period.close.day];
+            const openTime = formatTime(period.open.time);
+            const closeTime = formatTime(period.close.time);
+            
+            if (period.open.day === period.close.day) {
+              return (
+                <div key={index} className="text-sm text-muted-foreground">
+                  {openDay}: {openTime} - {closeTime}
+                </div>
+              );
+            } else {
+              return (
+                <div key={index} className="text-sm text-muted-foreground">
+                  {openDay} {openTime} - {closeDay} {closeTime}
+                </div>
+              );
+            }
+          })}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   // Fetch place details
   useEffect(() => {
     const fetchPlace = async () => {
@@ -55,10 +120,10 @@ export default function PlaceDetailPage() {
         if (fetchedPlace) {
           setPlace(fetchedPlace);
         } else {
-          setError('Place not found');
+          setError(t.userNotFound);
         }
       } catch (err) {
-        setError('Failed to load place');
+        setError(t.error);
         console.error('Error fetching place:', err);
       } finally {
         setIsLoading(false);
@@ -66,7 +131,7 @@ export default function PlaceDetailPage() {
     };
 
     fetchPlace();
-  }, [placeId]);
+  }, [placeId, t.userNotFound, t.error]);
 
   // Fetch logs using SWR
   const {
@@ -138,7 +203,7 @@ export default function PlaceDetailPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">
-            Loading...
+            {t.loading}
           </p>
         </div>
       </div>
@@ -150,7 +215,7 @@ export default function PlaceDetailPage() {
       <div className="h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <p className="text-destructive mb-4">{error}</p>
-          <Button onClick={handleGoBack}>Go Back</Button>
+          <Button onClick={handleGoBack}>{t.back}</Button>
         </div>
       </div>
     );
@@ -192,28 +257,80 @@ export default function PlaceDetailPage() {
               ? t.placeVerifiedDescription
               : t.placeUnverifiedDescription}
           </p>
-          <ExternalLink message={t.feedbackMessage} />
-          <div className="mt-4 flex items-center">
-            <MapPin className="w-4 h-4 mr-1" />
-            {place.secondary_text && (
-              <span className="ml-1">
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${place.secondary_text}&query_place_id=${place.place_id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary inline-block"
-                >
-                  {place.secondary_text}
-                </a>
-              </span>
-            )}
-          </div>
+          
+          {/* Place Status and Details */}
+          <PlaceStatusDisplay 
+            place={place}
+            className="mb-4"
+          />
+          
+          {/* Full Opening Hours Display */}
+          {place.opening_hours && (
+            <div className="space-y-3 mb-4">
+              <div className="flex items-start gap-3">
+                <Clock className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <div className="font-medium mb-2">{t.openingHours}</div>
+                  {renderOpeningHours(place.opening_hours)}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Contact Information */}
+          {(place.phone_number || place.website || place.secondary_text) && (
+            <div className="space-y-3 mb-4">
+              {/* Address */}
+              {place.secondary_text && (
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <div className="text-muted-foreground">{place.secondary_text}</div>
+                    {place.description && (
+                      <div className="text-sm text-muted-foreground/80 mt-1">{place.description}</div>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* Phone Number */}
+              {place.phone_number && (
+                <div className="flex items-start gap-3">
+                  <Phone className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <a 
+                    href={`tel:${place.phone_number}`}
+                    className="text-primary hover:text-primary/80 hover:underline"
+                  >
+                    {place.phone_number}
+                  </a>
+                </div>
+              )}
+              
+              {/* Website */}
+              {place.website && (
+                <div className="flex items-start gap-3">
+                  <Globe className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <a 
+                    href={place.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 hover:underline flex items-center gap-1"
+                  >
+                    {place.website}
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+          
+          <ExternalLinkComponent message={t.feedbackMessage} />
         </div>
 
         <div>
           <PlaceDetailNav />
           <VisitList
-            visits={visitsData?.visits}
+            visits={(visitsData?.visits as unknown as Visit[]) || []}
             isLoading={isLoadingVisits}
             hasMore={visitsData?.hasMore}
             onLoadMore={loadMoreVisits}

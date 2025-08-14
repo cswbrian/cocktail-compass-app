@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StarRating } from '@/components/common/StarRating';
 import { BookmarkButton } from '@/components/bookmark/bookmark-button';
+import { PlaceStatusDisplay } from '@/components/common/PlaceStatusDisplay';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { Link } from 'react-router-dom';
@@ -137,7 +138,9 @@ export function PlaceBottomSheet({
     return null;
   }
 
-  const displayPlace = placeWithStats || place;
+  const displayPlace = placeWithStats
+    ? ({ ...(placeWithStats as any), ...(place as any) } as any) // prefer dynamic fields from map row (e.g., is_open)
+    : place;
 
   return (
     <div className="bottom-sheet-backdrop fixed inset-0 z-50 pointer-events-none">
@@ -172,7 +175,7 @@ export function PlaceBottomSheet({
         <div className="relative flex-1 overflow-y-auto px-4 pb-4">
           {/* Header with Navigation */}
           <div className="mb-4">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-white/90 flex-1 pr-2">
                 {displayPlace.name}
               </h2>
@@ -220,22 +223,18 @@ export function PlaceBottomSheet({
             </div>
             
             {displayPlace.secondary_text && (
-              <p className="text-sm text-white/50 mb-2">{displayPlace.secondary_text}</p>
+              <p className="text-sm text-white/50 mb-1">{displayPlace.secondary_text}</p>
+            )}
+            {displayPlace.description && (
+              <p className="text-sm text-white/60 mb-2">{displayPlace.description}</p>
             )}
 
-            {/* Open/Closed Status */}
-            {displayPlace.is_open !== null && displayPlace.is_open !== undefined && (
-              <div className="flex items-center gap-2 mb-2">
-                <div className={`w-2 h-2 rounded-full ${
-                  displayPlace.is_open ? 'bg-green-400' : 'bg-red-400'
-                }`} />
-                <span className={`text-sm font-medium ${
-                  displayPlace.is_open ? 'text-green-400' : 'text-red-400'
-                }`}>
-                  {displayPlace.is_open ? t.open : t.closed}
-                </span>
-              </div>
-            )}
+            {/* Open/Closed Status and Today's Hours */}
+            <div className="flex items-center justify-between mb-2">
+              <PlaceStatusDisplay 
+                place={displayPlace}
+              />
+            </div>
           </div>
 
 

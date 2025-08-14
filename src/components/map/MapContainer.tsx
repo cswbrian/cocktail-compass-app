@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useState, useEffect, createContext, useContext } from 'react';
 import { MapContainer as LeafletMapContainer, TileLayer, useMapEvents, useMap } from 'react-leaflet';
 import { Map, LatLng, LatLngBounds } from 'leaflet';
 import { PlaceMarker, MapViewport } from '@/types/map';
@@ -6,9 +6,11 @@ import { mapService } from '@/services/map-service';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
-import { MAP_CONFIG, MAP_REGIONS } from '@/config/map-config';
+import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT } from '@/config/map-config';
 import { Button } from '@/components/ui/button';
 import { sendGAEvent } from '@/lib/ga';
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/translations';
 import 'leaflet/dist/leaflet.css';
 
 // Fix for default markers in react-leaflet
@@ -16,6 +18,18 @@ import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Context for marker click handler
+const MarkerClickContext = createContext<((place: PlaceMarker) => void) | null>(null);
+
+// Hook to use marker click handler
+export const useMarkerClick = () => {
+  const context = useContext(MarkerClickContext);
+  if (!context) {
+    throw new Error('useMarkerClick must be used within a MapContainer');
+  }
+  return context;
+};
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -27,7 +41,6 @@ L.Icon.Default.mergeOptions({
 interface MapContainerProps {
   onPlaceSelect?: (place: PlaceMarker) => void;
   onViewportChange?: (viewport: MapViewport) => void;
-  initialRegion?: string;
   initialCenter?: { lat: number; lng: number };
   initialZoom?: number;
   shouldCenterOnUserLocation?: boolean;
@@ -37,6 +50,11 @@ interface MapContainerProps {
   places?: PlaceMarker[];
   isLoading?: boolean;
   error?: Error | null;
+  onMarkerClick?: (place: PlaceMarker) => void;
+  openNowEnabled?: boolean;
+  onToggleOpenNow?: () => void;
+  asias50Enabled?: boolean;
+  onToggleAsias50?: () => void;
 }
 
 // Debounce hook for viewport changes
@@ -136,7 +154,6 @@ function UserLocationMarker({ position }: { position: LatLng }) {
 export const MapContainer = React.forwardRef<Map, MapContainerProps>(({ 
   onPlaceSelect, 
   onViewportChange,
-  initialRegion = 'hongkong',
   initialCenter,
   initialZoom,
   shouldCenterOnUserLocation = true,
@@ -145,10 +162,17 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   children,
   places = [],
   isLoading = false,
-  error = null
+  error = null,
+  onMarkerClick,
+  openNowEnabled = false,
+  onToggleOpenNow,
+  asias50Enabled = false,
+  onToggleAsias50
 }, ref) => {
   const mapRef = useRef<Map | null>(null);
   const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
+  const { language } = useLanguage();
+  const t = translations[language];
   
   // Expose map instance to parent via ref
   useEffect(() => {
@@ -166,22 +190,17 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     immediate: true, // Automatically request location on mount
   });
 
-  // Get initial region settings
-  const initialMapRegion = useMemo(() => {
-    return MAP_REGIONS[initialRegion] || MAP_REGIONS.hongkong;
-  }, [initialRegion]);
-
-  // Use URL state if available, otherwise fall back to region defaults
+  // Use URL state if available, otherwise fall back to smart defaults
   const mapCenter = useMemo(() => {
     if (initialCenter) {
       return [initialCenter.lat, initialCenter.lng] as [number, number];
     }
-    return initialMapRegion.center;
-  }, [initialCenter, initialMapRegion.center]);
+    return [SMART_DEFAULT_VIEWPORT.center.lat, SMART_DEFAULT_VIEWPORT.center.lng] as [number, number];
+  }, [initialCenter]);
 
   const mapZoom = useMemo(() => {
-    return initialZoom || initialMapRegion.defaultZoom;
-  }, [initialZoom, initialMapRegion.defaultZoom]);
+    return initialZoom || SMART_DEFAULT_VIEWPORT.defaultZoom;
+  }, [initialZoom]);
 
   // Places data will be passed from parent component
   // Remove local place fetching to avoid duplication
@@ -192,7 +211,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     // Notify parent about viewport changes
     if (onViewportChange) {
       const center = bounds.getCenter();
-      const zoom = mapRef.current?.getZoom() || initialMapRegion.defaultZoom;
+      const zoom = mapRef.current?.getZoom() || SMART_DEFAULT_VIEWPORT.defaultZoom;
       const viewport: MapViewport = {
         center,
         zoom,
@@ -200,7 +219,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       };
       onViewportChange(viewport);
     }
-  }, [onViewportChange, initialMapRegion.defaultZoom]);
+  }, [onViewportChange]);
 
   const handleLocationRequest = useCallback(async () => {
     try {
@@ -218,6 +237,30 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       sendGAEvent('Map', 'geolocation_error', error instanceof Error ? error.message : 'unknown_error');
     }
   }, [requestPermission, getCurrentPosition]);
+
+  // Handle marker click with smooth zoom and center
+  const handleMarkerClick = useCallback((place: PlaceMarker) => {
+    if (mapRef.current) {
+      const latLng = new LatLng(place.lat, place.lng);
+      
+      // Center and zoom to the marker with smooth transition
+      mapRef.current.setView(latLng, 18, {
+        animate: true,
+        duration: 0.5, // 500ms transition
+        easeLinearity: 0.25,
+        noMoveStart: false
+      });
+      console.log('zoomed to', latLng);
+      // Call the onMarkerClick callback if provided
+      onMarkerClick?.(place);
+      
+      // Also call onPlaceSelect for backward compatibility
+      onPlaceSelect?.(place);
+      
+      // Track marker click
+      sendGAEvent('Map', 'marker_click', place.name || 'unknown_place');
+    }
+  }, [onMarkerClick, onPlaceSelect]);
 
   // Center map on user location when detected (only if no URL coordinates provided)
   useEffect(() => {
@@ -262,38 +305,12 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         )}
 
         {/* Render children (Place markers) */}
-        {children}
+        <MarkerClickContext.Provider value={handleMarkerClick}>
+          {children}
+        </MarkerClickContext.Provider>
       </LeafletMapContainer>
 
-      {/* Zoom controls - positioned below transparent header on left */}
-      <div className="absolute top-16 left-4 z-10 flex flex-col gap-1">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => {
-            mapRef.current?.zoomIn();
-            sendGAEvent('Map', 'zoom_in', `current_zoom_${mapRef.current?.getZoom() || 'unknown'}`);
-          }}
-          title="Zoom in"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => {
-            mapRef.current?.zoomOut();
-            sendGAEvent('Map', 'zoom_out', `current_zoom_${mapRef.current?.getZoom() || 'unknown'}`);
-          }}
-          title="Zoom out"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 12H6" />
-          </svg>
-        </Button>
-      </div>
+      {/* Zoom controls removed per design */}
 
       {/* Floating controls - positioned on right side */}
       <div className="absolute top-16 right-4 z-10 flex flex-col gap-2">
@@ -327,21 +344,38 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         </Button>
       </div>
 
-      {/* Loading indicator - positioned below zoom controls on left */}
-      {isLoading && (
-        <div className="absolute top-32 left-4 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-lg px-3 py-2">
-          <div className="flex items-center gap-2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-            <span className="text-sm text-gray-600">Loading places...</span>
+      {/* Horizontal filter chips bar - top full width, scrollable */}
+      <div className="absolute top-16 left-0 right-0 z-10 px-4 pointer-events-none">
+        <div className="w-full overflow-x-auto no-scrollbar pointer-events-auto">
+          <div className="flex gap-2 min-w-full pr-4">
+            {/* Open Now chip */}
+            <Button
+              variant={openNowEnabled ? "default" : "outline"}
+              size="sm"
+              onClick={() => onToggleOpenNow?.()}
+              title={t.openNow}
+            >
+              {t.openNow}
+            </Button>
+            {/* Asia's 50 Best chip */}
+            <Button
+              variant={asias50Enabled ? "default" : "outline"}
+              size="sm"
+              onClick={() => onToggleAsias50?.()}
+              title={"Asia's 50 Best"}
+            >
+              {"Asia's 50 Best"}
+            </Button>
+            {/* Future chips can be added here */}
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Places count indicator - top center */}
+      {/* Places count indicator - below chips */}
       {places.length > 0 && (
-        <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-lg px-3 py-2">
+        <div className="absolute top-28 px-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-full py-2">
           <span className="text-sm text-gray-600">
-            {places.length} place{places.length !== 1 ? 's' : ''} {userPosition ? 'within 1km' : 'found'}
+            {t.foundPlacesInArea.replace('{count}', String(places.length))}
           </span>
         </div>
       )}

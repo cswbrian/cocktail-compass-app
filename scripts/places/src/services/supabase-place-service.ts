@@ -314,6 +314,9 @@ export class SupabasePlaceService {
 
   /**
    * Search places in database
+   * @param query Search query for name or address
+   * @param region DEPRECATED: Region filter (will be removed in future versions)
+   * @param limit Maximum number of results
    */
   async searchPlaces(
     query?: string,
@@ -329,7 +332,10 @@ export class SupabasePlaceService {
       queryBuilder = queryBuilder.or(`name.ilike.%${query}%,formatted_address.ilike.%${query}%`);
     }
 
+    // DEPRECATED: Region filtering will be removed in future versions
+    // Use viewport-based queries instead
     if (region) {
+      console.warn('Region-based filtering is deprecated. Use viewport-based queries instead.');
       queryBuilder = queryBuilder.eq('region', region);
     }
 
@@ -344,6 +350,10 @@ export class SupabasePlaceService {
 
   /**
    * Get places by rating range
+   * @param minRating Minimum rating (0-5)
+   * @param maxRating Maximum rating (0-5)
+   * @param region DEPRECATED: Region filter (will be removed in future versions)
+   * @param limit Maximum number of results
    */
   async getPlacesByRating(
     minRating: number,
@@ -358,7 +368,10 @@ export class SupabasePlaceService {
       .lte('rating', maxRating)
       .limit(limit);
 
+    // DEPRECATED: Region filtering will be removed in future versions
+    // Use viewport-based queries instead
     if (region) {
+      console.warn('Region-based filtering is deprecated. Use viewport-based queries instead.');
       queryBuilder = queryBuilder.eq('region', region);
     }
 
@@ -448,6 +461,7 @@ export class SupabasePlaceService {
 
   /**
    * Get database statistics
+   * @deprecated Region-based statistics will be removed in future versions
    */
   async getStats(): Promise<{
     totalPlaces: number;
@@ -465,6 +479,9 @@ export class SupabasePlaceService {
       .select('*', { count: 'exact', head: true })
       .eq('is_verified', true);
 
+    // DEPRECATED: Region-based statistics will be removed in future versions
+    // Use viewport-based queries instead
+    console.warn('Region-based statistics are deprecated. Use viewport-based queries instead.');
     const { data: byRegion } = await this.supabase
       .from('places')
       .select('region')
@@ -480,7 +497,7 @@ export class SupabasePlaceService {
       .select('rating')
       .not('rating', 'is', null);
 
-    // Aggregate region counts
+    // Aggregate region counts (DEPRECATED)
     const regionCounts = (byRegion || []).reduce((acc, item) => {
       acc[item.region] = (acc[item.region] || 0) + 1;
       return acc;

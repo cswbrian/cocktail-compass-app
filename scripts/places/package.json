@@ -1,0 +1,44 @@
+{
+  "name": "cocktail-compass-places-ingestion",
+  "version": "1.0.0",
+  "description": "Offline data ingestion pipeline for Google Places API to Supabase",
+  "main": "ingest-places.ts",
+  "scripts": {
+    "ingest": "tsx ingest-places.ts",
+    "test": "tsx --test **/*.test.ts",
+    "type-check": "tsc --noEmit",
+    "test-config": "tsx test-config.ts",
+    "test-schema": "tsx test-schema.ts",
+    "test-google-places": "tsx test-google-places.ts",
+    "diagnose-api": "tsx diagnose-api.ts",
+    "test-simple": "tsx test-simple-places.ts",
+    "test-supabase": "tsx test-supabase-service.ts",
+    "test-opening-hours": "tsx test-supabase-service.ts",
+    "ingest:sample": "tsx ingest-places.ts --input sample-places.json --dry-run --verbose",
+    "ingest:sample:txt": "tsx ingest-places.ts --input sample-places.txt --dry-run --verbose",
+    "ingest:live": "tsx ingest-places.ts --input sample-places.json --environment staging --region hongkong"
+  },
+  "keywords": [
+    "supabase",
+    "google-places-api",
+    "data-ingestion",
+    "cocktail-compass"
+  ],
+  "author": "Cocktail Compass Team",
+  "license": "MIT",
+  "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.3.42",
+    "@supabase/supabase-js": "^2.39.3",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

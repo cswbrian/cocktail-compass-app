@@ -32,6 +32,7 @@ async function testSupabasePlaceService() {
     console.log(`  Verified Places: ${stats.verifiedPlaces}`);
     console.log(`  Average Rating: ${stats.averageRating}`);
     console.log(`  By Region:`, Object.entries(stats.placesByRegion).map(([k, v]) => `${k}: ${v}`).join(', ') || 'None');
+    console.log(`  Note: Region-based statistics are deprecated and will be removed in future versions`);
     console.log(`  By Source:`, Object.entries(stats.placesByDataSource).map(([k, v]) => `${k}: ${v}`).join(', ') || 'None');
     
     // Test 2: Search existing places

@@ -1,103 +1,132 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { MapContainer } from '@/components/map/MapContainer';
-import { PlaceMarkers } from '@/components/map/PlaceMarkers';
-import { PlaceBottomSheet } from '@/components/map/PlaceBottomSheet';
-
-import { PlaceMarker, MapViewport } from '@/types/map';
-import { mapService } from '@/services/map-service';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import useSWR from 'swr';
-import { LatLngBounds } from 'leaflet';
+import { MapContainer } from '@/components/map/MapContainer';
+import { PlaceBottomSheet } from '@/components/map/PlaceBottomSheet';
+import { PlaceMarkers } from '@/components/map/PlaceMarkers';
+import { PlaceMarker } from '@/types/map';
+import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT } from '@/config/map-config';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { MAP_CONFIG, MAP_REGIONS } from '@/config/map-config';
+import { useAuth } from '@/context/AuthContext';
 import { sendGAEvent } from '@/lib/ga';
+import { LatLngBounds } from 'leaflet';
 
-export function MapPage() {
-  const [selectedPlace, setSelectedPlace] = useState<PlaceMarker | null>(null);
-  const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
-  const [showBottomSheet, setShowBottomSheet] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
-  const [displayPlaces, setDisplayPlaces] = useState<PlaceMarker[]>([]);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [userDraggedMap, setUserDraggedMap] = useState(false);
-  const mapRef = useRef<any>(null); // Reference to the map instance
-  const navigate = useNavigate();
+interface MapState {
+  center: { lat: number; lng: number };
+  zoom: number;
+  selectedPlaceId: string | null;
+  hasUrlCoordinates: boolean;
+}
+
+export default function MapPage() {
+  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-
-  // Initialize map state from URL parameters immediately
-  const initializeMapState = useCallback(() => {
+  const mapRef = useRef<any>(null);
+  
+  // Map state management
+  const [mapState, setMapState] = useState<MapState>(() => {
+    // Initialize from URL or use smart defaults
     const lat = searchParams.get('lat');
     const lng = searchParams.get('lng');
     const zoom = searchParams.get('zoom');
-    const selectedPlaceId = searchParams.get('place');
-
-    // Use Hong Kong region as default (matching MapContainer's initialRegion)
-    const defaultRegion = MAP_REGIONS.hongkong;
-    const defaultCenter = { lat: defaultRegion.center.lat, lng: defaultRegion.center.lng };
-
+    const place = searchParams.get('place');
+    
+    if (lat && lng) {
+      return {
+        center: { lat: parseFloat(lat), lng: parseFloat(lng) },
+        zoom: zoom ? parseInt(zoom) : SMART_DEFAULT_VIEWPORT.defaultZoom,
+        selectedPlaceId: place,
+        hasUrlCoordinates: true,
+      };
+    }
+    
+    // Smart defaults when no URL coordinates are present
+    const defaultCenter = { lat: SMART_DEFAULT_VIEWPORT.center.lat, lng: SMART_DEFAULT_VIEWPORT.center.lng };
+    
     return {
-      center: lat && lng ? { lat: parseFloat(lat), lng: parseFloat(lng) } : defaultCenter,
-      zoom: zoom ? parseInt(zoom) : defaultRegion.defaultZoom,
-      selectedPlaceId: selectedPlaceId,
-      hasUrlCoordinates: !!(lat && lng), // Track if URL has coordinates
+      center: defaultCenter,
+      zoom: zoom ? parseInt(zoom) : SMART_DEFAULT_VIEWPORT.defaultZoom,
+      selectedPlaceId: place,
+      hasUrlCoordinates: false,
     };
-  }, [searchParams]);
+  });
 
-  // Map state from URL parameters - initialize immediately with URL state
-  const [mapState, setMapState] = useState(() => initializeMapState());
+  // Places data state
+  const [displayPlaces, setDisplayPlaces] = useState<PlaceMarker[]>([]);
+  const [selectedPlace, setSelectedPlace] = useState<PlaceMarker | null>(null);
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [openNowOnly, setOpenNowOnly] = useState<boolean>(() => searchParams.get('open') === '1');
+  const [asias50Only, setAsias50Only] = useState<boolean>(() => searchParams.get('a50') === '1');
+  
+  // Map interaction state
+  const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
+  const [userInteracted, setUserInteracted] = useState(false);
+  const [userDraggedMap, setUserDraggedMap] = useState(false);
 
-  // Update map state when URL changes
-  useEffect(() => {
-    const newState = initializeMapState();
-    setMapState(newState);
-  }, [initializeMapState, location.search]);
-
-  // Function to update URL with current map state
-  const updateURL = useCallback((newState: Partial<typeof mapState>) => {
+  // Update URL when map state changes
+  const updateURL = useCallback((newState: MapState) => {
     const params = new URLSearchParams(searchParams);
     
-    if (newState.center) {
-      params.set('lat', newState.center.lat.toFixed(4));
-      params.set('lng', newState.center.lng.toFixed(4));
-    }
-    if (newState.zoom !== undefined) {
+    if (newState.hasUrlCoordinates) {
+      params.set('lat', newState.center.lat.toString());
+      params.set('lng', newState.center.lng.toString());
       params.set('zoom', newState.zoom.toString());
+    } else {
+      params.delete('lat');
+      params.delete('lng');
+      params.delete('zoom');
     }
+    
     if (newState.selectedPlaceId) {
       params.set('place', newState.selectedPlaceId);
-    } else if (newState.selectedPlaceId === null) {
+    } else {
       params.delete('place');
     }
     
+    // Persist filters
+    if (openNowOnly) {
+      params.set('open', '1');
+    } else {
+      params.delete('open');
+    }
+    if (asias50Only) {
+      params.set('a50', '1');
+    } else {
+      params.delete('a50');
+    }
     setSearchParams(params, { replace: true });
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, openNowOnly, asias50Only]);
 
-  // Use viewport-based loading only after user interaction, otherwise use region
+  // Smart data loading strategy: use viewport when available, fallback to smart defaults
   const shouldUseViewport = userInteracted && currentBounds !== null;
   
   const swrKey = shouldUseViewport
     ? CACHE_KEYS.PLACES_IN_VIEWPORT(currentBounds!.toBBoxString()) 
-    : CACHE_KEYS.PLACES_BY_REGION('hongkong');
+    : CACHE_KEYS.PLACES_SMART_FALLBACK;
     
   const swrFetcher = shouldUseViewport
     ? () => fetchers.getPlacesInViewport(currentBounds!.toBBoxString())
-    : () => fetchers.getPlacesByRegion('hongkong');
-  
-  // Debug logging before SWR call (comment out for production)
-  // console.log('🔍 SWR Setup:', {
-  //   shouldUseViewport,
-  //   userInteracted,
-  //   currentBounds: currentBounds?.toBBoxString(),
-  //   swrKey,
-  //   timestamp: new Date().toISOString()
-  // });
+    : () => fetchers.getPlacesWithSmartFallback();
   
   const { data: places = [], error, isLoading } = useSWR(
     swrKey,
     swrFetcher,
     MAP_CONFIG.cache
   );
+
+  // Derived, filtered places for rendering
+  const renderPlaces = useMemo(() => {
+    let filtered = displayPlaces;
+    if (openNowOnly) {
+      filtered = filtered.filter((p) => (p as any).is_open === true);
+    }
+    if (asias50Only) {
+      filtered = filtered.filter((p: any) => Array.isArray(p.tags) && p.tags.some((t: string) => t.toLowerCase() === "asia's 50 best"));
+    }
+    return filtered;
+  }, [displayPlaces, openNowOnly, asias50Only]);
 
   // Smooth place updates - keep previous places visible while loading new ones
   useEffect(() => {
@@ -165,25 +194,7 @@ export function MapPage() {
     }
   }, [location.search, isInitialLoad]);
   
-  // Debug logging after SWR call (comment out for production)
-  // console.log('📊 SWR Result:', {
-  //   placesCount: places.length,
-  //   displayPlacesCount: displayPlaces.length,
-  //   isLoading,
-  //   isInitialLoad,
-  //   error: error?.message,
-  //   firstPlace: places[0]?.name,
-  //   timestamp: new Date().toISOString()
-  // });
-
-  const handleViewportChange = useCallback((viewport: MapViewport) => {
-    // console.log('🗺️ Viewport Changed:', {
-    //   bounds: viewport.bounds.toBBoxString(),
-    //   center: `${viewport.center.lat.toFixed(4)}, ${viewport.center.lng.toFixed(4)}`,
-    //   zoom: viewport.zoom,
-    //   userInteracted: userInteracted,
-    //   timestamp: new Date().toISOString()
-    // });
+  const handleViewportChange = useCallback((viewport: any) => {
     
     setCurrentBounds(viewport.bounds);
     setUserInteracted(true); // Mark that user has interacted with the map
@@ -262,10 +273,88 @@ export function MapPage() {
   }, [mapState, updateURL, selectedPlace]);
 
   const handleNavigateToPlace = useCallback((placeId: string) => {
-    navigate(`/en/place/${placeId}`);
-  }, [navigate]);
+    // This function is not directly used in the new smart fallback logic,
+    // but keeping it for potential future use or if it's re-introduced.
+    // For now, it will just navigate to the place ID.
+    // If you want to navigate to a specific place page, you'd need a more sophisticated routing.
+    // For now, it's a placeholder.
+    // If you want to navigate to a specific place page, you'd need a more sophisticated routing.
+    // For now, it's a placeholder.
+  }, []);
 
+  // Enhanced error handling with smart fallback information
   if (error) {
+    
+    // If we have fallback data, show a warning instead of full error
+    if (displayPlaces.length > 0) {
+      return (
+        <div className="map-page-container-fullscreen relative w-full">
+          <MapContainer
+            ref={mapRef}
+            onViewportChange={handleViewportChange}
+            onPlaceSelect={handlePlaceSelect}
+            initialCenter={mapState.center}
+            initialZoom={mapState.zoom}
+            shouldCenterOnUserLocation={!mapState.hasUrlCoordinates && isInitialLoad}
+            className="h-full w-full"
+            places={renderPlaces}
+            isLoading={false}
+            error={null}
+            openNowEnabled={openNowOnly}
+            onToggleOpenNow={() => {
+              setOpenNowOnly((prev) => {
+                const next = !prev;
+                const params = new URLSearchParams(searchParams);
+                if (next) params.set('open', '1'); else params.delete('open');
+                setSearchParams(params, { replace: true });
+                sendGAEvent('Map', next ? 'filter_open_now_on' : 'filter_open_now_off');
+                return next;
+              });
+            }}
+          >
+            <PlaceMarkers
+              places={renderPlaces}
+              onPlaceClick={handlePlaceSelect}
+              selectedPlaceId={selectedPlace?.id}
+              enableClustering={MAP_CONFIG.enableClustering}
+            />
+          </MapContainer>
+
+          {/* Warning banner for fallback data */}
+          <div className="absolute top-20 left-4 right-4 z-20 bg-yellow-500/90 backdrop-blur-sm shadow-lg rounded-lg px-4 py-3 transition-all duration-300">
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5 text-yellow-900">⚠️</div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-yellow-900">
+                  Using fallback data
+                </p>
+                <p className="text-xs text-yellow-800">
+                  Showing {displayPlaces.length} places from default area. Move the map to load more.
+                </p>
+              </div>
+              <button
+                onClick={() => window.location.reload()}
+                className="text-xs text-yellow-900 hover:text-yellow-700 underline"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Sheet */}
+          <PlaceBottomSheet
+            place={selectedPlace}
+            places={renderPlaces}
+            isOpen={showBottomSheet}
+            onClose={handleBottomSheetClose}
+            onNavigateToPlace={handleNavigateToPlace}
+            onPlaceChange={handlePlaceChange}
+          />
+        </div>
+      );
+    }
+
+    // Full error state when no fallback data is available
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="text-center">
@@ -292,18 +381,39 @@ export function MapPage() {
         ref={mapRef}
         onViewportChange={handleViewportChange}
         onPlaceSelect={handlePlaceSelect}
-        initialRegion="hongkong"
         initialCenter={mapState.center}
         initialZoom={mapState.zoom}
         shouldCenterOnUserLocation={!mapState.hasUrlCoordinates && isInitialLoad}
         className="h-full w-full"
-        places={displayPlaces}
+        places={renderPlaces}
         isLoading={isInitialLoad && isLoading}
         error={error}
+        openNowEnabled={openNowOnly}
+        onToggleOpenNow={() => {
+          setOpenNowOnly((prev) => {
+            const next = !prev;
+            const params = new URLSearchParams(searchParams);
+            if (next) params.set('open', '1'); else params.delete('open');
+            setSearchParams(params, { replace: true });
+            sendGAEvent('Map', next ? 'filter_open_now_on' : 'filter_open_now_off');
+            return next;
+          });
+        }}
+        asias50Enabled={asias50Only}
+        onToggleAsias50={() => {
+          setAsias50Only((prev) => {
+            const next = !prev;
+            const params = new URLSearchParams(searchParams);
+            if (next) params.set('a50', '1'); else params.delete('a50');
+            setSearchParams(params, { replace: true });
+            sendGAEvent('Map', next ? 'filter_a50_on' : 'filter_a50_off');
+            return next;
+          });
+        }}
       >
         {/* Add PlaceMarkers as children with configurable clustering */}
         <PlaceMarkers
-          places={displayPlaces}
+          places={renderPlaces}
           onPlaceClick={handlePlaceSelect}
           selectedPlaceId={selectedPlace?.id}
           enableClustering={MAP_CONFIG.enableClustering}

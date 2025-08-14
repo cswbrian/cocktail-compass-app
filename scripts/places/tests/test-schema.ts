@@ -15,7 +15,7 @@ async function testEnhancedSchema() {
     console.log('1️⃣ Testing new columns existence...');
     const { data: columns, error: columnsError } = await supabase
       .from('places')
-      .select('phone_number, website, rating, price_level, place_types, is_open')
+      .select('phone_number, website, rating, price_level, place_types')
       .limit(1);
 
     if (columnsError) {
@@ -88,20 +88,39 @@ async function testEnhancedSchema() {
 
     // Test 4: Test data insertion (if we have write permissions)
     console.log('\n4️⃣ Testing data insertion...');
+    // Test data for a place
     const testPlace = {
-      name: 'Test Enhanced Place',
-      place_id: `test_${Date.now()}`,
-      main_text: 'Test Address',
+      place_id: 'test_place_123',
+      name: 'Test Bar',
+      main_text: 'Test Bar',
+      secondary_text: 'Test Address',
       lat: 22.3193,
       lng: 114.1694,
-      region: 'hongkong',
+      is_verified: false,
       phone_number: '+852 1234 5678',
-      website: 'https://test.example.com',
+      website: 'https://testbar.com',
+      formatted_address: 'Test Address, Hong Kong',
+      international_phone_number: '+852 1234 5678',
       rating: 4.5,
+      user_ratings_total: 100,
       price_level: 2,
       place_types: ['bar', 'restaurant'],
       business_status: 'OPERATIONAL',
-      data_source: 'test'
+      opening_hours: {
+        open_now: true,
+        periods: [
+          {
+            open: { day: 1, time: '1800' },
+            close: { day: 1, time: '0200' }
+          }
+        ],
+        weekday_text: [
+          'Monday: 6:00 PM – 2:00 AM'
+        ]
+      },
+      timezone: 'Asia/Hong_Kong',
+      google_url: 'https://maps.google.com/?cid=test',
+      data_source: 'google_places'
     };
 
     try {

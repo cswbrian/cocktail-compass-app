@@ -177,6 +177,9 @@ async function readInputFile(filePath: string): Promise<PlaceInput[]> {
         return data.map(item => ({
           name: item.name || item,
           searchQuery: item.searchQuery || `${item.name || item} cocktail bar`,
+          tags: Array.isArray(item.tags) ? item.tags : undefined,
+          description: typeof item.description === 'string' ? item.description : undefined,
+          show_on_map: typeof item.show_on_map === 'boolean' ? item.show_on_map : true,
         }));
       } else {
         throw new Error('JSON file must contain an array');
@@ -189,6 +192,7 @@ async function readInputFile(filePath: string): Promise<PlaceInput[]> {
         .map(name => ({
           name,
           searchQuery: `${name} cocktail bar`,
+          show_on_map: true,
         }));
     } else {
       throw new Error(`Unsupported file format: ${ext}. Use .json or .txt`);
@@ -329,18 +333,132 @@ async function processPlaces(
   // Individual or batch confirmation (unless --confirm flag is set)
   if (!options.confirm && !options.dryRun && placeDetails.length > 0) {
     if (options.individual) {
-      // Individual confirmation for each place
+      // Individual confirmation for each place with immediate processing
       console.log('\n🔍 Individual place confirmation mode enabled...');
       for (let i = 0; i < placeDetails.length; i++) {
         const placeDetail = placeDetails[i];
         const action = actions[i];
         
-        const confirmed = await confirmation.confirmPlace(placeDetail, action);
+        const manualTags = places[i]?.tags;
+        const manualDescription = places[i]?.description;
+        const manualShowOnMap = places[i]?.show_on_map;
+        const confirmed = await confirmation.confirmPlace(placeDetail, action, manualTags);
         if (!confirmed) {
           console.log(`\n⏭️  Skipping ${placeDetail.name} by user request.`);
-          actions[i] = 'skip'; // Mark as skipped
+          results.skipped++;
+          results.details.push({
+            name: placeDetail.name,
+            status: 'skipped',
+            reason: 'Skipped by user',
+          });
+          progress.update(1);
+          continue;
+        }
+
+        // Process immediately after confirmation
+        try {
+          console.log(`\n📍 Processing: ${placeDetail.name}`);
+          
+          if (options.verbose) {
+            console.log(`  📍 Found: ${placeDetail.name}`);
+            console.log(`     Address: ${placeDetail.formatted_address || 'N/A'}`);
+            console.log(`     Rating: ${placeDetail.rating || 'N/A'}/5`);
+            console.log(`     Types: ${placeDetail.types?.join(', ') || 'N/A'}`);
+          }
+
+          if (action === 'skip') {
+            console.log(`  ⏭️  Skipping existing place: ${placeDetail.name}`);
+            results.skipped++;
+            results.details.push({
+              name: placeDetail.name,
+              status: 'skipped',
+              reason: 'Place already exists',
+            });
+            progress.update(1);
+            continue;
+          }
+
+          if (options.dryRun) {
+            console.log(`  🔍 [DRY RUN] Would ${action}: ${placeDetail.name}`);
+            results.processed++;
+            results.details.push({
+              name: placeDetail.name,
+              status: 'dry_run',
+              action: action,
+            });
+            progress.update(1);
+            continue;
+          }
+
+          // Get timezone for this place
+          const timezone = await googleService.getPlaceTimezone(
+            placeDetail.geometry.location.lat,
+            placeDetail.geometry.location.lng
+          );
+          
+          // Convert and upsert
+          const placeData = supabaseService.convertGooglePlaceToPlaceData(placeDetail, timezone);
+          if (manualTags && manualTags.length > 0) {
+            (placeData as any).tags = manualTags;
+          }
+          if (typeof manualDescription === 'string' && manualDescription.length > 0) {
+            (placeData as any).description = manualDescription;
+          }
+          (placeData as any).show_on_map = typeof manualShowOnMap === 'boolean' ? manualShowOnMap : true;
+          const upsertResult = await supabaseService.upsertPlace(placeData, 'merge');
+          
+          if (upsertResult.type === 'inserted') {
+            console.log(`  ✅ Inserted: ${placeDetail.name}`);
+            results.inserted++;
+          } else if (upsertResult.type === 'updated') {
+            console.log(`  🔄 Updated: ${placeDetail.name}`);
+            results.updated++;
+          } else {
+            console.log(`  ⚠️  Skipped: ${placeDetail.name} (${upsertResult.type})`);
+            results.skipped++;
+          }
+
+          results.processed++;
+          results.details.push({
+            name: placeDetail.name,
+            status: upsertResult.type,
+            place_id: placeDetail.place_id,
+          });
+
+        } catch (error) {
+          console.error(`  ❌ Error processing ${placeDetail.name}:`, error instanceof Error ? error.message : String(error));
+          results.errors++;
+          results.details.push({
+            name: placeDetail.name,
+            status: 'error',
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+        
+        progress.update(1);
+        
+        // Small delay between individual processing
+        if (options.delay > 0) {
+          await new Promise(resolve => setTimeout(resolve, options.delay));
         }
       }
+      
+      // Skip the batch processing since we already processed everything individually
+      progress.complete();
+      confirmation.displaySummary(results);
+      
+      // Save report if output file specified
+      if (options.output) {
+        try {
+          const fs = await import('fs/promises');
+          await fs.writeFile(options.output, JSON.stringify(results, null, 2));
+          console.log(`\n📄 Report saved to: ${options.output}`);
+        } catch (error) {
+          console.error(`\n❌ Failed to save report:`, error instanceof Error ? error.message : String(error));
+        }
+      }
+      
+      return; // Exit early since we've already processed everything
     } else {
       // Batch confirmation
       const batchConfirmed = await confirmation.confirmBatch(placeDetails, actions);
@@ -400,6 +518,14 @@ async function processPlaces(
         
         // Convert and upsert
         const placeData = supabaseService.convertGooglePlaceToPlaceData(placeDetail, timezone);
+        const correspondingPlaceInput = places[i + j];
+        if (correspondingPlaceInput?.tags && correspondingPlaceInput.tags.length > 0) {
+          (placeData as any).tags = correspondingPlaceInput.tags;
+        }
+        if (typeof correspondingPlaceInput?.description === 'string' && correspondingPlaceInput.description.length > 0) {
+          (placeData as any).description = correspondingPlaceInput.description;
+        }
+        (placeData as any).show_on_map = typeof correspondingPlaceInput?.show_on_map === 'boolean' ? correspondingPlaceInput.show_on_map : true;
         const upsertResult = await supabaseService.upsertPlace(placeData, 'merge');
         
         if (upsertResult.type === 'inserted') {

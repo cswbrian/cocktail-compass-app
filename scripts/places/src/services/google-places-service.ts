@@ -453,16 +453,16 @@ export class GooglePlacesService {
 
   /**
    * Fallback timezone detection based on coordinates
+   * @deprecated This method will be removed in future versions as region concept is being phased out
    */
   private getTimezoneFromCoordinates(lat: number, lng: number): string {
-    // Hong Kong region
-    if (lat >= 22.0 && lat <= 22.6 && lng >= 113.8 && lng <= 114.5) {
-      return 'Asia/Hong_Kong';
-    }
-    // Taiwan region  
-    if (lat >= 21.8 && lat <= 25.3 && lng >= 119.2 && lng <= 122.1) {
-      return 'Asia/Taipei';
-    }
+    // DEPRECATED: Hardcoded region logic will be removed
+    // Use Google Time Zone API instead for accurate timezone detection
+    
+    // Fallback to Hong Kong timezone for backward compatibility
+    // TODO: Remove this method when region concept is fully removed
+    console.warn('Hardcoded region-based timezone detection is deprecated. Use Google Time Zone API instead.');
+    
     // Default fallback
     return 'Asia/Hong_Kong';
   }
