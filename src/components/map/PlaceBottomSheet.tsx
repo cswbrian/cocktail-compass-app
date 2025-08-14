@@ -245,7 +245,7 @@ export function PlaceBottomSheet({
             </div>
 
             {/* Filter status indicator */}
-            {places.length > 0 && (
+            {/* {places.length > 0 && (
               <div className="text-xs text-white/50 mb-2">
                 {places.length} places match current filters
                 {places.length > 1 && (
@@ -254,7 +254,7 @@ export function PlaceBottomSheet({
                   </span>
                 )}
               </div>
-            )}
+            )} */}
           </div>
 
 
