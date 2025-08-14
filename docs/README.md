@@ -1,59 +1,61 @@
-# Cocktail Bar Map Documentation
+# Cocktail Compass App Documentation
 
 ## 📚 Documentation Overview
 
-This folder contains all documentation for the Cocktail Bar Map feature development project.
+This folder contains organized documentation for all features and architectural decisions in the Cocktail Compass app.
 
-## 📄 Document Index
+## 📂 Documentation Structure
 
-### Planning Documents
-- **[PRD (Product Requirements Document)](./cocktail-bar-map-prd.md)** - Complete product requirements, objectives, and feature specifications
-- **[Implementation Plan](./task-breakdown.md)** - Detailed implementation plan, task breakdown, and status tracking
+### 📁 **[features/](./features/)** - Feature-Specific Documentation
+- **[map/](./features/map/)** - Interactive map with place discovery
+  - [PRD](./features/map/prd.md) - Product requirements
+  - [Task Tracking](./features/map/task-tracking.md) - Implementation progress
+  - [Leaflet Integration](./features/map/leaflet-integration.md) - Technical implementation
+  - [Geolocation](./features/map/geolocation.md) - PWA location services
 
-### Technical Documents  
-- **[Technical Decisions](./technical-decisions.md)** - Technical architecture decisions, library selections, and implementation strategies
-- **[Leaflet Integration](./leaflet-supabase-integration.md)** - Leaflet + Supabase integration strategy and optimization
-- **[PWA Geolocation](./pwa-geolocation-strategy.md)** - PWA geolocation implementation and user experience
-- **[Authentication Integration](./authentication-integration.md)** - Authentication requirements and route protection
+### 🏢 **[architecture/](./architecture/)** - Global Architecture
+- **[Technical Decisions](./architecture/technical-decisions.md)** - Technology stack and architectural choices
+- **[Authentication Strategy](./architecture/authentication-strategy.md)** - Auth across all features
+- **[Database Schema](./architecture/database-schema.md)** - Complete database structure
+- **[Performance Guidelines](./architecture/performance-guidelines.md)** - Performance standards
+
+### 🔗 **[shared/](./shared/)** - Cross-Feature Documentation
+- **[UI Components](./shared/ui-components.md)** - Shared component library
+- **[API Guidelines](./shared/api-guidelines.md)** - API design standards
+- **[Testing Strategy](./shared/testing-strategy.md)** - Testing approach
+
+
 
 ## 🎯 Quick Start
 
 ### For Product Managers
-1. Review the [PRD](./cocktail-bar-map-prd.md) for complete feature requirements
-2. Check [Implementation Plan](./task-breakdown.md) for current status and planning
-3. Review technical specifications in [Technical Decisions](./technical-decisions.md)
+1. Review **[Architecture Overview](./architecture/README.md)** for high-level technical decisions
+2. Check **[Feature Documentation](./features/)** for specific feature requirements and status
+3. Review individual feature task tracking for current development status
 
 ### For Developers
-1. Start with [Implementation Plan](./task-breakdown.md) for day-by-day tasks
-2. Read [Technical Decisions](./technical-decisions.md) for architecture overview
-3. Reference specialized guides for [Leaflet Integration](./leaflet-supabase-integration.md), [PWA Geolocation](./pwa-geolocation-strategy.md), and [Authentication](./authentication-integration.md)
+1. Start with **[Architecture Documentation](./architecture/)** for global technical decisions
+2. Review **[Feature-Specific Docs](./features/)** for implementation details
+3. Reference **[Shared Resources](./shared/)** for component library and guidelines
+4. Check feature-specific task tracking for active development status
 
-### For Stakeholders
-1. Review [PRD](./cocktail-bar-map-prd.md) for feature overview
-2. Monitor [Implementation Plan](./task-breakdown.md) for status updates
+### For New Team Members
+1. Read **[Technical Decisions](./architecture/technical-decisions.md)** for technology stack overview
+2. Review **[Database Schema](./architecture/database-schema.md)** for data structure understanding
+3. Explore **[Feature Documentation](./features/)** to understand existing functionality
+4. Check **[Performance Guidelines](./architecture/performance-guidelines.md)** for development standards
 
-## 🔄 Document Maintenance
+## 📅 **Project Status**
 
-### Daily Updates
-- [ ] Update implementation plan with completed tasks
-- [ ] Log any blockers or issues
-- [ ] Record key decisions or changes
+**Current Status**: ✅ Map Feature Complete → Enhanced Features Development  
+**Map Feature**: ✅ Production Ready (Days 1-4 completed)  
+**Next Phase**: Enhanced features (Day 5) + New feature development
 
-### Document Owners
-- **PRD**: Product Manager
-- **Implementation Plan**: Tech Lead + Development Team
-- **Technical Decisions**: Tech Lead
-- **Integration Guides**: Development Team
-
-## 📋 Key Project Info
-
-**Project Status**: ✅ Day 4 Complete → Day 5 Enhanced Features  
-**Start Date**: January 10, 2025  
-**Day 1 Completed**: January 10, 2025  
-**Day 2 Completed**: January 13, 2025  
-**Day 3 Completed**: January 13, 2025  
-**Day 4 Completed**: January 13, 2025  
-**Day 5 Target**: January 14, 2025
+### ✅ Completed Features
+- **Interactive Map**: Fully functional with place discovery
+- **Authentication**: Integrated across all features
+- **Performance**: Optimized for mobile and desktop
+- **PWA Features**: Geolocation and offline capabilities
 
 **Key Constraints**:
 - ⚡ Speed: Page load < 2 seconds
@@ -62,7 +64,7 @@ This folder contains all documentation for the Cocktail Bar Map feature developm
 - 🔧 Usability: Intuitive user experience
 
 **Success Metrics**:
-- ✅ Map page engagement (Day 2 completed)
+- ✅ Map page engagement (completed)
 - ✅ Venue discovery rates (bottom sheet navigation implemented)
 - ✅ Performance targets (<2s load time achieved with clustering)
 - ✅ User satisfaction (smooth UX with no loading popups)
@@ -73,7 +75,7 @@ This folder contains all documentation for the Cocktail Bar Map feature developm
 - ✅ Internationalization support (English/Chinese)
 - ✅ Authentication integration (protected routes)
 
-## 🎉 Project Achievements ✅ COMPLETED (Days 1-4)
+## 🎉 Map Feature Achievements ✅ COMPLETED
 
 ### Core Features Delivered
 - ✅ **Interactive Map**: Leaflet + OpenStreetMap with place markers
@@ -99,7 +101,7 @@ This folder contains all documentation for the Cocktail Bar Map feature developm
 - ✅ **Location Services**: Efficient GPS integration with permission handling
 - ✅ **Cross-Platform**: Consistent experience across iOS/Android/Desktop
 
-## 🆕 Day 5 Enhanced Features (NEW)
+## 🆕 Enhanced Features (In Development)
 
 ### List View with Distance Sorting
 - **"N places within Nkm" Button**: Click to switch to list view
@@ -122,7 +124,24 @@ This folder contains all documentation for the Cocktail Bar Map feature developm
 - **Visual Indicators**: Clear distinction between open/closed venues
 - **Persistent State**: Remember filter preferences across sessions
 
+## 🛠️ Adding New Features
+
+When adding new features, follow this structure:
+
+1. **Create Feature Directory**: `docs/features/[feature-name]/`
+2. **Use Template Structure**:
+   ```
+   docs/features/[feature-name]/
+   ├── README.md           # Feature overview
+   ├── prd.md              # Product requirements
+   ├── implementation.md   # Technical details
+   ├── task-tracking.md    # Development progress
+   └── testing.md          # Testing strategy
+   ```
+3. **Update Architecture Docs**: Add any global technical decisions to `architecture/`
+4. **Link from Main README**: Add feature to the documentation index above
+
 ---
 
 *This documentation is maintained throughout the project lifecycle*  
-*Last Updated: January 13, 2025 - Day 4 Complete, Day 5 Planning*
+*Last Updated: January 13, 2025 - Reorganized for multi-feature development*
