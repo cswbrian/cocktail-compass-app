@@ -50,14 +50,14 @@ export function BottomNav() {
       icon: Sparkles,
     },
     null, // Middle position for AddVisitButton
-    // {
-    //   href: getMapHref(),
-    //   icon: MapPin,
-    // },
     {
-      href: `/${language}/search`,
-      icon: Search,
+      href: getMapHref(),
+      icon: MapPin,
     },
+    // {
+    //   href: `/${language}/search`,
+    //   icon: Search,
+    // },
     {
       href: `/${language}/profile`,
       icon: User,
@@ -81,7 +81,9 @@ export function BottomNav() {
             }
 
             const Icon = item.icon;
-            const isActive = pathname.startsWith(item.href);
+            // Ensure active state ignores query string (e.g., map preserves ?lat/lng/zoom)
+            const hrefPath = item.href.split('?')[0];
+            const isActive = pathname.startsWith(hrefPath);
 
             return (
               <Link

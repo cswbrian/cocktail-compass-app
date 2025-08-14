@@ -30,6 +30,8 @@ import { ShareButton } from '@/components/ShareButton';
 import { BookmarkButton } from '@/components/bookmark/bookmark-button';
 import { BackButton } from '@/components/common/BackButton';
 import { PlaceStatusDisplay } from '@/components/common/PlaceStatusDisplay';
+import { sendGAEvent } from '@/lib/ga';
+import { buildGoogleMapsUrl } from '@/lib/utils';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -323,6 +325,27 @@ export default function PlaceDetailPage() {
               )}
             </div>
           )}
+          
+          {/* View on Google Maps */}
+          <div className="mb-6">
+            <Button
+              variant="outline"
+              onClick={() => {
+                sendGAEvent('PlaceDetail', 'directions_click', place.name);
+                const url = buildGoogleMapsUrl({
+                  name: place.name,
+                  place_id: place.place_id,
+                  lat: place.lat,
+                  lng: place.lng,
+                });
+                window.open(url, '_blank');
+              }}
+              className="inline-flex items-center gap-2"
+            >
+              {t.viewOnGoogleMaps}
+              <ExternalLink className="w-4 h-4" />
+            </Button>
+          </div>
           
           <ExternalLinkComponent message={t.feedbackMessage} />
         </div>

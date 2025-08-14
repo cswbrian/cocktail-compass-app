@@ -40,3 +40,16 @@ export function formatBilingualText(
 }
 
 export const validLanguages = ['en', 'zh'];
+
+// Build a Google Maps URL that prefers Place ID for direct navigation
+export function buildGoogleMapsUrl(place: {
+  name: string;
+  place_id?: string | null;
+  lat: number;
+  lng: number;
+}): string {
+  if (place.place_id) {
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${place.place_id}`;
+  }
+  return `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`;
+}

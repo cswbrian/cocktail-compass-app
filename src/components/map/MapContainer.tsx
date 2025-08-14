@@ -8,6 +8,8 @@ import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT } from '@/config/map-config';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 import { sendGAEvent } from '@/lib/ga';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
@@ -173,6 +175,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
   const { language } = useLanguage();
   const t = translations[language];
+  const { toast } = useToast();
   
   // Expose map instance to parent via ref
   useEffect(() => {
@@ -223,20 +226,54 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
 
   const handleLocationRequest = useCallback(async () => {
     try {
-      // Track geolocation request
       sendGAEvent('Map', 'geolocation_request', 'user_location_button');
-      
-      await requestPermission();
-      await getCurrentPosition();
-      
-      // Track successful geolocation
-      sendGAEvent('Map', 'geolocation_success', 'user_location_found');
+
+      const permission = await requestPermission();
+
+      if (permission === 'granted') {
+        await getCurrentPosition();
+        sendGAEvent('Map', 'geolocation_success', 'user_location_found');
+        return;
+      }
+
+      if (permission === 'prompt') {
+        try {
+          await getCurrentPosition();
+          sendGAEvent('Map', 'geolocation_success', 'user_location_found_after_prompt');
+          return;
+        } catch (err) {
+          const geoErr = err as GeolocationPositionError;
+          sendGAEvent('Map', 'geolocation_error_after_prompt', geoErr?.message || 'unknown_error');
+          // Show retry prompt
+          toast({
+            title: 'Enable location to find nearby places',
+            description: 'We need your location to show nearby cocktail bars. Please allow access when prompted.',
+            action: (
+              <ToastAction altText="Retry" onClick={() => handleLocationRequest()}>Retry</ToastAction>
+            ),
+          });
+          return;
+        }
+      }
+
+      // permission === 'denied'
+      sendGAEvent('Map', 'geolocation_denied', 'permission_denied');
+      toast({
+        title: 'Location access is blocked',
+        description: 'Please enable location in your browser settings (Site settings → Location) and try again.',
+        action: (
+          <ToastAction altText="Retry" onClick={() => handleLocationRequest()}>Retry</ToastAction>
+        ),
+      });
     } catch (error) {
       console.error('Failed to get user location:', error);
-      // Track geolocation failure
       sendGAEvent('Map', 'geolocation_error', error instanceof Error ? error.message : 'unknown_error');
+      toast({
+        title: 'Unable to access your location',
+        description: 'Please try again. If the issue persists, check your device and browser settings.',
+      });
     }
-  }, [requestPermission, getCurrentPosition]);
+  }, [requestPermission, getCurrentPosition, toast]);
 
   // Handle marker click with smooth zoom and center
   const handleMarkerClick = useCallback((place: PlaceMarker) => {

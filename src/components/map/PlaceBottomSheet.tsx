@@ -14,6 +14,7 @@ import { translations } from '@/translations';
 import { Link } from 'react-router-dom';
 import { sendGAEvent } from '@/lib/ga';
 import { ExternalLink, MapPin, Clock, Phone, Globe, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { buildGoogleMapsUrl } from '@/lib/utils';
 
 interface PlaceBottomSheetProps {
   place: PlaceMarker | null;
@@ -305,8 +306,13 @@ export function PlaceBottomSheet({
               onClick={() => {
                 // Track directions click
                 sendGAEvent('Map', 'directions_click', displayPlace.name);
-                // Open in maps app
-                const url = `https://www.google.com/maps/search/?api=1&query=${displayPlace.lat},${displayPlace.lng}`;
+                // Open in maps app - use helper for URL building
+                const url = buildGoogleMapsUrl({
+                  name: displayPlace.name,
+                  place_id: (displayPlace as any).place_id,
+                  lat: displayPlace.lat,
+                  lng: displayPlace.lng,
+                });
                 window.open(url, '_blank');
               }}
               variant="outline"
