@@ -11,6 +11,7 @@ import {
   Loader2,
   LayoutList,
   List,
+  SmilePlus,
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { VisitCard } from './VisitCard';
@@ -189,7 +190,15 @@ export function VisitList({
   }
 
   if (!providedVisits || providedVisits.length === 0) {
-    return null;
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center">
+            <SmilePlus className="w-24 h-24 text-muted-foreground mb-6" />
+            <p className="text-2xl text-muted-foreground mb-4">{t.noVisits}</p>
+            <p className="text-md text-muted-foreground">
+              {t.noLogsDescription}
+            </p>
+          </div>
+    );
   }
 
   return (

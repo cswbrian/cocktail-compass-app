@@ -2,6 +2,8 @@ import { Place } from '@/types/place';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { cn } from '@/lib/utils';
+import { PlaceStatusDisplay } from '@/components/common/PlaceStatusDisplay';
+import { MapPin } from 'lucide-react';
 
 interface PlaceCardProps {
   place: Place;
@@ -22,11 +24,13 @@ export function PlaceCard({ place, variant = 'default' }: PlaceCardProps) {
         <div className="relative space-y-2">
           <div className="flex items-start justify-between">
             <h3 className="font-semibold text-lg text-white/90">{place.name}</h3>
+            <PlaceStatusDisplay place={place} />
           </div>
-          {variant === 'default' && (
-            <p className="text-sm text-white/60">
-              {place.secondary_text}
-            </p>
+          {place.secondary_text && (
+            <div className="text-sm text-white/60 flex items-center gap-1">
+              <MapPin className="w-4 h-4 text-white/50" />
+              <span>{place.secondary_text}</span>
+            </div>
           )}
         </div>
       </div>

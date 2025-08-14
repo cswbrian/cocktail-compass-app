@@ -316,7 +316,7 @@ export default function PlaceDetailPage() {
                     rel="noopener noreferrer"
                     className="text-primary hover:text-primary/80 hover:underline flex items-center gap-1"
                   >
-                    {place.website}
+                    {t.visitWebsite}
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>

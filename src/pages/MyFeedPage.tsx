@@ -47,7 +47,7 @@ export default function MyFeedPage() {
             <SmilePlus className="w-24 h-24 text-muted-foreground mb-6" />
             <p className="text-2xl text-muted-foreground mb-4">{t.noVisits}</p>
             <p className="text-md text-muted-foreground">
-              {t.noVisitsDescription}
+              {t.noLogsDescription}
             </p>
           </div>
         ) : (

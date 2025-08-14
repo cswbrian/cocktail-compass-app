@@ -40,7 +40,8 @@ export class BookmarkService {
           place:places!place_id (
             id,
             place_id,
-            name
+            name,
+            secondary_text
           )
         )
       `)
@@ -64,7 +65,8 @@ export class BookmarkService {
         place:places!place_id (
           id,
           place_id,
-          name
+          name,
+          secondary_text
         )
       `)
       .eq('list_id', listId)
@@ -173,7 +175,8 @@ export class BookmarkService {
           place:places!place_id (
             id,
             place_id,
-            name
+            name,
+            secondary_text
           )
         )
       `)
@@ -228,7 +231,8 @@ export class BookmarkService {
           place:places!place_id (
             id,
             place_id,
-            name
+            name,
+            secondary_text
           )
         )
       `)

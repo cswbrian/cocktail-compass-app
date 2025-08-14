@@ -313,7 +313,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       {/* Zoom controls removed per design */}
 
       {/* Floating controls - positioned on right side */}
-      <div className="absolute top-16 right-4 z-10 flex flex-col gap-2">
+      <div className="absolute top-16 right-4 z-20 flex flex-col gap-2">
         {/* Location button */}
         <Button
           variant="outline"
@@ -345,7 +345,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       </div>
 
       {/* Horizontal filter chips bar - top full width, scrollable */}
-      <div className="absolute top-16 left-0 right-0 z-10 px-4 pointer-events-none">
+      <div className="absolute top-16 left-0 right-20 z-10 px-4 pointer-events-none">
         <div className="w-full overflow-x-auto no-scrollbar pointer-events-auto">
           <div className="flex gap-2 min-w-full pr-4">
             {/* Open Now chip */}

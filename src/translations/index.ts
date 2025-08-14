@@ -178,9 +178,6 @@ export const translations = {
     noLogs: 'It looks a little empty in here!',
     noLogsDescription:
       "You haven't started drinking yet? Start your cocktail journey by adding your first log.",
-    noVisits: 'No visits yet',
-    noVisitsDescription:
-      'Start logging your bar visits to see them here.',
     editLog: 'Edit Log',
     deleteLog: 'Delete Log',
     saveLog: 'Save Log',
@@ -369,6 +366,7 @@ Price: Was it worth the price?`,
     cardView: 'Normal View',
     compactView: 'Compact View',
     openingHours: 'Opening Hours',
+    visitWebsite: 'Visit Website',
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -540,9 +538,6 @@ Price: Was it worth the price?`,
     noLogs: '這裡看起來有點空喔！',
     noLogsDescription:
       '你怎麼可能還未喝酒？新增您的第一個日誌，開始您的調酒之旅！',
-    noVisits: '暫時未有到訪記錄',
-    noVisitsDescription:
-      '開始記錄您的酒吧到訪，即可在此查看。',
     editLog: '編輯日誌',
     deleteLog: '刪除日誌',
     saveLog: '儲存日誌',
@@ -715,5 +710,6 @@ Price: Was it worth the price?`,
     cardView: '卡片顯示',
     compactView: '列表顯示',
     openingHours: '營業時間',
+    visitWebsite: '前往網站',
   },
 };
