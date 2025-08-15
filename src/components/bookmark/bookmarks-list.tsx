@@ -11,7 +11,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { CocktailCard } from '@/components/cocktail-card';
 import { PlaceCard } from '@/components/place';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import {
   BookmarkList
@@ -90,6 +90,7 @@ export function BookmarksList({
   const { user } = useAuth();
   const { language } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const t = translations[language];
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -122,6 +123,7 @@ export function BookmarksList({
   });
 
   if (!user) {
+    localStorage.setItem('returnUrl', location.pathname || '/');
     navigate(`/${language}/login`);
     return null;
   }

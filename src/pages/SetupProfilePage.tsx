@@ -53,7 +53,15 @@ export default function SetupProfilePage() {
       // Refresh user settings to update the context
       await refreshUserSettings();
       toast.success(t.usernameUpdated);
-      navigate(`/${language}`); // Redirect to main app after successful setup
+      
+      // Check if there's a stored return URL to redirect to
+      const returnUrl = localStorage.getItem('returnUrl');
+      if (returnUrl) {
+        localStorage.removeItem('returnUrl');
+        navigate(returnUrl);
+      } else {
+        navigate(`/${language}`); // Default redirect to main app
+      }
     } catch (error: unknown) {
       console.error('Error updating username:', error);
       if (error instanceof UsernameValidationError) {

@@ -282,20 +282,8 @@ export const fetchers = {
 
   // Map-specific fetchers
   getPlacesInViewport: async (boundsString: string) => {
-    console.log('🔧 Fetcher Called: getPlacesInViewport', {
-      boundsString,
-      timestamp: new Date().toISOString()
-    });
-
     // Parse bounds string from Leaflet's toBBoxString(): "west,south,east,north" (lng,lat,lng,lat)
     const [west, south, east, north] = boundsString.split(',').map(Number);
-
-    console.log('📐 Parsed Bounds (west,south,east,north):', {
-      west,
-      south,
-      east,
-      north,
-    });
 
     const L = await import('leaflet');
     // Construct using [lat, lng]
@@ -305,12 +293,6 @@ export const fetchers = {
     );
 
     const result = await mapService.getPlacesInViewport(bounds);
-
-    console.log('✅ Viewport Result:', {
-      placesCount: result.length,
-      firstPlace: result[0]?.name,
-      timestamp: new Date().toISOString()
-    });
 
     return result;
   },
@@ -323,11 +305,6 @@ export const fetchers = {
 
 
   getPlacesWithSmartFallback: async (viewportKey?: string) => {
-    console.log('🔧 Fetcher Called: getPlacesWithSmartFallback', {
-      viewportKey,
-      timestamp: new Date().toISOString()
-    });
-
     // If viewportKey is provided and it's a valid bounds string, use it
     if (viewportKey && viewportKey !== 'default') {
       try {
@@ -341,7 +318,6 @@ export const fetchers = {
             [north, east]  // northeast corner (lat, lng)
           );
           
-          console.log('📐 Using provided viewport bounds for smart fallback');
           return await mapService.getPlacesInViewport(bounds);
         }
       } catch (error) {
@@ -350,7 +326,6 @@ export const fetchers = {
     }
     
     // Use smart fallback (default Hong Kong area)
-    console.log('🔄 Using smart fallback viewport for initial data loading');
     return await mapService.getPlacesWithSmartFallback();
   },
 

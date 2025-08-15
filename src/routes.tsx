@@ -30,6 +30,7 @@ import { RequireUsername } from '@/components/RequireUsername';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
 import { FeedRedirect } from '@/components/FeedRedirect';
 import { PlaceFeedRedirect } from '@/components/place';
+import { LoginScreen } from '@/components/login/login-screen';
 
 export default function AppRoutes() {
   return (
@@ -134,6 +135,12 @@ export default function AppRoutes() {
         />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
+
+      {/* Login route - accessible without authentication */}
+      <Route
+        path=":language/login"
+        element={<LoginScreen />}
+      />
 
       <Route
         path="/"

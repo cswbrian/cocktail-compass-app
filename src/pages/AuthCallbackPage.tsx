@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { userSettingsService } from '@/services/user-settings-service';
@@ -9,18 +9,56 @@ export default function AuthCallbackPage() {
   const navigate = useNavigate();
   const { language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
+  const [hasNavigated, setHasNavigated] = useState(false);
+  const navigationRef = useRef(false);
 
   const checkUserSettingsAndNavigate = async () => {
-    const settings =
-      await userSettingsService.getUserSettings();
+    // Prevent multiple navigations using both state and ref
+    if (hasNavigated || navigationRef.current) {
+      return;
+    }
+    
+    // Set navigation flag immediately to prevent race conditions
+    navigationRef.current = true;
+    setHasNavigated(true);
+    
+    // Check if there's a stored return URL from before login
+    const returnUrl = localStorage.getItem('returnUrl');
+    
+    if (returnUrl) {
+      // Clear the stored return URL
+      localStorage.removeItem('returnUrl');
+      
+      // Check if user needs to set up profile first
+      const settings = await userSettingsService.getUserSettings();
+      if (!settings?.username) {
+        // Store the return URL again so we can redirect after profile setup
+        localStorage.setItem('returnUrl', returnUrl);
+        navigate(`/${language}/profile/setup`);
+        return;
+      }
+      
+      // User has profile set up, redirect to the stored return URL
+      navigate(returnUrl);
+      return;
+    }
+    
+    // No return URL, proceed with normal flow
+    const settings = await userSettingsService.getUserSettings();
     if (!settings?.username) {
       navigate(`/${language}/profile/setup`);
     } else {
-      navigate(`/${language}`);
+      // Instead of redirecting to /${language} which triggers Home component redirect,
+      // go directly to the feeds page
+      navigate(`/${language}/feeds`);
     }
   };
 
   useEffect(() => {
+    if (hasNavigated || navigationRef.current) {
+      return;
+    }
+    
     const handleCallback = async () => {
       try {
         // Get the current session first
@@ -74,7 +112,11 @@ export default function AuthCallbackPage() {
           await checkUserSettingsAndNavigate();
         } else {
           // If all else fails, redirect to home
-          navigate(`/${language}`);
+          if (!navigationRef.current) {
+            navigationRef.current = true;
+            setHasNavigated(true);
+            navigate(`/${language}`);
+          }
         }
       } finally {
         setIsLoading(false);

@@ -17,24 +17,12 @@ export class MapService {
       result_limit: limit,
     };
     
-    console.log('🗄️ PostGIS Query: places_in_viewport', {
-      params,
-      boundsString: bounds.toBBoxString(),
-      timestamp: new Date().toISOString()
-    });
-    
     const { data, error } = await supabase.rpc('places_in_viewport_with_status', params);
 
     if (error) {
       console.error('❌ PostGIS Error:', error);
       throw error;
     }
-
-    console.log('✅ PostGIS Result:', {
-      placesCount: data?.length || 0,
-      firstPlace: data?.[0]?.name,
-      allPlaceNames: data?.map((p: any) => p.name) || []
-    });
 
     return data || [];
   }
