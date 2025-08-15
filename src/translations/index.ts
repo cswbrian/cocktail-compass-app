@@ -420,12 +420,12 @@ Price: Was it worth the price?`,
       'Refresh the page after changing settings'
     ],
     safariSteps: [
-      '開啟設定：在您的 iPhone 上找到並開啟設定應用程式',
-      '前往隱私：向下滾動並點擊「隱私與安全性」',
-      '存取位置服務：選擇「位置服務」',
-      '找到 Safari：向下滾動應用程式清單並點擊「Safari」',
-      '選擇位置存取：選擇「使用 App 時」或「永遠」',
-      '啟用精確位置（可選）：開啟「精確位置」以獲得準確性'
+      'Open Settings: Find and open the Settings app on your iPhone',
+      'Go to Privacy: Scroll down and tap on "Privacy & Security"',
+      'Access Location Services: Select "Location Services"',
+      'Find Safari: Scroll down the app list and tap on "Safari"',
+      'Choose Location Access: Select "While Using the App" or "Always"',
+      'Enable Precise Location (Optional): Turn on "Precise Location" for accuracy'
     ],
     defaultSteps: [
       'Look for a lock, shield, or info icon in the address bar',
@@ -445,7 +445,7 @@ Price: Was it worth the price?`,
     pwaAndroidSteps: [
       'Device Settings: Open Android Settings → Location',
       'Ensure "Use location" is turned On',
-      'Touch and hold the PWA icon on your home screen',
+      'Go to home screen, touch and hold the app icon',
       'Tap "App info" or the "i" icon',
       'Tap "Permissions" → "Location"',
       'Choose: "Allow all the time", "While using app", or "Ask every time"',
@@ -807,7 +807,7 @@ Price: Was it worth the price?`,
     enableLocationAccess: '啟用位置存取',
     locationAccessBlocked: '位置存取已被封鎖',
     locationPermissionNeeded: '需要位置權限',
-    locationHelpDescription: '要尋找附近的調酒酒吧，我們需要存取您的位置。以下是啟用方法：',
+    locationHelpDescription: '要尋找附近的調酒酒吧，我們需要存取您的位置：',
     gotIt: '知道了',
     tryAgain: '再試一次',
     locationHelpTip: '💡 更改設定後，請重新整理此頁面以生效。',
@@ -824,17 +824,17 @@ Price: Was it worth the price?`,
     safariTitle: '在 Safari 中啟用位置',
     defaultTitle: '在瀏覽器中啟用位置',
     chromeSteps: [
-      '點擊網址列中的鎖頭圖示 🔒',
+      '尋找網址列中的鎖頭、盾牌或資訊圖示',
       '將「位置」從「封鎖」改為「允許」',
       '重新整理頁面'
     ],
     edgeSteps: [
-      '點擊網址列中的鎖頭圖示 🔒',
+      '尋找網址列中的鎖頭、盾牌或資訊圖示',
       '將「位置」從「封鎖」改為「允許」',
       '重新整理頁面'
     ],
     firefoxSteps: [
-      '點擊網址列中的鎖頭圖示 🔒',
+      '尋找網址列中的鎖頭、盾牌或資訊圖示',
       '將「位置」從「封鎖」改為「允許」',
       '重新整理頁面'
     ],
@@ -859,16 +859,16 @@ Price: Was it worth the price?`,
       '在應用程式清單中找到 Safari 並選擇位置存取選項',
       '選擇「使用 App 時」或「永遠」（建議：「使用 App 時」）',
       '返回 PWA 並在提示時授予權限',
-      '如有需要請重新整理 PWA'
+      '如有需要，請重新整理此App'
     ],
     pwaAndroidSteps: [
       '裝置設定：開啟 Android 設定 → 位置',
       '確保「使用位置」已開啟',
-      '長按主畫面上的 PWA 圖示',
+      '回到主畫面，長按此應用程式圖示',
       '點擊「應用程式資訊」或「i」圖示',
       '點擊「權限」→「位置」',
       '選擇：「一律允許」、「使用應用程式時」或「每次詢問」',
-      '返回 PWA 並在需要時重新整理'
+      '如有需要，請重新整理此App'
     ],
   },
 };

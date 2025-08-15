@@ -364,7 +364,7 @@ export default function PlaceDetailPage() {
                   <div className="flex-1">
                     <div className="text-primary flex items-center gap-1">
                       {place.secondary_text}
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="w-4 h-4" />
                     </div>
                     {place.description && (
                       <div className="text-sm text-muted-foreground/80 mt-1">
@@ -399,7 +399,7 @@ export default function PlaceDetailPage() {
                     className="text-primary hover:text-primary/80 hover:underline flex items-center gap-1"
                   >
                     {t.visitWebsite}
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               )}

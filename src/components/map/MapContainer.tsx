@@ -177,6 +177,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   const mapRef = useRef<Map | null>(null);
   const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
   const [isLocationLoading, setIsLocationLoading] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const { language } = useLanguage();
   const t = translations[language];
   const pwaStatus = detectPWAStatus();
@@ -412,13 +413,12 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         
         {/* Location button */}
         {geolocationService.getPermissionStatus() === 'denied' ? (
-            <Popover>
+            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   size="icon"
                   disabled={isLocationLoading}
-                  className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100"
                   title={t.locationAccessBlocked}
                 >
                   {isLocationLoading ? (
@@ -480,11 +480,15 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
                     <Button
                       variant="outline"
                       className="flex-1"
+                      onClick={() => setIsPopoverOpen(false)}
                     >
                       {t.gotIt}
                     </Button>
                     <Button
-                      onClick={() => handleLocationRequest()}
+                      onClick={() => {
+                        handleLocationRequest();
+                        setIsPopoverOpen(false);
+                      }}
                       className="flex-1"
                     >
                       {t.tryAgain}
@@ -502,9 +506,6 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
               variant="outline"
               size="icon"
               onClick={() => {
-                console.log('Location button clicked!');
-                console.log('Current userPosition:', userPosition);
-                console.log('Current geolocation state:', { getCurrentPosition, requestPermission });
                 handleLocationRequest();
               }}
               disabled={isLocationLoading}
