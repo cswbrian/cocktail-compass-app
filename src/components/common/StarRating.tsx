@@ -27,6 +27,12 @@ export const StarRating: React.FC<StarRatingProps> = ({
   const clearLabel =
     translations[language as keyof typeof translations]
       .clearRating;
+  
+  // In read-only mode, don't show anything if there's no rating or rating is 0
+  if (readOnly && (value === null || value === 0)) {
+    return null;
+  }
+  
   // Helper to render each star
   const renderStar = (starIndex: number) => {
     const full = value !== null && value >= starIndex + 1;
