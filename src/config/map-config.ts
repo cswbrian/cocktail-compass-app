@@ -7,23 +7,9 @@ import { LatLngBounds, LatLng } from 'leaflet';
  * To customize clustering: Modify the clustering options below
  */
 export const MAP_CONFIG = {
-  // Enable/disable marker clustering
-  enableClustering: false, // Set to false to disable clustering, true to enable
-  
-  // Clustering options (only used when enableClustering is true)
-  clustering: {
-    // Disable clustering at this zoom level and higher
-    disableClusteringAtZoom: 15,
-    // Maximum radius that a cluster will cover
-    maxClusterRadius: 80,
-    // Show coverage on hover
-    showCoverageOnHover: true,
-    // Animate adding markers to the map
-    animateAddingMarkers: true,
-  },
-  
   // Debounce delay for map viewport changes (in milliseconds)
-  viewportDebounceDelay: 500,
+  // Reduced for better responsiveness
+  viewportDebounceDelay: 200,
   
   // Smooth transitions for markers
   smoothTransitions: {

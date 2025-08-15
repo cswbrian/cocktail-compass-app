@@ -356,10 +356,10 @@ export default function MapPage() {
             }}
           >
             <PlaceMarkers
+              key={`places-${renderPlaces.length}-${openNowOnly}-${asias50Only}`}
               places={renderPlaces}
               onPlaceClick={handlePlaceSelect}
               selectedPlaceId={selectedPlace?.id}
-              enableClustering={MAP_CONFIG.enableClustering}
             />
           </MapContainer>
 
@@ -454,12 +454,11 @@ export default function MapPage() {
           });
         }}
       >
-        {/* Add PlaceMarkers as children with configurable clustering */}
+        {/* Add PlaceMarkers as children */}
         <PlaceMarkers
           places={renderPlaces}
           onPlaceClick={handlePlaceSelect}
           selectedPlaceId={selectedPlace?.id}
-          enableClustering={MAP_CONFIG.enableClustering}
         />
       </MapContainer>
 

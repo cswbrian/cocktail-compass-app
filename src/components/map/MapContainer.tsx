@@ -107,14 +107,36 @@ function MapEventHandler({
     setViewport(newViewport);
   }, [map]);
 
+  // Handle zoom changes immediately for better UX
+  const handleZoomChange = useCallback(() => {
+    const center = map.getCenter();
+    const zoom = map.getZoom();
+    const bounds = map.getBounds();
+    
+    const newViewport: MapViewport = {
+      center,
+      zoom,
+      bounds,
+    };
+    
+    // For zoom changes, call immediately without debouncing
+    onViewportChange?.(newViewport);
+    onBoundsChange?.(bounds);
+    
+    // Also update the debounced viewport for move events
+    setViewport(newViewport);
+  }, [map, onViewportChange, onBoundsChange]);
+
   useMapEvents({
     moveend: handleMapChange,
-    zoomend: handleMapChange,
+    zoomend: handleZoomChange,
   });
 
-  // Call callbacks when debounced viewport changes
+  // Call callbacks when debounced viewport changes (for move events only)
   useEffect(() => {
     if (debouncedViewport) {
+      // Only call onViewportChange for move events, not zoom events
+      // Zoom events are handled immediately above
       onViewportChange?.(debouncedViewport);
       onBoundsChange?.(debouncedViewport.bounds);
     }
@@ -625,6 +647,16 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
             <span className="text-sm text-gray-600">
               {t.foundPlacesInArea.replace('{count}', String(places.length))}
             </span>
+          </div>
+        )}
+        
+        {/* Map updating indicator */}
+        {isLoading && (
+          <div className="absolute top-36 px-4 left-1/2 transform -translate-x-1/2 z-10 bg-blue-600/90 backdrop-blur-sm shadow-lg rounded-full py-2">
+            <div className="flex items-center gap-2 text-white text-sm">
+              <div className="w-4 h-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+              Updating map...
+            </div>
           </div>
         )}
       </div>
