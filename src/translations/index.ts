@@ -164,6 +164,18 @@ export const translations = {
       'Your bookmarks are now stored in the cloud ☁️ and accessible everywhere!',
     cocktail: 'Cocktails',
     location: 'Location',
+    selectLocation: 'Select Location',
+    searchLocation: 'Search location',
+    noLocationsFound: 'No locations found',
+    useCurrentLocation: 'Use Current Location',
+    locationSettings: 'Location Settings',
+    enableLocation: 'Enable Location',
+    disableLocation: 'Disable Location',
+    locationEnabled: 'Location Enabled',
+    locationDisabled: 'Location Disabled',
+    locationPermission: 'Location Permission',
+    clickToEnable: 'Click to enable',
+    unknown: 'Unknown',
     bartender: 'Bartender',
     addTag: 'Add Tag',
     rating: 'Rating',
@@ -221,10 +233,6 @@ export const translations = {
     cocktailNameZh: 'Cocktail Name (Chinese)',
     creating: 'Creating...',
     create: 'Create',
-    selectLocation: 'Select Location',
-    searchLocation: 'Search location',
-    noLocationsFound: 'No locations found',
-    useCurrentLocation: 'Use Current Location',
     required: 'Required',
     errorRemovingMedia: 'Error removing media',
     viewOnGoogleMaps: 'View on Google Maps',
@@ -368,6 +376,81 @@ Price: Was it worth the price?`,
     openingHours: 'Opening Hours',
     visitWebsite: 'Visit Website',
     viewOnMap: 'View on Map',
+    enableLocationAccess: 'Enable Location Access',
+    locationAccessBlocked: 'Location access blocked',
+    locationPermissionNeeded: 'Location permission needed',
+    locationHelpDescription: 'To find nearby cocktail bars, we need access to your location. Here\'s how to enable it:',
+    gotIt: 'Got it',
+    tryAgain: 'Try Again',
+    locationHelpTip: '💡 After changing the setting, refresh this page for the change to take effect.',
+    checkingLocationPermission: 'Checking location permission...',
+    
+    // PWA-specific location tutorial titles
+    pwaIOSTitle: 'Enable Location for PWA on iOS',
+    pwaAndroidTitle: 'Enable Location for PWA on Android',
+    
+    // Browser-specific location tutorial titles
+    chromeTitle: 'Enable Location in Chrome',
+    edgeTitle: 'Enable Location in Edge',
+    firefoxTitle: 'Enable Location in Firefox',
+    safariTitle: 'Enable Location in Safari',
+    defaultTitle: 'Enable Location in Browser',
+    chromeSteps: [
+      'Browser Settings: Open Chrome → More (⋮) → Settings → Advanced → Site settings → Location',
+      'Ensure Location is turned On in Chrome settings',
+      'Device Settings: Open Android Settings → Location → App location permissions',
+      'Find this app in the list and choose permission level',
+      'Select "Allow only while using the app" or "Allow all the time"',
+      'Refresh the page after changing settings'
+    ],
+    edgeSteps: [
+      'Browser Settings: Open Edge → More (⋮) → Settings → Advanced → Site settings → Location',
+      'Ensure Location is turned On in Edge settings',
+      'Device Settings: Open Android Settings → Location → App location permissions',
+      'Find this app in the list and choose permission level',
+      'Select "Allow only while using the app" or "Allow all the time"',
+      'Refresh the page after changing settings'
+    ],
+    firefoxSteps: [
+      'Browser Settings: Open Firefox → Menu (☰) → Settings → Privacy & Security → Permissions → Location',
+      'Ensure Location is set to "Ask" or "Allow"',
+      'Device Settings: Open Android Settings → Location → App location permissions',
+      'Find Firefox in the list and ensure location access is allowed',
+      'Choose appropriate permission level for location access',
+      'Refresh the page after changing settings'
+    ],
+    safariSteps: [
+      '開啟設定：在您的 iPhone 上找到並開啟設定應用程式',
+      '前往隱私：向下滾動並點擊「隱私與安全性」',
+      '存取位置服務：選擇「位置服務」',
+      '找到 Safari：向下滾動應用程式清單並點擊「Safari」',
+      '選擇位置存取：選擇「使用 App 時」或「永遠」',
+      '啟用精確位置（可選）：開啟「精確位置」以獲得準確性'
+    ],
+    defaultSteps: [
+      'Look for a lock, shield, or info icon in the address bar',
+      'Find location permissions and change to "Allow"',
+      'Refresh the page'
+    ],
+    
+    // PWA-specific location tutorial steps
+    pwaIOSSteps: [
+      'Device Settings: Open iOS Settings → Privacy & Security → Location Services',
+      'Ensure Location Services is turned On',
+      'Find Safari in the app list and select location access option',
+      'Choose "While Using the App" or "Always" (recommended: "While Using")',
+      'Return to the PWA and grant permission when prompted',
+      'Refresh the PWA if needed'
+    ],
+    pwaAndroidSteps: [
+      'Device Settings: Open Android Settings → Location',
+      'Ensure "Use location" is turned On',
+      'Touch and hold the PWA icon on your home screen',
+      'Tap "App info" or the "i" icon',
+      'Tap "Permissions" → "Location"',
+      'Choose: "Allow all the time", "While using app", or "Ask every time"',
+      'Return to the PWA and refresh if needed'
+    ],
   },
   zh: {
     appName: '溝酒神燈 🍸🔮',
@@ -525,6 +608,18 @@ Price: Was it worth the price?`,
       '你的書籤已成功搬到雲端 ☁️，隨時隨地可存取！',
     cocktail: '調酒',
     location: '地點',
+    selectLocation: '選擇地點',
+    searchLocation: '搜尋地點',
+    noLocationsFound: '找不到地點',
+    useCurrentLocation: '使用目前位置',
+    locationSettings: '位置設定',
+    enableLocation: '啟用位置',
+    disableLocation: '停用位置',
+    locationEnabled: '位置已啟用',
+    locationDisabled: '位置已停用',
+    locationPermission: '位置權限',
+    clickToEnable: '點擊啟用',
+    unknown: '未知',
     bartender: '調酒師',
     addTag: '新增標籤',
     rating: '評分',
@@ -577,10 +672,6 @@ Price: Was it worth the price?`,
     cocktailNameZh: '調酒名稱（中文）',
     creating: '建立中...',
     create: '建立',
-    selectLocation: '選擇地點',
-    searchLocation: '搜尋地點',
-    noLocationsFound: '找不到地點',
-    useCurrentLocation: '使用目前位置',
     required: '必填',
     errorRemovingMedia: '移除媒體時出錯',
     viewOnGoogleMaps: '在 Google 地圖查看',
@@ -713,5 +804,71 @@ Price: Was it worth the price?`,
     openingHours: '營業時間',
     visitWebsite: '前往網站',
     viewOnMap: '在地圖查看',
+    enableLocationAccess: '啟用位置存取',
+    locationAccessBlocked: '位置存取已被封鎖',
+    locationPermissionNeeded: '需要位置權限',
+    locationHelpDescription: '要尋找附近的調酒酒吧，我們需要存取您的位置。以下是啟用方法：',
+    gotIt: '知道了',
+    tryAgain: '再試一次',
+    locationHelpTip: '💡 更改設定後，請重新整理此頁面以生效。',
+    checkingLocationPermission: '檢查位置權限中...',
+    
+    // PWA-specific location tutorial titles
+    pwaIOSTitle: '在 iOS 上為 PWA 啟用位置',
+    pwaAndroidTitle: '在 Android 上為 PWA 啟用位置',
+    
+    // Browser-specific location tutorial titles
+    chromeTitle: '在 Chrome 中啟用位置',
+    edgeTitle: '在 Edge 中啟用位置',
+    firefoxTitle: '在 Firefox 中啟用位置',
+    safariTitle: '在 Safari 中啟用位置',
+    defaultTitle: '在瀏覽器中啟用位置',
+    chromeSteps: [
+      '點擊網址列中的鎖頭圖示 🔒',
+      '將「位置」從「封鎖」改為「允許」',
+      '重新整理頁面'
+    ],
+    edgeSteps: [
+      '點擊網址列中的鎖頭圖示 🔒',
+      '將「位置」從「封鎖」改為「允許」',
+      '重新整理頁面'
+    ],
+    firefoxSteps: [
+      '點擊網址列中的鎖頭圖示 🔒',
+      '將「位置」從「封鎖」改為「允許」',
+      '重新整理頁面'
+    ],
+    safariSteps: [
+      '開啟設定：在您的 iPhone 上找到並開啟設定應用程式',
+      '前往隱私：向下滾動並點擊「隱私與安全性」',
+      '存取位置服務：選擇「位置服務」',
+      '找到 Safari：向下滾動應用程式清單並點擊「Safari」',
+      '選擇位置存取：選擇「使用 App 時」或「永遠」',
+      '啟用精確位置（可選）：開啟「精確位置」以獲得準確性'
+    ],
+    defaultSteps: [
+      '尋找網址列中的鎖頭、盾牌或資訊圖示',
+      '找到位置權限並改為「允許」',
+      '重新整理頁面'
+    ],
+    
+    // PWA-specific location tutorial steps
+    pwaIOSSteps: [
+      '裝置設定：開啟 iOS 設定 → 隱私與安全性 → 位置服務',
+      '確保位置服務已開啟',
+      '在應用程式清單中找到 Safari 並選擇位置存取選項',
+      '選擇「使用 App 時」或「永遠」（建議：「使用 App 時」）',
+      '返回 PWA 並在提示時授予權限',
+      '如有需要請重新整理 PWA'
+    ],
+    pwaAndroidSteps: [
+      '裝置設定：開啟 Android 設定 → 位置',
+      '確保「使用位置」已開啟',
+      '長按主畫面上的 PWA 圖示',
+      '點擊「應用程式資訊」或「i」圖示',
+      '點擊「權限」→「位置」',
+      '選擇：「一律允許」、「使用應用程式時」或「每次詢問」',
+      '返回 PWA 並在需要時重新整理'
+    ],
   },
 };

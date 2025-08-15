@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Header } from '@/components/ui/header';
 import { Menu } from '@/components/ui/menu';
 import { Toaster } from '@/components/ui/sonner';
@@ -21,6 +22,8 @@ export default function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [showInAppWarning, setShowInAppWarning] = useState(false);
+
   return (
     <LanguageProvider>
       <AuthProvider>
@@ -28,22 +31,25 @@ export default function AppLayout({
           <CocktailLogProvider>
             <CocktailProvider>
               <VisitProvider>
-                  <VisitFormProvider>
-                    <div className={`antialiased dark`}>
-                      <div className="flex flex-col min-h-screen">
-                        <Header />
-                        <Menu />
-                        <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
-                          <MainContent>{children}</MainContent>
-                        </main>
-                        <InstallPrompt />
-                        <BottomNav />
-                        <GlobalVisitForm />
-                        <Toaster />
-                        <InAppBrowserWarning />
-                      </div>
+                <VisitFormProvider>
+                  <div className={`antialiased dark`}>
+                    <div className="flex flex-col min-h-screen">
+                      <Header />
+                      <Menu />
+                      <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
+                        <MainContent>{children}</MainContent>
+                      </main>
+                      <InstallPrompt />
+                      <BottomNav />
+                      <Toaster />
+                      <InAppBrowserWarning 
+                        isOpen={showInAppWarning} 
+                        onOpenChange={setShowInAppWarning} 
+                      />
                     </div>
-                  </VisitFormProvider>
+                  </div>
+                  <GlobalVisitForm />
+                </VisitFormProvider>
               </VisitProvider>
             </CocktailProvider>
           </CocktailLogProvider>

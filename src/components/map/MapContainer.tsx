@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect, createContext, useContext } from 'react';
 import { MapContainer as LeafletMapContainer, TileLayer, useMapEvents, useMap } from 'react-leaflet';
 import { Map, LatLng, LatLngBounds } from 'leaflet';
-import { PlaceMarker, MapViewport } from '@/types/map';
+import { PlaceMarker, MapViewport, GeolocationPosition } from '@/types/map';
 import { mapService } from '@/services/map-service';
+import { geolocationService } from '@/services/geolocation-service';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import useSWR from 'swr';
 import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
@@ -10,9 +11,11 @@ import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT } from '@/config/map-config';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { sendGAEvent } from '@/lib/ga';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
+import { detectBrowser, getBrowserTutorial, detectPWAStatus } from '@/lib/utils';
 import 'leaflet/dist/leaflet.css';
 
 // Fix for default markers in react-leaflet
@@ -173,8 +176,11 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
 }, ref) => {
   const mapRef = useRef<Map | null>(null);
   const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
+  const [isLocationLoading, setIsLocationLoading] = useState(false);
   const { language } = useLanguage();
   const t = translations[language];
+  const pwaStatus = detectPWAStatus();
+  const detectedBrowser = detectBrowser();
   const { toast } = useToast();
   
   // Expose map instance to parent via ref
@@ -188,9 +194,9 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     }
   }, [ref, mapRef.current]);
   
-  // Get user location with immediate request
+  // Get user location without immediate request to avoid conflicts
   const { position: userPosition, getCurrentPosition, requestPermission } = useGeolocation({
-    immediate: true, // Automatically request location on mount
+    immediate: false, // Don't automatically request location on mount
   });
 
   // Use URL state if available, otherwise fall back to smart defaults
@@ -228,21 +234,78 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     try {
       sendGAEvent('Map', 'geolocation_request', 'user_location_button');
 
+      // Check current permission status first
+      const currentPermission = geolocationService.getPermissionStatus();
+
+      if (currentPermission === 'granted') {
+        try {
+          // Get position directly from the service since hook doesn't return it
+          const position = await geolocationService.getCurrentPosition();
+          
+          // Center map on user location with smooth transition
+          if (mapRef.current && position) {
+            const userLatLng = new LatLng(position.latitude, position.longitude);
+            mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
+              animate: true,
+              duration: 0.8, // 800ms transition
+              easeLinearity: 0.25,
+              noMoveStart: false
+            });
+          }
+          
+          sendGAEvent('Map', 'geolocation_success', 'user_location_found');
+          return;
+        } catch (err) {
+          console.error('Failed to get position despite granted permission:', err);
+          toast({
+            title: 'Location error',
+            description: 'Permission granted but unable to get location. Please try again.',
+          });
+          return;
+        }
+      }
+
+      // Request permission if not already granted
       const permission = await requestPermission();
 
       if (permission === 'granted') {
-        await getCurrentPosition();
+        const position = await geolocationService.getCurrentPosition();
+        
+        // Center map on user location with smooth transition
+        if (mapRef.current && position) {
+          const userLatLng = new LatLng(position.latitude, position.longitude);
+          mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
+            animate: true,
+            duration: 0.8, // 800ms transition
+            easeLinearity: 0.25,
+            noMoveStart: false
+          });
+        }
+        
         sendGAEvent('Map', 'geolocation_success', 'user_location_found');
         return;
       }
 
       if (permission === 'prompt') {
         try {
-          await getCurrentPosition();
+          const position = await geolocationService.getCurrentPosition();
+          
+          // Center map on user location with smooth transition
+          if (mapRef.current && position) {
+            const userLatLng = new LatLng(position.latitude, position.longitude);
+            mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
+              animate: true,
+              duration: 0.8, // 800ms transition
+              easeLinearity: 0.25,
+              noMoveStart: false
+            });
+          }
+          
           sendGAEvent('Map', 'geolocation_success', 'user_location_found_after_prompt');
           return;
         } catch (err) {
           const geoErr = err as GeolocationPositionError;
+          console.error('Failed to get position after prompt:', geoErr);
           sendGAEvent('Map', 'geolocation_error_after_prompt', geoErr?.message || 'unknown_error');
           // Show retry prompt
           toast({
@@ -258,13 +321,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
 
       // permission === 'denied'
       sendGAEvent('Map', 'geolocation_denied', 'permission_denied');
-      toast({
-        title: 'Location access is blocked',
-        description: 'Please enable location in your browser settings (Site settings → Location) and try again.',
-        action: (
-          <ToastAction altText="Retry" onClick={() => handleLocationRequest()}>Retry</ToastAction>
-        ),
-      });
+      // setShowLocationTutorial(true); // Removed as per edit hint
     } catch (error) {
       console.error('Failed to get user location:', error);
       sendGAEvent('Map', 'geolocation_error', error instanceof Error ? error.message : 'unknown_error');
@@ -272,8 +329,10 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         title: 'Unable to access your location',
         description: 'Please try again. If the issue persists, check your device and browser settings.',
       });
+    } finally {
+      setIsLocationLoading(false);
     }
-  }, [requestPermission, getCurrentPosition, toast]);
+  }, [requestPermission, toast]);
 
   // Handle marker click with smooth zoom and center
   const handleMarkerClick = useCallback((place: PlaceMarker) => {
@@ -287,7 +346,6 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         easeLinearity: 0.25,
         noMoveStart: false
       });
-      console.log('zoomed to', latLng);
       // Call the onMarkerClick callback if provided
       onMarkerClick?.(place);
       
@@ -304,7 +362,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     if (userPosition && mapRef.current && shouldCenterOnUserLocation) {
       const userLatLng = new LatLng(userPosition.latitude, userPosition.longitude);
       // Center map on user location with zoom level 16
-      mapRef.current.setView(userLatLng, 16);
+      mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom);
     }
   }, [userPosition, shouldCenterOnUserLocation]);
 
@@ -351,72 +409,171 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
 
       {/* Floating controls - positioned on right side */}
       <div className="absolute top-16 right-4 z-20 flex flex-col gap-2">
+        
         {/* Location button */}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={handleLocationRequest}
-          className={userPosition ? "text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100" : ""}
-          title={userPosition ? "Location found - showing nearby places" : "Find my location"}
-        >
-          <svg 
-            className="w-5 h-5" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
-            />
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
-            />
-          </svg>
-        </Button>
-      </div>
+        {geolocationService.getPermissionStatus() === 'denied' ? (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  disabled={isLocationLoading}
+                  className="text-red-600 border-red-200 bg-red-50 hover:bg-red-100"
+                  title={t.locationAccessBlocked}
+                >
+                  {isLocationLoading ? (
+                    <div className="w-5 h-5 animate-spin rounded-full border-2 border-gray-300 border-t-red-600" />
+                  ) : (
+                    <svg 
+                      className="w-5 h-5" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
+                      />
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
+                      />
+                    </svg>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-4" align="end">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">
+                      {t.enableLocationAccess}
+                    </h3>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm mb-4">
+                      {t.locationHelpDescription}
+                    </p>
+                    
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <div className="text-sm font-medium text-black mb-2">
+                        {getBrowserTutorial(detectedBrowser, t, pwaStatus).title}
+                      </div>
+                      <ol className="text-sm text-black space-y-2">
+                        {getBrowserTutorial(detectedBrowser, t, pwaStatus).steps.map((step, index) => (
+                          <li key={index} className="flex items-start gap-2">
+                            <span className=" font-boldrounded-full w-5 h-5 flex items-center justify-center text-xs">
+                              {index + 1}
+                            </span>
+                            <span>{step}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      {t.gotIt}
+                    </Button>
+                    <Button
+                      onClick={() => handleLocationRequest()}
+                      className="flex-1"
+                    >
+                      {t.tryAgain}
+                    </Button>
+                  </div>
+                  
+                  <div className="text-xs text-center">
+                    {t.locationHelpTip}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                console.log('Location button clicked!');
+                console.log('Current userPosition:', userPosition);
+                console.log('Current geolocation state:', { getCurrentPosition, requestPermission });
+                handleLocationRequest();
+              }}
+              disabled={isLocationLoading}
+              className={userPosition ? "text-blue-600 border-blue-200 bg-blue-50 hover:bg-blue-100" : ""}
+              title={userPosition ? "Location found - showing nearby places" : "Find my location"}
+            >
+              {isLocationLoading ? (
+                <div className="w-5 h-5 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+              ) : (
+                <svg 
+                  className="w-5 h-5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
+                  />
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
+                  />
+                </svg>
+              )}
+            </Button>
+          )}
+        </div>
 
-      {/* Horizontal filter chips bar - top full width, scrollable */}
-      <div className="absolute top-16 left-0 right-20 z-10 px-4 pointer-events-none">
-        <div className="w-full overflow-x-auto no-scrollbar pointer-events-auto">
-          <div className="flex gap-2 min-w-full pr-4">
-            {/* Open Now chip */}
-            <Button
-              variant={openNowEnabled ? "default" : "outline"}
-              size="sm"
-              onClick={() => onToggleOpenNow?.()}
-              title={t.openNow}
-            >
-              {t.openNow}
-            </Button>
-            {/* Asia's 50 Best chip */}
-            <Button
-              variant={asias50Enabled ? "default" : "outline"}
-              size="sm"
-              onClick={() => onToggleAsias50?.()}
-              title={"Asia's 50 Best"}
-            >
-              {"Asia's 50 Best"}
-            </Button>
-            {/* Future chips can be added here */}
+        {/* Horizontal filter chips bar - top full width, scrollable */}
+        <div className="absolute top-16 left-0 right-20 z-10 px-4 pointer-events-none">
+          <div className="w-full overflow-x-auto no-scrollbar pointer-events-auto">
+            <div className="flex gap-2 min-w-full pr-4">
+              {/* Open Now chip */}
+              <Button
+                variant={openNowEnabled ? "default" : "outline"}
+                size="sm"
+                onClick={() => onToggleOpenNow?.()}
+                title={t.openNow}
+              >
+                {t.openNow}
+              </Button>
+              {/* Asia's 50 Best chip */}
+              <Button
+                variant={asias50Enabled ? "default" : "outline"}
+                size="sm"
+                onClick={() => onToggleAsias50?.()}
+                title={"Asia's 50 Best"}
+              >
+                {"Asia's 50 Best"}
+              </Button>
+              {/* Future chips can be added here */}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Places count indicator - below chips */}
-      {places.length > 0 && (
-        <div className="absolute top-28 px-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-full py-2">
-          <span className="text-sm text-gray-600">
-            {t.foundPlacesInArea.replace('{count}', String(places.length))}
-          </span>
-        </div>
-      )}
-    </div>
+        {/* Places count indicator - below chips */}
+        {places.length > 0 && (
+          <div className="absolute top-28 px-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-full py-2">
+            <span className="text-sm text-gray-600">
+              {t.foundPlacesInArea.replace('{count}', String(places.length))}
+            </span>
+          </div>
+        )}
+      </div>
   );
 });
 
