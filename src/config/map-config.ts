@@ -31,6 +31,14 @@ export const MAP_CONFIG = {
     markerFocusZoom: 16,
   },
   
+  // Marker overlap prevention
+  markers: {
+    // Enable automatic coordinate offset for overlapping markers
+    enableCoordinateOffset: true,
+    // Minimum distance between markers in degrees (0.0001 ≈ 11 meters)
+    minMarkerDistance: 0.0001,
+  },
+  
   // SWR cache settings
   cache: {
     // Don't revalidate on window focus

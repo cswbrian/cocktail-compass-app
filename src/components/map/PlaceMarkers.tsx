@@ -1,8 +1,9 @@
-import React from 'react';
-import { Marker, useMap } from 'react-leaflet';
+import React, { useEffect, useRef, useMemo } from 'react';
+import { useMap } from 'react-leaflet';
 import { PlaceMarker } from '@/types/map';
 import L from 'leaflet';
 import { MAP_CONFIG } from '@/config/map-config';
+import { offsetOverlappingCoordinates } from '@/lib/utils';
 
 interface PlaceMarkersProps {
   places: PlaceMarker[];
@@ -46,33 +47,78 @@ const createMarkerIcon = (isSelected: boolean = false) => {
 
 export function PlaceMarkers({ places, onPlaceClick, selectedPlaceId }: PlaceMarkersProps) {
   const map = useMap();
+  const markersRef = useRef<L.Marker[]>([]);
 
-  return (
-    <>
-      {places.map((place) => {
-        const isSelected = selectedPlaceId === place.id;
-        const icon = createMarkerIcon(isSelected);
+  // Process places to offset overlapping coordinates
+  const processedPlaces = useMemo(() => {
+    if (places.length === 0) return [];
+    
+    // Only apply offset if enabled and we have overlapping coordinates
+    if (MAP_CONFIG.markers.enableCoordinateOffset) {
+      const hasOverlaps = places.some((place, i) => 
+        places.slice(i + 1).some(other => 
+          Math.abs(place.lat - other.lat) < MAP_CONFIG.markers.minMarkerDistance && 
+          Math.abs(place.lng - other.lng) < MAP_CONFIG.markers.minMarkerDistance
+        )
+      );
+
+      if (hasOverlaps) {
+        console.log('🔧 Detected overlapping coordinates, applying automatic offset');
+        return offsetOverlappingCoordinates(places, MAP_CONFIG.markers.minMarkerDistance);
+      }
+    }
+    
+    return places;
+  }, [places]);
+
+  // Function to clear all markers
+  const clearAllMarkers = () => {
+    markersRef.current.forEach(marker => {
+      map.removeLayer(marker);
+    });
+    markersRef.current = [];
+  };
+
+  // Function to add markers
+  const addMarkers = () => {
+    processedPlaces.forEach((place) => {
+      const isSelected = selectedPlaceId === place.id;
+      const icon = createMarkerIcon(isSelected);
+      
+      const marker = L.marker([place.lat, place.lng], { icon });
+      
+      marker.on('click', () => {
+        const currentZoom = map.getZoom();
+        const targetZoom = MAP_CONFIG.interactions.markerFocusZoom;
         
-        return (
-          <Marker
-            key={place.id}
-            position={[place.lat, place.lng]}
-            icon={icon}
-            eventHandlers={{
-              click: () => {
-                // Center map on clicked marker with smooth transition
-                map.setView([place.lat, place.lng], MAP_CONFIG.interactions.markerFocusZoom, {
-                  animate: true,
-                  duration: MAP_CONFIG.interactions.centerDuration
-                });
-                onPlaceClick?.(place);
-              },
-            }}
-          >
-            {/* Popup removed - using bottom sheet instead */}
-          </Marker>
-        );
-      })}
-    </>
-  );
+        // Only zoom in if current zoom is lower than target zoom
+        const finalZoom = currentZoom < targetZoom ? targetZoom : currentZoom;
+        
+        map.setView([place.lat, place.lng], finalZoom, {
+          animate: true,
+          duration: MAP_CONFIG.interactions.centerDuration
+        });
+        onPlaceClick?.(place);
+      });
+      
+      map.addLayer(marker);
+      markersRef.current.push(marker);
+    });
+  };
+
+  useEffect(() => {
+    // Clear existing markers
+    clearAllMarkers();
+    
+    // Add markers
+    addMarkers();
+
+    // Cleanup function
+    return () => {
+      clearAllMarkers();
+    };
+  }, [processedPlaces, selectedPlaceId, map, onPlaceClick]);
+
+  // Don't render individual markers - they're handled by the markers array
+  return null;
 }

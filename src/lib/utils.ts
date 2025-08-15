@@ -242,3 +242,75 @@ export function detectPWAStatus(): {
     isStandalone
   };
 }
+
+/**
+ * Offset overlapping coordinates to prevent marker overlap
+ * @param places Array of places with coordinates
+ * @param minDistance Minimum distance between markers in degrees (default: 0.0001 ≈ 11 meters)
+ * @returns Array of places with adjusted coordinates
+ */
+export function offsetOverlappingCoordinates<T extends { lat: number; lng: number; id: string }>(
+  places: T[],
+  minDistance: number = 0.0001
+): T[] {
+  const result = [...places];
+  const offsets = [
+    [0, 0],           // No offset
+    [minDistance, 0],  // Right
+    [-minDistance, 0], // Left
+    [0, minDistance],  // Up
+    [0, -minDistance], // Down
+    [minDistance, minDistance], // Diagonal right-up
+    [-minDistance, minDistance], // Diagonal left-up
+    [minDistance, -minDistance], // Diagonal right-down
+    [-minDistance, -minDistance], // Diagonal left-down
+  ];
+
+  for (let i = 0; i < result.length; i++) {
+    const current = result[i];
+    let offsetIndex = 0;
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    while (attempts < maxAttempts) {
+      const offset = offsets[offsetIndex % offsets.length];
+      const testLat = current.lat + offset[0];
+      const testLng = current.lng + offset[1];
+
+      // Check if this position conflicts with any previous marker
+      let hasConflict = false;
+      for (let j = 0; j < i; j++) {
+        const prev = result[j];
+        const distance = Math.sqrt(
+          Math.pow(testLat - prev.lat, 2) + Math.pow(testLng - prev.lng, 2)
+        );
+        
+        if (distance < minDistance) {
+          hasConflict = true;
+          break;
+        }
+      }
+
+      if (!hasConflict) {
+        // Found a good position
+        result[i] = { ...current, lat: testLat, lng: testLng };
+        break;
+      }
+
+      offsetIndex++;
+      attempts++;
+    }
+
+    // If we couldn't find a good position, use the original with a small random offset
+    if (attempts >= maxAttempts) {
+      const randomOffset = (Math.random() - 0.5) * minDistance * 2;
+      result[i] = {
+        ...current,
+        lat: current.lat + randomOffset,
+        lng: current.lng + randomOffset
+      };
+    }
+  }
+
+  return result;
+}

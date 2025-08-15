@@ -433,9 +433,14 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   const handleMarkerClick = useCallback((place: PlaceMarker) => {
     if (mapRef.current) {
       const latLng = new LatLng(place.lat, place.lng);
+      const currentZoom = mapRef.current.getZoom();
+      const targetZoom = MAP_CONFIG.interactions.markerFocusZoom;
+      
+      // Only zoom in if current zoom is lower than target zoom
+      const finalZoom = currentZoom < targetZoom ? targetZoom : currentZoom;
       
       // Center and zoom to the marker with smooth transition
-      mapRef.current.setView(latLng, MAP_CONFIG.interactions.markerFocusZoom, {
+      mapRef.current.setView(latLng, finalZoom, {
         animate: true,
         duration: 0.5, // 500ms transition
         easeLinearity: 0.25,
