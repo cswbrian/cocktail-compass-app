@@ -41,16 +41,38 @@ export function PlaceBottomSheet({
   const [startY, setStartY] = useState(0);
   const [currentY, setCurrentY] = useState(0);
   const [sheetHeight, setSheetHeight] = useState(400); // Default height
+  const [isNavigating, setIsNavigating] = useState(false); // Track navigation state
+  const [currentPlace, setCurrentPlace] = useState<PlaceMarker | null>(place); // Local place state
+  
+  // Update local place state when prop changes
+  useEffect(() => {
+    console.log('🔄 Place prop changed:', { 
+      from: currentPlace?.id, 
+      to: place?.id,
+      fromName: currentPlace?.name,
+      toName: place?.name
+    });
+    setCurrentPlace(place);
+  }, [place]);
   
   // Navigation state - only navigate through filtered places
-  const currentIndex = place ? places.findIndex(p => p.id === place.id) : -1;
+  const currentIndex = currentPlace ? places.findIndex(p => p.id === currentPlace.id) : -1;
   const canNavigatePrev = currentIndex > 0;
   const canNavigateNext = currentIndex < places.length - 1;
 
+  console.log('🧭 Navigation state:', {
+    currentIndex,
+    canNavigatePrev,
+    canNavigateNext,
+    places: places.map(p => ({ id: p.id, name: p.name })),
+    currentPlaceId: currentPlace?.id,
+    currentPlaceName: currentPlace?.name
+  });
+
   // Fetch place details with stats
   const { data: placeWithStats, isLoading } = useSWR(
-    place ? CACHE_KEYS.PLACE_WITH_STATS(place.id) : null,
-    place ? () => fetchers.getPlaceWithStats(place.id) : null,
+    currentPlace ? CACHE_KEYS.PLACE_WITH_STATS(currentPlace.id) : null,
+    currentPlace ? () => fetchers.getPlaceWithStats(currentPlace.id) : null,
     {
       revalidateOnFocus: false,
       dedupingInterval: 300000, // 5 minutes
@@ -100,20 +122,78 @@ export function PlaceBottomSheet({
 
   // Navigation handlers - only navigate through filtered places
   const handlePrevPlace = useCallback(() => {
+    console.log('⬅️ handlePrevPlace called:', {
+      canNavigatePrev,
+      currentIndex,
+      placesCount: places.length,
+      currentPlaceId: currentPlace?.id,
+      currentPlaceName: currentPlace?.name
+    });
+    
     if (canNavigatePrev && places.length > 0) {
       const prevPlace = places[currentIndex - 1];
+      console.log('⬅️ Navigating to previous place:', {
+        prevPlace: { id: prevPlace.id, name: prevPlace.name },
+        currentPlace: { id: currentPlace?.id, name: currentPlace?.name }
+      });
+      
+      setIsNavigating(true);
       sendGAEvent('Map', 'bottom_sheet_navigate', `prev_${prevPlace.name}`);
+      
+      // Update local state immediately
+      console.log('⬅️ Setting currentPlace to:', prevPlace.id);
+      setCurrentPlace(prevPlace);
+      
+      // Notify parent immediately
+      console.log('⬅️ Calling onPlaceChange with:', prevPlace.id);
       onPlaceChange?.(prevPlace);
+      
+      // Reset navigation state after animation
+      setTimeout(() => {
+        console.log('⬅️ Resetting navigation state');
+        setIsNavigating(false);
+      }, 200);
+    } else {
+      console.log('⬅️ Cannot navigate prev:', { canNavigatePrev, placesCount: places.length });
     }
-  }, [canNavigatePrev, places, currentIndex, onPlaceChange]);
+  }, [canNavigatePrev, places, currentIndex, onPlaceChange, currentPlace]);
 
   const handleNextPlace = useCallback(() => {
+    console.log('➡️ handleNextPlace called:', {
+      canNavigateNext,
+      currentIndex,
+      placesCount: places.length,
+      currentPlaceId: currentPlace?.id,
+      currentPlaceName: currentPlace?.name
+    });
+    
     if (canNavigateNext && places.length > 0) {
       const nextPlace = places[currentIndex + 1];
+      console.log('➡️ Navigating to next place:', {
+        nextPlace: { id: nextPlace.id, name: nextPlace.name },
+        currentPlace: { id: currentPlace?.id, name: currentPlace?.name }
+      });
+      
+      setIsNavigating(true);
       sendGAEvent('Map', 'bottom_sheet_navigate', `next_${nextPlace.name}`);
+      
+      // Update local state immediately
+      console.log('➡️ Setting currentPlace to:', nextPlace.id);
+      setCurrentPlace(nextPlace);
+      
+      // Notify parent immediately
+      console.log('➡️ Calling onPlaceChange with:', nextPlace.id);
       onPlaceChange?.(nextPlace);
+      
+      // Reset navigation state after animation
+      setTimeout(() => {
+        console.log('➡️ Resetting navigation state');
+        setIsNavigating(false);
+      }, 200);
+    } else {
+      console.log('➡️ Cannot navigate next:', { canNavigateNext, placesCount: places.length });
     }
-  }, [canNavigateNext, places, currentIndex, onPlaceChange]);
+  }, [canNavigateNext, places, currentIndex, onPlaceChange, currentPlace]);
 
   // Handle outside click to close
   useEffect(() => {
@@ -136,27 +216,54 @@ export function PlaceBottomSheet({
     };
   }, [isOpen, onClose]);
 
-  if (!place || !isOpen) {
+  console.log('🎯 Render conditions:', {
+    hasCurrentPlace: !!currentPlace,
+    isOpen,
+    placeInPlaces: currentPlace ? !!places.find(p => p.id === currentPlace.id) : false,
+    currentPlaceId: currentPlace?.id,
+    currentPlaceName: currentPlace?.name
+  });
+
+  if (!currentPlace || !isOpen) {
+    console.log('❌ Not rendering - conditions not met:', { 
+      hasCurrentPlace: !!currentPlace, 
+      isOpen,
+      currentPlaceId: currentPlace?.id
+    });
     return null;
   }
 
   // Safety check: ensure the current place is in the filtered places
-  if (!places.find(p => p.id === place.id)) {
+  if (!places.find(p => p.id === currentPlace.id)) {
+    console.log('❌ Current place not found in places array:', {
+      currentPlaceId: currentPlace.id,
+      currentPlaceName: currentPlace.name,
+      availablePlaceIds: places.map(p => p.id),
+      availablePlaceNames: places.map(p => p.name)
+    });
     return null;
   }
 
   const displayPlace = placeWithStats
-    ? ({ ...(placeWithStats as any), ...(place as any) } as any) // prefer dynamic fields from map row (e.g., is_open)
-    : place;
+    ? ({ ...(placeWithStats as any), ...(currentPlace as any) } as any) // prefer dynamic fields from map row (e.g., is_open)
+    : currentPlace;
+
+  console.log('✅ Rendering bottom sheet for place:', {
+    displayPlaceId: displayPlace.id,
+    displayPlaceName: displayPlace.name,
+    hasStats: !!placeWithStats,
+    isNavigating
+  });
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isOpen && (
         <div className="bottom-sheet-backdrop fixed inset-0 z-50 pointer-events-none">
           {/* No backdrop overlay - let map remain visible */}
           
           {/* Bottom Sheet */}
           <motion.div
+            key={`${currentPlace.id}-${isNavigating}`} // Key changes when place changes or navigating
             ref={sheetRef}
             className="absolute bottom-16 left-4 right-4 rounded-3xl shadow-2xl pointer-events-auto bg-gray-900/95 backdrop-blur-sm border border-white/20"
             style={{ 
@@ -198,103 +305,136 @@ export function PlaceBottomSheet({
             
             {/* Content */}
             <div className="relative flex-1 overflow-y-auto px-4 pb-4">
-              {/* Header with Navigation */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-white/90 flex-1 pr-2">
-                    {displayPlace.name}
-                  </h2>
-                  <div className="flex items-center gap-1">
-                    {/* Previous Place Button */}
-                    <button
-                      onClick={handlePrevPlace}
-                      disabled={!canNavigatePrev}
-                      className={`p-1.5 rounded-full transition-all duration-200 ${
-                        canNavigatePrev 
-                          ? 'text-white/90 hover:bg-white/10 hover:text-white' 
-                          : 'text-white/30 cursor-not-allowed'
-                      }`}
-                      title={canNavigatePrev ? "Previous place" : "No more places in this direction"}
-                    >
-                      <ChevronLeft className="w-5 h-5" />
-                    </button>
+              {/* Navigation Loading Indicator */}
+              {isNavigating && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute top-0 left-0 right-0 z-10 flex justify-center"
+                >
+                  <div className="bg-blue-500/90 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                    {t.loading || 'Loading...'}
+                  </div>
+                </motion.div>
+              )}
+              
+              {/* Content with smooth transitions */}
+              <motion.div
+                key={currentPlace.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.15,
+                  ease: "easeOut"
+                }}
+              >
+                {/* Header with Navigation */}
+                <div className="mb-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-white/90 flex-1 pr-2">
+                      {displayPlace.name}
+                    </h2>
+                    <div className="flex items-center gap-1">
+                      {/* Previous Place Button */}
+                      <button
+                        onClick={handlePrevPlace}
+                        disabled={!canNavigatePrev || isNavigating}
+                        className={`p-1.5 rounded-full transition-all duration-200 ${
+                          canNavigatePrev && !isNavigating
+                            ? 'text-white/90 hover:bg-white/10 hover:text-white' 
+                            : 'text-white/30 cursor-not-allowed'
+                        }`}
+                        title={canNavigatePrev ? "Previous place" : "No more places in this direction"}
+                      >
+                        {isNavigating && currentIndex > 0 ? (
+                          <div className="w-5 h-5 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
+                        ) : (
+                          <ChevronLeft className="w-5 h-5" />
+                        )}
+                      </button>
 
-                    {/* Next Place Button */}
-                    <button
-                      onClick={handleNextPlace}
-                      disabled={!canNavigateNext}
-                      className={`p-1.5 rounded-full transition-all duration-200 ${
-                        canNavigateNext 
-                          ? 'text-white/90 hover:bg-white/10 hover:text-white' 
-                          : 'text-white/30 cursor-not-allowed'
-                      }`}
-                      title={canNavigateNext ? "Next place" : "No more places in this direction"}
-                    >
-                      <ChevronRight className="w-5 h-5" />
-                    </button>
+                      {/* Next Place Button */}
+                      <button
+                        onClick={handleNextPlace}
+                        disabled={!canNavigateNext || isNavigating}
+                        className={`p-1.5 rounded-full transition-all duration-200 ${
+                          canNavigateNext && !isNavigating
+                            ? 'text-white/90 hover:bg-white/10 hover:text-white' 
+                            : 'text-white/30 cursor-not-allowed'
+                        }`}
+                        title={canNavigateNext ? "Next place" : "No more places in this direction"}
+                      >
+                        {isNavigating && currentIndex < places.length - 1 ? (
+                          <div className="w-5 h-5 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5" />
+                        )}
+                      </button>
 
-                    {/* Bookmark Button */}
-                    <BookmarkButton placeId={displayPlace.id} />
+                      {/* Bookmark Button */}
+                      <BookmarkButton placeId={displayPlace.id} />
 
-                    {/* Close Button */}
-                    <button
-                      onClick={onClose}
-                      className="p-1.5 text-white/60 hover:text-white/90 transition-colors rounded-full hover:bg-white/10"
-                      title="Close"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
+                      {/* Close Button */}
+                      <button
+                        onClick={onClose}
+                        className="p-1.5 text-white/60 hover:text-white/90 transition-colors rounded-full hover:bg-white/10"
+                        title="Close"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {displayPlace.secondary_text && (
+                    <p className="text-sm text-white/50 mb-1">{displayPlace.secondary_text}</p>
+                  )}
+                  {displayPlace.description && (
+                    <p className="text-sm text-white/60 mb-2">{displayPlace.description}</p>
+                  )}
+
+                  {/* Open/Closed Status and Today's Hours */}
+                  <div className="flex items-center justify-between mb-2">
+                    <PlaceStatusDisplay 
+                      place={displayPlace}
+                    />
                   </div>
                 </div>
-                
-                {displayPlace.secondary_text && (
-                  <p className="text-sm text-white/50 mb-1">{displayPlace.secondary_text}</p>
-                )}
-                {displayPlace.description && (
-                  <p className="text-sm text-white/60 mb-2">{displayPlace.description}</p>
-                )}
 
-                {/* Open/Closed Status and Today's Hours */}
-                <div className="flex items-center justify-between mb-2">
-                  <PlaceStatusDisplay 
-                    place={displayPlace}
-                  />
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-white/20">
-                <Button
-                  asChild
-                  className="flex-1 bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/20"
-                  variant="outline"
-                >
-                  <Link 
-                    to={`/${language}/places/${displayPlace.place_id}`}
-                    onClick={() => sendGAEvent('Map', 'place_detail_view', displayPlace.name)}
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-4 border-t border-white/20">
+                  <Button
+                    asChild
+                    className="flex-1 bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/20"
+                    variant="outline"
                   >
-                    {t.seeMore}
-                  </Link>
-                </Button>
-                <Button
-                  onClick={() => {
-                    // Track directions click
-                    sendGAEvent('Map', 'directions_click', displayPlace.name);
-                    // Open in maps app - use helper for URL building
-                    const url = buildGoogleMapsUrl({
-                      name: displayPlace.name,
-                      place_id: (displayPlace as any).place_id,
-                      lat: displayPlace.lat,
-                      lng: displayPlace.lng,
-                    });
-                    window.open(url, '_blank');
-                  }}
-                  variant="outline"
-                  className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 hover:text-blue-200 border border-blue-500/20"
-                >
-                  {t.viewOnGoogleMaps}
-                </Button>
-              </div>
+                    <Link 
+                      to={`/${language}/places/${displayPlace.place_id}`}
+                      onClick={() => sendGAEvent('Map', 'place_detail_view', displayPlace.name)}
+                    >
+                      {t.seeMore}
+                    </Link>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      // Track directions click
+                      sendGAEvent('Map', 'directions_click', displayPlace.name);
+                      // Open in maps app - use helper for URL building
+                      const url = buildGoogleMapsUrl({
+                        name: displayPlace.name,
+                        place_id: (displayPlace as any).place_id,
+                        lat: displayPlace.lat,
+                        lng: displayPlace.lng,
+                      });
+                      window.open(url, '_blank');
+                    }}
+                    variant="outline"
+                    className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 hover:text-blue-200 border border-blue-500/20"
+                  >
+                    {t.viewOnGoogleMaps}
+                  </Button>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>

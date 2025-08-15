@@ -88,6 +88,8 @@ function MapEventHandler({
 }) {
   const map = useMap();
   const [viewport, setViewport] = useState<MapViewport | null>(null);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
+  const [isProgrammaticMovement, setIsProgrammaticMovement] = useState(false);
   
   // Debounce viewport changes to avoid too many API calls
   const debouncedViewport = useDebounce(viewport, MAP_CONFIG.viewportDebounceDelay);
@@ -104,7 +106,16 @@ function MapEventHandler({
     };
     
     setViewport(newViewport);
-  }, [map]);
+    
+    // Reset programmatic movement flag after movement completes
+    if (isProgrammaticMovement) {
+      setTimeout(() => {
+        setIsProgrammaticMovement(false);
+        // Also reset user interaction state when programmatic movement completes
+        setIsUserInteracting(false);
+      }, 100);
+    }
+  }, [map, isProgrammaticMovement]);
 
   // Handle zoom changes immediately for better UX
   const handleZoomChange = useCallback(() => {
@@ -124,18 +135,73 @@ function MapEventHandler({
     
     // Also update the debounced viewport for move events
     setViewport(newViewport);
+    
+    // Reset interaction state
+    setIsUserInteracting(false);
   }, [map, onViewportChange, onBoundsChange]);
 
   // Handle immediate map interactions (drag start, zoom start)
   const handleMapInteraction = useCallback(() => {
-    onMapInteraction?.();
-  }, [onMapInteraction]);
+    // Only trigger onMapInteraction if it's a user interaction, not programmatic
+    if (!isProgrammaticMovement) {
+      setIsUserInteracting(true);
+      onMapInteraction?.();
+    }
+  }, [onMapInteraction, isProgrammaticMovement]);
+
+  // Handle when user interaction ends
+  const handleMapInteractionEnd = useCallback(() => {
+    // Only reset if it was a user interaction, not programmatic
+    if (!isProgrammaticMovement) {
+      setIsUserInteracting(false);
+    }
+  }, [isProgrammaticMovement]);
+
+  // Override the map's setView method to track programmatic movements
+  useEffect(() => {
+    const originalSetView = map.setView.bind(map);
+    
+    map.setView = function(center: any, zoom?: any, options?: any) {
+      // Check if this is a programmatic movement (has animate: true)
+      if (options && options.animate) {
+        // Set flag immediately and synchronously
+        setIsProgrammaticMovement(true);
+        setIsUserInteracting(false);
+      }
+      return originalSetView(center, zoom, options);
+    };
+    
+    // Also override flyTo and panTo methods
+    const originalFlyTo = map.flyTo.bind(map);
+    map.flyTo = function(bounds: any, options?: any) {
+      // Set flag immediately and synchronously
+      setIsProgrammaticMovement(true);
+      setIsUserInteracting(false);
+      return originalFlyTo(bounds, options);
+    };
+    
+    const originalPanTo = map.panTo.bind(map);
+    map.panTo = function(center: any, options?: any) {
+      // Set flag immediately and synchronously
+      setIsProgrammaticMovement(true);
+      setIsUserInteracting(false);
+      return originalPanTo(center, options);
+    };
+    
+    return () => {
+      // Restore original methods
+      map.setView = originalSetView;
+      map.flyTo = originalFlyTo;
+      map.panTo = originalPanTo;
+    };
+  }, [map]);
 
   useMapEvents({
     moveend: handleMapChange,
     zoomend: handleZoomChange,
     movestart: handleMapInteraction, // Close bottom sheet when dragging starts
     zoomstart: handleMapInteraction, // Close bottom sheet when zooming starts
+    dragend: handleMapInteractionEnd, // Reset interaction state
     // Removed click event - it was interfering with marker clicks
   });
 
@@ -148,6 +214,14 @@ function MapEventHandler({
       onBoundsChange?.(debouncedViewport.bounds);
     }
   }, [debouncedViewport, onViewportChange, onBoundsChange]);
+
+  // Cleanup effect to reset states when component unmounts or dependencies change
+  useEffect(() => {
+    return () => {
+      setIsUserInteracting(false);
+      setIsProgrammaticMovement(false);
+    };
+  }, []);
 
   return null;
 }

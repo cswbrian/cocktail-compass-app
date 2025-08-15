@@ -126,12 +126,15 @@ export default function MapPage() {
     if (asias50Only) {
       filtered = filtered.filter((p: any) => Array.isArray(p.tags) && p.tags.some((t: string) => t.toLowerCase() === "asia's 50 best"));
     }
+    
     return filtered;
-  }, [displayPlaces, openNowOnly, asias50Only]);
+  }, [displayPlaces, openNowOnly, asias50Only, selectedPlace, showBottomSheet]);
 
   // Update selected place when filters change to ensure it's still in filtered results
   useEffect(() => {
+    
     if (selectedPlace && !renderPlaces.find(p => p.id === selectedPlace.id)) {
+      
       // Selected place is no longer in filtered results, select the first available place
       if (renderPlaces.length > 0) {
         setSelectedPlace(renderPlaces[0]);
@@ -280,29 +283,36 @@ export default function MapPage() {
   }, [mapState, updateURL]);
 
   const handlePlaceChange = useCallback((place: PlaceMarker) => {
-    setSelectedPlace(place);
-    setUserDraggedMap(false); // Reset drag flag when navigating between places
-    // Center map on the new place
-    if (mapRef.current) {
-      mapRef.current.setView([place.lat, place.lng], MAP_CONFIG.interactions.markerFocusZoom, {
-        animate: true,
-        duration: MAP_CONFIG.interactions.centerDuration
-      });
-    }
+    // First, close the current bottom sheet to trigger fade-out animation
+    setShowBottomSheet(false);
     
-    // Track place navigation
-    sendGAEvent('Map', 'place_navigate', `${place.name} - ${place.id}`);
-    
-    // Update URL with new selected place and center
-    const newMapState = {
-      center: { lat: place.lat, lng: place.lng },
-      zoom: MAP_CONFIG.interactions.markerFocusZoom,
-      selectedPlaceId: place.id,
-      hasUrlCoordinates: true, // Now has coordinates from place navigation
-    };
-    setMapState(newMapState);
-    updateURL(newMapState);
-    // Note: Bottom sheet remains open, just changes content
+    // After a brief delay, update the place and reopen the sheet
+    setTimeout(() => {
+      setSelectedPlace(place);
+      setUserDraggedMap(false); // Reset drag flag when navigating between places
+      
+      // Center map on the new place
+      if (mapRef.current) {
+        mapRef.current.setView([place.lat, place.lng], MAP_CONFIG.interactions.markerFocusZoom, {
+          animate: true,
+          duration: MAP_CONFIG.interactions.centerDuration
+        });
+      }
+      
+      // Update URL with new place
+      const newMapState = {
+        ...mapState,
+        selectedPlaceId: place.id,
+      };
+      setMapState(newMapState);
+      updateURL(newMapState);
+      
+      // Reopen the bottom sheet with the new place
+      setShowBottomSheet(true);
+      
+      // Track navigation
+      sendGAEvent('Map', 'place_navigation', place.name);
+    }, 150); // Brief delay to allow fade-out animation
   }, [mapState, updateURL]);
 
   const handleBottomSheetClose = useCallback(() => {
@@ -365,7 +375,9 @@ export default function MapPage() {
                 return next;
               });
             }}
-            onMapInteraction={handleBottomSheetClose}
+            onMapInteraction={() => {
+              handleBottomSheetClose();
+            }}
           >
             <PlaceMarkers
               key={`places-${renderPlaces.length}-${openNowOnly}-${asias50Only}`}
@@ -466,7 +478,9 @@ export default function MapPage() {
             return next;
           });
         }}
-        onMapInteraction={handleBottomSheetClose}
+        onMapInteraction={() => {
+          handleBottomSheetClose();
+        }}
       >
         {/* Add PlaceMarkers as children */}
         <PlaceMarkers
@@ -479,14 +493,18 @@ export default function MapPage() {
       {/* Subtle loading indicator in corner - positioned below transparent header */}
 
       {/* Enhanced Bottom Sheet with Navigation */}
-      <PlaceBottomSheet
-        place={selectedPlace}
-        places={renderPlaces}
-        isOpen={showBottomSheet}
-        onClose={handleBottomSheetClose}
-        onNavigateToPlace={handleNavigateToPlace}
-        onPlaceChange={handlePlaceChange}
-      />
+      {(() => {
+        return (
+          <PlaceBottomSheet
+            place={selectedPlace}
+            places={renderPlaces}
+            isOpen={showBottomSheet}
+            onClose={handleBottomSheetClose}
+            onNavigateToPlace={handleNavigateToPlace}
+            onPlaceChange={handlePlaceChange}
+          />
+        );
+      })()}
 
     </div>
   );
