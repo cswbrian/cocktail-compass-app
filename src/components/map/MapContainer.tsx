@@ -299,6 +299,17 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       if (currentPermission === 'granted') {
         await getCurrentPosition();
         
+        // Center map on user location with smooth transition (following existing marker zoom pattern)
+        if (mapRef.current && userPosition) {
+          const userLatLng = new LatLng(userPosition.latitude, userPosition.longitude);
+          mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
+            animate: true,
+            duration: 0.8, // 800ms transition
+            easeLinearity: 0.25,
+            noMoveStart: false
+          });
+        }
+        
         sendGAEvent('Map', 'geolocation_success', 'user_location_found');
         return;
       }
@@ -308,6 +319,17 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
 
       if (permission === 'granted') {
         await getCurrentPosition();
+        
+        // Center map on user location with smooth transition (following existing marker zoom pattern)
+        if (mapRef.current && userPosition) {
+          const userLatLng = new LatLng(userPosition.latitude, userPosition.longitude);
+          mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
+            animate: true,
+            duration: 0.8, // 800ms transition
+            easeLinearity: 0.25,
+            noMoveStart: false
+          });
+        }
         
         sendGAEvent('Map', 'geolocation_success', 'user_location_found');
         return;
