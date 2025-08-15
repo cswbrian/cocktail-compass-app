@@ -33,6 +33,12 @@ import { PlaceStatusDisplay } from '@/components/common/PlaceStatusDisplay';
 import { sendGAEvent } from '@/lib/ga';
 import { buildGoogleMapsUrl } from '@/lib/utils';
 import { MAP_CONFIG } from '@/config/map-config';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -51,90 +57,176 @@ export default function PlaceDetailPage() {
   const isMyFeed = location.pathname.includes('/feeds/me');
   const isVisitsView = location.pathname.includes('/feeds');
 
-  // Helper function to format time (e.g., "1700" -> "5:00 PM")
+  // Helper function to format time (e.g., "1700" -> "17:00")
   const formatTime = (timeStr: string) => {
-    const hour = parseInt(timeStr.substring(0, 2));
+    const hour = timeStr.substring(0, 2);
     const minute = timeStr.substring(2, 4);
-    const period = hour >= 12 ? 'PM' : 'AM';
-    const displayHour =
-      hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-    return `${displayHour}:${minute} ${period}`;
+    return `${hour}:${minute}`;
   };
 
   // Helper function to render opening hours
   const renderOpeningHours = (openingHours: any) => {
     if (!openingHours) return null;
 
-    // Show weekday_text if available (most readable)
+    // Use periods as primary method for better translation support
+    if (
+      openingHours.periods &&
+      Array.isArray(openingHours.periods)
+    ) {
+      const weekdays = [
+        t.sunday,
+        t.monday,
+        t.tuesday,
+        t.wednesday,
+        t.thursday,
+        t.friday,
+        t.saturday,
+      ];
+
+      // Get current day (0 = Sunday, 1 = Monday, etc.)
+      const today = new Date().getDay();
+
+      return (
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="opening-hours">
+            <AccordionTrigger className="text-left">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <span className="font-medium">{t.openingHours}</span>
+                {/* Place Status Display */}
+                <div>
+                  {place && (
+                    <PlaceStatusDisplay
+                      place={place}
+                      className="ml-2"
+                    />
+                  )}
+                  {/* Show today's hours in the trigger */}
+                  {(() => {
+                    const todayPeriod = openingHours.periods.find(
+                      (period: any) => period.open.day === today
+                    );
+                    if (todayPeriod) {
+                      const openTime = formatTime(todayPeriod.open.time);
+                      const closeTime = formatTime(todayPeriod.close.time);
+                      return (
+                        <span className="ml-2">
+                          {weekdays[today]}: {openTime} - {closeTime}
+                        </span>
+                      );
+                    } else {
+                      return (
+                        <span className="ml-2 text-muted-foreground">
+                          {weekdays[today]}: {t.closed}
+                        </span>
+                      );
+                    }
+                  })()}
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-1">
+                {weekdays.map((weekday, index) => {
+                  const period = openingHours.periods.find(
+                    (p: any) => p.open.day === index
+                  );
+                  const isToday = index === today;
+
+                  if (period) {
+                    const openTime = formatTime(period.open.time);
+                    const closeTime = formatTime(period.close.time);
+
+                    if (period.open.day === period.close.day) {
+                      return (
+                        <div
+                          key={index}
+                          className={`flex justify-between p-1 ${
+                            isToday 
+                              ? 'text-primary bg-primary/10 rounded' 
+                              : 'text-muted-foreground'
+                          }`}
+                        >
+                          <span>{weekday}</span> 
+                          <span>{openTime} - {closeTime}</span>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={index}
+                          className={`flex justify-between p-1 ${
+                            isToday 
+                              ? 'text-primary bg-primary/10 rounded' 
+                              : 'text-muted-foreground'
+                          }`}
+                        >
+                          <span>{weekday}</span> 
+                          <span>{openTime} - {closeTime}</span>
+                        </div>
+                      );
+                    }
+                  } else {
+                    // No data for this day, show as closed
+                    return (
+                      <div
+                        key={index}
+                        className={`flex justify-between p-1 ${
+                          isToday 
+                            ? 'text-primary bg-primary/10 rounded' 
+                            : 'text-muted-foreground'
+                        }`}
+                      >
+                        <span>{weekday}</span> 
+                        <span>{t.closed}</span>
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      );
+    }
+
+    // Fallback to weekday_text if periods not available
     if (
       openingHours.weekday_text &&
       Array.isArray(openingHours.weekday_text)
     ) {
       return (
-        <div className="space-y-1">
-          {openingHours.weekday_text.map(
-            (dayText: string, index: number) => (
-              <div
-                key={index}
-                className="text-sm text-muted-foreground"
-              >
-                {dayText}
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="opening-hours">
+            <AccordionTrigger className="text-left">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <span className="font-medium">{t.openingHours}</span>
+                {/* Place Status Display */}
+                {place && (
+                  <PlaceStatusDisplay
+                    place={place}
+                    className="ml-2"
+                  />
+                )}
               </div>
-            ),
-          )}
-        </div>
-      );
-    }
-
-    // Fallback to periods if weekday_text not available
-    if (
-      openingHours.periods &&
-      Array.isArray(openingHours.periods)
-    ) {
-      const days = [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-      ];
-
-      return (
-        <div className="space-y-1">
-          {openingHours.periods.map(
-            (period: any, index: number) => {
-              const openDay = days[period.open.day];
-              const closeDay = days[period.close.day];
-              const openTime = formatTime(period.open.time);
-              const closeTime = formatTime(
-                period.close.time,
-              );
-
-              if (period.open.day === period.close.day) {
-                return (
-                  <div
-                    key={index}
-                    className="text-sm text-muted-foreground"
-                  >
-                    {openDay}: {openTime} - {closeTime}
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    key={index}
-                    className="text-sm text-muted-foreground"
-                  >
-                    {openDay} {openTime} - {closeDay}{' '}
-                    {closeTime}
-                  </div>
-                );
-              }
-            },
-          )}
-        </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-1 pt-2">
+                {openingHours.weekday_text.map(
+                  (dayText: string, index: number) => (
+                    <div
+                      key={index}
+                      className="text-sm text-muted-foreground"
+                    >
+                      {dayText}
+                    </div>
+                  ),
+                )}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       );
     }
 
@@ -316,23 +408,12 @@ export default function PlaceDetailPage() {
           </p>
 
           {/* Place Status and Details */}
-          <PlaceStatusDisplay
-            place={place}
-            className="mb-4"
-          />
+          {/* Removed PlaceStatusDisplay from here - moved to accordion trigger */}
 
           {/* Full Opening Hours Display */}
           {place.opening_hours && (
             <div className="space-y-3 mb-4">
-              <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
-                <div className="flex-1">
-                  <div className="font-medium mb-2">
-                    {t.openingHours}
-                  </div>
-                  {renderOpeningHours(place.opening_hours)}
-                </div>
-              </div>
+              {renderOpeningHours(place.opening_hours)}
             </div>
           )}
 

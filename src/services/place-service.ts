@@ -22,6 +22,26 @@ export class PlaceService {
     }
 
     if (existingPlace) {
+      // Compute the is_open status for existing place
+      try {
+        const { data: openStatus, error: statusError } = await supabase.rpc(
+          'is_open_now',
+          {
+            opening_hours: existingPlace.opening_hours,
+            tz: existingPlace.timezone || 'Asia/Hong_Kong'
+          }
+        );
+
+        if (!statusError) {
+          return {
+            ...existingPlace,
+            is_open: openStatus
+          };
+        }
+      } catch (error) {
+        console.warn('Error computing open status for existing place:', error);
+      }
+
       return existingPlace;
     }
 
@@ -30,50 +50,130 @@ export class PlaceService {
       await supabase
         .from('places')
         .insert([placeData])
-        .select()
+        .select('*')
         .single();
 
     if (createError) {
       throw createError;
     }
 
+    // Compute the is_open status for new place
+    try {
+      const { data: openStatus, error: statusError } = await supabase.rpc(
+        'is_open_now',
+        {
+          opening_hours: newPlace.opening_hours,
+          tz: newPlace.timezone || 'Asia/Hong_Kong'
+        }
+      );
+
+      if (!statusError) {
+        return {
+          ...newPlace,
+          is_open: openStatus
+        };
+      }
+    } catch (error) {
+      console.warn('Error computing open status for new place:', error);
+    }
+
     return newPlace;
   }
 
   async getPlaceById(id: string): Promise<Place | null> {
-    const { data, error } = await supabase
+    // First get the place data
+    const { data: placeData, error: placeError } = await supabase
       .from('places')
       .select('*')
       .eq('id', id)
       .single();
 
-    if (error) {
-      if (error.code === 'PGRST116') {
+    if (placeError) {
+      if (placeError.code === 'PGRST116') {
         return null;
       }
-      throw error;
+      throw placeError;
     }
 
-    return data;
+    if (!placeData) {
+      return null;
+    }
+
+    // Then compute the is_open status using the function
+    try {
+      const { data: openStatus, error: statusError } = await supabase.rpc(
+        'is_open_now',
+        {
+          opening_hours: placeData.opening_hours,
+          tz: placeData.timezone || 'Asia/Hong_Kong'
+        }
+      );
+
+      if (statusError) {
+        console.warn('Could not compute open status:', statusError);
+        // Return place without open status rather than failing
+        return placeData;
+      }
+
+      // Combine the place data with the computed open status
+      return {
+        ...placeData,
+        is_open: openStatus
+      };
+    } catch (error) {
+      console.warn('Error computing open status:', error);
+      // Return place without open status rather than failing
+      return placeData;
+    }
   }
 
   async getPlaceByPlaceId(
     placeId: string,
   ): Promise<Place | null> {
-    const { data, error } = await supabase
+    // First get the place data
+    const { data: placeData, error: placeError } = await supabase
       .from('places')
       .select('*')
       .eq('place_id', placeId)
       .single();
 
-    if (error) {
-      if (error.code === 'PGRST116') {
+    if (placeError) {
+      if (placeError.code === 'PGRST116') {
         return null;
       }
-      throw error;
+      throw placeError;
     }
 
-    return data;
+    if (!placeData) {
+      return null;
+    }
+
+    // Then compute the is_open status using the function
+    try {
+      const { data: openStatus, error: statusError } = await supabase.rpc(
+        'is_open_now',
+        {
+          opening_hours: placeData.opening_hours,
+          tz: placeData.timezone || 'Asia/Hong_Kong'
+        }
+      );
+
+      if (statusError) {
+        console.warn('Could not compute open status:', statusError);
+        // Return place without open status rather than failing
+        return placeData;
+      }
+
+      // Combine the place data with the computed open status
+      return {
+        ...placeData,
+        is_open: openStatus
+      };
+    } catch (error) {
+      console.warn('Error computing open status:', error);
+      // Return place without open status rather than failing
+      return placeData;
+    }
   }
 
   async getAllPlaces() {

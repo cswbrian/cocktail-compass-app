@@ -7,7 +7,6 @@ interface PlaceStatusDisplayProps {
   place: Place & { is_open?: boolean | null };
   className?: string;
 }
-
 export function PlaceStatusDisplay({
   place,
   className = '',
@@ -35,7 +34,7 @@ export function PlaceStatusDisplay({
           place.is_open ? 'text-green-600' : 'text-red-600'
         }`}
       >
-        {place.is_open ? t.open : t.closed}
+        {place.is_open ? t.open : t.closedNow}
       </span>
     </div>
   );

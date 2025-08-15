@@ -358,6 +358,37 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     }
   }, [onMarkerClick, onPlaceSelect]);
 
+  // Refresh map function
+  const refreshMap = useCallback(() => {
+    if (mapRef.current) {
+      // Refresh map tiles
+      mapRef.current.invalidateSize();
+      
+      // Force a redraw of all layers
+      mapRef.current.eachLayer((layer) => {
+        if (layer instanceof L.TileLayer) {
+          layer.redraw();
+        }
+      });
+      
+      // Trigger a viewport change to refresh data
+      const center = mapRef.current.getCenter();
+      const zoom = mapRef.current.getZoom();
+      const bounds = mapRef.current.getBounds();
+      
+      const viewport: MapViewport = {
+        center,
+        zoom,
+        bounds,
+      };
+      
+      onViewportChange?.(viewport);
+      
+      // Track map refresh
+      sendGAEvent('Map', 'map_refresh', 'try_again_clicked');
+    }
+  }, [onViewportChange]);
+
   // Center map on user location when detected (only if no URL coordinates provided)
   useEffect(() => {
     if (userPosition && mapRef.current && shouldCenterOnUserLocation) {
@@ -487,6 +518,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
                     <Button
                       onClick={() => {
                         handleLocationRequest();
+                        refreshMap();
                         setIsPopoverOpen(false);
                       }}
                       className="flex-1"
