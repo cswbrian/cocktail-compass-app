@@ -60,6 +60,7 @@ interface MapContainerProps {
   onToggleOpenNow?: () => void;
   asias50Enabled?: boolean;
   onToggleAsias50?: () => void;
+  onMapInteraction?: () => void; // Callback to close bottom sheet
 }
 
 // Debounce hook for viewport changes
@@ -82,10 +83,12 @@ function useDebounce<T>(value: T, delay: number): T {
 // Component to handle map events
 function MapEventHandler({ 
   onViewportChange, 
-  onBoundsChange 
+  onBoundsChange,
+  onMapInteraction
 }: { 
   onViewportChange?: (viewport: MapViewport) => void;
   onBoundsChange?: (bounds: LatLngBounds) => void;
+  onMapInteraction?: () => void;
 }) {
   const map = useMap();
   const [viewport, setViewport] = useState<MapViewport | null>(null);
@@ -127,9 +130,17 @@ function MapEventHandler({
     setViewport(newViewport);
   }, [map, onViewportChange, onBoundsChange]);
 
+  // Handle immediate map interactions (drag start, zoom start)
+  const handleMapInteraction = useCallback(() => {
+    onMapInteraction?.();
+  }, [onMapInteraction]);
+
   useMapEvents({
     moveend: handleMapChange,
     zoomend: handleZoomChange,
+    movestart: handleMapInteraction, // Close bottom sheet when dragging starts
+    zoomstart: handleMapInteraction, // Close bottom sheet when zooming starts
+    // Removed click event - it was interfering with marker clicks
   });
 
   // Call callbacks when debounced viewport changes (for move events only)
@@ -185,7 +196,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   initialZoom,
   shouldCenterOnUserLocation = true,
   className = '',
-  height = '100vh',
+  height = 'calc(100vh - 80px)', // Account for bottom nav height
   children,
   places = [],
   isLoading = false,
@@ -194,7 +205,8 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   openNowEnabled = false,
   onToggleOpenNow,
   asias50Enabled = false,
-  onToggleAsias50
+  onToggleAsias50,
+  onMapInteraction
 }, ref) => {
   const mapRef = useRef<Map | null>(null);
   const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
@@ -440,7 +452,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   }
 
   return (
-    <div className={`relative ${className}`} style={{ height }}>
+    <div className={`relative ${className}`} style={{ height, overflow: 'hidden' }}>
       <LeafletMapContainer
         ref={mapRef}
         center={mapCenter}
@@ -448,6 +460,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         className="w-full h-full z-0"
         zoomControl={false}
         attributionControl={true}
+        style={{ height: '100%', overflow: 'hidden' }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -459,6 +472,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         <MapEventHandler 
           onViewportChange={onViewportChange}
           onBoundsChange={handleBoundsChange}
+          onMapInteraction={onMapInteraction}
         />
 
         {/* User location marker */}

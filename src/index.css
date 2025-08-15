@@ -1,6 +1,27 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Mobile-specific map height fixes */
+.map-page-container-fullscreen {
+  height: calc(100vh - 80px);
+  overflow: hidden;
+}
+
+/* Ensure Leaflet map doesn't create scrollbars on mobile */
+.leaflet-container {
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Fix for iOS Safari viewport height issues */
+@supports (-webkit-touch-callout: none) {
+  .map-page-container-fullscreen {
+    height: calc(100vh - 80px - env(safe-area-inset-bottom));
+  }
+}
+
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

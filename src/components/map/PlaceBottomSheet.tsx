@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PlaceMarker } from '@/types/map';
 import { mapService } from '@/services/map-service';
 import useSWR from 'swr';
@@ -45,8 +46,6 @@ export function PlaceBottomSheet({
   const currentIndex = place ? places.findIndex(p => p.id === place.id) : -1;
   const canNavigatePrev = currentIndex > 0;
   const canNavigateNext = currentIndex < places.length - 1;
-
-
 
   // Fetch place details with stats
   const { data: placeWithStats, isLoading } = useSWR(
@@ -151,197 +150,155 @@ export function PlaceBottomSheet({
     : place;
 
   return (
-    <div className="bottom-sheet-backdrop fixed inset-0 z-50 pointer-events-none">
-      {/* No backdrop overlay - let map remain visible */}
-      
-      {/* Bottom Sheet */}
-      <div
-        ref={sheetRef}
-        className={`
-          absolute bottom-16 left-4 right-4 rounded-3xl shadow-2xl 
-          transform transition-transform duration-300 ease-out pointer-events-auto
-          bg-gray-900/95 backdrop-blur-sm border border-white/20
-          ${isOpen ? 'translate-y-0' : 'translate-y-full'}
-        `}
-        style={{ 
-          maxHeight: '60vh',
-          minHeight: '100px'
-        }}  
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Drag Handle */}
-        <div className="flex justify-center pt-3 pb-2">
-          {/* <div className="w-12 h-1 bg-white/40 rounded-full" /> */}
-        </div>
-
-        {/* Gradient Background Effect */}
-        <div className="absolute inset-0 rounded-t-3xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 blur-xl opacity-70" />
-        
-        {/* Content */}
-        <div className="relative flex-1 overflow-y-auto px-4 pb-4">
-          {/* Header with Navigation */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white/90 flex-1 pr-2">
-                {displayPlace.name}
-              </h2>
-              <div className="flex items-center gap-1">
-                {/* Previous Place Button */}
-                <button
-                  onClick={handlePrevPlace}
-                  disabled={!canNavigatePrev}
-                  className={`p-1.5 rounded-full transition-all duration-200 ${
-                    canNavigatePrev 
-                      ? 'text-white/90 hover:bg-white/10 hover:text-white' 
-                      : 'text-white/30 cursor-not-allowed'
-                  }`}
-                  title={canNavigatePrev ? "Previous place" : "No more places in this direction"}
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-
-                {/* Next Place Button */}
-                <button
-                  onClick={handleNextPlace}
-                  disabled={!canNavigateNext}
-                  className={`p-1.5 rounded-full transition-all duration-200 ${
-                    canNavigateNext 
-                      ? 'text-white/90 hover:bg-white/10 hover:text-white' 
-                      : 'text-white/30 cursor-not-allowed'
-                  }`}
-                  title={canNavigateNext ? "Next place" : "No more places in this direction"}
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-
-                {/* Bookmark Button */}
-                <BookmarkButton placeId={displayPlace.id} />
-
-                {/* Close Button */}
-                <button
-                  onClick={onClose}
-                  className="p-1.5 text-white/60 hover:text-white/90 transition-colors rounded-full hover:bg-white/10"
-                  title="Close"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+    <AnimatePresence>
+      {isOpen && (
+        <div className="bottom-sheet-backdrop fixed inset-0 z-50 pointer-events-none">
+          {/* No backdrop overlay - let map remain visible */}
+          
+          {/* Bottom Sheet */}
+          <motion.div
+            ref={sheetRef}
+            className="absolute bottom-16 left-4 right-4 rounded-3xl shadow-2xl pointer-events-auto bg-gray-900/95 backdrop-blur-sm border border-white/20"
+            style={{ 
+              maxHeight: '60vh',
+              minHeight: '100px'
+            }}
+            initial={{ 
+              y: '100%', 
+              opacity: 0,
+              scale: 0.95
+            }}
+            animate={{ 
+              y: 0, 
+              opacity: 1,
+              scale: 1
+            }}
+            exit={{ 
+              y: '100%', 
+              opacity: 0,
+              scale: 0.95
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+              duration: 0.3
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Drag Handle */}
+            <div className="flex justify-center pt-3 pb-2">
+              {/* <div className="w-12 h-1 bg-white/40 rounded-full" /> */}
             </div>
+
+            {/* Gradient Background Effect */}
+            <div className="absolute inset-0 rounded-t-3xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 blur-xl opacity-70" />
             
-            {displayPlace.secondary_text && (
-              <p className="text-sm text-white/50 mb-1">{displayPlace.secondary_text}</p>
-            )}
-            {displayPlace.description && (
-              <p className="text-sm text-white/60 mb-2">{displayPlace.description}</p>
-            )}
+            {/* Content */}
+            <div className="relative flex-1 overflow-y-auto px-4 pb-4">
+              {/* Header with Navigation */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-white/90 flex-1 pr-2">
+                    {displayPlace.name}
+                  </h2>
+                  <div className="flex items-center gap-1">
+                    {/* Previous Place Button */}
+                    <button
+                      onClick={handlePrevPlace}
+                      disabled={!canNavigatePrev}
+                      className={`p-1.5 rounded-full transition-all duration-200 ${
+                        canNavigatePrev 
+                          ? 'text-white/90 hover:bg-white/10 hover:text-white' 
+                          : 'text-white/30 cursor-not-allowed'
+                      }`}
+                      title={canNavigatePrev ? "Previous place" : "No more places in this direction"}
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
 
-            {/* Open/Closed Status and Today's Hours */}
-            <div className="flex items-center justify-between mb-2">
-              <PlaceStatusDisplay 
-                place={displayPlace}
-              />
-            </div>
+                    {/* Next Place Button */}
+                    <button
+                      onClick={handleNextPlace}
+                      disabled={!canNavigateNext}
+                      className={`p-1.5 rounded-full transition-all duration-200 ${
+                        canNavigateNext 
+                          ? 'text-white/90 hover:bg-white/10 hover:text-white' 
+                          : 'text-white/30 cursor-not-allowed'
+                      }`}
+                      title={canNavigateNext ? "Next place" : "No more places in this direction"}
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
 
-            {/* Filter status indicator */}
-            {/* {places.length > 0 && (
-              <div className="text-xs text-white/50 mb-2">
-                {places.length} places match current filters
-                {places.length > 1 && (
-                  <span className="ml-2 text-white/40">
-                    ({currentIndex + 1} of {places.length})
-                  </span>
+                    {/* Bookmark Button */}
+                    <BookmarkButton placeId={displayPlace.id} />
+
+                    {/* Close Button */}
+                    <button
+                      onClick={onClose}
+                      className="p-1.5 text-white/60 hover:text-white/90 transition-colors rounded-full hover:bg-white/10"
+                      title="Close"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+                
+                {displayPlace.secondary_text && (
+                  <p className="text-sm text-white/50 mb-1">{displayPlace.secondary_text}</p>
                 )}
-              </div>
-            )} */}
-          </div>
+                {displayPlace.description && (
+                  <p className="text-sm text-white/60 mb-2">{displayPlace.description}</p>
+                )}
 
-
-
-
-          {/* Place Details */}
-          {/* <div className="space-y-3 mb-6">
-            {(displayPlace as any).formatted_address && (
-              <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-white/50 mt-0.5 flex-shrink-0" />
-                <span className="text-white/70">{(displayPlace as any).formatted_address}</span>
-              </div>
-            )}
-            
-            {(displayPlace as any).opening_hours && (
-              <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-white/50 mt-0.5 flex-shrink-0" />
-                <div className="text-white/70">
-                  <div className="font-medium">Hours</div>
-                  <div className="text-sm text-white/60">{(displayPlace as any).opening_hours}</div>
+                {/* Open/Closed Status and Today's Hours */}
+                <div className="flex items-center justify-between mb-2">
+                  <PlaceStatusDisplay 
+                    place={displayPlace}
+                  />
                 </div>
               </div>
-            )}
-            
-            {(displayPlace as any).phone_number && (
-              <div className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-white/50 mt-0.5 flex-shrink-0" />
-                <a 
-                  href={`tel:${(displayPlace as any).phone_number}`}
-                  className="text-blue-300 hover:text-blue-200 hover:underline"
-                >
-                  {(displayPlace as any).phone_number}
-                </a>
-              </div>
-            )}
-            
-            {(displayPlace as any).website && (
-              <div className="flex items-start gap-3">
-                <Globe className="w-5 h-5 text-white/50 mt-0.5 flex-shrink-0" />
-                <a 
-                  href={(displayPlace as any).website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-300 hover:text-blue-200 hover:underline flex items-center gap-1"
-                >
-                  Website
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
-            )}
-          </div> */}
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t border-white/20">
-            <Button
-              asChild
-              className="flex-1 bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/20"
-              variant="outline"
-            >
-              <Link 
-                to={`/${language}/places/${displayPlace.place_id}`}
-                onClick={() => sendGAEvent('Map', 'place_detail_view', displayPlace.name)}
-              >
-                {t.seeMore}
-              </Link>
-            </Button>
-            <Button
-              onClick={() => {
-                // Track directions click
-                sendGAEvent('Map', 'directions_click', displayPlace.name);
-                // Open in maps app - use helper for URL building
-                const url = buildGoogleMapsUrl({
-                  name: displayPlace.name,
-                  place_id: (displayPlace as any).place_id,
-                  lat: displayPlace.lat,
-                  lng: displayPlace.lng,
-                });
-                window.open(url, '_blank');
-              }}
-              variant="outline"
-              className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 hover:text-blue-200 border border-blue-500/20"
-            >
-              {t.viewOnGoogleMaps}
-            </Button>
-          </div>
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4 border-t border-white/20">
+                <Button
+                  asChild
+                  className="flex-1 bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/20"
+                  variant="outline"
+                >
+                  <Link 
+                    to={`/${language}/places/${displayPlace.place_id}`}
+                    onClick={() => sendGAEvent('Map', 'place_detail_view', displayPlace.name)}
+                  >
+                    {t.seeMore}
+                  </Link>
+                </Button>
+                <Button
+                  onClick={() => {
+                    // Track directions click
+                    sendGAEvent('Map', 'directions_click', displayPlace.name);
+                    // Open in maps app - use helper for URL building
+                    const url = buildGoogleMapsUrl({
+                      name: displayPlace.name,
+                      place_id: (displayPlace as any).place_id,
+                      lat: displayPlace.lat,
+                      lng: displayPlace.lng,
+                    });
+                    window.open(url, '_blank');
+                  }}
+                  variant="outline"
+                  className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 hover:text-blue-200 border border-blue-500/20"
+                >
+                  {t.viewOnGoogleMaps}
+                </Button>
+              </div>
+            </div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }

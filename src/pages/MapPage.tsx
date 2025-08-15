@@ -64,6 +64,7 @@ export default function MapPage() {
   const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
   const [userInteracted, setUserInteracted] = useState(false);
   const [userDraggedMap, setUserDraggedMap] = useState(false);
+  const [isPlaceSelectionInProgress, setIsPlaceSelectionInProgress] = useState(false);
 
   // Update URL when map state changes
   const updateURL = useCallback((newState: MapState) => {
@@ -262,6 +263,10 @@ export default function MapPage() {
     setShowBottomSheet(true);
     setUserDraggedMap(false); // Reset drag flag when user selects a place
     
+    // Set flag to prevent immediate map interaction closure
+    setIsPlaceSelectionInProgress(true);
+    setTimeout(() => setIsPlaceSelectionInProgress(false), 500); // Allow 500ms for map centering
+    
     // Track place selection
     sendGAEvent('Map', 'place_select', `${place.name} - ${place.id}`);
     
@@ -301,6 +306,11 @@ export default function MapPage() {
   }, [mapState, updateURL]);
 
   const handleBottomSheetClose = useCallback(() => {
+    // Don't close if a place selection is in progress
+    if (isPlaceSelectionInProgress) {
+      return;
+    }
+    
     setShowBottomSheet(false);
     
     // Track bottom sheet close
@@ -313,7 +323,7 @@ export default function MapPage() {
     };
     setMapState(newMapState);
     updateURL(newMapState);
-  }, [mapState, updateURL, selectedPlace]);
+  }, [mapState, updateURL, selectedPlace, isPlaceSelectionInProgress]);
 
   const handleNavigateToPlace = useCallback((placeId: string) => {
     // This function is not directly used in the new smart fallback logic,
@@ -331,7 +341,7 @@ export default function MapPage() {
     // If we have fallback data, show a warning instead of full error
     if (displayPlaces.length > 0) {
       return (
-        <div className="map-page-container-fullscreen relative w-full">
+        <div className="map-page-container-fullscreen relative w-full h-[calc(100vh-80px)]">
           <MapContainer
             ref={mapRef}
             onViewportChange={handleViewportChange}
@@ -340,6 +350,7 @@ export default function MapPage() {
             initialZoom={mapState.zoom}
             shouldCenterOnUserLocation={!mapState.hasUrlCoordinates && isInitialLoad}
             className="h-full w-full"
+            height="100%"
             places={renderPlaces}
             isLoading={false}
             error={null}
@@ -354,6 +365,7 @@ export default function MapPage() {
                 return next;
               });
             }}
+            onMapInteraction={handleBottomSheetClose}
           >
             <PlaceMarkers
               key={`places-${renderPlaces.length}-${openNowOnly}-${asias50Only}`}
@@ -419,7 +431,7 @@ export default function MapPage() {
   }
 
   return (
-    <div className="map-page-container-fullscreen relative w-full">
+    <div className="map-page-container-fullscreen relative w-full h-[calc(100vh-80px)]">
       <MapContainer
         ref={mapRef}
         onViewportChange={handleViewportChange}
@@ -428,6 +440,7 @@ export default function MapPage() {
         initialZoom={mapState.zoom}
         shouldCenterOnUserLocation={!mapState.hasUrlCoordinates && isInitialLoad}
         className="h-full w-full"
+        height="100%"
         places={renderPlaces}
         isLoading={isInitialLoad && isLoading}
         error={error}
@@ -453,6 +466,7 @@ export default function MapPage() {
             return next;
           });
         }}
+        onMapInteraction={handleBottomSheetClose}
       >
         {/* Add PlaceMarkers as children */}
         <PlaceMarkers
