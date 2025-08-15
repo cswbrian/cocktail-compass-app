@@ -4,10 +4,11 @@ import { Map, LatLng, LatLngBounds } from 'leaflet';
 import { PlaceMarker, MapViewport } from '@/types/map';
 import { geolocationService } from '@/services/geolocation-service';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT } from '@/config/map-config';
+import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT, CITY_QUICK_ZOOM, City } from '@/config/map-config';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { CitySelector } from './CitySelector';
 import { sendGAEvent } from '@/lib/ga';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
@@ -283,6 +284,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   const [isLocationLoading, setIsLocationLoading] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [showPlacesCount, setShowPlacesCount] = useState(false);
+  const [currentCity, setCurrentCity] = useState<City | null>(null);
   const { language } = useLanguage();
   const t = translations[language];
   const pwaStatus = detectPWAStatus();
@@ -450,6 +452,44 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     }
   }, [onMarkerClick, onPlaceSelect]);
 
+  // Handle city jump with instant navigation (no animation)
+  const handleCityJump = useCallback((city: City) => {
+    if (mapRef.current) {
+      const cityLatLng = new LatLng(city.lat, city.lng);
+      
+      // Jump to city instantly without animation
+      mapRef.current.setView(cityLatLng, city.zoom, {
+        animate: false
+      });
+      
+      // Update current city state
+      setCurrentCity(city);
+      
+      // Track city jump event
+      sendGAEvent('Map', 'city_jump', city.name.toLowerCase().replace(/\s+/g, '_'));
+    }
+  }, []);
+
+  // Determine current city based on map center
+  const determineCurrentCity = useCallback((center: LatLng): City | null => {
+    const cities = CITY_QUICK_ZOOM.cities;
+    let closestCity: City | null = null;
+    let minDistance = Infinity;
+    
+    for (const city of cities) {
+      const cityLatLng = new LatLng(city.lat, city.lng);
+      const distance = center.distanceTo(cityLatLng);
+      
+      // If we're within 10km of a city center, consider it the current city
+      if (distance < 10000 && distance < minDistance) {
+        minDistance = distance;
+        closestCity = city as City;
+      }
+    }
+    
+    return closestCity;
+  }, []);
+
   // Refresh map function
   const refreshMap = useCallback(() => {
     if (mapRef.current) {
@@ -489,6 +529,17 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom);
     }
   }, [userPosition, shouldCenterOnUserLocation]);
+
+  // Update current city when map center changes
+  useEffect(() => {
+    if (mapRef.current) {
+      const center = mapRef.current.getCenter();
+      const newCurrentCity = determineCurrentCity(center);
+      if (newCurrentCity !== currentCity) {
+        setCurrentCity(newCurrentCity);
+      }
+    }
+  }, [currentBounds, determineCurrentCity, currentCity]);
 
   if (error) {
     console.error('Error loading map places:', error);
@@ -669,6 +720,12 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         <div className="absolute top-16 left-0 right-20 z-10 px-4 pointer-events-none">
           <div className="w-full overflow-x-auto no-scrollbar pointer-events-auto">
             <div className="flex gap-2 min-w-full pr-4">
+              {/* City selector - positioned to the left of open now button */}
+              <CitySelector
+                onCitySelect={handleCityJump}
+                currentCity={currentCity}
+                userPosition={userPosition}
+              />
               {/* Open Now chip */}
               <Button
                 variant={openNowEnabled ? "default" : "outline"}

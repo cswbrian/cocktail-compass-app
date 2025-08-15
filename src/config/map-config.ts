@@ -65,3 +65,19 @@ export const SMART_DEFAULT_VIEWPORT = {
 } as const;
 
 export type MapConfig = typeof MAP_CONFIG;
+
+// City-based quick zoom configuration
+export const CITY_QUICK_ZOOM = {
+  cities: [
+    { name: 'Hong Kong', lat: 22.2933, lng: 114.1628, zoom: 14, country: 'HK' },
+    { name: 'Taipei', lat: 25.0435, lng: 121.5354, zoom: 13, country: 'TW' },
+    { name: 'Tainan', lat: 22.9938, lng: 120.2028, zoom: 15, country: 'TW' },
+    { name: 'Kaohsiung', lat: 22.6281, lng: 120.3052, zoom: 14, country: 'TW' },
+    // { name: 'Tokyo', lat: 35.6762, lng: 139.6503, zoom: 14, country: 'JP' },
+    // { name: 'Bangkok', lat: 13.7563, lng: 100.5018, zoom: 14, country: 'TH' },
+    // { name: 'Chiang Mai', lat: 18.7883, lng: 98.9853, zoom: 15, country: 'TH' }
+  ]
+} as const;
+
+export type CityQuickZoom = typeof CITY_QUICK_ZOOM;
+export type City = CityQuickZoom['cities'][0];
