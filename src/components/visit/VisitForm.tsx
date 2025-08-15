@@ -158,6 +158,7 @@ const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
     if (currentMedia.length + files.length > 5) {
       console.log('Media limit exceeded');
       onError(t.maxMediaExceeded);
+      sendGAEvent('Visit Form', 'Media Upload Error', 'Limit Exceeded');
       return;
     }
 
@@ -168,6 +169,7 @@ const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
     if (oversizedFiles.length > 0) {
       console.log('Oversized files found:', oversizedFiles.length);
       onError(t.maxFileSizeExceeded);
+      sendGAEvent('Visit Form', 'Media Upload Error', 'File Too Large');
       return;
     }
 
@@ -186,6 +188,9 @@ const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
       shouldValidate: true,
       shouldDirty: true,
     });
+
+    // Track successful media upload
+    sendGAEvent('Visit Form', 'Media Upload', `Files: ${files.length}, Type: ${files[0]?.type || 'unknown'}`);
   };
 
   const handleRemoveMedia = (mediaIndex: number) => {
@@ -194,10 +199,14 @@ const MediaField = ({ control, setValue, index, onError }: MediaFieldProps) => {
       shouldValidate: true,
       shouldDirty: true,
     });
+    
+    // Track media removal
+    sendGAEvent('Visit Form', 'Media Removed', `Index: ${mediaIndex}`);
   };
 
   const handleMediaClick = () => {
     fileInputRef.current?.click();
+    sendGAEvent('Visit Form', 'Media Field Interaction', 'Upload Button Clicked');
   };
 
   return (
@@ -326,6 +335,64 @@ export function VisitForm({
     },
   });
 
+  // Add comprehensive GA tracking after form declaration
+  useEffect(() => {
+    if (isOpen) {
+      sendGAEvent('Visit Form', 'Form Opened', existingVisit ? 'Edit Mode' : 'Create Mode');
+    }
+  }, [isOpen, existingVisit]);
+
+  // Track form abandonment
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (form.formState.isDirty) {
+        sendGAEvent('Visit Form', 'Form Abandoned', 'Page Unload');
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && form.formState.isDirty) {
+        sendGAEvent('Visit Form', 'Form Abandoned', 'Tab Switch');
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [form.formState.isDirty]);
+
+  // Track time spent on form
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    const startTime = Date.now();
+    
+    return () => {
+      const timeSpent = Date.now() - startTime;
+      if (timeSpent > 1000) { // Only track if form was open for more than 1 second
+        sendGAEvent('Visit Form', 'Time Spent', `${Math.round(timeSpent / 1000)}s`);
+      }
+    };
+  }, [isOpen]);
+
+  // Track validation errors
+  useEffect(() => {
+    const subscription = form.watch(() => {
+      const errors = form.formState.errors;
+      if (Object.keys(errors).length > 0) {
+        // Track validation errors
+        Object.entries(errors).forEach(([field, error]) => {
+          sendGAEvent('Visit Form', 'Validation Error', `${field}: ${error?.message || 'Unknown error'}`);
+        });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   // Add validation error logging
   useEffect(() => {
     const subscription = form.watch(() => {
@@ -336,6 +403,28 @@ export function VisitForm({
     });
     return () => subscription.unsubscribe();
   }, [form]);
+
+  // Track field interactions
+  const handleFieldInteraction = (fieldName: string, action: string) => {
+    sendGAEvent('Visit Form', 'Field Interaction', `${fieldName}: ${action}`);
+  };
+
+  // Track location selection
+  const handleLocationSelection = (location: any) => {
+    try {
+      form.setValue('location', location);
+      sendGAEvent('Visit Form', 'Location Selected', location.name);
+    } catch (error) {
+      sendGAEvent('Visit Form', 'Location Selection Error', error instanceof Error ? error.message : 'Unknown error');
+    }
+  };
+
+  // Track cocktail search behavior
+  const handleCocktailSearch = (query: string) => {
+    if (query.length > 2) {
+      sendGAEvent('Visit Form', 'Cocktail Search', `Query: ${query.substring(0, 20)}`);
+    }
+  };
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -365,6 +454,12 @@ export function VisitForm({
 
   // Handle form close
   const handleClose = () => {
+    // Track form close
+    if (form.formState.isDirty) {
+      sendGAEvent('Visit Form', 'Form Closed', 'With Changes');
+    } else {
+      sendGAEvent('Visit Form', 'Form Closed', 'No Changes');
+    }
     resetForm();
     onClose();
   };
@@ -388,8 +483,14 @@ export function VisitForm({
             label: formatBilingualText(cocktail.name, language),
           }));
         setFilteredCocktails(filtered);
+        
+        // Track search results
+        if (currentCocktailInput.length > 2) {
+          sendGAEvent('Visit Form', 'Search Results', `Query: ${currentCocktailInput.substring(0, 20)}, Results: ${filtered.length}`);
+        }
       } catch (error) {
         console.error('Error loading cocktails:', error);
+        sendGAEvent('Visit Form', 'Search Error', error instanceof Error ? error.message : 'Unknown error');
         toast({
           description: t.errorLoadingCocktail,
           variant: 'destructive',
@@ -474,6 +575,9 @@ export function VisitForm({
   };
 
   const onSubmit = async (data: VisitFormData) => {
+    // Track submission attempt
+    sendGAEvent('Visit Form', 'Submit Attempted', `Entries: ${data.cocktailEntries?.length || 0}`);
+    
     try {
       setIsLoading(true);
 
@@ -484,6 +588,7 @@ export function VisitForm({
           description: t.notAuthenticated,
           variant: 'destructive',
         });
+        sendGAEvent('Visit Form', 'Submit Error', 'Not Authenticated');
         return;
       }
 
@@ -605,6 +710,9 @@ export function VisitForm({
         variant: 'default',
       });
 
+      // Track successful submission
+      sendGAEvent('Visit Form', 'Submit Success', existingVisit ? 'Update' : 'Create');
+
       onClose();
       onSuccess();
 
@@ -612,8 +720,9 @@ export function VisitForm({
       navigate(`/${language}/feeds/me`);
     } catch (error) {
       console.error('Form submission error:', error);
-      // Track form submission error
-      sendGAEvent('Visit Form', 'Submit Error', error instanceof Error ? error.message : 'Unknown error');
+      // Track specific error types
+      const errorType = error instanceof Error ? error.constructor.name : 'Unknown';
+      sendGAEvent('Visit Form', 'Submit Error', errorType);
       toast({
         description: t.errorSavingLog,
         variant: 'destructive',
@@ -872,7 +981,11 @@ export function VisitForm({
                               <div className="mb-2">
                                 <StarRating
                                   value={form.watch(`cocktailEntries.${index}.rating`) || 0}
-                                  onChange={val => form.setValue(`cocktailEntries.${index}.rating`, val, { shouldDirty: true })}
+                                  onChange={val => {
+                                    form.setValue(`cocktailEntries.${index}.rating`, val, { shouldDirty: true });
+                                    // Track rating change
+                                    sendGAEvent('Visit Form', 'Rating Changed', `Value: ${val}, Index: ${index}`);
+                                  }}
                                 />
                               </div>
                               <div className="relative">
@@ -948,7 +1061,11 @@ export function VisitForm({
                     value={form.watch('visibility')}
                     onValueChange={(
                       value: 'public' | 'private',
-                    ) => form.setValue('visibility', value)}
+                    ) => {
+                      form.setValue('visibility', value);
+                      // Track visibility change
+                      sendGAEvent('Visit Form', 'Visibility Changed', value);
+                    }}
                   >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue
@@ -990,7 +1107,11 @@ export function VisitForm({
           {isCreatingCustom && (
             <CustomCocktailModal
               isOpen={isCreatingCustom}
-              onClose={() => setIsCreatingCustom(false)}
+              onClose={() => {
+                setIsCreatingCustom(false);
+                // Track custom cocktail modal close
+                sendGAEvent('Visit Form', 'Custom Cocktail Modal', 'Closed');
+              }}
               onCustomCocktailValues={
                 handleCustomCocktailValues
               }
