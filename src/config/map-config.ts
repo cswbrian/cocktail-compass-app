@@ -82,8 +82,8 @@ export const CITY_QUICK_ZOOM = {
     { name: 'Tainan', lat: 22.9938, lng: 120.2028, zoom: 15, country: 'TW' },
     { name: 'Kaohsiung', lat: 22.6281, lng: 120.3052, zoom: 14, country: 'TW' },
     // { name: 'Tokyo', lat: 35.6762, lng: 139.6503, zoom: 14, country: 'JP' },
-    // { name: 'Bangkok', lat: 13.7563, lng: 100.5018, zoom: 14, country: 'TH' },
-    // { name: 'Chiang Mai', lat: 18.7883, lng: 98.9853, zoom: 15, country: 'TH' }
+    { name: 'Bangkok', lat: 13.7334, lng: 100.5415, zoom: 12, country: 'TH' },
+    { name: 'Chiang Mai', lat: 18.8042, lng: 98.9804, zoom: 13, country: 'TH' }
   ]
 } as const;
 
