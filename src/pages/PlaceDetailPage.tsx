@@ -14,7 +14,6 @@ import {
   MapPin,
   BadgeCheck,
   AlertCircle,
-  Clock,
   Phone,
   Globe,
   ExternalLink,
@@ -25,20 +24,13 @@ import { fetchers, CACHE_KEYS } from '@/lib/swr-config';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
 import { ExternalLink as ExternalLinkComponent } from '@/components/external-link';
 import { VisitList } from '@/components/visit/VisitList';
-import { PlaceDetailNav } from '@/components/place/PlaceDetailNav';
+import { PlaceDetailNav, OpeningHours } from '@/components/place';
 import { ShareButton } from '@/components/ShareButton';
 import { BookmarkButton } from '@/components/bookmark/bookmark-button';
 import { BackButton } from '@/components/common/BackButton';
-import { PlaceStatusDisplay } from '@/components/common/PlaceStatusDisplay';
 import { sendGAEvent } from '@/lib/ga';
 import { buildGoogleMapsUrl } from '@/lib/utils';
 import { MAP_CONFIG } from '@/config/map-config';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 
 export default function PlaceDetailPage() {
   const [place, setPlace] = useState<Place | null>(null);
@@ -57,181 +49,7 @@ export default function PlaceDetailPage() {
   const isMyFeed = location.pathname.includes('/feeds/me');
   const isVisitsView = location.pathname.includes('/feeds');
 
-  // Helper function to format time (e.g., "1700" -> "17:00")
-  const formatTime = (timeStr: string) => {
-    const hour = timeStr.substring(0, 2);
-    const minute = timeStr.substring(2, 4);
-    return `${hour}:${minute}`;
-  };
-
-  // Helper function to render opening hours
-  const renderOpeningHours = (openingHours: any) => {
-    if (!openingHours) return null;
-
-    // Use periods as primary method for better translation support
-    if (
-      openingHours.periods &&
-      Array.isArray(openingHours.periods)
-    ) {
-      const weekdays = [
-        t.sunday,
-        t.monday,
-        t.tuesday,
-        t.wednesday,
-        t.thursday,
-        t.friday,
-        t.saturday,
-      ];
-
-      // Get current day (0 = Sunday, 1 = Monday, etc.)
-      const today = new Date().getDay();
-
-      return (
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="opening-hours">
-            <AccordionTrigger className="text-left">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-muted-foreground" />
-                <span className="font-medium">{t.openingHours}</span>
-                {/* Place Status Display */}
-                <div>
-                  {place && (
-                    <PlaceStatusDisplay
-                      place={place}
-                      className="ml-2"
-                    />
-                  )}
-                  {/* Show today's hours in the trigger */}
-                  {(() => {
-                    const todayPeriod = openingHours.periods.find(
-                      (period: any) => period.open.day === today
-                    );
-                    if (todayPeriod) {
-                      const openTime = formatTime(todayPeriod.open.time);
-                      const closeTime = formatTime(todayPeriod.close.time);
-                      return (
-                        <span className="ml-2">
-                          {weekdays[today]}: {openTime} - {closeTime}
-                        </span>
-                      );
-                    } else {
-                      return (
-                        <span className="ml-2 text-muted-foreground">
-                          {weekdays[today]}: {t.closed}
-                        </span>
-                      );
-                    }
-                  })()}
-                </div>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-1">
-                {weekdays.map((weekday, index) => {
-                  const period = openingHours.periods.find(
-                    (p: any) => p.open.day === index
-                  );
-                  const isToday = index === today;
-
-                  if (period) {
-                    const openTime = formatTime(period.open.time);
-                    const closeTime = formatTime(period.close.time);
-
-                    if (period.open.day === period.close.day) {
-                      return (
-                        <div
-                          key={index}
-                          className={`flex justify-between p-1 ${
-                            isToday 
-                              ? 'text-primary bg-primary/10 rounded' 
-                              : 'text-muted-foreground'
-                          }`}
-                        >
-                          <span>{weekday}</span> 
-                          <span>{openTime} - {closeTime}</span>
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div
-                          key={index}
-                          className={`flex justify-between p-1 ${
-                            isToday 
-                              ? 'text-primary bg-primary/10 rounded' 
-                              : 'text-muted-foreground'
-                          }`}
-                        >
-                          <span>{weekday}</span> 
-                          <span>{openTime} - {closeTime}</span>
-                        </div>
-                      );
-                    }
-                  } else {
-                    // No data for this day, show as closed
-                    return (
-                      <div
-                        key={index}
-                        className={`flex justify-between p-1 ${
-                          isToday 
-                            ? 'text-primary bg-primary/10 rounded' 
-                            : 'text-muted-foreground'
-                        }`}
-                      >
-                        <span>{weekday}</span> 
-                        <span>{t.closed}</span>
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      );
-    }
-
-    // Fallback to weekday_text if periods not available
-    if (
-      openingHours.weekday_text &&
-      Array.isArray(openingHours.weekday_text)
-    ) {
-      return (
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="opening-hours">
-            <AccordionTrigger className="text-left">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-muted-foreground" />
-                <span className="font-medium">{t.openingHours}</span>
-                {/* Place Status Display */}
-                {place && (
-                  <PlaceStatusDisplay
-                    place={place}
-                    className="ml-2"
-                  />
-                )}
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-1 pt-2">
-                {openingHours.weekday_text.map(
-                  (dayText: string, index: number) => (
-                    <div
-                      key={index}
-                      className="text-sm text-muted-foreground"
-                    >
-                      {dayText}
-                    </div>
-                  ),
-                )}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      );
-    }
-
-    return null;
-  };
+  
 
   // Fetch place details
   useEffect(() => {
@@ -413,7 +231,7 @@ export default function PlaceDetailPage() {
           {/* Full Opening Hours Display */}
           {place.opening_hours && (
             <div className="space-y-3 mb-4">
-              {renderOpeningHours(place.opening_hours)}
+              <OpeningHours openingHours={place.opening_hours} place={place} />
             </div>
           )}
 

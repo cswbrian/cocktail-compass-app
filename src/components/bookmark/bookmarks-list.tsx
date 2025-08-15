@@ -10,7 +10,7 @@ import {
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { CocktailCard } from '@/components/cocktail-card';
-import { PlaceCard } from '@/components/place/PlaceCard';
+import { PlaceCard } from '@/components/place';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import {

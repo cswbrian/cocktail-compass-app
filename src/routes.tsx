@@ -29,7 +29,7 @@ import MapPage from './pages/MapPage';
 import { RequireUsername } from '@/components/RequireUsername';
 import { AuthWrapper } from '@/components/auth/auth-wrapper';
 import { FeedRedirect } from '@/components/FeedRedirect';
-import { PlaceFeedRedirect } from '@/components/place/PlaceFeedRedirect';
+import { PlaceFeedRedirect } from '@/components/place';
 
 export default function AppRoutes() {
   return (
