@@ -18,10 +18,10 @@ export function MainContent({
   
   return (
     <div
-      className={`h-full overflow-auto ${
+      className={`h-full ${
         isBottomNavVisible ? 'pb-16' : ''
       } ${
-        !isMapPage ? 'pt-16' : '' // Add top padding for non-map pages
+        isMapPage ? 'overflow-hidden' : 'overflow-auto pt-16' // Add top padding for non-map pages
       }`}
     >
       {children}

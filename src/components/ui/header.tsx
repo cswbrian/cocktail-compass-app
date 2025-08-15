@@ -30,6 +30,9 @@ export function Header() {
     useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
 
+  // Check if we're on the map page (which has transparent header)
+  const isMapPage = location.pathname.includes('/map');
+
   useEffect(() => {
     // Check if app is installed
     if (
@@ -113,7 +116,7 @@ export function Header() {
   };
 
   return (
-    <header className="flex justify-between items-center px-6 py-4 fixed top-0 left-0 right-0 z-50">
+    <header className={`flex justify-between items-center px-6 py-4 fixed top-0 left-0 right-0 z-50 ${isMapPage ? 'bg-transparent' : 'bg-black'}`}>
       <div className="flex items-center gap-2">
         <Link to={`/${language}`} className="font-medium text-white drop-shadow-lg">
           {t.appName}
