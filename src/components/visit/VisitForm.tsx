@@ -611,6 +611,16 @@ export function VisitForm({
           createdAt: updatedVisit.createdAt,
           updatedAt: updatedVisit.updatedAt,
           deletedAt: updatedVisit.deletedAt,
+          logs: updatedVisit.logs.map(log => ({
+            ...log,
+            cocktail: {
+              ...log.cocktail,
+              name: {
+                en: typeof log.cocktail.name === 'string' ? log.cocktail.name : (log.cocktail.name as any).en || log.cocktail.name,
+                zh: typeof log.cocktail.name === 'string' ? null : (log.cocktail.name as any).zh || null,
+              },
+            },
+          })),
         };
 
         // Track visit update
@@ -633,7 +643,7 @@ export function VisitForm({
                       type: 'image' as const,
                     })),
                     data.visibility,
-                    entry.rating,
+                    entry.rating ?? undefined,
                   )
                 : cocktailLogService.createLog(
                     entry.cocktailId,
@@ -668,6 +678,16 @@ export function VisitForm({
           createdAt: newVisit.createdAt,
           updatedAt: newVisit.updatedAt,
           deletedAt: newVisit.deletedAt,
+          logs: newVisit.logs.map(log => ({
+            ...log,
+            cocktail: {
+              ...log.cocktail,
+              name: {
+                en: typeof log.cocktail.name === 'string' ? log.cocktail.name : (log.cocktail.name as any).en || log.cocktail.name,
+                zh: typeof log.cocktail.name === 'string' ? null : (log.cocktail.name as any).zh || null,
+              },
+            },
+          })),
         };
 
         // Track new visit creation
