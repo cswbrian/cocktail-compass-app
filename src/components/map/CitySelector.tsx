@@ -158,7 +158,7 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
                 key={`${city.country}-${city.name}`}
                 onClick={() => handleCitySelect(city)}
                 className={`w-full px-3 py-3 text-left hover:bg-gray-50 hover:text-black transition-colors duration-150 flex items-center justify-between group ${
-                  currentCity?.name === city.name ? 'bg-primary border-r-2 border-blue-500' : ''
+                  currentCity?.name === city.name ? 'bg-primary' : ''
                 }`}
               >
                 <div className="flex items-center gap-3">
