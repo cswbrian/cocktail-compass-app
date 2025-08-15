@@ -37,13 +37,13 @@ export function useGeolocation(options: UseGeolocationOptions = {}) {
   }, []);
 
   // Get current position
-  const getCurrentPosition = useCallback(async () => {
+  const getCurrentPosition = useCallback(async (): Promise<GeolocationPosition | null> => {
     if (!geolocationService.isSupported()) {
       updateState({
         error: new Error('Geolocation is not supported') as unknown as GeolocationPositionError,
         loading: false,
       });
-      return;
+      return null;
     }
 
     updateState({ loading: true, error: null });
@@ -60,11 +60,14 @@ export function useGeolocation(options: UseGeolocationOptions = {}) {
         loading: false,
         error: null,
       });
+      
+      return position;
     } catch (error) {
       updateState({
         error: error as GeolocationPositionError,
         loading: false,
       });
+      return null;
     }
   }, [enableHighAccuracy, timeout, maximumAge, updateState]);
 
@@ -130,10 +133,15 @@ export function useGeolocation(options: UseGeolocationOptions = {}) {
     }
   }, [updateState]);
 
-  // Initialize permission status
+  // Initialize permission status and get last known position
   useEffect(() => {
     const permissionStatus = geolocationService.getPermissionStatus();
-    updateState({ permissionStatus });
+    const lastKnownPosition = geolocationService.getLastKnownPosition();
+    
+    updateState({ 
+      permissionStatus,
+      position: lastKnownPosition // Initialize with last known position if available
+    });
   }, [updateState]);
 
   // Handle immediate position request

@@ -371,11 +371,11 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       const currentPermission = geolocationService.getPermissionStatus();
 
       if (currentPermission === 'granted') {
-        await getCurrentPosition();
+        const position = await getCurrentPosition();
         
         // Center map on user location with smooth transition (following existing marker zoom pattern)
-        if (mapRef.current && userPosition) {
-          const userLatLng = new LatLng(userPosition.latitude, userPosition.longitude);
+        if (mapRef.current && position) {
+          const userLatLng = new LatLng(position.latitude, position.longitude);
           mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
             animate: true,
             duration: 0.8, // 800ms transition
@@ -392,11 +392,11 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       const permission = await requestPermission();
 
       if (permission === 'granted') {
-        await getCurrentPosition();
+        const position = await getCurrentPosition();
         
         // Center map on user location with smooth transition (following existing marker zoom pattern)
-        if (mapRef.current && userPosition) {
-          const userLatLng = new LatLng(userPosition.latitude, userPosition.longitude);
+        if (mapRef.current && position) {
+          const userLatLng = new LatLng(position.latitude, position.longitude);
           mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
             animate: true,
             duration: 0.8, // 800ms transition
