@@ -178,6 +178,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   const [currentBounds, setCurrentBounds] = useState<LatLngBounds | null>(null);
   const [isLocationLoading, setIsLocationLoading] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [showPlacesCount, setShowPlacesCount] = useState(false);
   const { language } = useLanguage();
   const t = translations[language];
   const pwaStatus = detectPWAStatus();
@@ -199,6 +200,20 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   const { position: userPosition, getCurrentPosition, requestPermission } = useGeolocation({
     immediate: false, // Don't automatically request location on mount
   });
+
+  // Handle places count display with auto-dismiss
+  useEffect(() => {
+    if (places.length > 0) {
+      setShowPlacesCount(true);
+      
+      // Auto-dismiss after 1 second
+      const timer = setTimeout(() => {
+        setShowPlacesCount(false);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [places.length]);
 
   // Use URL state if available, otherwise fall back to smart defaults
   const mapCenter = useMemo(() => {
@@ -600,7 +615,13 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
 
         {/* Places count indicator - below chips */}
         {places.length > 0 && (
-          <div className="absolute top-28 px-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-full py-2">
+          <div 
+            className={`absolute top-28 px-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-full py-2 transition-all duration-300 ease-in-out ${
+              showPlacesCount 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 -translate-y-2 pointer-events-none'
+            }`}
+          >
             <span className="text-sm text-gray-600">
               {t.foundPlacesInArea.replace('{count}', String(places.length))}
             </span>

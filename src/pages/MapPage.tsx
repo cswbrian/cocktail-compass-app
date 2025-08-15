@@ -464,14 +464,6 @@ export default function MapPage() {
       </MapContainer>
 
       {/* Subtle loading indicator in corner - positioned below transparent header */}
-      {isLoading && !isInitialLoad && userInteracted && (
-        <div className="absolute top-20 left-4 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-lg px-3 py-2 transition-all duration-300">
-          <div className="flex items-center gap-2">
-            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
-            <span className="text-xs text-gray-600">Updating...</span>
-          </div>
-        </div>
-      )}
 
       {/* Enhanced Bottom Sheet with Navigation */}
       <PlaceBottomSheet
