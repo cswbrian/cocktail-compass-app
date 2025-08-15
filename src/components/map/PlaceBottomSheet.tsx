@@ -46,28 +46,12 @@ export function PlaceBottomSheet({
   
   // Update local place state when prop changes
   useEffect(() => {
-    console.log('🔄 Place prop changed:', { 
-      from: currentPlace?.id, 
-      to: place?.id,
-      fromName: currentPlace?.name,
-      toName: place?.name
-    });
     setCurrentPlace(place);
   }, [place]);
   
-  // Navigation state - only navigate through filtered places
+  // Navigation state - circular navigation (always available)
   const currentIndex = currentPlace ? places.findIndex(p => p.id === currentPlace.id) : -1;
-  const canNavigatePrev = currentIndex > 0;
-  const canNavigateNext = currentIndex < places.length - 1;
-
-  console.log('🧭 Navigation state:', {
-    currentIndex,
-    canNavigatePrev,
-    canNavigateNext,
-    places: places.map(p => ({ id: p.id, name: p.name })),
-    currentPlaceId: currentPlace?.id,
-    currentPlaceName: currentPlace?.name
-  });
+  const hasMultiplePlaces = places.length > 1;
 
   // Fetch place details with stats
   const { data: placeWithStats, isLoading } = useSWR(
@@ -120,80 +104,48 @@ export function PlaceBottomSheet({
     }
   }, [isDragging, currentY, startY, onClose]);
 
-  // Navigation handlers - only navigate through filtered places
+  // Navigation handlers - circular navigation through places
   const handlePrevPlace = useCallback(() => {
-    console.log('⬅️ handlePrevPlace called:', {
-      canNavigatePrev,
-      currentIndex,
-      placesCount: places.length,
-      currentPlaceId: currentPlace?.id,
-      currentPlaceName: currentPlace?.name
-    });
     
-    if (canNavigatePrev && places.length > 0) {
-      const prevPlace = places[currentIndex - 1];
-      console.log('⬅️ Navigating to previous place:', {
-        prevPlace: { id: prevPlace.id, name: prevPlace.name },
-        currentPlace: { id: currentPlace?.id, name: currentPlace?.name }
-      });
+    if (hasMultiplePlaces) {
+      const prevPlace = places[(currentIndex - 1 + places.length) % places.length];
       
       setIsNavigating(true);
       sendGAEvent('Map', 'bottom_sheet_navigate', `prev_${prevPlace.name}`);
       
       // Update local state immediately
-      console.log('⬅️ Setting currentPlace to:', prevPlace.id);
       setCurrentPlace(prevPlace);
       
       // Notify parent immediately
-      console.log('⬅️ Calling onPlaceChange with:', prevPlace.id);
       onPlaceChange?.(prevPlace);
       
       // Reset navigation state after animation
       setTimeout(() => {
-        console.log('⬅️ Resetting navigation state');
         setIsNavigating(false);
       }, 200);
-    } else {
-      console.log('⬅️ Cannot navigate prev:', { canNavigatePrev, placesCount: places.length });
     }
-  }, [canNavigatePrev, places, currentIndex, onPlaceChange, currentPlace]);
+  }, [hasMultiplePlaces, places, currentIndex, onPlaceChange, currentPlace]);
 
   const handleNextPlace = useCallback(() => {
-    console.log('➡️ handleNextPlace called:', {
-      canNavigateNext,
-      currentIndex,
-      placesCount: places.length,
-      currentPlaceId: currentPlace?.id,
-      currentPlaceName: currentPlace?.name
-    });
     
-    if (canNavigateNext && places.length > 0) {
-      const nextPlace = places[currentIndex + 1];
-      console.log('➡️ Navigating to next place:', {
-        nextPlace: { id: nextPlace.id, name: nextPlace.name },
-        currentPlace: { id: currentPlace?.id, name: currentPlace?.name }
-      });
+    if (hasMultiplePlaces) {
+      const nextPlace = places[(currentIndex + 1) % places.length];
       
       setIsNavigating(true);
       sendGAEvent('Map', 'bottom_sheet_navigate', `next_${nextPlace.name}`);
       
       // Update local state immediately
-      console.log('➡️ Setting currentPlace to:', nextPlace.id);
       setCurrentPlace(nextPlace);
       
       // Notify parent immediately
-      console.log('➡️ Calling onPlaceChange with:', nextPlace.id);
       onPlaceChange?.(nextPlace);
       
       // Reset navigation state after animation
       setTimeout(() => {
-        console.log('➡️ Resetting navigation state');
         setIsNavigating(false);
       }, 200);
-    } else {
-      console.log('➡️ Cannot navigate next:', { canNavigateNext, placesCount: places.length });
     }
-  }, [canNavigateNext, places, currentIndex, onPlaceChange, currentPlace]);
+  }, [hasMultiplePlaces, places, currentIndex, onPlaceChange, currentPlace]);
 
   // Handle outside click to close
   useEffect(() => {
@@ -216,44 +168,18 @@ export function PlaceBottomSheet({
     };
   }, [isOpen, onClose]);
 
-  console.log('🎯 Render conditions:', {
-    hasCurrentPlace: !!currentPlace,
-    isOpen,
-    placeInPlaces: currentPlace ? !!places.find(p => p.id === currentPlace.id) : false,
-    currentPlaceId: currentPlace?.id,
-    currentPlaceName: currentPlace?.name
-  });
-
   if (!currentPlace || !isOpen) {
-    console.log('❌ Not rendering - conditions not met:', { 
-      hasCurrentPlace: !!currentPlace, 
-      isOpen,
-      currentPlaceId: currentPlace?.id
-    });
     return null;
   }
 
   // Safety check: ensure the current place is in the filtered places
   if (!places.find(p => p.id === currentPlace.id)) {
-    console.log('❌ Current place not found in places array:', {
-      currentPlaceId: currentPlace.id,
-      currentPlaceName: currentPlace.name,
-      availablePlaceIds: places.map(p => p.id),
-      availablePlaceNames: places.map(p => p.name)
-    });
     return null;
   }
 
   const displayPlace = placeWithStats
     ? ({ ...(placeWithStats as any), ...(currentPlace as any) } as any) // prefer dynamic fields from map row (e.g., is_open)
     : currentPlace;
-
-  console.log('✅ Rendering bottom sheet for place:', {
-    displayPlaceId: displayPlace.id,
-    displayPlaceName: displayPlace.name,
-    hasStats: !!placeWithStats,
-    isNavigating
-  });
 
   return (
     <AnimatePresence mode="wait">
@@ -339,15 +265,15 @@ export function PlaceBottomSheet({
                       {/* Previous Place Button */}
                       <button
                         onClick={handlePrevPlace}
-                        disabled={!canNavigatePrev || isNavigating}
+                        disabled={!hasMultiplePlaces || isNavigating}
                         className={`p-1.5 rounded-full transition-all duration-200 ${
-                          canNavigatePrev && !isNavigating
+                          hasMultiplePlaces && !isNavigating
                             ? 'text-white/90 hover:bg-white/10 hover:text-white' 
                             : 'text-white/30 cursor-not-allowed'
                         }`}
-                        title={canNavigatePrev ? "Previous place" : "No more places in this direction"}
+                        title={hasMultiplePlaces ? "Previous place" : "No more places in this direction"}
                       >
-                        {isNavigating && currentIndex > 0 ? (
+                        {isNavigating ? (
                           <div className="w-5 h-5 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
                         ) : (
                           <ChevronLeft className="w-5 h-5" />
@@ -357,15 +283,15 @@ export function PlaceBottomSheet({
                       {/* Next Place Button */}
                       <button
                         onClick={handleNextPlace}
-                        disabled={!canNavigateNext || isNavigating}
+                        disabled={!hasMultiplePlaces || isNavigating}
                         className={`p-1.5 rounded-full transition-all duration-200 ${
-                          canNavigateNext && !isNavigating
+                          hasMultiplePlaces && !isNavigating
                             ? 'text-white/90 hover:bg-white/10 hover:text-white' 
                             : 'text-white/30 cursor-not-allowed'
                         }`}
-                        title={canNavigateNext ? "Next place" : "No more places in this direction"}
+                        title={hasMultiplePlaces ? "Next place" : "No more places in this direction"}
                       >
-                        {isNavigating && currentIndex < places.length - 1 ? (
+                        {isNavigating ? (
                           <div className="w-5 h-5 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
                         ) : (
                           <ChevronRight className="w-5 h-5" />
