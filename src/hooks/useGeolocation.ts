@@ -40,7 +40,7 @@ export function useGeolocation(options: UseGeolocationOptions = {}) {
   const getCurrentPosition = useCallback(async () => {
     if (!geolocationService.isSupported()) {
       updateState({
-        error: new Error('Geolocation is not supported') as GeolocationPositionError,
+        error: new Error('Geolocation is not supported') as unknown as GeolocationPositionError,
         loading: false,
       });
       return;
@@ -72,7 +72,7 @@ export function useGeolocation(options: UseGeolocationOptions = {}) {
   const startWatching = useCallback(() => {
     if (!geolocationService.isSupported()) {
       updateState({
-        error: new Error('Geolocation is not supported') as GeolocationPositionError,
+        error: new Error('Geolocation is not supported') as unknown as GeolocationPositionError,
       });
       return;
     }

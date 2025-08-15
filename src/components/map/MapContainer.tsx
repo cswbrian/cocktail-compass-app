@@ -1,16 +1,12 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect, createContext, useContext } from 'react';
 import { MapContainer as LeafletMapContainer, TileLayer, useMapEvents, useMap } from 'react-leaflet';
 import { Map, LatLng, LatLngBounds } from 'leaflet';
-import { PlaceMarker, MapViewport, GeolocationPosition } from '@/types/map';
-import { mapService } from '@/services/map-service';
+import { PlaceMarker, MapViewport } from '@/types/map';
 import { geolocationService } from '@/services/geolocation-service';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import useSWR from 'swr';
-import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
 import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT } from '@/config/map-config';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { ToastAction } from '@/components/ui/toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { sendGAEvent } from '@/lib/ga';
 import { useLanguage } from '@/context/LanguageContext';
@@ -230,10 +226,23 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     }
   }, [ref, mapRef.current]);
   
-  // Get user location without immediate request to avoid conflicts
+  // Get user location - automatically get if permission already granted
   const { position: userPosition, getCurrentPosition, requestPermission } = useGeolocation({
-    immediate: false, // Don't automatically request location on mount
+    immediate: false, // We'll handle immediate location manually based on permission status
   });
+
+  // Check if we should get location immediately (if permission already granted)
+  useEffect(() => {
+    const checkAndGetLocation = async () => {
+      const permissionStatus = geolocationService.getPermissionStatus();
+      
+      if (permissionStatus === 'granted') {
+        await getCurrentPosition();
+      }
+    };
+    
+    checkAndGetLocation();
+  }, [getCurrentPosition]);
 
   // Handle places count display with auto-dismiss
   useEffect(() => {
@@ -288,101 +297,39 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
       const currentPermission = geolocationService.getPermissionStatus();
 
       if (currentPermission === 'granted') {
-        try {
-          // Get position directly from the service since hook doesn't return it
-          const position = await geolocationService.getCurrentPosition();
-          
-          // Center map on user location with smooth transition
-          if (mapRef.current && position) {
-            const userLatLng = new LatLng(position.latitude, position.longitude);
-            mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
-              animate: true,
-              duration: 0.8, // 800ms transition
-              easeLinearity: 0.25,
-              noMoveStart: false
-            });
-          }
-          
-          sendGAEvent('Map', 'geolocation_success', 'user_location_found');
-          return;
-        } catch (err) {
-          console.error('Failed to get position despite granted permission:', err);
-          toast({
-            title: 'Location error',
-            description: 'Permission granted but unable to get location. Please try again.',
-          });
-          return;
-        }
+        await getCurrentPosition();
+        
+        sendGAEvent('Map', 'geolocation_success', 'user_location_found');
+        return;
       }
 
       // Request permission if not already granted
       const permission = await requestPermission();
 
       if (permission === 'granted') {
-        const position = await geolocationService.getCurrentPosition();
-        
-        // Center map on user location with smooth transition
-        if (mapRef.current && position) {
-          const userLatLng = new LatLng(position.latitude, position.longitude);
-          mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
-            animate: true,
-            duration: 0.8, // 800ms transition
-            easeLinearity: 0.25,
-            noMoveStart: false
-          });
-        }
+        await getCurrentPosition();
         
         sendGAEvent('Map', 'geolocation_success', 'user_location_found');
         return;
       }
 
-      if (permission === 'prompt') {
-        try {
-          const position = await geolocationService.getCurrentPosition();
-          
-          // Center map on user location with smooth transition
-          if (mapRef.current && position) {
-            const userLatLng = new LatLng(position.latitude, position.longitude);
-            mapRef.current.setView(userLatLng, MAP_CONFIG.interactions.markerFocusZoom, {
-              animate: true,
-              duration: 0.8, // 800ms transition
-              easeLinearity: 0.25,
-              noMoveStart: false
-            });
-          }
-          
-          sendGAEvent('Map', 'geolocation_success', 'user_location_found_after_prompt');
-          return;
-        } catch (err) {
-          const geoErr = err as GeolocationPositionError;
-          console.error('Failed to get position after prompt:', geoErr);
-          sendGAEvent('Map', 'geolocation_error_after_prompt', geoErr?.message || 'unknown_error');
-          // Show retry prompt
-          toast({
-            title: 'Enable location to find nearby places',
-            description: 'We need your location to show nearby cocktail bars. Please allow access when prompted.',
-            action: (
-              <ToastAction altText="Retry" onClick={() => handleLocationRequest()}>Retry</ToastAction>
-            ),
-          });
-          return;
-        }
-      }
-
       // permission === 'denied'
       sendGAEvent('Map', 'geolocation_denied', 'permission_denied');
-      // setShowLocationTutorial(true); // Removed as per edit hint
-    } catch (error) {
-      console.error('Failed to get user location:', error);
-      sendGAEvent('Map', 'geolocation_error', error instanceof Error ? error.message : 'unknown_error');
       toast({
-        title: 'Unable to access your location',
-        description: 'Please try again. If the issue persists, check your device and browser settings.',
+        title: 'Location access denied',
+        description: 'Please enable location access in your browser settings to find nearby places.',
+      });
+    } catch (error) {
+      console.error('Location request failed:', error);
+      sendGAEvent('Map', 'geolocation_error', 'request_failed');
+      toast({
+        title: 'Location error',
+        description: 'Unable to get your location. Please try again.',
       });
     } finally {
       setIsLocationLoading(false);
     }
-  }, [requestPermission, toast]);
+  }, [requestPermission, toast, getCurrentPosition]);
 
   // Handle marker click with smooth zoom and center
   const handleMarkerClick = useCallback((place: PlaceMarker) => {
