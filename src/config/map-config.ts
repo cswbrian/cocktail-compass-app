@@ -87,7 +87,9 @@ export const CITY_QUICK_ZOOM = {
       areas: [
         { name: 'Central', key: 'hkCentral', lat: 22.2843556, lng: 114.1527621, zoom: 16 },
         { name: 'Causeway Bay', key: 'hkCausewayBay', lat: 22.2793, lng: 114.1829, zoom: 16 },
-        { name: 'Tsim Sha Tsui', key: 'hkTsimShaTsui', lat: 22.2988, lng: 114.1722, zoom: 16 }
+        { name: 'Wan Chai', key: 'hkCausewayBay', lat: 22.2793, lng: 114.1829, zoom: 16 },
+        { name: 'Tsim Sha Tsui', key: 'hkWanChai', lat: 22.2803, lng: 114.1763, zoom: 16 },
+        { name: 'Mongkok', key: 'hkMongkok', lat: 22.3190, lng: 114.1668, zoom: 15 }
       ]
     },
     { 
