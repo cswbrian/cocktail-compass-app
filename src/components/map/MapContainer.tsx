@@ -4,7 +4,7 @@ import { Map, LatLng, LatLngBounds } from 'leaflet';
 import { PlaceMarker, MapViewport } from '@/types/map';
 import { geolocationService } from '@/services/geolocation-service';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT, CITY_QUICK_ZOOM, City } from '@/config/map-config';
+import { MAP_CONFIG, SMART_DEFAULT_VIEWPORT, CITY_QUICK_ZOOM, City, CityArea } from '@/config/map-config';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -458,20 +458,32 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   }, [onMarkerClick, onPlaceSelect]);
 
   // Handle city jump with instant navigation (no animation)
-  const handleCityJump = useCallback((city: City) => {
+  const handleCityJump = useCallback((city: City | CityArea) => {
     if (mapRef.current) {
       const cityLatLng = new LatLng(city.lat, city.lng);
       
-      // Jump to city instantly without animation
+      // Jump to city/area instantly without animation
       mapRef.current.setView(cityLatLng, city.zoom, {
         animate: false
       });
       
-      // Update current city state
-      setCurrentCity(city);
+      // Update current city state - if it's an area, find the parent city
+      if ('areas' in city) {
+        // This is a city
+        setCurrentCity(city);
+      } else {
+        // This is an area, find the parent city
+        const parentCity = CITY_QUICK_ZOOM.cities.find(c => 
+          'areas' in c && c.areas && c.areas.some(area => area.key === city.key)
+        );
+        if (parentCity) {
+          setCurrentCity(parentCity as City);
+        }
+      }
       
-      // Track city jump event
-      sendGAEvent('Map', 'city_jump', city.name.toLowerCase().replace(/\s+/g, '_'));
+      // Track city/area jump event
+      const eventLabel = city.key.toLowerCase().replace(/\s+/g, '_');
+      sendGAEvent('Map', 'city_jump', eventLabel);
     }
   }, []);
 
@@ -751,6 +763,24 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
               </Button>
               {/* Future chips can be added here */}
             </div>
+            
+            {/* Area navigation buttons - shown when a city with areas is selected */}
+            {currentCity && 'areas' in currentCity && currentCity.areas && currentCity.areas.length > 0 && (
+              <div className="mt-2 flex gap-2 min-w-full pr-4">
+                {currentCity.areas.map((area) => (
+                  <Button
+                    key={`area-${area.key}`}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleCityJump(area)}
+                    className="text-xs whitespace-nowrap"
+                    title={String(t[area.key as keyof typeof t] || area.key)}
+                  >
+                    {t[area.key as keyof typeof t] || area.key}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
