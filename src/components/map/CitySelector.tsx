@@ -57,8 +57,16 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
     onCitySelect(city);
     setIsOpen(false);
     
-    // Track analytics event
-    sendGAEvent('Map', 'city_jump', city.key.toLowerCase().replace(/\s+/g, '_'));
+    // Track analytics event with enhanced data
+    const eventLabel = city.key.toLowerCase().replace(/\s+/g, '_');
+    
+    sendGAEvent('Map', 'city_jump', eventLabel);
+    
+    // Additional tracking for area selections
+    if (!('areas' in city)) {
+      // This is an area selection
+      sendGAEvent('Map', 'area_jump', eventLabel);
+    }
   };
 
   // Track when city selector is opened
@@ -68,6 +76,12 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
     // Track analytics event when city selector is opened
     if (open) {
       sendGAEvent('Map', 'city_selector_opened', 'city_selector');
+      
+      // Track if user has areas available
+      const citiesWithAreas = CITY_QUICK_ZOOM.cities.filter(city => 'areas' in city && city.areas && city.areas.length > 0);
+      if (citiesWithAreas.length > 0) {
+        sendGAEvent('Map', 'areas_available', `${citiesWithAreas.length}_cities_with_areas`);
+      }
     }
   };
 
