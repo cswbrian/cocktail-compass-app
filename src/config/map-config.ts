@@ -102,7 +102,21 @@ export const CITY_QUICK_ZOOM = {
         { name: 'Taipa', key: 'moTaipa', lat: 22.1568, lng: 113.5589, zoom: 15 }
       ]
     },
-    { name: 'Taipei', key: 'taipei', lat: 25.0435, lng: 121.5354, zoom: 13, country: 'TW' },
+    { 
+      name: 'Taipei', 
+      key: 'taipei', 
+      lat: 25.0435, 
+      lng: 121.5354, 
+      zoom: 13, 
+      country: 'TW',
+      areas: [
+        { name: 'Zhongshan', key: 'twZhongshan', lat: 25.0540, lng: 121.5242, zoom: 15 },
+        { name: 'Eastern District', key: 'twEasternDistrict', lat: 25.0330, lng: 121.5654, zoom: 15 },
+        { name: 'Xinyi', key: 'twXinyi', lat: 25.0330, lng: 121.5654, zoom: 15 },
+        { name: 'Gongguan', key: 'twGongguan', lat: 25.0147, lng: 121.5347, zoom: 15 },
+        { name: 'Wanhua', key: 'twWanhua', lat: 25.0147, lng: 121.5347, zoom: 15 }
+      ]
+    },
     { name: 'Tainan', key: 'tainan', lat: 22.9938, lng: 120.2028, zoom: 15, country: 'TW' },
     { name: 'Kaohsiung', key: 'kaohsiung', lat: 22.6281, lng: 120.3052, zoom: 14, country: 'TW' },
     // { key: 'tokyo', lat: 35.6762, lng: 139.6503, zoom: 14, country: 'JP' },
