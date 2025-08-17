@@ -26,6 +26,7 @@ const CITY_TRANSLATION_KEYS: Record<string, string> = {
   'Taipei': 'taipei',
   'Tainan': 'tainan',
   'Kaohsiung': 'kaohsiung',
+  'Macau': 'macau',
   'Tokyo': 'tokyo',
   'Bangkok': 'bangkok',
   'Chiang Mai': 'chiangMai',

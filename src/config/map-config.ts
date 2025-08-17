@@ -78,6 +78,7 @@ export type MapConfig = typeof MAP_CONFIG;
 export const CITY_QUICK_ZOOM = {
   cities: [
     { name: 'Hong Kong', lat: 22.2933, lng: 114.1628, zoom: 14, country: 'HK' },
+    { name: 'Macau', lat: 22.1781, lng: 113.5551, zoom: 13, country: 'MO' },
     { name: 'Taipei', lat: 25.0435, lng: 121.5354, zoom: 13, country: 'TW' },
     { name: 'Tainan', lat: 22.9938, lng: 120.2028, zoom: 15, country: 'TW' },
     { name: 'Kaohsiung', lat: 22.6281, lng: 120.3052, zoom: 14, country: 'TW' },
