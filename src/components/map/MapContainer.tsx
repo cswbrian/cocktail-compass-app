@@ -766,7 +766,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         </div>
 
         {/* Horizontal filter chips bar - top full width, scrollable */}
-        <div className="absolute top-16 left-0 right-20 z-10 px-4 pointer-events-none">
+        <div className="absolute top-16 left-0 right-12 z-10 px-4 pointer-events-none">
           <div className="w-full overflow-x-auto no-scrollbar pointer-events-auto">
             <div className="flex gap-2 min-w-full pr-4">
               {/* City selector - positioned to the left of open now button */}
@@ -808,7 +808,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
                     onClick={() => handleCityJump(area)}
                     className={`text-xs whitespace-nowrap transition-all duration-200 ${
                       currentArea?.key === area.key 
-                        ? 'bg-primary text-white border-primary shadow-md scale-105' 
+                        ? 'bg-primary text-white border-primary shadow-md' 
                         : 'hover:bg-gray-50 hover:scale-105'
                     }`}
                     title={String(t[area.key as keyof typeof t] || area.key)}

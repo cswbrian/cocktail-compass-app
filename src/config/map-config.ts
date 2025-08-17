@@ -111,10 +111,11 @@ export const CITY_QUICK_ZOOM = {
       country: 'TW',
       areas: [
         { name: 'Zhongshan', key: 'twZhongshan', lat: 25.0540, lng: 121.5242, zoom: 15 },
-        { name: 'Eastern District', key: 'twEasternDistrict', lat: 25.0330, lng: 121.5654, zoom: 15 },
-        { name: 'Xinyi', key: 'twXinyi', lat: 25.0330, lng: 121.5654, zoom: 15 },
+        { name: 'Eastern District', key: 'twEasternDistrict', lat: 25.0436, lng: 121.5472, zoom: 16 },
+        { name: 'Daan', key: 'twDaan', lat: 25.0328, lng: 121.5539, zoom: 16 },
+        { name: 'Xinyi', key: 'twXinyi', lat: 25.0363, lng: 121.5667, zoom: 16 },
         { name: 'Gongguan', key: 'twGongguan', lat: 25.0147, lng: 121.5347, zoom: 15 },
-        { name: 'Wanhua', key: 'twWanhua', lat: 25.0147, lng: 121.5347, zoom: 15 }
+        { name: 'Ximending', key: 'twXimending', lat: 25.0443, lng: 121.5049, zoom: 16 }
       ]
     },
     { name: 'Tainan', key: 'tainan', lat: 22.9938, lng: 120.2028, zoom: 15, country: 'TW' },

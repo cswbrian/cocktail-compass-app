@@ -204,14 +204,14 @@ export function CitySelector({ onCitySelect, currentCity, currentArea, userPosit
           )}
         </SheetHeader>
         
-        <div className="flex flex-col flex-1 overflow-y-auto px-6 py-4 gap-y-2">
+        <div className="flex flex-col flex-1 overflow-y-auto px-2 py-4 gap-y-2">
           {sortedCities.map((cityWithDistance) => {
             return (
               <div key={`${cityWithDistance.country}-${cityWithDistance.key}`}>
                 {/* City Header */}
                 <button
                   onClick={() => handleSelection(cityWithDistance)}
-                  className={`w-full px-4 py-2 text-left  hover:text-black transition-colors duration-150 flex items-center justify-between group rounded-lg ${
+                  className={`w-full px-4 py-2 text-left transition-colors duration-150 flex items-center justify-between group rounded-lg ${
                     selectedKey === cityWithDistance.key 
                       ? 'bg-primary text-white' 
                       : ''
@@ -241,7 +241,7 @@ export function CitySelector({ onCitySelect, currentCity, currentArea, userPosit
                 
                 {/* City Areas */}
                 {'areas' in cityWithDistance && cityWithDistance.areas && cityWithDistance.areas.length > 0 && (
-                  <div className="mt-3 ml-8">
+                  <div className="mt-3 mx-2">
                     <div className="flex flex-wrap gap-2">
                       {cityWithDistance.areas.map((area: CityArea) => (
                         <Button
@@ -252,7 +252,7 @@ export function CitySelector({ onCitySelect, currentCity, currentArea, userPosit
                           className={`${
                             selectedKey === area.key 
                               ? 'bg-primary text-white border-primary' 
-                              : 'hover:bg-gray-50'
+                              : ''
                           }`}
                         >
                           {t[area.key as keyof typeof t] || area.key}
