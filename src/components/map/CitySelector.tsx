@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CITY_QUICK_ZOOM, City } from '@/config/map-config';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { CITY_QUICK_ZOOM, City, CityArea } from '@/config/map-config';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
 import { sendGAEvent } from '@/lib/ga';
 
 interface CitySelectorProps {
-  onCitySelect: (city: City) => void;
-  currentCity?: City | null;
+  onCitySelect: (city: City | CityArea) => void;
+  currentCity?: City | CityArea | null;
   userPosition?: { latitude: number; longitude: number } | null;
 }
 
@@ -19,18 +19,6 @@ const COUNTRY_FLAGS: Record<string, string> = {
   'TW': '🇹🇼',
   'JP': '🇯🇵',
   'TH': '🇹🇭',
-};
-
-// City name translation keys mapping
-const CITY_TRANSLATION_KEYS: Record<string, string> = {
-  'Hong Kong': 'hongKong',
-  'Taipei': 'taipei',
-  'Tainan': 'tainan',
-  'Kaohsiung': 'kaohsiung',
-  'Macau': 'macau',
-  'Tokyo': 'tokyo',
-  'Bangkok': 'bangkok',
-  'Chiang Mai': 'chiangMai',
 };
 
 // Calculate distance between two coordinates in kilometers
@@ -61,15 +49,16 @@ function formatDistance(distance: number): string {
 
 export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedKey, setSelectedKey] = useState<string | null>(currentCity?.key || null);
   const { language } = useLanguage();
   const t = translations[language];
 
-  const handleCitySelect = (city: { name: string; lat: number; lng: number; zoom: number; country: string }) => {
-    onCitySelect(city as City);
+  const handleCitySelect = (city: City | CityArea) => {
+    onCitySelect(city);
     setIsOpen(false);
     
     // Track analytics event
-    sendGAEvent('Map', 'city_jump', city.name.toLowerCase().replace(/\s+/g, '_'));
+    sendGAEvent('Map', 'city_jump', city.key.toLowerCase().replace(/\s+/g, '_'));
   };
 
   // Track when city selector is opened
@@ -80,6 +69,28 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
     if (open) {
       sendGAEvent('Map', 'city_selector_opened', 'city_selector');
     }
+  };
+
+  // Handle city/area selection and close sheet
+  const handleSelection = (city: City | CityArea) => {
+    // Log the selected button
+    console.log('Selected button:', {
+      key: city.key,
+      name: 'name' in city ? city.name : 'N/A',
+      type: 'areas' in city ? 'City' : 'Area',
+      coordinates: { lat: city.lat, lng: city.lng, zoom: city.zoom },
+      country: 'country' in city ? city.country : 'N/A'
+    });
+    
+    // Store the selected key
+    setSelectedKey(city.key);
+    
+    // First close the sheet
+    setIsOpen(false);
+    // Small delay to ensure sheet closes before handling selection
+    setTimeout(() => {
+      handleCitySelect(city);
+    }, 100);
   };
 
   // Get cities with distance calculations if user position is available
@@ -104,12 +115,12 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
     : citiesWithDistance;
 
   const currentCityName = currentCity 
-    ? (t[CITY_TRANSLATION_KEYS[currentCity.name] as keyof typeof t] || currentCity.name)
+    ? (t[currentCity.key as keyof typeof t] || currentCity.key)
     : (t.selectCity || 'Select City');
 
   return (
-    <Popover open={isOpen} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>
+    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+      <SheetTrigger asChild>
         <Button
           variant="outline"
           size="sm"
@@ -146,54 +157,101 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
             />
           </svg>
         </Button>
-      </PopoverTrigger>
+      </SheetTrigger>
       
-      <PopoverContent 
-        className="w-72 p-0" 
-        align="start"
-        side="bottom"
-        sideOffset={8}
+      <SheetContent 
+        side="bottom" 
+        className="h-[85vh] w-full rounded-t-[10px] p-0"
       >
-        <div className="p-3 border-b border-gray-100">
+        <SheetHeader className="px-6 py-4 border-b border-gray-100">
+          <div className="flex items-center justify-between">
+            <SheetTitle className="text-lg font-semibold">
+              {t.selectCity || 'Select City'}
+            </SheetTitle>
+          </div>
           {userPosition && (
             <p className="text-xs text-gray-500 mt-1">
               {t.sortedByDistance || 'Sorted by distance from your location'}
             </p>
           )}
-        </div>
+        </SheetHeader>
         
-        <div className="max-h-64 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto px-6 py-4">
           {sortedCities.map((cityWithDistance) => {
-            const city = { name: cityWithDistance.name, lat: cityWithDistance.lat, lng: cityWithDistance.lng, zoom: cityWithDistance.zoom, country: cityWithDistance.country };
             return (
-              <button
-                key={`${city.country}-${city.name}`}
-                onClick={() => handleCitySelect(city)}
-                className={`w-full px-3 py-3 text-left hover:bg-gray-50 hover:text-black transition-colors duration-150 flex items-center justify-between group ${
-                  currentCity?.name === city.name ? 'bg-primary' : ''
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{COUNTRY_FLAGS[city.country]}</span>
-                  <div className="text-left">
-                    <div className="font-medium transition-colors">
-                      {t[CITY_TRANSLATION_KEYS[city.name] as keyof typeof t] || city.name}
+              <div key={`${cityWithDistance.country}-${cityWithDistance.key}`} className="mb-6">
+                {/* City Header */}
+                <button
+                  onClick={() => handleSelection(cityWithDistance)}
+                  className={`w-full px-4 py-2 text-left  hover:text-black transition-colors duration-150 flex items-center justify-between group rounded-lg ${
+                    selectedKey === cityWithDistance.key 
+                      ? 'bg-primary text-white' 
+                      : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{COUNTRY_FLAGS[cityWithDistance.country]}</span>
+                    <div className="text-left">
+                      <div className="font-semibold text-lg transition-colors">
+                        {t[cityWithDistance.key as keyof typeof t] || cityWithDistance.key}
+                      </div>
                     </div>
                   </div>
-                </div>
+                  
+                  <div className="flex items-center gap-2">
+                    {cityWithDistance.distance !== null && (
+                      <span className={`text-xs px-3 py-1 rounded-full ${
+                        selectedKey === cityWithDistance.key
+                          ? 'bg-white/20 text-white' 
+                          : 'bg-gray-100 text-black'
+                      }`}>
+                        {formatDistance(cityWithDistance.distance)}
+                      </span>
+                    )}
+                  </div>
+                </button>
                 
-                <div className="flex items-center gap-2">
-                  {cityWithDistance.distance !== null && (
-                    <span className="text-xs text-black bg-gray-100 px-2 py-1 rounded-full">
-                      {formatDistance(cityWithDistance.distance)}
-                    </span>
-                  )}
-                </div>
-              </button>
+                {/* City Areas */}
+                {'areas' in cityWithDistance && cityWithDistance.areas && cityWithDistance.areas.length > 0 && (
+                  <div className="mt-3 ml-8">
+                    <div className="flex flex-wrap gap-2">
+                      {cityWithDistance.areas.map((area: CityArea) => (
+                        <Button
+                          key={`${cityWithDistance.key}-${area.key}`}
+                          onClick={() => handleSelection(area)}
+                          variant={selectedKey === area.key ? "default" : "outline"}
+                          size="sm"
+                          className={`${
+                            selectedKey === area.key 
+                              ? 'bg-primary text-white border-primary' 
+                              : 'hover:bg-gray-50'
+                          }`}
+                        >
+                          {t[area.key as keyof typeof t] || area.key}
+                          {userPosition && (
+                            <span className={`ml-2  ${
+                              selectedKey === area.key 
+                                ? 'text-white/70' 
+                                : 'opacity-70'
+                            }`}>
+                              {formatDistance(calculateDistance(
+                                userPosition.latitude,
+                                userPosition.longitude,
+                                area.lat,
+                                area.lng
+                              ))}
+                            </span>
+                          )}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
-      </PopoverContent>
-    </Popover>
+      </SheetContent>
+    </Sheet>
   );
 }
