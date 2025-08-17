@@ -285,6 +285,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [showPlacesCount, setShowPlacesCount] = useState(false);
   const [currentCity, setCurrentCity] = useState<City | null>(null);
+  const [currentArea, setCurrentArea] = useState<CityArea | null>(null);
   const { language } = useLanguage();
   const t = translations[language];
   const pwaStatus = detectPWAStatus();
@@ -467,10 +468,11 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         animate: false
       });
       
-      // Update current city state - if it's an area, find the parent city
+      // Update current city and area state
       if ('areas' in city) {
         // This is a city
         setCurrentCity(city);
+        setCurrentArea(null); // Clear area when jumping to city
       } else {
         // This is an area, find the parent city
         const parentCity = CITY_QUICK_ZOOM.cities.find(c => 
@@ -478,6 +480,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
         );
         if (parentCity) {
           setCurrentCity(parentCity as City);
+          setCurrentArea(city); // Set the current area
         }
       }
       
@@ -487,24 +490,40 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     }
   }, []);
 
-  // Determine current city based on map center
-  const determineCurrentCity = useCallback((center: LatLng): City | null => {
+  // Determine current city and area based on map center and viewport
+  const determineCurrentCityAndArea = useCallback((center: LatLng, bounds?: LatLngBounds, zoom?: number): { city: City | null; area: CityArea | null } => {
     const cities = CITY_QUICK_ZOOM.cities;
     let closestCity: City | null = null;
-    let minDistance = Infinity;
+    let closestArea: CityArea | null = null;
+    let minCityDistance = Infinity;
+    let minAreaDistance = Infinity;
     
     for (const city of cities) {
       const cityLatLng = new LatLng(city.lat, city.lng);
-      const distance = center.distanceTo(cityLatLng);
+      const cityDistance = center.distanceTo(cityLatLng);
       
       // If we're within 10km of a city center, consider it the current city
-      if (distance < 10000 && distance < minDistance) {
-        minDistance = distance;
+      if (cityDistance < 10000 && cityDistance < minCityDistance) {
+        minCityDistance = cityDistance;
         closestCity = city as City;
+        
+        // Check if we're within any of this city's areas
+        if ('areas' in city && city.areas) {
+          for (const area of city.areas) {
+            const areaLatLng = new LatLng(area.lat, area.lng);
+            const areaDistance = center.distanceTo(areaLatLng);
+            
+            // If we're within 5km of an area center and zoom is high enough, consider it the current area
+            if (areaDistance < 5000 && areaDistance < minAreaDistance && (zoom || 0) >= 15) {
+              minAreaDistance = areaDistance;
+              closestArea = area;
+            }
+          }
+        }
       }
     }
     
-    return closestCity;
+    return { city: closestCity, area: closestArea };
   }, []);
 
   // Refresh map function
@@ -547,16 +566,29 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
     }
   }, [userPosition, shouldCenterOnUserLocation]);
 
-  // Update current city when map center changes
+  // Update current city and area when map center changes
   useEffect(() => {
     if (mapRef.current) {
       const center = mapRef.current.getCenter();
-      const newCurrentCity = determineCurrentCity(center);
+      const bounds = mapRef.current.getBounds();
+      const zoom = mapRef.current.getZoom();
+      const { city: newCurrentCity, area: newCurrentArea } = determineCurrentCityAndArea(center, bounds, zoom);
+      
+      // Update city immediately
       if (newCurrentCity !== currentCity) {
         setCurrentCity(newCurrentCity);
       }
+      
+      // Update area with a small delay to avoid flickering during zoom/pan
+      if (newCurrentArea !== currentArea) {
+        const timer = setTimeout(() => {
+          setCurrentArea(newCurrentArea);
+        }, 300);
+        
+        return () => clearTimeout(timer);
+      }
     }
-  }, [currentBounds, determineCurrentCity, currentCity]);
+  }, [currentBounds, determineCurrentCityAndArea, currentCity, currentArea]);
 
   if (error) {
     console.error('Error loading map places:', error);
@@ -741,6 +773,7 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
               <CitySelector
                 onCitySelect={handleCityJump}
                 currentCity={currentCity}
+                currentArea={currentArea}
                 userPosition={userPosition}
               />
               {/* Open Now chip */}
@@ -770,10 +803,14 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
                 {currentCity.areas.map((area) => (
                   <Button
                     key={`area-${area.key}`}
-                    variant="outline"
+                    variant={currentArea?.key === area.key ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleCityJump(area)}
-                    className="text-xs whitespace-nowrap"
+                    className={`text-xs whitespace-nowrap transition-all duration-200 ${
+                      currentArea?.key === area.key 
+                        ? 'bg-primary text-white border-primary shadow-md scale-105' 
+                        : 'hover:bg-gray-50 hover:scale-105'
+                    }`}
                     title={String(t[area.key as keyof typeof t] || area.key)}
                   >
                     {t[area.key as keyof typeof t] || area.key}
@@ -798,6 +835,8 @@ export const MapContainer = React.forwardRef<Map, MapContainerProps>(({
             </span>
           </div>
         )}
+        
+
         
         {/* Map updating indicator */}
         {isLoading && (

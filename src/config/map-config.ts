@@ -90,7 +90,18 @@ export const CITY_QUICK_ZOOM = {
         { name: 'Tsim Sha Tsui', key: 'hkTsimShaTsui', lat: 22.2988, lng: 114.1722, zoom: 16 }
       ]
     },
-    { name: 'Macau', key: 'macau', lat: 22.1781, lng: 113.5551, zoom: 13, country: 'MO' },
+    { 
+      name: 'Macau', 
+      key: 'macau', 
+      lat: 22.1781, 
+      lng: 113.5551, 
+      zoom: 13, 
+      country: 'MO',
+      areas: [
+        { name: 'Macau Island', key: 'moMacauIsland', lat: 22.1889, lng: 113.5449, zoom: 15 },
+        { name: 'Taipa', key: 'moTaipa', lat: 22.1568, lng: 113.5589, zoom: 15 }
+      ]
+    },
     { name: 'Taipei', key: 'taipei', lat: 25.0435, lng: 121.5354, zoom: 13, country: 'TW' },
     { name: 'Tainan', key: 'tainan', lat: 22.9938, lng: 120.2028, zoom: 15, country: 'TW' },
     { name: 'Kaohsiung', key: 'kaohsiung', lat: 22.6281, lng: 120.3052, zoom: 14, country: 'TW' },

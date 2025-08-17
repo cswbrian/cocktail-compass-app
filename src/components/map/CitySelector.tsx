@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { CITY_QUICK_ZOOM, City, CityArea } from '@/config/map-config';
@@ -9,6 +9,7 @@ import { sendGAEvent } from '@/lib/ga';
 interface CitySelectorProps {
   onCitySelect: (city: City | CityArea) => void;
   currentCity?: City | CityArea | null;
+  currentArea?: CityArea | null;
   userPosition?: { latitude: number; longitude: number } | null;
 }
 
@@ -47,11 +48,22 @@ function formatDistance(distance: number): string {
   return `${distance.toFixed(1)}km`;
 }
 
-export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySelectorProps) {
+export function CitySelector({ onCitySelect, currentCity, currentArea, userPosition }: CitySelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedKey, setSelectedKey] = useState<string | null>(currentCity?.key || null);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const { language } = useLanguage();
   const t = translations[language];
+  
+  // Update selected key when currentCity or currentArea changes
+  useEffect(() => {
+    if (currentArea) {
+      setSelectedKey(currentArea.key);
+    } else if (currentCity) {
+      setSelectedKey(currentCity.key);
+    } else {
+      setSelectedKey(null);
+    }
+  }, [currentCity, currentArea]);
 
   const handleCitySelect = (city: City | CityArea) => {
     onCitySelect(city);
@@ -128,9 +140,11 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
     ? citiesWithDistance.sort((a, b) => (a.distance || 0) - (b.distance || 0))
     : citiesWithDistance;
 
-  const currentCityName = currentCity 
-    ? (t[currentCity.key as keyof typeof t] || currentCity.key)
-    : (t.selectCity || 'Select City');
+  const currentCityName = currentArea 
+    ? `${t[currentArea.key as keyof typeof t] || currentArea.key}, ${t[currentCity?.key as keyof typeof t] || currentCity?.key}`
+    : currentCity 
+      ? (t[currentCity.key as keyof typeof t] || currentCity.key)
+      : (t.selectCity || 'Select City');
 
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
@@ -190,10 +204,10 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
           )}
         </SheetHeader>
         
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="flex flex-col flex-1 overflow-y-auto px-6 py-4 gap-y-2">
           {sortedCities.map((cityWithDistance) => {
             return (
-              <div key={`${cityWithDistance.country}-${cityWithDistance.key}`} className="mb-6">
+              <div key={`${cityWithDistance.country}-${cityWithDistance.key}`}>
                 {/* City Header */}
                 <button
                   onClick={() => handleSelection(cityWithDistance)}
