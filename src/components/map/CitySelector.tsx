@@ -15,6 +15,7 @@ interface CitySelectorProps {
 // Country flag emojis
 const COUNTRY_FLAGS: Record<string, string> = {
   'HK': '🇭🇰',
+  'MO': '🇲🇴',
   'TW': '🇹🇼',
   'JP': '🇯🇵',
   'TH': '🇹🇭',
@@ -71,6 +72,16 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
     sendGAEvent('Map', 'city_jump', city.name.toLowerCase().replace(/\s+/g, '_'));
   };
 
+  // Track when city selector is opened
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    
+    // Track analytics event when city selector is opened
+    if (open) {
+      sendGAEvent('Map', 'city_selector_opened', 'city_selector');
+    }
+  };
+
   // Get cities with distance calculations if user position is available
   const citiesWithDistance = CITY_QUICK_ZOOM.cities.map(city => {
     let distance: number | null = null;
@@ -97,7 +108,7 @@ export function CitySelector({ onCitySelect, currentCity, userPosition }: CitySe
     : (t.selectCity || 'Select City');
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
