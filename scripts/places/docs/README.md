@@ -15,6 +15,51 @@ This directory contains the offline data ingestion pipeline for importing place 
 - ✅ Error handling and usage logging
 - ✅ Data validation utilities
 - ✅ Test script for validation
+- ✅ **NEW: Place ID support for 65% cost reduction**
+
+## Cost Optimization Features
+
+### Place ID Support (NEW)
+Your ingestion script now supports direct place lookup using Google Place IDs, which **reduces API costs by 65%**:
+
+- **With Place ID**: Only Place Details API call ($0.017 per place)
+- **Without Place ID**: Text Search + Place Details ($0.049 per place)
+
+### Input Formats Supporting Place IDs
+
+#### JSON with Place IDs (RECOMMENDED)
+```json
+[
+  {
+    "name": "The Old Man",
+    "google_place_id": "ChIJ7cv00DwBBDQRdwjMnkP9EAs",
+    "tags": ["speakeasy", "craft cocktails"]
+  }
+]
+```
+
+#### CSV with Place IDs
+```csv
+name,google_place_id,tags,description
+"The Old Man","ChIJ7cv00DwBBDQRdwjMnkP9EAs","speakeasy,craft cocktails","Hidden gem in Soho"
+```
+
+### How to Get Place IDs
+
+1. **From Previous Runs**: Use `--dry-run` to see what would be found, then extract place IDs
+2. **From Google Maps URLs**: Extract from Google Maps search results
+3. **From Google My Business**: If you manage the venues
+
+### Cost Analysis Output
+
+The script now shows cost savings when using place IDs:
+```
+💰 Cost Analysis:
+   Places found by place ID: 25 (saved $0.800 USD)
+   Places found by text search: 5
+   Total API calls: 30
+   💡 Cost saved: $0.800 USD (~6.24 HKD)
+```
 
 ## Quick Start
 

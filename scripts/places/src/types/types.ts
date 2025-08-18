@@ -83,6 +83,7 @@ export interface OpeningPeriod {
 export interface PlaceInput {
   name: string;
   searchQuery?: string;
+  google_place_id?: string; // Google Places API place ID for direct lookup
   tags?: string[];
   description?: string;
   show_on_map?: boolean;

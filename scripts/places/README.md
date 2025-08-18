@@ -30,6 +30,7 @@ scripts/places/
 ├── samples/               # Sample data files
 │   ├── my-bars.json
 │   ├── sample-places.json
+│   ├── sample-places.csv
 │   └── sample-places.txt
 ├── ingest-places.ts       # Main ingestion script
 ├── config.ts              # Configuration management
@@ -53,10 +54,13 @@ scripts/places/
 3. **Run ingestion:**
    ```bash
    # Basic usage
-   tsx ingest-places.ts --input samples/sample-places.json
-   
-   # With options
-   tsx ingest-places.ts --input my-bars.json --environment staging --update-existing
+tsx ingest-places.ts --input samples/sample-places.json
+
+# CSV format
+tsx ingest-places.ts --input samples/sample-places.csv
+
+# With options
+tsx ingest-places.ts --input my-bars.json --environment staging --update-existing
    ```
 
 ## 🔧 Main Components
@@ -82,12 +86,36 @@ scripts/places/
 
 ## 📊 Data Flow
 
-1. **Input**: JSON/TXT files with venue names
+1. **Input**: JSON/CSV/TXT files with venue names
 2. **Search**: Google Places API text search
 3. **Details**: Fetch comprehensive place information
 4. **Validation**: Check for existing venues
 5. **Upsert**: Insert new or update existing venues
 6. **Output**: Summary report and database updates
+
+## 📁 Input File Formats
+
+### JSON Format
+```json
+[
+  {"name": "The Old Man", "searchQuery": "cocktail bar"},
+  {"name": "Quinary", "searchQuery": "quinary bar"}
+]
+```
+
+### CSV Format
+```csv
+name,searchQuery,tags,description,show_on_map
+"The Old Man","cocktail bar","speakeasy,craft cocktails","Hidden gem in Soho",true
+"Quinary","quinary bar","molecular gastronomy,innovative","Award-winning cocktail bar",true
+```
+
+### TXT Format
+```
+The Old Man
+Quinary
+COA
+```
 
 ## 🧪 Testing
 

@@ -1,6 +1,13 @@
 # Cocktail Bar Map - Implementation Plan
 
-## 📈 Status: ✅ Day 3 Mostly Complete → Ready for Day 4 Polish
+## 📈 Current Status
+**Day 1**: ✅ **COMPLETED** - Foundation, geolocation, PostGIS, authentication, routing
+**Day 2**: ✅ **COMPLETED** - Core features, enhanced UX, state management, internationalization
+**Day 3**: ✅ **COMPLETED** - PWA geolocation, user positioning, nearby places display
+**Day 4**: ✅ **COMPLETED** - Polish, testing, performance optimization, accessibility audit
+**Day 5**: 🔄 **NEXT** - Enhanced features (list view, opening hours, filter toggles)
+**Day 6**: 📋 **PLANNED** - Place tags & multi-tag filtering
+**Day 7**: 📋 **PLANNED** - City-based quick zoom functionality
 
 ## 📋 Implementation Plan (3-4 days)
 
@@ -66,6 +73,16 @@
 - [ ] Update `map-service` and `PlaceSearchParams` to accept `selectedTags` and `matchMode`
 - [ ] i18n keys for tag filtering and match mode
 - [ ] Analytics for tag filter usage
+
+### Day 7: City-Based Quick Zoom (NEW)
+- [ ] Extend `MapConfig` with city definitions and zoom levels
+- [ ] Create `CitySelector` component with dropdown interface
+- [ ] Add city selector to `MapContainer` left control stack
+- [ ] Implement smooth flyTo transitions between cities
+- [ ] Update URL state management to include city parameter
+- [ ] Add i18n support for city names and "Quick Jump" functionality
+- [ ] Implement analytics tracking for city selection events
+- [ ] Test cross-city navigation and state persistence
 
 ## 🎯 MVP Components
 **P0 (Must Have)**:
@@ -208,6 +225,55 @@ Implementation of the Cocktail Bar Map feature based on the [Product Requirement
 - [ ] Large selection of tags performs well (<500ms fetch)
 - [ ] URL share reproduces selection
 - [ ] Backfill creates stable tags for all existing places
+
+### **City-Based Quick Zoom — Implementation Plan**
+
+#### Configuration & data
+- [ ] Extend `src/config/map-config.ts` with city definitions:
+  ```typescript
+  export const CITY_QUICK_ZOOM = {
+    cities: [
+      { name: 'Hong Kong', lat: 22.2849, lng: 114.1577, zoom: 16, country: 'HK' },
+      { name: 'Taipei', lat: 25.0330, lng: 121.5654, zoom: 15, country: 'TW' },
+      { name: 'Tainan', lat: 22.9997, lng: 120.2270, zoom: 15, country: 'TW' },
+      { name: 'Kaohsiung', lat: 22.6273, lng: 120.3014, zoom: 15, country: 'TW' },
+      { name: 'Tokyo', lat: 35.6762, lng: 139.6503, zoom: 14, country: 'JP' },
+      { name: 'Bangkok', lat: 13.7563, lng: 100.5018, zoom: 14, country: 'TH' },
+      { name: 'Chiang Mai', lat: 18.7883, lng: 98.9853, zoom: 15, country: 'TH' }
+    ]
+  } as const;
+  ```
+
+#### UI components
+- [ ] Create `src/components/map/CitySelector.tsx`:
+  - Dropdown trigger with globe icon and current city name
+  - City list with country flags and distance indicators
+  - Hover states and smooth transitions
+  - Responsive design for mobile and desktop
+- [ ] Add city selector to `MapContainer` left control stack (opposite side from location button)
+- [ ] Position above filter chips to avoid overlap
+
+#### Functionality
+- [ ] Implement `handleCityJump(city)` function in `MapContainer`:
+  - Use `mapRef.current.flyTo()` for smooth transitions
+  - Update URL state with city parameter
+  - Trigger viewport change for data loading
+  - Track analytics event
+- [ ] Update URL state management to include `?city=hong-kong` parameter
+- [ ] Session persistence for last selected city
+- [ ] Integration with existing viewport-based data loading
+
+#### i18n & analytics
+- [ ] Add translation keys: `quickJump`, `selectCity`, city names in multiple languages
+- [ ] Track events: `city_jump_[city_name]`, `city_selector_open`
+- [ ] Support for English, Chinese, Thai, Japanese city names
+
+#### QA
+- [ ] Smooth transitions between cities (<1s animation)
+- [ ] URL state correctly reflects selected city
+- [ ] Session persistence works across browser refresh
+- [ ] Mobile and desktop responsive design
+- [ ] No interference with existing map controls
 
 ### **Open Now Filter & Status — Implementation Plan**
 

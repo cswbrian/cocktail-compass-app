@@ -106,6 +106,68 @@ Interactive map for discovering cocktail places with region-based filtering and 
 - **i18n**: Add translation keys for `openNow`, `openPlacesCount`, `allPlacesCount`
 - **Analytics**: Track events `filter_open_now_on/off`
 
+### Place Tags & Multi-Tag Filtering 🆕
+
+- **UX**:
+  - Tag chips control on the map (top overlay or filter drawer)
+  - Multi-select tags; support match mode: Any/All
+  - Persist selection in URL and session (e.g., `?tags=speakeasy,tiki&match=any`)
+  - Show tags as chips in `PlaceBottomSheet`
+- **Data**:
+  - Add `places.tags text[]` with GIN index; backfill from `place_types` via mapping
+  - Deterministic mapping from Google `types[]` to curated app tags (e.g., `speakeasy`, `rooftop`, `tiki`, `whisky`, `hotel_bar`, `outdoor`, `live_music`, `happy_hour`)
+- **API**:
+  - Extend viewport/nearby RPCs with optional `filter_tags text[]` and `match text` (`'any'|'all'`)
+  - Filtering logic: `any` → `p.tags && filter_tags`; `all` → `p.tags @> filter_tags`
+- **Performance**:
+  - Ensure `idx_places_tags` (GIN) is present; verify query plans use it
+- **i18n**:
+  - Reuse `tags` key; add `matchAnyTags`, `matchAllTags` if needed
+- **Analytics**:
+  - Track `filter_tags_apply`, `filter_tags_clear`, `filter_match_mode_change`
+- **Acceptance Criteria**:
+  - Users can select multiple tags and see markers filtered in <500ms
+  - Tags appear on the place detail bottom sheet
+  - URL share preserves selected tags and match mode
+  - Queries return within SLA using GIN index
+
+### City-Based Quick Zoom 🆕
+
+- **UX**:
+  - Floating city selector dropdown positioned on the left side of the map
+  - Compact design that doesn't interfere with existing controls
+  - Quick access to major cities with pre-configured zoom levels
+  - Smooth animated transitions when jumping between cities
+- **Cities & Coordinates**:
+  - **Hong Kong**: 22.2849, 114.1577 (zoom 16 - Central district)
+  - **Taipei**: 25.0330, 121.5654 (zoom 15 - city center)
+  - **Tainan**: 22.9997, 120.2270 (zoom 15 - historic district)
+  - **Kaohsiung**: 22.6273, 120.3014 (zoom 15 - port city)
+  - **Tokyo**: 35.6762, 139.6503 (zoom 14 - metropolitan area)
+  - **Bangkok**: 13.7563, 100.5018 (zoom 14 - city center)
+  - **Chiang Mai**: 18.7883, 98.9853 (zoom 15 - old city)
+- **Design**:
+  - Dropdown trigger with globe icon and current city name
+  - City list with country flags and distance from current location
+  - Hover states and smooth transitions
+  - Responsive design for mobile and desktop
+- **Functionality**:
+  - Instant map centering with appropriate zoom level for each city
+  - URL state updates to reflect new city location
+  - Session persistence for last selected city
+  - Integration with existing viewport-based data loading
+- **Technical**:
+  - Extend `MapConfig` with city definitions and zoom levels
+  - Add city selector component to `MapContainer` left control stack
+  - Implement smooth flyTo transitions between cities
+  - Update URL state management to include city parameter
+- **i18n**:
+  - Add translation keys for city names and "Quick Jump" functionality
+  - Support for multiple languages (English, Chinese, Thai, Japanese)
+- **Analytics**:
+  - Track city selection events: `city_jump_[city_name]`
+  - Monitor usage patterns for popular city destinations
+
 ## ❓ Future Considerations
 - Search functionality scope
 - Advanced filters (venue type, activity level, price range)
@@ -156,28 +218,3 @@ Interactive map for discovering cocktail places with region-based filtering and 
 - **Quick Access**: Easily accessible but not intrusive
 - **Status Display**: Show filter count "5 open venues" / "12 closed venues"
 - **Clear All**: Quick option to remove all filters
-
-### Place Tags & Multi-Tag Filtering 🆕
-
-- **UX**:
-  - Tag chips control on the map (top overlay or filter drawer)
-  - Multi-select tags; support match mode: Any/All
-  - Persist selection in URL and session (e.g., `?tags=speakeasy,tiki&match=any`)
-  - Show tags as chips in `PlaceBottomSheet`
-- **Data**:
-  - Add `places.tags text[]` with GIN index; backfill from `place_types` via mapping
-  - Deterministic mapping from Google `types[]` to curated app tags (e.g., `speakeasy`, `rooftop`, `tiki`, `whisky`, `hotel_bar`, `outdoor`, `live_music`, `happy_hour`)
-- **API**:
-  - Extend viewport/nearby RPCs with optional `filter_tags text[]` and `match text` (`'any'|'all'`)
-  - Filtering logic: `any` → `p.tags && filter_tags`; `all` → `p.tags @> filter_tags`
-- **Performance**:
-  - Ensure `idx_places_tags` (GIN) is present; verify query plans use it
-- **i18n**:
-  - Reuse `tags` key; add `matchAnyTags`, `matchAllTags` if needed
-- **Analytics**:
-  - Track `filter_tags_apply`, `filter_tags_clear`, `filter_match_mode_change`
-- **Acceptance Criteria**:
-  - Users can select multiple tags and see markers filtered in <500ms
-  - Tags appear on the place detail bottom sheet
-  - URL share preserves selected tags and match mode
-  - Queries return within SLA using GIN index
