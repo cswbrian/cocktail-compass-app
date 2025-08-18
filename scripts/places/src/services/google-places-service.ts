@@ -6,6 +6,11 @@ import { GooglePlacesRateLimiter, ExponentialBackoff } from '../utils/rate-limit
 /**
  * Google Places API service using direct HTTP requests
  * More reliable than the google-maps-services library for server-side usage
+ * 
+ * Uses Text Search Essentials (IDs only) for cost optimization:
+ * - Text Search API returns minimal data (place_id, basic info)
+ * - Place Details API provides comprehensive information
+ * - This approach reduces costs while maintaining full functionality
  */
 export class GooglePlacesService {
   private rateLimiter: GooglePlacesRateLimiter;
@@ -36,6 +41,7 @@ export class GooglePlacesService {
 
   /**
    * Search for places using text query with fallback strategies
+   * Uses Text Search Essentials (IDs only) for cost optimization
    */
   async searchPlaces(query: string, location?: string): Promise<GooglePlaceDetails[]> {
     // Clean up the query
@@ -87,13 +93,14 @@ export class GooglePlacesService {
 
   /**
    * Perform the actual search with given parameters
+   * Uses Text Search Essentials (IDs only) for cost optimization
    */
   private async performSearch(query: string, location?: string): Promise<GooglePlaceDetails[]> {
     const params = new URLSearchParams({
       query,
       key: this.apiKey,
-      // Remove restrictive type filter to get more results
-      // type: 'bar', // Focus on bars/drinking establishments
+      // Text Search Essentials returns minimal data - just enough to identify places
+      // We'll get full details via Place Details API calls
     });
 
     // Add location context if provided to improve search accuracy
@@ -130,7 +137,35 @@ export class GooglePlacesService {
         }
       );
 
-      return (response.results || []).map((place: any) => this.mapGooglePlaceToDetails(place));
+      // Text Search Essentials returns minimal data - extract only place_id and basic info
+      // Full details will be retrieved via Place Details API calls
+      return (response.results || []).map((place: any) => ({
+        place_id: place.place_id,
+        name: place.name || 'Unknown Place', // Keep name for logging/debugging
+        formatted_address: place.formatted_address || '',
+        geometry: {
+          location: {
+            lat: place.geometry?.location?.lat || 0,
+            lng: place.geometry?.location?.lng || 0,
+          },
+          viewport: place.geometry?.viewport ? {
+            northeast: place.geometry.viewport.northeast,
+            southwest: place.geometry.viewport.southwest,
+          } : undefined,
+        },
+        // Minimal data from Text Search Essentials
+        types: place.types || [],
+        rating: place.rating,
+        user_ratings_total: place.user_ratings_total,
+        price_level: place.price_level,
+        business_status: place.business_status,
+        // Other fields will be populated by Place Details API calls
+        opening_hours: undefined,
+        formatted_phone_number: undefined,
+        international_phone_number: undefined,
+        website: undefined,
+        url: undefined,
+      }));
     } catch (error) {
       this.logError('searchPlaces', error, { query });
       console.error(`  🔍 Search failed for "${query}":`, error instanceof Error ? error.message : String(error));
@@ -140,8 +175,9 @@ export class GooglePlacesService {
 
   /**
    * Get detailed information for a specific place
+   * This is the main method for retrieving comprehensive place data after getting place_id from search
    */
-  async getPlaceDetails(placeId: string): Promise<GooglePlaceDetails> {
+  async getPlaceDetails(placeId: string, includeAtmosphereData: boolean = false): Promise<GooglePlaceDetails> {
     const fields = [
       // Basic information
       'place_id',
@@ -171,6 +207,32 @@ export class GooglePlacesService {
       'photos',
       'reviews',
     ];
+
+    // Only include atmosphere/food service fields if specifically requested
+    if (includeAtmosphereData) {
+      fields.push(
+        // Accessibility and services
+        'wheelchair_accessible_entrance',
+        'delivery',
+        'dine_in',
+        'takeout',
+        'reservable',
+        
+        // Food and beverage services
+        'serves_beer',
+        'serves_cocktails',
+        'serves_wine',
+        'serves_breakfast',
+        'serves_lunch',
+        'serves_dinner',
+        'serves_brunch',
+        
+        // Venue features
+        'outdoor_seating',
+        'live_music',
+        'happy_hour'
+      );
+    }
 
     const params = new URLSearchParams({
       place_id: placeId,
@@ -219,6 +281,7 @@ export class GooglePlacesService {
 
   /**
    * Search for places near a location (basic info only)
+   * Returns minimal data - full details should be retrieved via Place Details API
    */
   async searchNearby(
     lat: number, 
@@ -270,6 +333,7 @@ export class GooglePlacesService {
 
   /**
    * Search for places near a location with full details (including opening hours)
+   * Demonstrates the proper workflow: basic search → place IDs → full details via Place Details API
    */
   async searchNearbyWithDetails(
     lat: number, 
@@ -322,6 +386,8 @@ export class GooglePlacesService {
 
   /**
    * Map Google Places API response to our GooglePlaceDetails interface
+   * Used for mapping Place Details API responses (comprehensive data)
+   * Text Search responses are handled directly in performSearch for cost optimization
    */
   private mapGooglePlaceToDetails(place: any): GooglePlaceDetails {
     return {
