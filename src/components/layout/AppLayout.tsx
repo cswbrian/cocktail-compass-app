@@ -2,19 +2,21 @@
 
 import { useState } from 'react';
 import { Header } from '@/components/ui/header';
-import { Menu } from '@/components/ui/menu';
+// Explorer-only: unused while menu/nav/visit form are commented out
+// import { Menu } from '@/components/ui/menu';
 import { Toaster } from '@/components/ui/sonner';
-import { BottomNav } from '@/components/ui/bottom-nav';
+// import { BottomNav } from '@/components/ui/bottom-nav';
 import { InstallPrompt } from '@/components/InstallPrompt';
 import { MainContent } from '@/components/ui/main-content';
 import { LanguageProvider } from '@/context/LanguageContext';
-import { AuthProvider } from '@/context/AuthContext';
+// Explorer-only: skip Supabase-backed providers
+// import { AuthProvider } from '@/context/AuthContext';
 import { BottomNavProvider } from '@/context/BottomNavContext';
-import { CocktailLogProvider } from '@/context/CocktailLogContext';
+// import { CocktailLogProvider } from '@/context/CocktailLogContext';
 import { CocktailProvider } from '@/context/CocktailContext';
-import { VisitFormProvider } from '@/context/VisitFormContext';
-import { GlobalVisitForm } from '@/components/visit/GlobalVisitForm';
-import { VisitProvider } from '@/context/VisitContext';
+// import { VisitFormProvider } from '@/context/VisitFormContext';
+// import { GlobalVisitForm } from '@/components/visit/GlobalVisitForm';
+// import { VisitProvider } from '@/context/VisitContext';
 import { InAppBrowserWarning } from '@/components/InAppBrowserWarning';
 
 export default function AppLayout({
@@ -26,21 +28,22 @@ export default function AppLayout({
 
   return (
     <LanguageProvider>
-      <AuthProvider>
+      {/* <AuthProvider> */}
         <BottomNavProvider>
-          <CocktailLogProvider>
+          {/* <CocktailLogProvider> */}
             <CocktailProvider>
-              <VisitProvider>
-                <VisitFormProvider>
+              {/* <VisitProvider> */}
+                {/* <VisitFormProvider> */}
                   <div className={`antialiased dark`}>
                     <div className="flex flex-col min-h-screen">
                       <Header />
-                      <Menu />
+                      {/* Explorer-only: hide menu and other features */}
+                      {/* <Menu /> */}
                       <main className="w-full max-w-4xl mx-auto h-[calc(100vh-50px)]">
                         <MainContent>{children}</MainContent>
                       </main>
                       <InstallPrompt />
-                      <BottomNav />
+                      {/* <BottomNav /> */}
                       <Toaster />
                       <InAppBrowserWarning 
                         isOpen={showInAppWarning} 
@@ -48,13 +51,13 @@ export default function AppLayout({
                       />
                     </div>
                   </div>
-                  <GlobalVisitForm />
-                </VisitFormProvider>
-              </VisitProvider>
+                  {/* <GlobalVisitForm /> */}
+                {/* </VisitFormProvider> */}
+              {/* </VisitProvider> */}
             </CocktailProvider>
-          </CocktailLogProvider>
+          {/* </CocktailLogProvider> */}
         </BottomNavProvider>
-      </AuthProvider>
+      {/* </AuthProvider> */}
     </LanguageProvider>
   );
 }

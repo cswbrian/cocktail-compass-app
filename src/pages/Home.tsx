@@ -3,5 +3,6 @@ import { useLanguage } from '../context/LanguageContext';
 
 export default function Home() {
   const { language } = useLanguage();
-  return <Navigate to={`/${language}/feeds`} replace />;
+  // Explorer-only: was feeds
+  return <Navigate to={`/${language}/explorer`} replace />;
 }

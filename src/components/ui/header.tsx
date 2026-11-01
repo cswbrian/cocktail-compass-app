@@ -3,7 +3,8 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { translations } from '@/translations';
-import { Menu } from '@/components/ui/menu';
+// Explorer-only: hide login/menu
+// import { Menu } from '@/components/ui/menu';
 import { useEffect, useState } from 'react';
 import { Download } from 'lucide-react';
 
@@ -131,7 +132,7 @@ export function Header() {
           </button>
         )}
       </div>
-      <Menu />
+      {/* <Menu /> */}
     </header>
   );
 }

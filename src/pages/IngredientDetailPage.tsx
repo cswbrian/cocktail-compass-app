@@ -1,47 +1,87 @@
 import { useParams } from 'react-router-dom';
-import { validLanguages } from '@/lib/utils';
+import { slugify, validLanguages } from '@/lib/utils';
 import { CocktailCard } from '@/components/cocktail-card';
 import { Cocktail } from '@/types/cocktail';
 import { Link } from 'react-router-dom';
 import { translations } from '@/translations/index';
 import { ExternalLink } from '@/components/external-link';
-import { cocktailService } from '@/services/cocktail-service';
-import {
-  ingredientService,
-  Ingredient,
-  IngredientType,
-} from '@/services/ingredient-service';
+// Explorer-only: local static data instead of Supabase
+// import { cocktailService } from '@/services/cocktail-service';
+import { staticCocktailService } from '@/services/static-cocktail-service';
+// import {
+//   ingredientService,
+//   Ingredient,
+//   IngredientType,
+// } from '@/services/ingredient-service';
 import { useEffect, useState } from 'react';
+
+type IngredientType = 'base_spirit' | 'liqueur' | 'ingredient';
+
+type LocalIngredient = {
+  slug: string;
+  type: IngredientType;
+  nameEn: string;
+  nameZh: string;
+};
+
+function resolveIngredientFromStatic(
+  slug: string,
+): { ingredient: LocalIngredient; cocktails: Cocktail[] } | null {
+  const cocktails =
+    staticCocktailService.getStaticCocktailsByIngredient(slug);
+  if (cocktails.length === 0) return null;
+
+  for (const cocktail of cocktails) {
+    const groups: [IngredientType, Cocktail['base_spirits']][] = [
+      ['base_spirit', cocktail.base_spirits ?? []],
+      ['liqueur', cocktail.liqueurs ?? []],
+      ['ingredient', cocktail.ingredients ?? []],
+    ];
+    for (const [type, list] of groups) {
+      const match = list.find(
+        ing => slugify(ing.name.en) === slug,
+      );
+      if (match) {
+        return {
+          ingredient: {
+            slug,
+            type,
+            nameEn: match.name.en,
+            nameZh: match.name.zh,
+          },
+          cocktails,
+        };
+      }
+    }
+  }
+
+  return null;
+}
 
 export default function IngredientDetailPage() {
   const { language, slug } = useParams();
   const t =
     translations[language as keyof typeof translations];
   const [ingredient, setIngredient] =
-    useState<Ingredient | null>(null);
+    useState<LocalIngredient | null>(null);
   const [matchingCocktails, setMatchingCocktails] =
     useState<Cocktail[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadData = () => {
       if (!language || !slug) return;
 
       setIsLoading(true);
       try {
-        // Get ingredient details
-        const ingredients =
-          await ingredientService.getIngredientsBySlug(
-            slug,
-          );
-        if (ingredients.length > 0) {
-          setIngredient(ingredients[0]);
-          // Get matching cocktails
-          const cocktails =
-            await cocktailService.getCocktailsByIngredientId(
-              ingredients[0].id,
-            );
-          setMatchingCocktails(cocktails);
+        // Explorer-only: was ingredientService + cocktailService (Supabase)
+        const resolved = resolveIngredientFromStatic(slug);
+        if (resolved) {
+          setIngredient(resolved.ingredient);
+          setMatchingCocktails(resolved.cocktails);
+        } else {
+          setIngredient(null);
+          setMatchingCocktails([]);
         }
       } catch (error) {
         console.error(

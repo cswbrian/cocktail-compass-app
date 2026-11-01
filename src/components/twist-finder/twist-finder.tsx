@@ -8,7 +8,9 @@ import { translations } from '@/translations';
 import { sendGAEvent } from '@/lib/ga';
 import { calculateDistance } from '@/lib/cocktail-twist';
 import { TwistResults } from '@/components/twist-finder/twist-results';
-import { cocktailService } from '@/services/cocktail-service';
+// Explorer-only: local static data instead of Supabase
+// import { cocktailService } from '@/services/cocktail-service';
+import { staticCocktailService } from '@/services/static-cocktail-service';
 
 interface TwistFinderProps {
   baseCocktail: Cocktail;
@@ -22,11 +24,13 @@ export function TwistFinder({
   const [twists, setTwists] = useState<Array<{ cocktail: Cocktail; distance: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const findTwists = useCallback(async () => {
+  const findTwists = useCallback(() => {
     try {
       setIsLoading(true);
-      const allCocktails = await cocktailService.getRecommendableCocktails();
-      
+      // was: await cocktailService.getRecommendableCocktails()
+      const allCocktails =
+        staticCocktailService.getStaticRecommendableCocktails();
+
       const cocktailScores = allCocktails
         .filter(c => c.id !== baseCocktail.id)
         .map(cocktail => {

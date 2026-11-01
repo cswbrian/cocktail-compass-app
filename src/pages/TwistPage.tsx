@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { TwistFinder } from '@/components/twist-finder/twist-finder';
-import { cocktailService } from '@/services/cocktail-service';
+// Explorer-only: local static data instead of Supabase
+// import { cocktailService } from '@/services/cocktail-service';
+import { staticCocktailService } from '@/services/static-cocktail-service';
 import { useEffect, useState } from 'react';
 import { Cocktail } from '@/types/cocktail';
 import { useLanguage } from '@/context/LanguageContext';
@@ -12,15 +14,18 @@ export default function TwistPage() {
   const [baseCocktail, setBaseCocktail] = useState<Cocktail | null>(null);
 
   useEffect(() => {
-    const loadCocktail = async () => {
+    const loadCocktail = () => {
       if (!slug) {
-        navigate(`/${language}`);
+        navigate(`/${language}/explorer`);
         return;
       }
 
-      const cocktail = await cocktailService.getCocktailBySlug(slug);
+      // was: await cocktailService.getCocktailBySlug(slug)
+      const cocktail =
+        staticCocktailService.getStaticCocktailBySlug(slug) ??
+        null;
       if (!cocktail) {
-        navigate(`/${language}`);
+        navigate(`/${language}/explorer`);
         return;
       }
 

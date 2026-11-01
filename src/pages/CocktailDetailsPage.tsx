@@ -1,23 +1,37 @@
-import { getLocalizedText } from '@/lib/utils';
+import { getLocalizedText, slugify } from '@/lib/utils';
 import { Link, useParams } from 'react-router-dom';
 import FlavorRadar from '@/components/flavor-radar';
 import { translations } from '@/translations';
 import ReactMarkdown from 'react-markdown';
 import { FlavorDescriptor } from '@/components/flavor-descriptor';
 import { ShareButton } from '@/components/ShareButton';
-import { BookmarkButton } from '@/components/bookmark/bookmark-button';
+// Explorer-only: bookmarks require Supabase
+// import { BookmarkButton } from '@/components/bookmark/bookmark-button';
 import { ExternalLink } from '@/components/external-link';
 import { Search } from 'lucide-react';
 import { flavorColorMap } from '@/constants';
 import { TwistButton } from '@/components/twist-button';
-import { cocktailService } from '@/services/cocktail-service';
-import { CocktailLogList } from '@/components/cocktail-log/CocktailLogList';
-import { useState, useCallback } from 'react';
+// Explorer-only: local static data instead of Supabase
+// import { cocktailService } from '@/services/cocktail-service';
+import { staticCocktailService } from '@/services/static-cocktail-service';
+// import { CocktailLogList } from '@/components/cocktail-log/CocktailLogList';
 import useSWR from 'swr';
-import { cocktailLogService } from '@/services/cocktail-log-service';
-import { CocktailLog } from '@/types/cocktail-log';
+// import { cocktailLogService } from '@/services/cocktail-log-service';
+// import { CocktailLog } from '@/types/cocktail-log';
 import { Cocktail } from '@/types/cocktail';
 import { BackButton } from '@/components/common/BackButton';
+
+function ingredientPath(
+  language: string,
+  ingredient: { slug?: string; id?: string; name: { en: string } },
+) {
+  // Static data often lacks id/slug — derive from English name
+  const key =
+    ingredient.slug ||
+    ingredient.id ||
+    slugify(ingredient.name.en);
+  return `/${language}/ingredients/${key}`;
+}
 
 interface CocktailIngredientsProps {
   cocktail: Cocktail;
@@ -45,7 +59,7 @@ function CocktailIngredients({
           {cocktail.base_spirits.map((spirit, i) => (
             <li key={i} className="flex justify-between">
               <Link
-                to={`/${language || 'en'}/ingredients/${spirit.slug}`}
+                to={ingredientPath(language || 'en', spirit)}
                 className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
               >
                 {getLocalizedText(
@@ -66,7 +80,7 @@ function CocktailIngredients({
           {cocktail.liqueurs.map((liqueur, i) => (
             <li key={i} className="flex justify-between">
               <Link
-                to={`/${language || 'en'}/ingredients/${liqueur.id}`}
+                to={ingredientPath(language || 'en', liqueur)}
                 className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
               >
                 {getLocalizedText(
@@ -87,7 +101,7 @@ function CocktailIngredients({
           {cocktail.ingredients.map((ingredient, i) => (
             <li key={i} className="flex justify-between">
               <Link
-                to={`/${language || 'en'}/ingredients/${ingredient.id}`}
+                to={ingredientPath(language || 'en', ingredient)}
                 className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
               >
                 {getLocalizedText(
@@ -130,52 +144,25 @@ export default function CocktailDetails() {
   const t =
     translations[language as keyof typeof translations] ||
     translations.en;
-  const [page, setPage] = useState(1);
-  const [accumulatedLogs, setAccumulatedLogs] = useState<
-    CocktailLog[]
-  >([]);
-  const PAGE_SIZE = 10;
 
+  // Explorer-only: load from static compressed data
   const { data: cocktail, isLoading: isLoadingCocktail } =
     useSWR(['cocktail', slug], async () => {
       if (!slug) return null;
-      return await cocktailService.getCocktailBySlug(slug);
+      // was: await cocktailService.getCocktailBySlug(slug)
+      return (
+        staticCocktailService.getStaticCocktailBySlug(
+          slug,
+        ) ?? null
+      );
     });
 
-  const { data: logsData, isLoading: isLoadingLogs } =
-    useSWR(
-      ['cocktail-logs', cocktail?.id, page],
-      async () => {
-        if (!cocktail?.id)
-          return { logs: [], hasMore: false };
-        const result =
-          await cocktailLogService.getLogsByCocktailId(
-            cocktail.id,
-            page,
-            PAGE_SIZE,
-          );
-        return result;
-      },
-      {
-        fallbackData: { logs: [], hasMore: false },
-        onSuccess: data => {
-          if (page === 1) {
-            setAccumulatedLogs(data.logs);
-          } else {
-            setAccumulatedLogs(prev => [
-              ...prev,
-              ...data.logs,
-            ]);
-          }
-        },
-      },
-    );
-
-  const loadMore = useCallback(() => {
-    if (logsData?.hasMore && !isLoadingLogs) {
-      setPage(prev => prev + 1);
-    }
-  }, [logsData?.hasMore, isLoadingLogs]);
+  // Explorer-only: cocktail logs require Supabase — disabled
+  // const [page, setPage] = useState(1);
+  // const [accumulatedLogs, setAccumulatedLogs] = useState<CocktailLog[]>([]);
+  // const PAGE_SIZE = 10;
+  // const { data: logsData, isLoading: isLoadingLogs } = useSWR(... cocktailLogService ...);
+  // const loadMore = useCallback(...);
 
   if (isLoadingCocktail) return <div>Loading...</div>;
   if (!cocktail) return null;
@@ -192,7 +179,7 @@ export default function CocktailDetails() {
   return (
     <div>
       <div className="px-6">
-        <BackButton to={`/${language}/feeds`} />
+        <BackButton to={`/${language}/explorer`} />
         <div className="mb-6 flex justify-between items-start">
           <div>
             <h1 className="text-4xl mb-2">
@@ -206,7 +193,7 @@ export default function CocktailDetails() {
           </div>
           <div className="flex flex-col gap-2 items-end">
             <div className="flex gap-2">
-              <BookmarkButton cocktailId={cocktail.id} />
+              {/* <BookmarkButton cocktailId={cocktail.id} /> */}
               <ShareButton
                 url={window.location.href}
               />
@@ -295,14 +282,15 @@ export default function CocktailDetails() {
         )}
       </div>
 
-      <div className="mt-8">
+      {/* Explorer-only: CocktailLogList requires Supabase — disabled */}
+      {/* <div className="mt-8">
         <CocktailLogList
           logs={accumulatedLogs}
           isLoading={isLoadingLogs}
           hasMore={logsData?.hasMore}
           onLoadMore={loadMore}
         />
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -50,7 +50,8 @@ export function BottomNavProvider({
 
   return (
     <BottomNavContext.Provider
-      value={{ isBottomNavVisible }}
+      // Explorer-only: hide bottom nav (was isBottomNavVisible)
+      value={{ isBottomNavVisible: false }}
     >
       {children}
     </BottomNavContext.Provider>

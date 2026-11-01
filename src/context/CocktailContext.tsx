@@ -10,7 +10,9 @@ import {
 import { RankedCocktail } from '@/types/cocktail';
 import { useLanguage } from '@/context/LanguageContext';
 import { rankCocktails } from '@/lib/cocktail-ranking';
-import { cocktailService } from '@/services/cocktail-service';
+// Explorer-only: use static data instead of Supabase
+// import { cocktailService } from '@/services/cocktail-service';
+import { staticCocktailService } from '@/services/static-cocktail-service';
 import { translations } from '@/translations';
 
 type CocktailContextType = {
@@ -154,7 +156,9 @@ export function CocktailProvider({
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    const cocktails = await cocktailService.getRecommendableCocktails();
+    // Explorer-only: was cocktailService.getRecommendableCocktails()
+    const cocktails =
+      staticCocktailService.getStaticRecommendableCocktails();
     const rankedResults = rankCocktails(cocktails, {
       sweetness: state.sweetness,
       sourness: state.sourness,
