@@ -2,12 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import pako from 'pako';
 
-// Read the cocktails data from data directory
-const cocktailsPath = path.join(
-  process.cwd(),
-  'data',
-  'cocktails.json',
-);
+// The app imports src/data, not the root data/ folder.
+const dataDir = path.join(process.cwd(), 'src', 'data');
+const cocktailsPath = path.join(dataDir, 'cocktails.json');
 const cocktailsData = JSON.parse(
   fs.readFileSync(cocktailsPath, 'utf-8'),
 );
@@ -28,8 +25,7 @@ export const compressedCocktails = "${base64Data}";
 
 // Write the output file to public data directory
 const outputPath = path.join(
-  process.cwd(),
-  'data',
+  dataDir,
   'cocktails.compressed.ts',
 );
 fs.writeFileSync(outputPath, outputContent);

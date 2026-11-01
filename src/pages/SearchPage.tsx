@@ -2,15 +2,15 @@ import { Suspense } from 'react';
 import useSWR from 'swr';
 import { Loading } from '@/components/ui/loading';
 import { SearchContainer } from '@/components/search/SearchContainer';
-import { CACHE_KEYS, fetchers } from '@/lib/swr-config';
+import { staticCocktailService } from '@/services/static-cocktail-service';
 
 export default function SearchPage() {
   const { data: cocktailList } = useSWR(
-    CACHE_KEYS.COCKTAIL_LIST,
-    fetchers.getCocktailList,
+    'static-cocktail-list',
+    () => staticCocktailService.getStaticCocktails(),
     {
       revalidateOnFocus: false,
-      revalidateIfStale: true,
+      revalidateIfStale: false,
     }
   );
 

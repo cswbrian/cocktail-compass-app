@@ -130,7 +130,7 @@ function generateSummary(cocktails: Cocktail[]): Summary {
 async function generateAndSaveSummary() {
   try {
     // Read cocktails data
-    const dataDir = path.join(process.cwd(), 'data');
+    const dataDir = path.join(process.cwd(), 'src', 'data');
     const cocktailsPath = path.join(
       dataDir,
       'cocktails.json',
