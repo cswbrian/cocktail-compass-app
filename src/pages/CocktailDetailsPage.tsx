@@ -5,8 +5,7 @@ import { translations } from '@/translations';
 import ReactMarkdown from 'react-markdown';
 import { FlavorDescriptor } from '@/components/flavor-descriptor';
 import { ShareButton } from '@/components/ShareButton';
-// Explorer-only: bookmarks require Supabase
-// import { BookmarkButton } from '@/components/bookmark/bookmark-button';
+import { CocktailBookmarkButton } from '@/components/bookmark/cocktail-bookmark-button';
 import { ExternalLink } from '@/components/external-link';
 import { Search } from 'lucide-react';
 import { flavorColorMap } from '@/constants';
@@ -23,7 +22,11 @@ import { BackButton } from '@/components/common/BackButton';
 
 function ingredientPath(
   language: string,
-  ingredient: { slug?: string; id?: string; name: { en: string } },
+  ingredient: {
+    slug?: string;
+    id?: string;
+    name: { en: string };
+  },
 ) {
   // Static data often lacks id/slug — derive from English name
   const key =
@@ -44,9 +47,9 @@ function CocktailIngredients({
   language,
   t,
 }: CocktailIngredientsProps) {
-  const hasIngredients = 
-    cocktail.base_spirits.length > 0 || 
-    cocktail.liqueurs.length > 0 || 
+  const hasIngredients =
+    cocktail.base_spirits.length > 0 ||
+    cocktail.liqueurs.length > 0 ||
     cocktail.ingredients.length > 0;
 
   if (!hasIngredients) return null;
@@ -59,7 +62,10 @@ function CocktailIngredients({
           {cocktail.base_spirits.map((spirit, i) => (
             <li key={i} className="flex justify-between">
               <Link
-                to={ingredientPath(language || 'en', spirit)}
+                to={ingredientPath(
+                  language || 'en',
+                  spirit,
+                )}
                 className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
               >
                 {getLocalizedText(
@@ -80,7 +86,10 @@ function CocktailIngredients({
           {cocktail.liqueurs.map((liqueur, i) => (
             <li key={i} className="flex justify-between">
               <Link
-                to={ingredientPath(language || 'en', liqueur)}
+                to={ingredientPath(
+                  language || 'en',
+                  liqueur,
+                )}
                 className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
               >
                 {getLocalizedText(
@@ -101,7 +110,10 @@ function CocktailIngredients({
           {cocktail.ingredients.map((ingredient, i) => (
             <li key={i} className="flex justify-between">
               <Link
-                to={ingredientPath(language || 'en', ingredient)}
+                to={ingredientPath(
+                  language || 'en',
+                  ingredient,
+                )}
                 className="hover:text-blue-400 transition-colors flex flex-wrap items-center gap-x-1"
               >
                 {getLocalizedText(
@@ -193,10 +205,11 @@ export default function CocktailDetails() {
           </div>
           <div className="flex flex-col gap-2 items-end">
             <div className="flex gap-2">
-              {/* <BookmarkButton cocktailId={cocktail.id} /> */}
-              <ShareButton
-                url={window.location.href}
+              <CocktailBookmarkButton
+                cocktailSlug={cocktail.slug}
+                cocktailName={cocktail.name.en}
               />
+              <ShareButton url={window.location.href} />
             </div>
             {cocktail.is_custom ? null : (
               <TwistButton cocktailSlug={cocktail.slug}>
