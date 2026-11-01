@@ -151,49 +151,40 @@ export function rankCocktails(
   cocktails: Cocktail[],
   params: Omit<CalculateDistanceParams, 'cocktail'>,
 ): RankedCocktail[] {
-  // Calculate scores and filter out non-matching cocktails
-  const rankedCocktails: RankedCocktail[] = cocktails
+  // Score by reference first — avoid spreading ~670 full cocktails
+  const ranked = cocktails
     .map(cocktail => ({
-      ...cocktail,
+      cocktail,
       distance: calculateDistance({ ...params, cocktail }),
     }))
     .filter(
-      cocktail =>
-        cocktail.distance !== Number.MAX_SAFE_INTEGER,
-    ) // Remove cocktails that don't meet mandatory criteria
-    .sort((a, b) => a.distance - b.distance); // Sort by score ascending (lower is better)
+      entry => entry.distance !== Number.MAX_SAFE_INTEGER,
+    )
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 20);
 
-  // Convert to 0-100 display score (higher is better)
-  const scoredCocktails = rankedCocktails.map(cocktail => {
+  // Convert top 20 to 0-100 display score (higher is better)
+  return ranked.map(({ cocktail, distance }) => {
     let displayScore = 100;
 
-    // If there are ≥ 1,000,000 points, ingredient mismatch is dominant factor
-    if (cocktail.distance >= 1000000) {
+    if (distance >= 1000000) {
       displayScore = Math.max(
         0,
-        60 - (cocktail.distance - 1000000) / 20000,
+        60 - (distance - 1000000) / 20000,
       );
-    }
-    // If there are ≥ 10,000 points, flavor mismatch is dominant factor
-    else if (cocktail.distance >= 10000) {
+    } else if (distance >= 10000) {
       displayScore = Math.max(
         60,
-        80 - (cocktail.distance - 10000) / 500,
+        80 - (distance - 10000) / 500,
       );
-    }
-    // Otherwise attribute distance is dominant factor
-    else {
-      displayScore = Math.max(
-        80,
-        100 - cocktail.distance / 100,
-      );
+    } else {
+      displayScore = Math.max(80, 100 - distance / 100);
     }
 
     return {
       ...cocktail,
+      distance,
       score: Math.round(displayScore),
     };
   });
-
-  return scoredCocktails.slice(0, 20); // Return top 20
 }

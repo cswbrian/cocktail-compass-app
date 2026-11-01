@@ -158,7 +158,7 @@ export function CocktailProvider({
   const handleSubmit = useCallback(async () => {
     // Explorer-only: was cocktailService.getRecommendableCocktails()
     const cocktails =
-      staticCocktailService.getStaticRecommendableCocktails();
+      await staticCocktailService.getStaticRecommendableCocktails();
     const rankedResults = rankCocktails(cocktails, {
       sweetness: state.sweetness,
       sourness: state.sourness,

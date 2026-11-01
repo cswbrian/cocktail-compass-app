@@ -24,12 +24,12 @@ export function TwistFinder({
   const [twists, setTwists] = useState<Array<{ cocktail: Cocktail; distance: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const findTwists = useCallback(() => {
+  const findTwists = useCallback(async () => {
     try {
       setIsLoading(true);
       // was: await cocktailService.getRecommendableCocktails()
       const allCocktails =
-        staticCocktailService.getStaticRecommendableCocktails();
+        await staticCocktailService.getStaticRecommendableCocktails();
 
       const cocktailScores = allCocktails
         .filter(c => c.id !== baseCocktail.id)

@@ -1,4 +1,3 @@
-import { compressedCocktails } from '@/data/cocktails.compressed';
 import {
   Cocktail,
   CocktailPreview,
@@ -8,62 +7,63 @@ import { decompress } from '@/lib/decompress';
 
 class StaticCocktailService {
   private static instance: StaticCocktailService;
-  private static isInitialized = false;
-  private cocktails: Cocktail[];
+  private cocktails: Cocktail[] = [];
   private cocktailPreviews: CocktailPreview[] = [];
+  private recommendableCocktails: Cocktail[] | null = null;
+  private initPromise: Promise<void> | null = null;
+  private ready = false;
 
   // Cache for frequently accessed data
-  private slugToCocktail: Map<string, Cocktail>;
-  private flavorToCocktails: Map<string, Cocktail[]>;
-  private ingredientToCocktails: Map<string, Cocktail[]>;
-  private allFlavors: Set<string>;
-  private allIngredients: Set<string>;
+  private slugToCocktail = new Map<string, Cocktail>();
+  private flavorToCocktails = new Map<string, Cocktail[]>();
+  private ingredientToCocktails = new Map<
+    string,
+    Cocktail[]
+  >();
+  private allFlavors = new Set<string>();
+  private allIngredients = new Set<string>();
 
-  private constructor() {
-    if (StaticCocktailService.isInitialized) {
-      console.warn(
-        'StaticCocktailService is being instantiated multiple times!',
+  private constructor() {}
+
+  private ensureInit(): Promise<void> {
+    if (this.ready) return Promise.resolve();
+    if (this.initPromise) return this.initPromise;
+
+    this.initPromise = (async () => {
+      console.log(
+        '🔄 Decompressing static cocktails data...',
       );
-    }
+      // Lazy chunk: keep compressed catalog out of the initial bundle
+      const { compressedCocktails } = await import(
+        '@/data/cocktails.compressed'
+      );
+      this.cocktails = decompress(
+        compressedCocktails,
+      ) as Cocktail[];
+      console.log(
+        `✅ Decompressed ${this.cocktails.length} cocktails`,
+      );
 
-    // Initialize with decompressed data
-    console.log(
-      '🔄 Decompressing static cocktails data...',
-    );
-    this.cocktails = decompress(
-      compressedCocktails,
-    ) as Cocktail[];
-    console.log(
-      `✅ Decompressed ${this.cocktails.length} cocktails`,
-    );
+      this.initializeCaches();
+      this.initializePreviewList();
+      this.ready = true;
+    })();
 
-    this.slugToCocktail = new Map();
-    this.flavorToCocktails = new Map();
-    this.ingredientToCocktails = new Map();
-    this.allFlavors = new Set();
-    this.allIngredients = new Set();
-
-    // Initialize caches
-    this.initializeCaches();
-    this.initializePreviewList();
-    StaticCocktailService.isInitialized = true;
+    return this.initPromise;
   }
 
   private initializeCaches(): void {
-    // Build slug to cocktail map
-    this.cocktails.forEach(cocktail => {
-      this.slugToCocktail.set(cocktail.slug, cocktail);
-    });
+    this.slugToCocktail.clear();
+    this.allFlavors.clear();
+    this.allIngredients.clear();
 
-    // Build flavor descriptors set
-    this.cocktails.forEach(cocktail => {
+    for (const cocktail of this.cocktails) {
+      this.slugToCocktail.set(cocktail.slug, cocktail);
+
       cocktail.flavor_descriptors?.forEach(flavor => {
         this.allFlavors.add(slugify(flavor.en));
       });
-    });
 
-    // Build ingredients set
-    this.cocktails.forEach(cocktail => {
       [
         ...(cocktail.base_spirits ?? []),
         ...(cocktail.liqueurs ?? []),
@@ -73,7 +73,7 @@ class StaticCocktailService {
           slugify(ingredient.name.en),
         );
       });
-    });
+    }
   }
 
   private initializePreviewList() {
@@ -90,45 +90,49 @@ class StaticCocktailService {
 
   public static getInstance(): StaticCocktailService {
     if (!StaticCocktailService.instance) {
-      console.log(
-        '🎯 Creating new StaticCocktailService instance',
-      );
       StaticCocktailService.instance =
         new StaticCocktailService();
     }
     return StaticCocktailService.instance;
   }
 
-  public getStaticCocktails(): CocktailPreview[] {
+  public async getStaticCocktails(): Promise<
+    CocktailPreview[]
+  > {
+    await this.ensureInit();
     return this.cocktailPreviews;
   }
 
-  public getStaticCocktailsWithDetails(): Cocktail[] {
+  public async getStaticCocktailsWithDetails(): Promise<
+    Cocktail[]
+  > {
+    await this.ensureInit();
     return this.cocktails;
   }
 
-  public getStaticCocktailBySlug(
+  public async getStaticCocktailBySlug(
     slug: string,
-  ): Cocktail | undefined {
+  ): Promise<Cocktail | undefined> {
+    await this.ensureInit();
     return this.slugToCocktail.get(slug);
   }
 
-  public getStaticCocktailById(
+  public async getStaticCocktailById(
     id: string,
-  ): Cocktail | undefined {
+  ): Promise<Cocktail | undefined> {
+    await this.ensureInit();
     return this.cocktails.find(
       cocktail => cocktail.id === id,
     );
   }
 
-  public getStaticCocktailsByFlavor(
+  public async getStaticCocktailsByFlavor(
     flavorSlug: string,
-  ): Cocktail[] {
-    // Check cache first
+  ): Promise<Cocktail[]> {
+    await this.ensureInit();
     const cached = this.flavorToCocktails.get(flavorSlug);
     if (cached) return cached;
 
-    // If not in cache, compute and cache
     const matchingCocktails = this.cocktails.filter(
       cocktail =>
         cocktail.flavor_descriptors.some(
@@ -144,15 +148,14 @@ class StaticCocktailService {
     return matchingCocktails;
   }
 
-  public getStaticCocktailsByIngredient(
+  public async getStaticCocktailsByIngredient(
     ingredientSlug: string,
-  ): Cocktail[] {
-    // Check cache first
+  ): Promise<Cocktail[]> {
+    await this.ensureInit();
     const cached =
       this.ingredientToCocktails.get(ingredientSlug);
     if (cached) return cached;
 
-    // If not in cache, compute and cache
     const matchingCocktails = this.cocktails.filter(
       cocktail => {
         const allIngredients = [
@@ -174,35 +177,50 @@ class StaticCocktailService {
     return matchingCocktails;
   }
 
-  public getStaticAllFlavors(): string[] {
+  public async getStaticAllFlavors(): Promise<string[]> {
+    await this.ensureInit();
     return Array.from(this.allFlavors);
   }
 
-  public getStaticAllIngredients(): string[] {
+  public async getStaticAllIngredients(): Promise<
+    string[]
+  > {
+    await this.ensureInit();
     return Array.from(this.allIngredients);
   }
 
-  public getStaticRecommendableCocktails(): Cocktail[] {
-    return this.cocktails.filter(cocktail => {
-      const profile = cocktail.flavor_profile;
-      return (
-        profile &&
-        typeof profile.sweetness === 'number' &&
-        typeof profile.sourness === 'number' &&
-        typeof profile.body === 'number' &&
-        typeof profile.complexity === 'number' &&
-        typeof profile.booziness === 'number' &&
-        typeof profile.bubbles === 'boolean'
-      );
-    });
+  public async getStaticRecommendableCocktails(): Promise<
+    Cocktail[]
+  > {
+    await this.ensureInit();
+    if (this.recommendableCocktails) {
+      return this.recommendableCocktails;
+    }
+
+    this.recommendableCocktails = this.cocktails.filter(
+      cocktail => {
+        const profile = cocktail.flavor_profile;
+        return (
+          profile &&
+          typeof profile.sweetness === 'number' &&
+          typeof profile.sourness === 'number' &&
+          typeof profile.body === 'number' &&
+          typeof profile.complexity === 'number' &&
+          typeof profile.booziness === 'number' &&
+          typeof profile.bubbles === 'boolean'
+        );
+      },
+    );
+    return this.recommendableCocktails;
   }
 
-  // Method to clear caches if needed (e.g., for testing)
   public clearCaches(): void {
     this.flavorToCocktails.clear();
     this.ingredientToCocktails.clear();
+    this.recommendableCocktails = null;
   }
 }
 
+// Lightweight singleton — decompress deferred until first read
 export const staticCocktailService =
   StaticCocktailService.getInstance();

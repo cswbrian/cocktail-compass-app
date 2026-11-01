@@ -151,9 +151,9 @@ export default function CocktailDetails() {
       if (!slug) return null;
       // was: await cocktailService.getCocktailBySlug(slug)
       return (
-        staticCocktailService.getStaticCocktailBySlug(
+        (await staticCocktailService.getStaticCocktailBySlug(
           slug,
-        ) ?? null
+        )) ?? null
       );
     });
 

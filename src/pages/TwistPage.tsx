@@ -14,7 +14,7 @@ export default function TwistPage() {
   const [baseCocktail, setBaseCocktail] = useState<Cocktail | null>(null);
 
   useEffect(() => {
-    const loadCocktail = () => {
+    const loadCocktail = async () => {
       if (!slug) {
         navigate(`/${language}/explorer`);
         return;
@@ -22,8 +22,9 @@ export default function TwistPage() {
 
       // was: await cocktailService.getCocktailBySlug(slug)
       const cocktail =
-        staticCocktailService.getStaticCocktailBySlug(slug) ??
-        null;
+        (await staticCocktailService.getStaticCocktailBySlug(
+          slug,
+        )) ?? null;
       if (!cocktail) {
         navigate(`/${language}/explorer`);
         return;

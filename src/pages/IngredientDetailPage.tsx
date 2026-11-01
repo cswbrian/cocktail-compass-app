@@ -24,11 +24,16 @@ type LocalIngredient = {
   nameZh: string;
 };
 
-function resolveIngredientFromStatic(
+async function resolveIngredientFromStatic(
   slug: string,
-): { ingredient: LocalIngredient; cocktails: Cocktail[] } | null {
+): Promise<{
+  ingredient: LocalIngredient;
+  cocktails: Cocktail[];
+} | null> {
   const cocktails =
-    staticCocktailService.getStaticCocktailsByIngredient(slug);
+    await staticCocktailService.getStaticCocktailsByIngredient(
+      slug,
+    );
   if (cocktails.length === 0) return null;
 
   for (const cocktail of cocktails) {
@@ -69,13 +74,14 @@ export default function IngredientDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = () => {
+    const loadData = async () => {
       if (!language || !slug) return;
 
       setIsLoading(true);
       try {
         // Explorer-only: was ingredientService + cocktailService (Supabase)
-        const resolved = resolveIngredientFromStatic(slug);
+        const resolved =
+          await resolveIngredientFromStatic(slug);
         if (resolved) {
           setIngredient(resolved.ingredient);
           setMatchingCocktails(resolved.cocktails);
